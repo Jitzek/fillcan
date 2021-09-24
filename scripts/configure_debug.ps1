@@ -1,0 +1,1 @@
+cmake -DCMAKE_BUILD_TYPE=Debug -B "$($args[0])\build" -G "MinGW Makefiles" $args[0]

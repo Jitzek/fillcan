@@ -1,0 +1,1 @@
+cmake -DCMAKE_BUILD_TYPE=Release -B "%1\build" -G "MinGW Makefiles" %1

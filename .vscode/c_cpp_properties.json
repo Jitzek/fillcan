@@ -1,0 +1,56 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "/usr/include/**",
+                "/usr/local/include/**",
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/apps/**",
+                "${workspaceFolder}/fillcan/**",
+                "${workspaceFolder}/fillcan/include/**",
+                "${workspaceFolder}/fillcan/lib/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/g++",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-x64",
+            "configurationProvider": "ms-vscode.cmake-tools",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/src",
+                    "${workspaceFolder}/include",
+                    "${workspaceFolder}/fillcan"
+                ]
+            }
+        },
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/apps/**",
+                "${workspaceFolder}/fillcan/**",
+                "${workspaceFolder}/fillcan/include/**",
+                "${workspaceFolder}/fillcan/lib/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "windowsSdkVersion": "10.0.18362.0",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "msvc-x64",
+            "configurationProvider": "ms-vscode.cmake-tools",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/apps",
+                    "${workspaceFolder}/fillcan"
+                ]
+            }
+        }
+    ],
+    "version": 4
+}

@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch",
+            "program": "${workspaceFolder}/build/Release/Fillcan-Application",
+            "type": "cppdbg",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "CMake: Build (Release)"
+        },
+        {
+            "name": "Debug",
+            "program": "${workspaceFolder}/build/Debug/Fillcan-Application",
+            "type": "cppdbg",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "CMake: Build (Debug)"
+        },
+        {
+            "name": "Debug: VS Solution",
+            "program": "${workspaceFolder}/build/Debug/Fillcan-Application",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+        }
+    ]
+}

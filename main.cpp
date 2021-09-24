@@ -1,0 +1,23 @@
+#include "apps/default/app.hpp"
+
+// std
+#include <cstdlib>
+#include <iostream>
+#include <stdexcept>
+
+int main(int argc, char *argv[])
+{
+    app::App app{};
+    
+    try
+    {
+        app.run();
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << "\n";
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
+}
