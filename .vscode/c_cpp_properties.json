@@ -5,22 +5,19 @@
             "includePath": [
                 "/usr/include/**",
                 "/usr/local/include/**",
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/apps/**",
-                "${workspaceFolder}/fillcan/**",
-                "${workspaceFolder}/fillcan/include/**",
-                "${workspaceFolder}/fillcan/lib/**"
+                "${workspaceFolder}/**"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/g++",
+            "compilerPath": "/usr/bin/gcc",
             "cStandard": "c11",
             "cppStandard": "c++17",
-            "intelliSenseMode": "linux-gcc-x64",
+            "intelliSenseMode": "gcc-x64",
             "configurationProvider": "ms-vscode.cmake-tools",
             "browse": {
                 "path": [
-                    "${workspaceFolder}/src",
+                    "${workspaceFolder}/",
                     "${workspaceFolder}/include",
+                    "${workspaceFolder}/apps",
                     "${workspaceFolder}/fillcan"
                 ]
             }
@@ -28,11 +25,7 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/apps/**",
-                "${workspaceFolder}/fillcan/**",
-                "${workspaceFolder}/fillcan/include/**",
-                "${workspaceFolder}/fillcan/lib/**"
+                "${workspaceFolder}/**"
             ],
             "defines": [
                 "_DEBUG",

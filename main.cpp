@@ -3,6 +3,7 @@
 // std
 #include <cstdlib>
 #include <iostream>
+#include <ostream>
 #include <stdexcept>
 
 int main(int argc, char *argv[])

@@ -10,9 +10,25 @@
             "preLaunchTask": "CMake: Build (Release)"
         },
         {
+            "name": "Launch (CodeLLDB)",
+            "program": "${workspaceFolder}/build/Release/Fillcan-Application",
+            "type": "lldb",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "CMake: Build (Release)"
+        },
+        {
             "name": "Debug",
             "program": "${workspaceFolder}/build/Debug/Fillcan-Application",
             "type": "cppdbg",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "CMake: Build (Debug)"
+        },
+        {
+            "name": "Debug (CodeLLDB)",
+            "program": "${workspaceFolder}/build/Debug/Fillcan-Application",
+            "type": "lldb",
             "request": "launch",
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "CMake: Build (Debug)"

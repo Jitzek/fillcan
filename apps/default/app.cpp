@@ -2,6 +2,7 @@
 
 // std
 #include <iostream>
+#include <thread>
 
 namespace app
 {
@@ -12,8 +13,11 @@ namespace app
     {
         std::cout << "Running App \"Default\"" << std::endl;
 
-        while(!window.shouldClose()) {
-            glfwPollEvents();
-        }
+        fillcan.MainLoop(std::bind(&App::update, this));
+    }
+
+    void App::update()
+    {
+        
     }
 }

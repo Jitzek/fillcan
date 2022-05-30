@@ -1,19 +1,19 @@
-#include "window.hpp";
+#include "window.hpp"
 
 namespace fillcan
 {
-    FillcanWindow::FillcanWindow(int width, int height, std::string name) : width{width}, height{height}, name{name} 
+    Window::Window(Instance* pInstance, uint32_t width, uint32_t height, std::string name) : width{width}, height{height}, name{name} 
     {
         initWindow();
     }
     
-    FillcanWindow::~FillcanWindow()
+    Window::~Window()
     {
         glfwDestroyWindow(window);
         glfwTerminate();
     }
 
-    void FillcanWindow::initWindow()
+    void Window::initWindow()
     {
         glfwInit();
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
@@ -22,7 +22,7 @@ namespace fillcan
         window = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
     }
 
-    bool FillcanWindow::shouldClose()
+    bool Window::shouldClose()
     {
         return glfwWindowShouldClose(window); 
     }

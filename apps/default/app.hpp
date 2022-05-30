@@ -1,17 +1,20 @@
 #pragma once
 
 // fillcan
-#include <fillcan/window.hpp>
+// #include <fillcan/window.hpp>
+#include <fillcan/fillcan.hpp>
 
 namespace app
 {
     class App
     {
     private:
-        fillcan::FillcanWindow window{960, 540, "Default Application"};
+        // fillcan::Window window{960, 540, "Default Application"};
+        fillcan::Fillcan fillcan{"Default Application", 1};
     public:
         App();
         ~App();
         void run();
+        void update();
     };
 }

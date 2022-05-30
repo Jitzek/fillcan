@@ -1,34 +1,41 @@
 #pragma once
 
+// fillcan
+
+// std
+#include <fillcan/instance.hpp>
+#include <array>
+#include <string>
+#include <iostream>
+
+// glfw
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
-// std
-#include <string>
+namespace fillcan {
+class Window {
+private:
+  uint32_t width;
+  uint32_t height;
+  std::string name;
+  GLFWwindow *window;
 
-namespace fillcan
-{
-    class FillcanWindow
-    {
-    private:
-        int width;
-        int height;
-        std::string name;
-        GLFWwindow *window;
+  void initWindow();
 
-        void initWindow();
-    public:
-        FillcanWindow(int width, int height, std::string name);
-        ~FillcanWindow();
+public:
+  Window(Instance* pInstance, uint32_t width, uint32_t height, std::string name);
+  ~Window();
 
-        /** 
-         * Explicitly delete the copy constructor and assignment operator:
-         * [FillcanWindow] is a pointer to the glfwWindow, copying [FillcanWindow] would create a copy of a pointer to the glfwWindow.
-         * When calling the destructor of [FillcanWindow] the glfwWindow will be terminated aswell leaving a dangling pointer behind.
-        */
-        FillcanWindow(const FillcanWindow&) = delete;
-        FillcanWindow &operator=(const FillcanWindow&) = delete;
+  /**
+   * Explicitly delete the copy constructor and assignment operator:
+   * [Window] is a pointer to the glfwWindow, copying [Window] would create a
+   * copy of a pointer to the glfwWindow. When calling the destructor of
+   * [Window] the glfwWindow will be terminated aswell leaving a dangling
+   * pointer behind.
+   */
+  Window(const Window &) = delete;
+  Window &operator=(const Window &) = delete;
 
-        bool shouldClose();
-    };   
-}
+  bool shouldClose();
+};
+} // namespace fillcan
