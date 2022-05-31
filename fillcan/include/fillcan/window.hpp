@@ -1,41 +1,51 @@
 #pragma once
 
+// vulkan
+#include "vulkan/vulkan_core.h"
+
 // fillcan
+#include <fillcan/instance.hpp>
 
 // std
-#include <fillcan/instance.hpp>
-#include <array>
 #include <string>
-#include <iostream>
+#include <vector>
 
 // glfw
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
 namespace fillcan {
-class Window {
-private:
-  uint32_t width;
-  uint32_t height;
-  std::string name;
-  GLFWwindow *window;
+    class Window {
+      private:
+        uint32_t width;
+        uint32_t height;
+        std::string name;
+        GLFWwindow* pWindow;
 
-  void initWindow();
+        VkSurfaceKHR hSurface;
 
-public:
-  Window(Instance* pInstance, uint32_t width, uint32_t height, std::string name);
-  ~Window();
+        void initWindow();
 
-  /**
-   * Explicitly delete the copy constructor and assignment operator:
-   * [Window] is a pointer to the glfwWindow, copying [Window] would create a
-   * copy of a pointer to the glfwWindow. When calling the destructor of
-   * [Window] the glfwWindow will be terminated aswell leaving a dangling
-   * pointer behind.
-   */
-  Window(const Window &) = delete;
-  Window &operator=(const Window &) = delete;
+      public:
+        Window(unsigned int width, unsigned int height, std::string name);
+        ~Window();
 
-  bool shouldClose();
-};
+        /**
+         * Explicitly delete the copy constructor and assignment operator:
+         * [Window] is a pointer to the glfwWindow, copying [Window] would create a
+         * copy of a pointer to the glfwWindow. When calling the destructor of
+         * [Window] the glfwWindow will be terminated aswell leaving a dangling
+         * pointer behind.
+         */
+        Window(const Window&) = delete;
+        Window& operator=(const Window&) = delete;
+
+        bool shouldClose();
+
+        std::vector<const char*> getRequiredExtensions();
+
+        void createSurface(Instance* pInstance);
+        VkSurfaceKHR getSurface();
+        VkExtent2D getExtend();
+    };
 } // namespace fillcan

@@ -10,7 +10,7 @@ namespace app
     {
     private:
         // fillcan::Window window{960, 540, "Default Application"};
-        fillcan::Fillcan fillcan{"Default Application", 1};
+        fillcan::Fillcan fillcan{"Default Application", 1, 800, 600};
     public:
         App();
         ~App();

@@ -1,29 +1,48 @@
-#include "window.hpp"
+// vulkan
+#include "vulkan/vulkan_core.h"
 
-namespace fillcan
-{
-    Window::Window(Instance* pInstance, uint32_t width, uint32_t height, std::string name) : width{width}, height{height}, name{name} 
-    {
-        initWindow();
-    }
-    
-    Window::~Window()
-    {
-        glfwDestroyWindow(window);
+// fillcan
+#include <fillcan/window.hpp>
+#include <fillcan/instance.hpp>
+
+// glfw
+#include "GLFW/glfw3.h"
+
+// std
+#include <vector>
+
+namespace fillcan {
+    Window::Window(unsigned int width, unsigned int height, std::string name) : width{width}, height{height}, name{name} { initWindow(); }
+
+    Window::~Window() {
+        glfwDestroyWindow(pWindow);
         glfwTerminate();
     }
 
-    void Window::initWindow()
-    {
+    void Window::initWindow() {
         glfwInit();
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-        window = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
+        pWindow = glfwCreateWindow(this->width, this->height, this->name.c_str(), nullptr, nullptr);
     }
 
-    bool Window::shouldClose()
-    {
-        return glfwWindowShouldClose(window); 
+    bool Window::shouldClose() { return glfwWindowShouldClose(pWindow); }
+
+    std::vector<const char*> Window::getRequiredExtensions() {
+        uint32_t glfwExtensionCount = 0;
+        const char** glfwExtensions;
+        glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+        return std::vector<const char*>(glfwExtensions, glfwExtensions + glfwExtensionCount);
     }
-}
+
+    void Window::createSurface(Instance* pInstance) {
+        if (glfwCreateWindowSurface(pInstance->getInstance(), this->pWindow, nullptr, &this->hSurface) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to create window surface");
+        }
+    }
+    VkSurfaceKHR Window::getSurface() { return this->hSurface; }
+
+    VkExtent2D Window::getExtend() { return {.width = this->width, .height = this->height}; }
+} // namespace fillcan

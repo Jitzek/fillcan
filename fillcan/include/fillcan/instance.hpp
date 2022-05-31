@@ -4,21 +4,31 @@
 #include "vulkan/vulkan_core.h"
 
 // std
+#include <cstddef>
+#include <string>
 #include <vector>
 
+#include <iostream>
+
 namespace fillcan {
-class Instance {
-private:
-  VkInstance pInstance;
+    class Instance {
+      private:
+        VkInstance hInstance;
+        std::string applicationName;
+        unsigned int applicationVersion;
+        std::vector<const char*> requiredLayers;
+        std::vector<const char*> requiredExtensions;
 
-  bool checkValidationLayerSupport(const char *layers);
-  bool checkExtensionSupport(const char *extensions);
+        bool checkValidationLayerSupport(std::vector<const char*> layers);
+        bool checkExtensionSupport(std::vector<const char*> extensions);
 
-public:
-  Instance(const char *pApplicationName, unsigned int applicationVersion,
-            std::vector<const char*> requiredLayers, std::vector<const char*> requiredExtensions);
-  ~Instance();
-  Instance(const Instance &) = delete;
-  Instance &operator=(const Instance &) = delete;
-};
+      public:
+        Instance(std::string pApplicationName, unsigned int applicationVersion, std::vector<const char*> requiredLayers,
+                 std::vector<const char*> requiredExtensions);
+        ~Instance();
+        Instance(const Instance&) = delete;
+        Instance& operator=(const Instance&) = delete;
+
+        VkInstance getInstance();
+    };
 } // namespace fillcan
