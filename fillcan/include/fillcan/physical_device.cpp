@@ -22,8 +22,8 @@ namespace fillcan {
     VkPhysicalDevice PhysicalDevice::getPhysicalDeviceHandle() { return this->hPhysicalDevice; }
     Window* PhysicalDevice::getWindow() { return this->pWindow; }
 
-    std::vector<const char*> PhysicalDevice::getRequiredExtensions() { return this->requiredExtensions; }
-
+    const std::vector<const char*>& PhysicalDevice::getRequiredExtensions() const { return this->requiredExtensions; }
+ 
     bool PhysicalDevice::areExtensionsSupported() {
         unsigned int extensionCount;
         vkEnumerateDeviceExtensionProperties(this->hPhysicalDevice, nullptr, &extensionCount, nullptr);
@@ -47,7 +47,7 @@ namespace fillcan {
         return true;
     }
 
-    VkPhysicalDeviceFeatures PhysicalDevice::getRequiredFeatures() { return this->requiredFeatures; }
+    const VkPhysicalDeviceFeatures& PhysicalDevice::getRequiredFeatures() const { return this->requiredFeatures; }
 
     bool PhysicalDevice::areFeaturesSupported() {
         VkPhysicalDeviceFeatures supportedFeatures = getFeatures();

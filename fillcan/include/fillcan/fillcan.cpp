@@ -38,9 +38,6 @@ Fillcan::Fillcan(const char* pApplicationName, uint32_t applicationVersion, unsi
 
     // Initialize Device Pool
     this->upDevicePool = std::make_unique<DevicePool>(this->upInstance.get(), this->upWindow.get(), requiredDeviceExtensions, requiredDeviceFeatures);
-
-    // Pick device (creates Logical Device)
-    LogicalDevice* logicalDevice = this->upDevicePool->selectDevice(0);
 }
 
 Fillcan::~Fillcan() {}
@@ -51,6 +48,14 @@ void Fillcan::MainLoop(std::function<void()> callback) {
 
         callback();
     }
+}
+
+const std::vector<PhysicalDevice> Fillcan::getSupportedPhysicalDevices() const {
+    return this->upDevicePool->getSupportedPhysicalDevices();
+}
+
+void Fillcan::selectDevice(unsigned int deviceIndex) {
+    this->upDevicePool->selectDevice(deviceIndex);
 }
 
 } // namespace fillcan

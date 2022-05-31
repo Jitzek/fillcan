@@ -31,9 +31,9 @@ namespace fillcan {
         VkPhysicalDevice getPhysicalDeviceHandle();
         Window* getWindow();
 
-        std::vector<const char*> getRequiredExtensions();
+        const std::vector<const char*>& getRequiredExtensions() const;
         bool areExtensionsSupported();
-        VkPhysicalDeviceFeatures getRequiredFeatures();
+        const VkPhysicalDeviceFeatures& getRequiredFeatures() const;
         bool areFeaturesSupported();
         VkPhysicalDeviceFeatures getFeatures();
         VkPhysicalDeviceProperties getProperties();

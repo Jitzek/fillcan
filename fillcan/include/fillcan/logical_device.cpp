@@ -41,7 +41,7 @@ namespace fillcan {
         VkPhysicalDeviceFeatures deviceFeatures = this->pPhysicalDevice->getRequiredFeatures();
         deviceCreateInfo.pEnabledFeatures = &deviceFeatures;
 
-        std::vector<const char*> deviceExtensions = pPhysicalDevice->getRequiredExtensions();
+        const std::vector<const char*> deviceExtensions = pPhysicalDevice->getRequiredExtensions();
         deviceCreateInfo.enabledExtensionCount = deviceExtensions.size();
         deviceCreateInfo.ppEnabledExtensionNames = deviceExtensions.data();
 
@@ -52,6 +52,10 @@ namespace fillcan {
         upGraphicsQueue = std::make_unique<Queue>(this, pPhysicalDevice->getGraphicsQueueFamilyIndex(), 0);
         upPresentQueue = std::make_unique<Queue>(this, pPhysicalDevice->getPresentQueueFamilyIndex(), 0);
         upComputeQueue = std::make_unique<Queue>(this, pPhysicalDevice->getComputeQueueFamilyIndex(), 0);
+
+#ifndef NDEBUG
+        std::cout << "Logical Device: " << this->pPhysicalDevice->getProperties().deviceName << " created\n";
+#endif
     }
 
     LogicalDevice::~LogicalDevice() {

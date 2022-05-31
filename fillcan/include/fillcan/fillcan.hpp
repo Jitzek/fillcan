@@ -1,8 +1,8 @@
 #pragma once
 
 // fillcan
-#include "fillcan/device_pool.hpp"
-#include "fillcan/physical_device.hpp"
+#include <fillcan/device_pool.hpp>
+#include <fillcan/physical_device.hpp>
 #include <fillcan/instance.hpp>
 #include <fillcan/window.hpp>
 
@@ -26,7 +26,7 @@ namespace fillcan {
 
         void MainLoop(std::function<void()> callback);
 
-        std::vector<PhysicalDevice> getSupportedPhysicalDevices();
+        const std::vector<PhysicalDevice> getSupportedPhysicalDevices() const;
         void selectDevice(unsigned int deviceIndex = 0);
     };
 } // namespace fillcan

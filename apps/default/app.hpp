@@ -3,12 +3,12 @@
 // fillcan
 // #include <fillcan/window.hpp>
 #include <fillcan/fillcan.hpp>
+#include <memory>
 
 namespace app {
     class App {
       private:
-        // fillcan::Window window{960, 540, "Default Application"};
-        fillcan::Fillcan fillcan{"Default Application", 1, 800, 600, {.samplerAnisotropy = true}};
+        std::unique_ptr<fillcan::Fillcan> upFillcan;
 
       public:
         App();
