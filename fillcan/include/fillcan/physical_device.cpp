@@ -36,21 +36,21 @@ namespace fillcan {
         return true;
     }
 
-    std::vector<VkPhysicalDeviceFeatures> PhysicalDevice::getPhysicalDeviceFeatures() {
-        std::vector<VkPhysicalDeviceFeatures> features;
-        vkGetPhysicalDeviceFeatures(this->hPhysicalDevice, features.data());
+    VkPhysicalDeviceFeatures PhysicalDevice::getPhysicalDeviceFeatures() {
+        VkPhysicalDeviceFeatures features;
+        vkGetPhysicalDeviceFeatures(this->hPhysicalDevice, &features);
         return features;
     }
 
-    std::vector<VkPhysicalDeviceProperties> PhysicalDevice::getPhysicalDeviceProperties() {
-        std::vector<VkPhysicalDeviceProperties> properties;
-        vkGetPhysicalDeviceProperties(this->hPhysicalDevice, properties.data());
+    VkPhysicalDeviceProperties PhysicalDevice::getPhysicalDeviceProperties() {
+        VkPhysicalDeviceProperties properties;
+        vkGetPhysicalDeviceProperties(this->hPhysicalDevice, &properties);
         return properties;
     }
 
-    std::vector<VkSurfaceCapabilitiesKHR> PhysicalDevice::getPhysicalDeviceSurfaceCapabilitiesKHR(Window* pWindow) {
-        std::vector<VkSurfaceCapabilitiesKHR> surfaceCapabilities;
-        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(this->hPhysicalDevice, pWindow->getSurface(), surfaceCapabilities.data());
+    VkSurfaceCapabilitiesKHR PhysicalDevice::getPhysicalDeviceSurfaceCapabilitiesKHR(Window* pWindow) {
+        VkSurfaceCapabilitiesKHR surfaceCapabilities;
+        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(this->hPhysicalDevice, pWindow->getSurface(), &surfaceCapabilities);
         return surfaceCapabilities;
     }
 
@@ -71,7 +71,7 @@ namespace fillcan {
         if (presentModeCount == 0) {
             return {};
         }
-        std::vector<VkPresentModeKHR> presentModes;
+        std::vector<VkPresentModeKHR> presentModes(presentModeCount);
         vkGetPhysicalDeviceSurfacePresentModesKHR(this->hPhysicalDevice, pWindow->getSurface(), &presentModeCount, presentModes.data());
         return presentModes;
     }
@@ -82,7 +82,7 @@ namespace fillcan {
         if (queueFamilyPropertyCount == 0) {
             return {};
         }
-        std::vector<VkQueueFamilyProperties> queueFamilyProperties;
+        std::vector<VkQueueFamilyProperties> queueFamilyProperties(queueFamilyPropertyCount);
         vkGetPhysicalDeviceQueueFamilyProperties(this->hPhysicalDevice, &queueFamilyPropertyCount, queueFamilyProperties.data());
         return queueFamilyProperties;
     }

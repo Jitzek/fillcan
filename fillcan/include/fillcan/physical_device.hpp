@@ -20,9 +20,9 @@ namespace fillcan {
         ~PhysicalDevice();
 
         bool checkPhysicalDeviceExtensionSupport(std::vector<const char*> extensions);
-        std::vector<VkPhysicalDeviceFeatures> getPhysicalDeviceFeatures();
-        std::vector<VkPhysicalDeviceProperties> getPhysicalDeviceProperties();
-        std::vector<VkSurfaceCapabilitiesKHR> getPhysicalDeviceSurfaceCapabilitiesKHR(Window* pWindow);
+        VkPhysicalDeviceFeatures getPhysicalDeviceFeatures();
+        VkPhysicalDeviceProperties getPhysicalDeviceProperties();
+        VkSurfaceCapabilitiesKHR getPhysicalDeviceSurfaceCapabilitiesKHR(Window* pWindow);
         std::vector<VkSurfaceFormatKHR> getPhysicalDeviceSurfaceFormatsKHR(Window* pWindow);
         std::vector<VkPresentModeKHR> getPhysicalDeviceSurfacePresentModesKHR(Window* pWindow);
         std::vector<VkQueueFamilyProperties> getPhysicalDeviceQueueFamilyProperties();

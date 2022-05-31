@@ -22,5 +22,8 @@ namespace fillcan {
 
         DevicePool(const DevicePool&) = delete;
         DevicePool& operator=(const DevicePool&) = delete;
+
+        std::vector<PhysicalDevice> getSupportedPhysicalDevices();
+        LogicalDevice* selectDevice(unsigned int deviceIndex);
     };
 } // namespace fillcan

@@ -1,4 +1,5 @@
 #include "fillcan/device_pool.hpp"
+#include "fillcan/logical_device.hpp"
 #include "fillcan/window.hpp"
 #include <fillcan/fillcan.hpp>
 #include <fillcan/instance.hpp>
@@ -32,8 +33,14 @@ Fillcan::Fillcan(const char* pApplicationName, uint32_t applicationVersion, unsi
     requiredInstanceExtensions.insert(requiredInstanceExtensions.begin(), windowExtensions.begin(), windowExtensions.end());
     this->upInstance = std::make_unique<Instance>(pApplicationName, applicationVersion, requiredInstanceLayers, requiredInstanceExtensions);
 
+    // Create surface of Window using Instance
+    this->upWindow->createSurface(this->upInstance.get());
+
     // Initialize Device Pool
     this->upDevicePool = std::make_unique<DevicePool>(this->upInstance.get(), this->upWindow.get(), requiredDeviceExtensions);
+
+    // Pick device (creates Logical Device)
+    LogicalDevice* logicalDevice = this->upDevicePool->selectDevice(0);
 }
 
 Fillcan::~Fillcan() {}
