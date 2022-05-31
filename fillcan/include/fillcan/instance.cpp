@@ -12,6 +12,15 @@
 #include <vector>
 
 namespace fillcan {
+    // Local callbacks
+    static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+                                                        VkDebugUtilsMessageTypeFlagsEXT messageType,
+                                                        const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
+        std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
+        return VK_FALSE;
+    }
+
+    // ENDOF local callbacks
 
     Instance::Instance(std::string applicationName, unsigned int applicationVersion, std::vector<const char*> requiredLayers,
                        std::vector<const char*> requiredExtensions)
@@ -38,15 +47,49 @@ namespace fillcan {
         instanceCreateInfo.enabledExtensionCount = this->requiredExtensions.size();
         instanceCreateInfo.ppEnabledExtensionNames = this->requiredExtensions.data();
 
+#ifndef NDEBUG
         instanceCreateInfo.enabledLayerCount = this->requiredLayers.size();
         instanceCreateInfo.ppEnabledLayerNames = this->requiredLayers.data();
+
+        VkDebugUtilsMessengerCreateInfoEXT debugUtilsMessengerCreateInfo = {};
+        debugUtilsMessengerCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+        debugUtilsMessengerCreateInfo.messageSeverity =
+            VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+        debugUtilsMessengerCreateInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+                                                    VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+        debugUtilsMessengerCreateInfo.pfnUserCallback = debugCallback;
+        debugUtilsMessengerCreateInfo.pUserData = nullptr;
+
+        instanceCreateInfo.pNext = &debugUtilsMessengerCreateInfo;
+#else
+        instanceCreateInfo.enabledLayerCount = 0;
+        instanceCreateInfo.ppEnabledLayerNames = nullptr;
+#endif
 
         if (vkCreateInstance(&instanceCreateInfo, nullptr, &this->hInstance) != VK_SUCCESS) {
             throw std::runtime_error("Failed to create instance");
         }
+
+#ifndef NDEBUG
+        auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(this->hInstance, "vkCreateDebugUtilsMessengerEXT");
+        if (func == nullptr) {
+            throw std::runtime_error("Failed to set up debug messenger");
+        }
+        if (func(this->hInstance, &debugUtilsMessengerCreateInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to set up debug messenger");
+        }
+#endif
     }
 
-    Instance::~Instance() {}
+    Instance::~Instance() {
+#ifndef NDEBUG
+        auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(this->hInstance, "vkDestroyDebugUtilsMessengerEXT");
+        if (func != nullptr) {
+            func(this->hInstance, debugMessenger, nullptr);
+        }
+#endif
+        vkDestroyInstance(this->hInstance, nullptr);
+    }
 
     bool Instance::checkValidationLayerSupport(std::vector<const char*> layers) {
         uint32_t layerCount;
@@ -73,6 +116,6 @@ namespace fillcan {
     }
     bool Instance::checkExtensionSupport(std::vector<const char*> extensions) { return true; }
 
-    VkInstance Instance::getInstance() { return this->hInstance; }
+    VkInstance Instance::getInstanceHandle() { return this->hInstance; }
 
 } // namespace fillcan

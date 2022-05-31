@@ -38,7 +38,7 @@ namespace fillcan {
     }
 
     void Window::createSurface(Instance* pInstance) {
-        if (glfwCreateWindowSurface(pInstance->getInstance(), this->pWindow, nullptr, &this->hSurface) != VK_SUCCESS) {
+        if (glfwCreateWindowSurface(pInstance->getInstanceHandle(), this->pWindow, nullptr, &this->hSurface) != VK_SUCCESS) {
             throw std::runtime_error("Failed to create window surface");
         }
     }

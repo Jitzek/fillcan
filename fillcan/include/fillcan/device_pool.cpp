@@ -1,4 +1,5 @@
 // fillcan
+#include "fillcan/fillcan.hpp"
 #include "fillcan/logical_device.hpp"
 #include "fillcan/physical_device.hpp"
 #include "vulkan/vulkan_core.h"
@@ -9,9 +10,10 @@
 #include <vector>
 
 namespace fillcan {
-    DevicePool::DevicePool(Instance* pInstance, Window* pWindow, std::vector<const char*> requiredDeviceExtensions) {
+    DevicePool::DevicePool(Instance* pInstance, Window* pWindow, std::vector<const char*> requiredDeviceExtensions,
+                           VkPhysicalDeviceFeatures requiredDeviceFeatures) {
         unsigned int deviceCount = 0;
-        vkEnumeratePhysicalDevices(pInstance->getInstance(), &deviceCount, nullptr);
+        vkEnumeratePhysicalDevices(pInstance->getInstanceHandle(), &deviceCount, nullptr);
         if (deviceCount == 0) {
             throw std::runtime_error("Failed to find GPUs with Vulkan support!");
         }
@@ -19,54 +21,50 @@ namespace fillcan {
         std::cout << "Device count: " << deviceCount << std::endl;
 #endif
         std::vector<VkPhysicalDevice> allVkPhysicalDevices(deviceCount);
-        vkEnumeratePhysicalDevices(pInstance->getInstance(), &deviceCount, allVkPhysicalDevices.data());
+        vkEnumeratePhysicalDevices(pInstance->getInstanceHandle(), &deviceCount, allVkPhysicalDevices.data());
 
         for (VkPhysicalDevice vkPhysicalDevice : allVkPhysicalDevices) {
-            this->supportedPhysicalDevices.emplace_back(vkPhysicalDevice);
+            this->supportedPhysicalDevices.emplace_back(vkPhysicalDevice, pWindow, requiredDeviceExtensions, requiredDeviceFeatures);
         }
 
         // Remove all physical devices that don't meet the requirements
         this->supportedPhysicalDevices.erase(
             std::remove_if(this->supportedPhysicalDevices.begin(), this->supportedPhysicalDevices.end(),
-                           [requiredDeviceExtensions, pWindow](PhysicalDevice& physicalDevice) {
+                           [](PhysicalDevice& physicalDevice) {
                                // Check if the physical device supports the required device extensions
-                               if (!physicalDevice.checkPhysicalDeviceExtensionSupport(requiredDeviceExtensions)) {
+                               if (!physicalDevice.areExtensionsSupported()) {
+                                   return true;
+                               }
+
+                               // Check if the physical device supports the required features
+                               if (!physicalDevice.areFeaturesSupported()) {
                                    return true;
                                }
 
                                // Check if the physical device supports a swapchain
-                               std::vector<VkSurfaceFormatKHR> physicalDeviceSurfaceFormatsKHR =
-                                   physicalDevice.getPhysicalDeviceSurfaceFormatsKHR(pWindow);
+                               std::vector<VkSurfaceFormatKHR> physicalDeviceSurfaceFormatsKHR = physicalDevice.getSurfaceFormatsKHR();
                                if (physicalDeviceSurfaceFormatsKHR.empty()) {
                                    return true;
                                }
-                               std::vector<VkPresentModeKHR> physicalDeviceSurfacePresentModesKHR =
-                                   physicalDevice.getPhysicalDeviceSurfacePresentModesKHR(pWindow);
+                               std::vector<VkPresentModeKHR> physicalDeviceSurfacePresentModesKHR = physicalDevice.getSurfacePresentModesKHR();
                                if (physicalDeviceSurfacePresentModesKHR.empty()) {
                                    return true;
                                }
 
-                               std::vector<VkQueueFamilyProperties> physicalDeviceQueueFamilyProperties =
-                                   physicalDevice.getPhysicalDeviceQueueFamilyProperties();
+                               std::vector<VkQueueFamilyProperties> physicalDeviceQueueFamilyProperties = physicalDevice.getQueueFamilyProperties();
 
                                // Check if the physical device supports graphics operations
-                               if (physicalDevice.findGraphicsQueueFamilyIndex(physicalDeviceQueueFamilyProperties) == -1) {
+                               if (physicalDevice.getGraphicsQueueFamilyIndex() == -1) {
                                    return true;
                                }
 
                                // Check if the physical device supports present operations
-                               if (physicalDevice.findPresentQueueFamilyIndex(pWindow, physicalDeviceQueueFamilyProperties) == -1) {
+                               if (physicalDevice.getPresentQueueFamilyIndex() == -1) {
                                    return true;
                                }
 
                                // Check if the physical device supports compute operations
-                               if (physicalDevice.findComputeQueueFamilyIndex(physicalDeviceQueueFamilyProperties) == -1) {
-                                   return true;
-                               }
-
-                               // Check if necessary features are supported
-                               VkPhysicalDeviceFeatures physicalDeviceFeatures = physicalDevice.getPhysicalDeviceFeatures();
-                               if (!physicalDeviceFeatures.samplerAnisotropy) {
+                               if (physicalDevice.getComputeQueueFamilyIndex() == -1) {
                                    return true;
                                }
 
@@ -80,9 +78,7 @@ namespace fillcan {
 
     DevicePool::~DevicePool() {}
 
-    std::vector<PhysicalDevice> DevicePool::getSupportedPhysicalDevices() {
-        return this->supportedPhysicalDevices;
-    }
+    std::vector<PhysicalDevice> DevicePool::getSupportedPhysicalDevices() { return this->supportedPhysicalDevices; }
 
     LogicalDevice* DevicePool::selectDevice(unsigned int deviceIndex) {
         if (deviceIndex < 0 || deviceIndex > this->supportedPhysicalDevices.size() - 1) {

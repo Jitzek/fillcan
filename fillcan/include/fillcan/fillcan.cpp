@@ -24,7 +24,7 @@ std::vector<const char*> requiredInstanceExtensions = {
 
 std::vector<const char*> requiredDeviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
-Fillcan::Fillcan(const char* pApplicationName, uint32_t applicationVersion, unsigned int windowWidth, unsigned int windowHeight) {
+Fillcan::Fillcan(const char* pApplicationName, uint32_t applicationVersion, unsigned int windowWidth, unsigned int windowHeight, VkPhysicalDeviceFeatures requiredDeviceFeatures) {
     // Initialize Window
     this->upWindow = std::make_unique<Window>(windowWidth, windowHeight, pApplicationName);
 
@@ -37,7 +37,7 @@ Fillcan::Fillcan(const char* pApplicationName, uint32_t applicationVersion, unsi
     this->upWindow->createSurface(this->upInstance.get());
 
     // Initialize Device Pool
-    this->upDevicePool = std::make_unique<DevicePool>(this->upInstance.get(), this->upWindow.get(), requiredDeviceExtensions);
+    this->upDevicePool = std::make_unique<DevicePool>(this->upInstance.get(), this->upWindow.get(), requiredDeviceExtensions, requiredDeviceFeatures);
 
     // Pick device (creates Logical Device)
     LogicalDevice* logicalDevice = this->upDevicePool->selectDevice(0);

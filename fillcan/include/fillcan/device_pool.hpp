@@ -1,9 +1,9 @@
 #pragma once
 
 // fillcan
-#include "fillcan/instance.hpp"
-#include "fillcan/logical_device.hpp"
-#include "fillcan/window.hpp"
+#include <fillcan/instance.hpp>
+#include <fillcan/logical_device.hpp>
+#include <fillcan/window.hpp>
 #include <fillcan/physical_device.hpp>
 
 // std
@@ -17,7 +17,8 @@ namespace fillcan {
         std::unique_ptr<LogicalDevice> upCurrentLogicalDevice;
 
       public:
-        DevicePool(Instance* pInstance, Window* pWindow, std::vector<const char*> requiredDeviceExtensions);
+        DevicePool(Instance* pInstance, Window* pWindow, std::vector<const char*> requiredDeviceExtensions,
+                   VkPhysicalDeviceFeatures requiredDeviceFeatures);
         ~DevicePool();
 
         DevicePool(const DevicePool&) = delete;

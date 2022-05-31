@@ -15,19 +15,35 @@ namespace fillcan {
     class PhysicalDevice {
       private:
         VkPhysicalDevice hPhysicalDevice;
+        Window* pWindow;
+        std::vector<const char*> requiredExtensions;
+        VkPhysicalDeviceFeatures requiredFeatures;
+        int graphicsQueueFamilyIndex = -1;
+        int presentQueueFamilyIndex = -1;
+        int computeQueueFamilyIndex = -1;
+
+        void findGraphicsAndPresentQueueFamilyIndex(std::vector<VkQueueFamilyProperties> queueFamilyProperties = {});
+        void findComputeQueueFamilyIndex(std::vector<VkQueueFamilyProperties> queueFamilyProperties = {});
       public:
-        PhysicalDevice(VkPhysicalDevice hPhysicalDevice);
+        PhysicalDevice(VkPhysicalDevice hPhysicalDevice, Window* pWindow, std::vector<const char *> requiredExtensions, VkPhysicalDeviceFeatures requiredFeatures = {});
         ~PhysicalDevice();
 
-        bool checkPhysicalDeviceExtensionSupport(std::vector<const char*> extensions);
-        VkPhysicalDeviceFeatures getPhysicalDeviceFeatures();
-        VkPhysicalDeviceProperties getPhysicalDeviceProperties();
-        VkSurfaceCapabilitiesKHR getPhysicalDeviceSurfaceCapabilitiesKHR(Window* pWindow);
-        std::vector<VkSurfaceFormatKHR> getPhysicalDeviceSurfaceFormatsKHR(Window* pWindow);
-        std::vector<VkPresentModeKHR> getPhysicalDeviceSurfacePresentModesKHR(Window* pWindow);
-        std::vector<VkQueueFamilyProperties> getPhysicalDeviceQueueFamilyProperties();
-        int findGraphicsQueueFamilyIndex(std::vector<VkQueueFamilyProperties> queueFamilyProperties = {});
-        int findPresentQueueFamilyIndex(Window* pWindow, std::vector<VkQueueFamilyProperties> queueFamilyProperties = {});
-        int findComputeQueueFamilyIndex(std::vector<VkQueueFamilyProperties> queueFamilyProperties = {});
+        VkPhysicalDevice getPhysicalDeviceHandle();
+        Window* getWindow();
+
+        std::vector<const char*> getRequiredExtensions();
+        bool areExtensionsSupported();
+        VkPhysicalDeviceFeatures getRequiredFeatures();
+        bool areFeaturesSupported();
+        VkPhysicalDeviceFeatures getFeatures();
+        VkPhysicalDeviceProperties getProperties();
+        VkSurfaceCapabilitiesKHR getSurfaceCapabilitiesKHR();
+        std::vector<VkSurfaceFormatKHR> getSurfaceFormatsKHR();
+        std::vector<VkPresentModeKHR> getSurfacePresentModesKHR();
+        std::vector<VkQueueFamilyProperties> getQueueFamilyProperties();
+
+        int getGraphicsQueueFamilyIndex();
+        int getPresentQueueFamilyIndex();
+        int getComputeQueueFamilyIndex();
     };
 } // namespace fillcan

@@ -19,7 +19,7 @@ namespace fillcan {
         std::unique_ptr<DevicePool> upDevicePool;
 
       public:
-        Fillcan(const char* pApplicationName, uint32_t applicationVersion, unsigned int windowWidth, unsigned int windowHeight);
+        Fillcan(const char* pApplicationName, uint32_t applicationVersion, unsigned int windowWidth, unsigned int windowHeight, VkPhysicalDeviceFeatures requiredDeviceFeatures = {});
         ~Fillcan();
         Fillcan(const Fillcan&) = delete;
         Fillcan& operator=(const Fillcan&) = delete;

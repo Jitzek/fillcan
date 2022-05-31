@@ -18,6 +18,7 @@ namespace fillcan {
         unsigned int applicationVersion;
         std::vector<const char*> requiredLayers;
         std::vector<const char*> requiredExtensions;
+        VkDebugUtilsMessengerEXT debugMessenger;
 
         bool checkValidationLayerSupport(std::vector<const char*> layers);
         bool checkExtensionSupport(std::vector<const char*> extensions);
@@ -29,6 +30,6 @@ namespace fillcan {
         Instance(const Instance&) = delete;
         Instance& operator=(const Instance&) = delete;
 
-        VkInstance getInstance();
+        VkInstance getInstanceHandle();
     };
 } // namespace fillcan

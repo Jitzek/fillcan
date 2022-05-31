@@ -1,7 +1,8 @@
 #pragma once
 
 // fillcan
-#include "fillcan/queue.hpp"
+#include <fillcan/queue.hpp>
+
 // vulkan
 #include "vulkan/vulkan_core.h"
 
@@ -23,7 +24,13 @@ namespace fillcan {
         std::unique_ptr<Queue> upPresentQueue;
         std::unique_ptr<Queue> upComputeQueue;
       public:
-        LogicalDevice(PhysicalDevice* pPhysicalDevice);
+        LogicalDevice(PhysicalDevice* pPhysicalDevice, VkPhysicalDeviceFeatures features = {});
         ~LogicalDevice();
+
+        VkDevice getLogicalDeviceHandle();
+        
+        Queue* getGraphicsQueue();
+        Queue* getPresentQueue();
+        Queue* getComputeQueue();
     };
 } // namespace fillcan
