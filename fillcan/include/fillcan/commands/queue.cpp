@@ -32,45 +32,8 @@ namespace fillcan {
         return this->recordings.back();
     }
 
-    // bool Queue::submitRecordings(std::vector<CommandRecording*> pCommandRecordings, VkFence fence) {
-    //     std::cout << "\n";
-    //     std::vector<VkSubmitInfo> submitInfos = {};
-    //     std::vector<VkCommandBuffer*> commandBufferHandlesVector = {};
-    //     for (CommandRecording* pCommandRecording : pCommandRecordings) {
-    //         VkSubmitInfo submitInfo = {};
-    //         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    //         submitInfo.pNext = nullptr;
-    //         submitInfo.waitSemaphoreCount = pCommandRecording->waitSemaphores.size();
-    //         submitInfo.pWaitSemaphores = pCommandRecording->waitSemaphores.data();
-    //         submitInfo.pWaitDstStageMask = &pCommandRecording->waitDstStageMask;
-    //         const unsigned int commandBufferHandleCount = pCommandRecording->pPrimaryCommandBuffers.size() +
-    //         pCommandRecording->pSecondaryCommandBuffers.size();
-    //         // This is bad practice, but it's the only way I could find where the handles didnt change address
-    //         VkCommandBuffer* commandBufferHandles = new VkCommandBuffer[commandBufferHandleCount];
-    //         commandBufferHandlesVector.push_back(commandBufferHandles);
-    //         int i = 0;
-    //         for (std::shared_ptr<CommandBuffer>& spCommandBuffer : pCommandRecording->pPrimaryCommandBuffers) {
-    //             commandBufferHandles[i++] = spCommandBuffer->getCommandBufferHandle();
-    //         }
-    //         for (std::shared_ptr<CommandBuffer>& spCommandBuffer : pCommandRecording->pSecondaryCommandBuffers) {
-    //             commandBufferHandles[i++] = spCommandBuffer->getCommandBufferHandle();
-    //         }
-    //         submitInfo.commandBufferCount = commandBufferHandleCount;
-    //         submitInfo.pCommandBuffers = commandBufferHandles;
-    //         submitInfo.signalSemaphoreCount = pCommandRecording->signalSemaphores.size();
-    //         submitInfo.pSignalSemaphores = pCommandRecording->signalSemaphores.data();
-    //         submitInfos.push_back(submitInfo);
-    //     }
-    //     return vkQueueSubmit(this->hQueue, submitInfos.size(), submitInfos.data(), fence) == VK_SUCCESS ? true : false;
-    //     for (VkCommandBuffer* commandBufferHandles : commandBufferHandlesVector) {
-    //         delete[] commandBufferHandles;
-    //     }
-    // }
-
     bool Queue::submitRecordings(std::vector<CommandRecording*> pCommandRecordings, VkFence fence) {
-        std::cout << "\n";
-        std::vector<VkSubmitInfo> submitInfos = {};
-        std::vector<VkCommandBuffer*> commandBufferHandlesVector = {};
+        bool success = true;
         for (CommandRecording* pCommandRecording : pCommandRecordings) {
             VkSubmitInfo submitInfo = {};
             submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -78,27 +41,19 @@ namespace fillcan {
             submitInfo.waitSemaphoreCount = pCommandRecording->waitSemaphores.size();
             submitInfo.pWaitSemaphores = pCommandRecording->waitSemaphores.data();
             submitInfo.pWaitDstStageMask = &pCommandRecording->waitDstStageMask;
-            const unsigned int commandBufferHandleCount =
-                pCommandRecording->pPrimaryCommandBuffers.size() + pCommandRecording->pSecondaryCommandBuffers.size();
-            // This is bad practice, but it's the only way I could find where the handles didnt change address
-            VkCommandBuffer* commandBufferHandles = new VkCommandBuffer[commandBufferHandleCount];
-            commandBufferHandlesVector.push_back(commandBufferHandles);
+            std::vector<VkCommandBuffer> commandBufferHandles = {};
             int i = 0;
             for (std::shared_ptr<CommandBuffer>& spCommandBuffer : pCommandRecording->pPrimaryCommandBuffers) {
-                commandBufferHandles[i++] = spCommandBuffer->getCommandBufferHandle();
+                commandBufferHandles.push_back(spCommandBuffer->getCommandBufferHandle());
             }
             for (std::shared_ptr<CommandBuffer>& spCommandBuffer : pCommandRecording->pSecondaryCommandBuffers) {
-                commandBufferHandles[i++] = spCommandBuffer->getCommandBufferHandle();
+                commandBufferHandles.push_back(spCommandBuffer->getCommandBufferHandle());
             }
-            submitInfo.commandBufferCount = commandBufferHandleCount;
-            submitInfo.pCommandBuffers = commandBufferHandles;
+            submitInfo.commandBufferCount = commandBufferHandles.size();
+            submitInfo.pCommandBuffers = commandBufferHandles.data();
             submitInfo.signalSemaphoreCount = pCommandRecording->signalSemaphores.size();
             submitInfo.pSignalSemaphores = pCommandRecording->signalSemaphores.data();
-            submitInfos.push_back(submitInfo);
-        }
-        bool success = vkQueueSubmit(this->hQueue, submitInfos.size(), submitInfos.data(), fence) == VK_SUCCESS ? true : false;
-        for (VkCommandBuffer* commandBufferHandles : commandBufferHandlesVector) {
-            delete[] commandBufferHandles;
+            success = success && vkQueueSubmit(this->hQueue, 1, &submitInfo, fence) == VK_SUCCESS ? true : false;
         }
         return success;
     }
