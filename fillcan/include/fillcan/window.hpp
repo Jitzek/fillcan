@@ -4,7 +4,7 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include <fillcan/instance.hpp>
+#include <fillcan/instance/instance.hpp>
 
 // std
 #include <string>

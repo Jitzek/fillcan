@@ -7,7 +7,6 @@
 #include <cstddef>
 #include <string>
 #include <vector>
-
 #include <iostream>
 
 namespace fillcan {
@@ -30,6 +29,6 @@ namespace fillcan {
         Instance(const Instance&) = delete;
         Instance& operator=(const Instance&) = delete;
 
-        VkInstance getInstanceHandle();
+        const VkInstance getInstanceHandle() const;
     };
 } // namespace fillcan

@@ -1,15 +1,5 @@
-// vulkan
-#include "vulkan/vulkan_core.h"
-
 // fillcan
 #include <fillcan/window.hpp>
-#include <fillcan/instance.hpp>
-
-// glfw
-#include "GLFW/glfw3.h"
-
-// std
-#include <vector>
 
 namespace fillcan {
     Window::Window(unsigned int width, unsigned int height, std::string name) : width{width}, height{height}, name{name} { initWindow(); }

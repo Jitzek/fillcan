@@ -1,15 +1,9 @@
-// vulkan
-#include "vulkan/vulkan_core.h"
-
 // fillcan
-#include <cstddef>
-#include <fillcan/instance.hpp>
+#include <fillcan/instance/instance.hpp>
 
 // std
 #include <cstring>
-#include <iostream>
 #include <stdexcept>
-#include <vector>
 
 namespace fillcan {
     // Local callbacks
@@ -116,6 +110,6 @@ namespace fillcan {
     }
     bool Instance::checkExtensionSupport(std::vector<const char*> extensions) { return true; }
 
-    VkInstance Instance::getInstanceHandle() { return this->hInstance; }
+    const VkInstance Instance::getInstanceHandle() const { return this->hInstance; }
 
 } // namespace fillcan

@@ -1,12 +1,9 @@
-// vulkan
-#include "vulkan/vulkan_core.h"
-
 // fillcan
-#include <fillcan/logical_device.hpp>
+#include <fillcan/commands/queue.hpp>
+#include <fillcan/instance/logical_device.hpp>
 
 // std
 #include <algorithm>
-#include <memory>
 #include <set>
 #include <stdexcept>
 #include <vector>
@@ -63,18 +60,11 @@ namespace fillcan {
         vkDestroyDevice(this->hLogicalDevice, nullptr);
     }
 
-    VkDevice LogicalDevice::getLogicalDeviceHandle() {
-        return this->hLogicalDevice;
-    }
-        
-    Queue* LogicalDevice::getGraphicsQueue() {
-        return this->upGraphicsQueue.get();
-    }
-    Queue* LogicalDevice::getPresentQueue() {
-        return this->upPresentQueue.get();
-    }
-    Queue* LogicalDevice::getComputeQueue() {
-        return this->upComputeQueue.get();
-    }
+    const VkDevice LogicalDevice::getLogicalDeviceHandle() const { return this->hLogicalDevice; }
+    const PhysicalDevice* LogicalDevice::getPhysicalDevice() const { return this->pPhysicalDevice; }
+
+    Queue* LogicalDevice::getGraphicsQueue() const { return this->upGraphicsQueue.get(); }
+    Queue* LogicalDevice::getPresentQueue() const { return this->upPresentQueue.get(); }
+    Queue* LogicalDevice::getComputeQueue() const { return this->upComputeQueue.get(); }
 
 } // namespace fillcan

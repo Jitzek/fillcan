@@ -1,19 +1,14 @@
 #pragma once
 
-// fillcan
-#include <fillcan/queue.hpp>
-
 // vulkan
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include <fillcan/physical_device.hpp>
-#include <fillcan/queue.hpp>
+#include <fillcan/commands/queue.hpp>
+#include <fillcan/instance/physical_device.hpp>
 
 // std
 #include <memory>
-
-// std
 
 namespace fillcan {
     class LogicalDevice {
@@ -27,10 +22,11 @@ namespace fillcan {
         LogicalDevice(PhysicalDevice* pPhysicalDevice, VkPhysicalDeviceFeatures features = {});
         ~LogicalDevice();
 
-        VkDevice getLogicalDeviceHandle();
+        const VkDevice getLogicalDeviceHandle() const;
+        const PhysicalDevice* getPhysicalDevice() const;
         
-        Queue* getGraphicsQueue();
-        Queue* getPresentQueue();
-        Queue* getComputeQueue();
+        Queue* getGraphicsQueue() const;
+        Queue* getPresentQueue() const;
+        Queue* getComputeQueue() const;
     };
 } // namespace fillcan

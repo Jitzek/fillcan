@@ -9,14 +9,14 @@ project(
 file(GLOB SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/*.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/**/*.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/**/*.cpp
-    # ${CMAKE_CURRENT_SOURCE_DIR}/include/vulkan/*.cpp
-    # ${CMAKE_CURRENT_SOURCE_DIR}/include/vulkan/*.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib/glm/glm/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib/glm/glm/*.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/include/**/*.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/include/**/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/include/**/**/*.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/include/**/**/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/glm/glm/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/glm/glm/*.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/glfw/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib/glfw/*.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/glfw/*.hpp
 )
 
 ## Make Library

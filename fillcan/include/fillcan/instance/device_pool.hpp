@@ -1,10 +1,10 @@
 #pragma once
 
 // fillcan
-#include <fillcan/instance.hpp>
-#include <fillcan/logical_device.hpp>
+#include <fillcan/instance/instance.hpp>
+#include <fillcan/instance/logical_device.hpp>
+#include <fillcan/instance/physical_device.hpp>
 #include <fillcan/window.hpp>
-#include <fillcan/physical_device.hpp>
 
 // std
 #include <memory>
@@ -26,5 +26,6 @@ namespace fillcan {
 
         std::vector<PhysicalDevice> getSupportedPhysicalDevices();
         LogicalDevice* selectDevice(unsigned int deviceIndex);
+        LogicalDevice* getCurrentDevice();
     };
 } // namespace fillcan

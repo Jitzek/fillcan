@@ -1,9 +1,10 @@
 #pragma once
 
 // fillcan
-#include <fillcan/device_pool.hpp>
-#include <fillcan/physical_device.hpp>
-#include <fillcan/instance.hpp>
+#include "fillcan/commands/command_pool.hpp"
+#include <fillcan/instance/device_pool.hpp>
+#include <fillcan/instance/physical_device.hpp>
+#include <fillcan/instance/instance.hpp>
 #include <fillcan/window.hpp>
 
 // std
@@ -27,6 +28,8 @@ namespace fillcan {
         void MainLoop(std::function<void()> callback);
 
         const std::vector<PhysicalDevice> getSupportedPhysicalDevices() const;
-        void selectDevice(unsigned int deviceIndex = 0);
+        LogicalDevice* selectDevice(unsigned int deviceIndex = 0);
+
+        LogicalDevice* getCurrentDevice();
     };
 } // namespace fillcan

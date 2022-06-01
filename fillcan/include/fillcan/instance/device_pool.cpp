@@ -1,13 +1,13 @@
-// fillcan
-#include "fillcan/fillcan.hpp"
-#include "fillcan/logical_device.hpp"
-#include "fillcan/physical_device.hpp"
+// vulkan
 #include "vulkan/vulkan_core.h"
+
+// fillcan
+#include <fillcan/fillcan.hpp>
+#include <fillcan/instance/device_pool.hpp>
+
+// std
 #include <algorithm>
-#include <fillcan/device_pool.hpp>
 #include <iostream>
-#include <memory>
-#include <vector>
 
 namespace fillcan {
     DevicePool::DevicePool(Instance* pInstance, Window* pWindow, std::vector<const char*> requiredDeviceExtensions,
@@ -87,4 +87,6 @@ namespace fillcan {
         this->upCurrentLogicalDevice = std::make_unique<LogicalDevice>(&this->supportedPhysicalDevices[deviceIndex]);
         return this->upCurrentLogicalDevice.get();
     }
+
+    LogicalDevice* DevicePool::getCurrentDevice() { return this->upCurrentLogicalDevice.get(); }
 } // namespace fillcan

@@ -4,8 +4,8 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include <fillcan/instance.hpp>
-#include "fillcan/window.hpp"
+#include <fillcan/instance/instance.hpp>
+#include <fillcan/window.hpp>
 
 // std
 #include <vector>
@@ -28,19 +28,19 @@ namespace fillcan {
         PhysicalDevice(VkPhysicalDevice hPhysicalDevice, Window* pWindow, std::vector<const char *> requiredExtensions, VkPhysicalDeviceFeatures requiredFeatures = {});
         ~PhysicalDevice();
 
-        VkPhysicalDevice getPhysicalDeviceHandle();
+        const VkPhysicalDevice getPhysicalDeviceHandle() const;
         Window* getWindow();
 
         const std::vector<const char*>& getRequiredExtensions() const;
         bool areExtensionsSupported();
         const VkPhysicalDeviceFeatures& getRequiredFeatures() const;
         bool areFeaturesSupported();
-        VkPhysicalDeviceFeatures getFeatures();
-        VkPhysicalDeviceProperties getProperties();
-        VkSurfaceCapabilitiesKHR getSurfaceCapabilitiesKHR();
-        std::vector<VkSurfaceFormatKHR> getSurfaceFormatsKHR();
-        std::vector<VkPresentModeKHR> getSurfacePresentModesKHR();
-        std::vector<VkQueueFamilyProperties> getQueueFamilyProperties();
+        const VkPhysicalDeviceFeatures getFeatures() const;
+        const VkPhysicalDeviceProperties getProperties() const;
+        const VkSurfaceCapabilitiesKHR getSurfaceCapabilitiesKHR() const;
+        const std::vector<VkSurfaceFormatKHR> getSurfaceFormatsKHR() const;
+        const std::vector<VkPresentModeKHR> getSurfacePresentModesKHR() const;
+        const std::vector<VkQueueFamilyProperties> getQueueFamilyProperties() const;
 
         int getGraphicsQueueFamilyIndex();
         int getPresentQueueFamilyIndex();

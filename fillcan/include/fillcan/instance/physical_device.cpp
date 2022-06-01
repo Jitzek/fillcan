@@ -1,12 +1,11 @@
-#include "fillcan/physical_device.hpp"
-#include "fillcan/window.hpp"
-#include "vulkan/vulkan_core.h"
+// fillcan
+#include <fillcan/instance/physical_device.hpp>
+
+// std
 #include <array>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
-#include <fillcan/physical_device.hpp>
-#include <vector>
 
 namespace fillcan {
     PhysicalDevice::PhysicalDevice(VkPhysicalDevice hPhysicalDevice, Window* pWindow, std::vector<const char*> requiredExtensions,
@@ -19,11 +18,11 @@ namespace fillcan {
 
     PhysicalDevice::~PhysicalDevice() {}
 
-    VkPhysicalDevice PhysicalDevice::getPhysicalDeviceHandle() { return this->hPhysicalDevice; }
+    const VkPhysicalDevice PhysicalDevice::getPhysicalDeviceHandle() const { return this->hPhysicalDevice; }
     Window* PhysicalDevice::getWindow() { return this->pWindow; }
 
     const std::vector<const char*>& PhysicalDevice::getRequiredExtensions() const { return this->requiredExtensions; }
- 
+
     bool PhysicalDevice::areExtensionsSupported() {
         unsigned int extensionCount;
         vkEnumerateDeviceExtensionProperties(this->hPhysicalDevice, nullptr, &extensionCount, nullptr);
@@ -140,25 +139,25 @@ namespace fillcan {
         }
     }
 
-    VkPhysicalDeviceFeatures PhysicalDevice::getFeatures() {
+    const VkPhysicalDeviceFeatures PhysicalDevice::getFeatures() const {
         VkPhysicalDeviceFeatures features;
         vkGetPhysicalDeviceFeatures(this->hPhysicalDevice, &features);
         return features;
     }
 
-    VkPhysicalDeviceProperties PhysicalDevice::getProperties() {
+    const VkPhysicalDeviceProperties PhysicalDevice::getProperties() const {
         VkPhysicalDeviceProperties properties;
         vkGetPhysicalDeviceProperties(this->hPhysicalDevice, &properties);
         return properties;
     }
 
-    VkSurfaceCapabilitiesKHR PhysicalDevice::getSurfaceCapabilitiesKHR() {
+    const VkSurfaceCapabilitiesKHR PhysicalDevice::getSurfaceCapabilitiesKHR() const {
         VkSurfaceCapabilitiesKHR surfaceCapabilities;
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(this->hPhysicalDevice, this->pWindow->getSurface(), &surfaceCapabilities);
         return surfaceCapabilities;
     }
 
-    std::vector<VkSurfaceFormatKHR> PhysicalDevice::getSurfaceFormatsKHR() {
+    const std::vector<VkSurfaceFormatKHR> PhysicalDevice::getSurfaceFormatsKHR() const {
         uint32_t surfaceFormatCount = 0;
         vkGetPhysicalDeviceSurfaceFormatsKHR(this->hPhysicalDevice, this->pWindow->getSurface(), &surfaceFormatCount, nullptr);
         if (surfaceFormatCount == 0) {
@@ -169,7 +168,7 @@ namespace fillcan {
         return surfaceFormats;
     }
 
-    std::vector<VkPresentModeKHR> PhysicalDevice::getSurfacePresentModesKHR() {
+    const std::vector<VkPresentModeKHR> PhysicalDevice::getSurfacePresentModesKHR() const {
         uint32_t presentModeCount;
         vkGetPhysicalDeviceSurfacePresentModesKHR(this->hPhysicalDevice, this->pWindow->getSurface(), &presentModeCount, nullptr);
         if (presentModeCount == 0) {
@@ -180,7 +179,7 @@ namespace fillcan {
         return presentModes;
     }
 
-    std::vector<VkQueueFamilyProperties> PhysicalDevice::getQueueFamilyProperties() {
+    const std::vector<VkQueueFamilyProperties> PhysicalDevice::getQueueFamilyProperties() const {
         uint32_t queueFamilyPropertyCount;
         vkGetPhysicalDeviceQueueFamilyProperties(this->hPhysicalDevice, &queueFamilyPropertyCount, nullptr);
         if (queueFamilyPropertyCount == 0) {
