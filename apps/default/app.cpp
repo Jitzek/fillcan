@@ -30,8 +30,18 @@ namespace app {
         fillcan::CommandRecording presentRecording = currentDevice->getPresentQueue()->createRecording(2, 1);
         fillcan::CommandRecording computRecording = currentDevice->getComputeQueue()->createRecording(2, 1);
 
+        for (std::shared_ptr<fillcan::CommandBuffer>& pCommandBuffer : graphicsRecording.pPrimaryCommandBuffers) {
+            std::cout << pCommandBuffer->begin() << "\n";
+        }
+        for (std::shared_ptr<fillcan::CommandBuffer>& pCommandBuffer : graphicsRecording.pSecondaryCommandBuffers) {
+            VkCommandBufferInheritanceInfo test = {.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO};
+            std::cout << pCommandBuffer->begin(0, &test) << "\n";
+        }
+        std::cout << graphicsRecording.endAll() << "\n";
         currentDevice->getGraphicsQueue()->submitRecordings({&graphicsRecording}, nullptr);
-        // currentDevice->getGraphicsQueue()->freeRecording(graphicsRecording);
+        currentDevice->getGraphicsQueue()->waitIdle();
+        graphicsRecording.resetAll();
+        currentDevice->getGraphicsQueue()->freeRecording(graphicsRecording);
 
         upFillcan->MainLoop(std::bind(&App::update, this));
     }

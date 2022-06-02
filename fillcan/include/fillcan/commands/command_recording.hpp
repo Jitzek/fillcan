@@ -10,24 +10,17 @@
 #include <vector>
 
 namespace fillcan {
+    class Queue;
     struct CommandRecording {
+        Queue* queue;
         std::vector<std::shared_ptr<CommandBuffer>> pPrimaryCommandBuffers = {};
         std::vector<std::shared_ptr<CommandBuffer>> pSecondaryCommandBuffers = {};
         std::vector<VkSemaphore> waitSemaphores = {};
         VkPipelineStageFlags waitDstStageMask = 0;
         std::vector<VkSemaphore> signalSemaphores = {};
 
-        bool resetCommandBuffers(VkCommandBufferResetFlags flags = 0) {
-            bool succesfullReset = true;
-            for (std::shared_ptr<CommandBuffer> primaryCommandBuffer : this->pPrimaryCommandBuffers) {
-                if (!primaryCommandBuffer->reset(flags))
-                    succesfullReset = false;
-            }
-            for (std::shared_ptr<CommandBuffer> secondaryCommandBuffer : this->pSecondaryCommandBuffers) {
-                if (!secondaryCommandBuffer->reset(flags))
-                    succesfullReset = false;
-            }
-            return succesfullReset;
-        }
+        bool endAll();
+        bool submitAll(VkFence fence);
+        bool resetAll(VkCommandBufferResetFlags flags = 0);
     };
 } // namespace fillcan

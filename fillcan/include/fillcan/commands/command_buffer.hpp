@@ -20,8 +20,8 @@ namespace fillcan {
         const VkCommandBuffer getCommandBufferHandle() const;
         const VkCommandBufferLevel getLevel() const;
 
-        bool begin(VkCommandBufferUsageFlags flags, VkCommandBufferInheritanceInfo* pSecondaryCommandBufferInheritanceInfo);
+        bool begin(VkCommandBufferUsageFlags flags = 0, VkCommandBufferInheritanceInfo* pSecondaryCommandBufferInheritanceInfo = nullptr);
         bool end();
-        bool reset(VkCommandBufferResetFlags flags);
+        bool reset(VkCommandBufferResetFlags flags = 0);
     };
 } // namespace fillcan

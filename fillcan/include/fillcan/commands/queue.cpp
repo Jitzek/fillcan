@@ -46,9 +46,10 @@ namespace fillcan {
             for (std::shared_ptr<CommandBuffer>& spCommandBuffer : pCommandRecording->pPrimaryCommandBuffers) {
                 commandBufferHandles.push_back(spCommandBuffer->getCommandBufferHandle());
             }
-            for (std::shared_ptr<CommandBuffer>& spCommandBuffer : pCommandRecording->pSecondaryCommandBuffers) {
-                commandBufferHandles.push_back(spCommandBuffer->getCommandBufferHandle());
-            }
+            // Secondary Command Buffers shouldn't be submitted
+            // for (std::shared_ptr<CommandBuffer>& spCommandBuffer : pCommandRecording->pSecondaryCommandBuffers) {
+            //     commandBufferHandles.push_back(spCommandBuffer->getCommandBufferHandle());
+            // }
             submitInfo.commandBufferCount = commandBufferHandles.size();
             submitInfo.pCommandBuffers = commandBufferHandles.data();
             submitInfo.signalSemaphoreCount = pCommandRecording->signalSemaphores.size();
