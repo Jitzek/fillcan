@@ -1,10 +1,14 @@
+// vulkan
+#include "vulkan/vulkan_core.h"
+
 // fillcan
 #include "fillcan/commands/command_buffer.hpp"
 #include "fillcan/commands/command_pool.hpp"
 #include "fillcan/commands/command_recording.hpp"
-#include "vulkan/vulkan_core.h"
 #include <fillcan/commands/queue.hpp>
 #include <fillcan/instance/logical_device.hpp>
+
+// std
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -46,10 +50,6 @@ namespace fillcan {
             for (std::shared_ptr<CommandBuffer>& spCommandBuffer : pCommandRecording->pPrimaryCommandBuffers) {
                 commandBufferHandles.push_back(spCommandBuffer->getCommandBufferHandle());
             }
-            // Secondary Command Buffers shouldn't be submitted
-            // for (std::shared_ptr<CommandBuffer>& spCommandBuffer : pCommandRecording->pSecondaryCommandBuffers) {
-            //     commandBufferHandles.push_back(spCommandBuffer->getCommandBufferHandle());
-            // }
             submitInfo.commandBufferCount = commandBufferHandles.size();
             submitInfo.pCommandBuffers = commandBufferHandles.data();
             submitInfo.signalSemaphoreCount = pCommandRecording->signalSemaphores.size();
