@@ -67,11 +67,12 @@ namespace app {
         descriptorPoolBuilder.setFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT);
         descriptorPoolBuilder.addSet(descriptorSetLayouts[0].get(), 3);
         descriptorPoolBuilder.addSet(descriptorSetLayouts[1].get(), 1);
-        std::unique_ptr<fillcan::DescriptorPool> pool = descriptorPoolBuilder.getResult();
-        std::cout << (pool->freeDescriptorSets() ? "Freed descriptor sets" : "Failed to free descriptor sets") << "\n";
-        std::cout << (pool->reset() ? "Reset pool" : "Failed to reset pool") << "\n";
+        std::unique_ptr<fillcan::DescriptorPool> descriptorPool = descriptorPoolBuilder.getResult();
+        std::cout << (descriptorPool->freeDescriptorSets() ? "Freed descriptor sets" : "Failed to free descriptor sets") << "\n";
+        std::cout << (descriptorPool->reset() ? "Reset pool" : "Failed to reset pool") << "\n";
 
-        fillcan::ShaderModule shaderModule = fillcan::ShaderModule("", std::move(descriptorSetLayouts), std::move(pool));
+        std::vector<char> code = {'t', 'e', 's', 't'};
+        fillcan::ShaderModule shaderModule = fillcan::ShaderModule(currentDevice, code, std::move(descriptorSetLayouts), std::move(descriptorPool));
 
         upFillcan->MainLoop(std::bind(&App::update, this));
     }

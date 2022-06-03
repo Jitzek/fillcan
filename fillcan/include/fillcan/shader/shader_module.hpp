@@ -22,7 +22,7 @@ namespace fillcan {
         std::unique_ptr<DescriptorPool> upDescriptorPool = nullptr;
         // TODO: pushconstants
       public:
-        ShaderModule(std::string code, std::vector<std::unique_ptr<DescriptorSetLayout>> upDescriptorSetLayouts,
+        ShaderModule(LogicalDevice* pLogicalDevice, std::vector<char>& code, std::vector<std::unique_ptr<DescriptorSetLayout>> upDescriptorSetLayouts,
                      std::unique_ptr<DescriptorPool> upDescriptorPool /*, TODO: pushConstants*/);
         ~ShaderModule();
 
