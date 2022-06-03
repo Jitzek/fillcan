@@ -8,6 +8,7 @@
 // std
 #include <utility>
 #include <vector>
+#include <memory>
 
 namespace fillcan {
     class LogicalDevice;
@@ -29,6 +30,6 @@ namespace fillcan {
         void setLogicalDevice(LogicalDevice* pLogicalDevice);
         void setFlags(VkDescriptorPoolCreateFlags flags);
         void addSet(DescriptorSetLayout* pDescriptorSetLayout, unsigned int amount);
-        DescriptorPool getResult();
+        std::unique_ptr<DescriptorPool> getResult();
     };
 } // namespace fillcan

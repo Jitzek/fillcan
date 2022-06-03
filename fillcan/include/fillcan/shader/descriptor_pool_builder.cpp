@@ -9,6 +9,7 @@
 #include <fillcan/shader/descriptor_set_layout.hpp>
 
 // std
+#include <memory>
 #include <vector>
 
 namespace fillcan {
@@ -41,14 +42,15 @@ namespace fillcan {
         }
     }
 
-    DescriptorPool DescriptorPoolBuilder::getResult() {
+    std::unique_ptr<DescriptorPool> DescriptorPoolBuilder::getResult() {
         std::vector<VkDescriptorPoolSize> poolSizes = {};
         poolSizes.reserve(this->descriptorsAndCounts.size());
         for (std::pair<VkDescriptorType, unsigned int>& descriptorAndCount : this->descriptorsAndCounts) {
             poolSizes.emplace_back((VkDescriptorPoolSize){.type = descriptorAndCount.first, .descriptorCount = descriptorAndCount.second});
         }
-        DescriptorPool descriptorPool = DescriptorPool(this->pLogicalDevice, this->flags, this->maxSets, poolSizes);
-        descriptorPool.allocateDescriptorSets(this->pDescriptorSetLayouts);
-        return descriptorPool;
+        std::unique_ptr<DescriptorPool> upDescriptorPool =
+            std::make_unique<DescriptorPool>(this->pLogicalDevice, this->flags, this->maxSets, poolSizes);
+        upDescriptorPool->allocateDescriptorSets(this->pDescriptorSetLayouts);
+        return std::move(upDescriptorPool);
     }
 } // namespace fillcan

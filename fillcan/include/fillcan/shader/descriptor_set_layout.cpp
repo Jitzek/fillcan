@@ -10,7 +10,7 @@
 #include <vector>
 
 namespace fillcan {
-    DescriptorSetLayout::DescriptorSetLayout(LogicalDevice* pLogicalDevice, std::vector<VkDescriptorSetLayoutBinding> bindings)
+    DescriptorSetLayout::DescriptorSetLayout(LogicalDevice* pLogicalDevice, std::vector<VkDescriptorSetLayoutBinding> bindings, unsigned int amount)
         : pLogicalDevice(pLogicalDevice), bindings(bindings) {
         VkDescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo = {};
         descriptorSetLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;

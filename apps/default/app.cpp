@@ -3,13 +3,14 @@
 #include "fillcan/shader/descriptor_pool_builder.hpp"
 #include "fillcan/shader/descriptor_set_layout.hpp"
 #include "fillcan/shader/descriptor_set_layout_builder.hpp"
+#include "fillcan/shader/shader_module.hpp"
 #include "vulkan/vulkan_core.h"
 
 #include "app.hpp"
 
 // fillcan
-#include <fillcan/commands/queue.hpp>
 #include <fillcan/commands/command_recording.hpp>
+#include <fillcan/commands/queue.hpp>
 
 // std
 #include <iostream>
@@ -18,8 +19,7 @@
 #include <vector>
 
 namespace app {
-    App::App() {
-    }
+    App::App() {}
     App::~App() {}
 
     void App::run() {
@@ -48,25 +48,30 @@ namespace app {
         graphicsRecording.resetAll();
         currentDevice->getGraphicsQueue()->freeRecording(graphicsRecording);
 
+        std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> descriptorSetLayouts = {};
+
         fillcan::DescriptorSetLayoutBuilder descriptorSetLayoutBuilder{};
         descriptorSetLayoutBuilder.setLogicalDevice(currentDevice);
         descriptorSetLayoutBuilder.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT);
-        fillcan::DescriptorSetLayout layout1 = descriptorSetLayoutBuilder.getResult();
+        descriptorSetLayouts.push_back(descriptorSetLayoutBuilder.getResult());
 
         descriptorSetLayoutBuilder.reset();
         descriptorSetLayoutBuilder.setLogicalDevice(currentDevice);
         descriptorSetLayoutBuilder.addBinding(0, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT);
-        fillcan::DescriptorSetLayout layout2 = descriptorSetLayoutBuilder.getResult();
+        descriptorSetLayouts.push_back(descriptorSetLayoutBuilder.getResult());
 
+        // descriptorSetLayouts.push_back(std::move(layout1));
 
         fillcan::DescriptorPoolBuilder descriptorPoolBuilder = fillcan::DescriptorPoolBuilder();
         descriptorPoolBuilder.setLogicalDevice(currentDevice);
         descriptorPoolBuilder.setFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT);
-        descriptorPoolBuilder.addSet(&layout2, 1);
-        descriptorPoolBuilder.addSet(&layout1, 3);
-        fillcan::DescriptorPool pool = descriptorPoolBuilder.getResult();
-        std::cout << (pool.freeDescriptorSets() ? "Freed descriptor sets" : "Failed to free descriptor sets") << "\n";
-        std::cout << (pool.reset() ? "Reset pool" : "Failed to reset pool") << "\n";
+        descriptorPoolBuilder.addSet(descriptorSetLayouts[0].get(), 3);
+        descriptorPoolBuilder.addSet(descriptorSetLayouts[1].get(), 1);
+        std::unique_ptr<fillcan::DescriptorPool> pool = descriptorPoolBuilder.getResult();
+        std::cout << (pool->freeDescriptorSets() ? "Freed descriptor sets" : "Failed to free descriptor sets") << "\n";
+        std::cout << (pool->reset() ? "Reset pool" : "Failed to reset pool") << "\n";
+
+        fillcan::ShaderModule shaderModule = fillcan::ShaderModule("", std::move(descriptorSetLayouts), std::move(pool));
 
         upFillcan->MainLoop(std::bind(&App::update, this));
     }

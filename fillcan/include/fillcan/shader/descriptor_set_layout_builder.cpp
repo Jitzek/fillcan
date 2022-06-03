@@ -7,6 +7,7 @@
 #include <fillcan/shader/descriptor_set_layout_builder.hpp>
 
 // std
+#include <memory>
 #include <vector>
 
 namespace fillcan {
@@ -25,7 +26,9 @@ namespace fillcan {
                                            .pImmutableSamplers = immutableSamplers.size() > 0 ? immutableSamplers.data() : nullptr});
     }
 
-    DescriptorSetLayout DescriptorSetLayoutBuilder::getResult() { return DescriptorSetLayout(this->pLogicalDevice, this->bindings); }
+    std::unique_ptr<DescriptorSetLayout> DescriptorSetLayoutBuilder::getResult() {
+        return std::move(std::make_unique<DescriptorSetLayout>(this->pLogicalDevice, this->bindings));
+    }
 
     void DescriptorSetLayoutBuilder::reset() {
         this->pLogicalDevice = nullptr;

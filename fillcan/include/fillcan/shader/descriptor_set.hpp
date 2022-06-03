@@ -22,9 +22,9 @@ namespace fillcan {
 
         VkDescriptorSet getDescriptorSetHandle();
         DescriptorSetLayout* getLayout();
-        // writeImage
-        // writeBuffer
-        // writeTexelBufferView
-        // copy
+        // TODO: writeImage
+        // TODO: writeBuffer
+        // TODO: writeTexelBufferView
+        // TODO: copy
     };
 } // namespace fillcan

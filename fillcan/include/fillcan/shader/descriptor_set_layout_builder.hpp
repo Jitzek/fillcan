@@ -6,6 +6,7 @@
 // fillcan
 
 // std
+#include <memory>
 #include <vector>
 
 namespace fillcan {
@@ -24,7 +25,7 @@ namespace fillcan {
         void addBinding(unsigned int binding, VkDescriptorType descriptorType, unsigned int descriptorCount, VkShaderStageFlags stageFlags,
                         std::vector<VkSampler> immutableSamplers = {});
 
-        DescriptorSetLayout getResult();
+        std::unique_ptr<DescriptorSetLayout> getResult();
         void reset();
     };
 } // namespace fillcan

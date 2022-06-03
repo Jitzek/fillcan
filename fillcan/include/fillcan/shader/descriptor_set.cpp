@@ -15,6 +15,5 @@ namespace fillcan {
     DescriptorSet::~DescriptorSet() {}
 
     VkDescriptorSet DescriptorSet::getDescriptorSetHandle() { return this->hDescriptorSet; }
-
     DescriptorSetLayout* DescriptorSet::getLayout() { return this->pDescriptorSetLayout; }
 } // namespace fillcan

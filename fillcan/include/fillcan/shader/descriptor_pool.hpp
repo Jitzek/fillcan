@@ -29,7 +29,7 @@ namespace fillcan {
 
         bool allocateDescriptorSets(std::vector<DescriptorSetLayout*> pDescriptorSetLayouts);
 
-        VkDescriptorPool getDescriptorPoolHandle();
+         VkDescriptorPool getDescriptorPoolHandle();
         const std::vector<DescriptorSet>& getDescriptorSets() const;
 
         bool freeDescriptorSets();
