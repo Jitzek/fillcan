@@ -9,6 +9,7 @@
 
 // std
 #include <vector>
+#include <memory>
 
 namespace fillcan {
     class LogicalDevice;
@@ -30,5 +31,10 @@ namespace fillcan {
 
         VkDescriptorPool getDescriptorPoolHandle();
         const std::vector<DescriptorSet>& getDescriptorSets() const;
+
+        bool freeDescriptorSets();
+        bool freeDescriptorSets(std::vector<std::shared_ptr<DescriptorSet>> pDescriptorSets);
+
+        bool reset();
     };
 } // namespace fillcan

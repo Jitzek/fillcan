@@ -15,6 +15,7 @@
 #include <iostream>
 #include <memory>
 #include <thread>
+#include <vector>
 
 namespace app {
     App::App() {
@@ -60,10 +61,12 @@ namespace app {
 
         fillcan::DescriptorPoolBuilder descriptorPoolBuilder = fillcan::DescriptorPoolBuilder();
         descriptorPoolBuilder.setLogicalDevice(currentDevice);
-        descriptorPoolBuilder.setFlags(0);
+        descriptorPoolBuilder.setFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT);
         descriptorPoolBuilder.addSet(&layout2, 1);
         descriptorPoolBuilder.addSet(&layout1, 3);
         fillcan::DescriptorPool pool = descriptorPoolBuilder.getResult();
+        std::cout << (pool.freeDescriptorSets() ? "Freed descriptor sets" : "Failed to free descriptor sets") << "\n";
+        std::cout << (pool.reset() ? "Reset pool" : "Failed to reset pool") << "\n";
 
         upFillcan->MainLoop(std::bind(&App::update, this));
     }

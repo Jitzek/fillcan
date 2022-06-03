@@ -9,8 +9,8 @@
 #include <vector>
 
 namespace fillcan {
-    DescriptorSet::DescriptorSet(LogicalDevice* pLogicalDevice, DescriptorSetLayout* pDescriptorSetLayout)
-        : pLogicalDevice(pLogicalDevice), pDescriptorSetLayout(pDescriptorSetLayout) {}
+    DescriptorSet::DescriptorSet(LogicalDevice* pLogicalDevice, VkDescriptorSet hDescriptorSet, DescriptorSetLayout* pDescriptorSetLayout)
+        : pLogicalDevice(pLogicalDevice), hDescriptorSet(hDescriptorSet), pDescriptorSetLayout(pDescriptorSetLayout) {}
 
     DescriptorSet::~DescriptorSet() {}
 

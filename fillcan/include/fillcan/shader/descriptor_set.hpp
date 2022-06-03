@@ -17,7 +17,7 @@ namespace fillcan {
         DescriptorSetLayout* pDescriptorSetLayout;
 
       public:
-        DescriptorSet(LogicalDevice* pLogicalDevice, DescriptorSetLayout* pDescriptorSetLayout);
+        DescriptorSet(LogicalDevice* pLogicalDevice, VkDescriptorSet hDescriptorSet, DescriptorSetLayout* pDescriptorSetLayout);
         ~DescriptorSet();
 
         VkDescriptorSet getDescriptorSetHandle();
