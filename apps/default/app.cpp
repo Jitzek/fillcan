@@ -1,4 +1,8 @@
 // vulkan
+#include "fillcan/shader/descriptor_pool.hpp"
+#include "fillcan/shader/descriptor_pool_builder.hpp"
+#include "fillcan/shader/descriptor_set_layout.hpp"
+#include "fillcan/shader/descriptor_set_layout_builder.hpp"
 #include "vulkan/vulkan_core.h"
 
 #include "app.hpp"
@@ -42,6 +46,24 @@ namespace app {
         currentDevice->getGraphicsQueue()->waitIdle();
         graphicsRecording.resetAll();
         currentDevice->getGraphicsQueue()->freeRecording(graphicsRecording);
+
+        fillcan::DescriptorSetLayoutBuilder descriptorSetLayoutBuilder{};
+        descriptorSetLayoutBuilder.setLogicalDevice(currentDevice);
+        descriptorSetLayoutBuilder.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT);
+        fillcan::DescriptorSetLayout layout1 = descriptorSetLayoutBuilder.getResult();
+
+        descriptorSetLayoutBuilder.reset();
+        descriptorSetLayoutBuilder.setLogicalDevice(currentDevice);
+        descriptorSetLayoutBuilder.addBinding(0, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT);
+        fillcan::DescriptorSetLayout layout2 = descriptorSetLayoutBuilder.getResult();
+
+
+        fillcan::DescriptorPoolBuilder descriptorPoolBuilder = fillcan::DescriptorPoolBuilder();
+        descriptorPoolBuilder.setLogicalDevice(currentDevice);
+        descriptorPoolBuilder.setFlags(0);
+        descriptorPoolBuilder.addSet(&layout2, 1);
+        descriptorPoolBuilder.addSet(&layout1, 3);
+        fillcan::DescriptorPool pool = descriptorPoolBuilder.getResult();
 
         upFillcan->MainLoop(std::bind(&App::update, this));
     }
