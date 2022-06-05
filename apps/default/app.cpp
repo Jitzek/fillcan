@@ -1,9 +1,4 @@
 // vulkan
-#include "fillcan/shader/descriptor_pool.hpp"
-#include "fillcan/shader/descriptor_pool_builder.hpp"
-#include "fillcan/shader/descriptor_set_layout.hpp"
-#include "fillcan/shader/descriptor_set_layout_builder.hpp"
-#include "fillcan/shader/shader_module.hpp"
 #include "vulkan/vulkan_core.h"
 
 #include "app.hpp"
@@ -11,6 +6,13 @@
 // fillcan
 #include <fillcan/commands/command_recording.hpp>
 #include <fillcan/commands/queue.hpp>
+#include <fillcan/shader/descriptor_pool.hpp>
+#include <fillcan/shader/descriptor_pool_builder.hpp>
+#include <fillcan/shader/descriptor_set_layout.hpp>
+#include <fillcan/shader/descriptor_set_layout_builder.hpp>
+#include <fillcan/shader/shader_module.hpp>
+#include <fillcan/memory/buffer_director.hpp>
+#include <fillcan/memory/buffer.hpp>
 
 // std
 #include <iostream>
@@ -58,6 +60,7 @@ namespace app {
         descriptorSetLayoutBuilder.reset();
         descriptorSetLayoutBuilder.setLogicalDevice(currentDevice);
         descriptorSetLayoutBuilder.addBinding(0, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT);
+        descriptorSetLayoutBuilder.addBinding(1, VK_DESCRIPTOR_TYPE_SAMPLER, 2, VK_SHADER_STAGE_COMPUTE_BIT);
         descriptorSetLayouts.push_back(descriptorSetLayoutBuilder.getResult());
 
         // descriptorSetLayouts.push_back(std::move(layout1));
@@ -73,6 +76,9 @@ namespace app {
 
         std::vector<char> code = {'t', 'e', 's', 't'};
         fillcan::ShaderModule shaderModule = fillcan::ShaderModule(currentDevice, code, std::move(descriptorSetLayouts), std::move(descriptorPool));
+
+        fillcan::BufferDirector bufferDirector = fillcan::BufferDirector(currentDevice);
+        std::unique_ptr<fillcan::Buffer> buffer1 = bufferDirector.makeVertexBuffer(4);
 
         upFillcan->MainLoop(std::bind(&App::update, this));
     }
