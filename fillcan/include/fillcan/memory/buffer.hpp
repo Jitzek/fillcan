@@ -2,7 +2,6 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include <fillcan/memory/memory.hpp>
 
 // std
 #include <cstdint>
@@ -11,6 +10,7 @@
 
 namespace fillcan {
     class LogicalDevice;
+    class Memory;
     class Buffer {
       private:
         LogicalDevice* pLogicalDevice;
@@ -20,11 +20,22 @@ namespace fillcan {
         VkBufferUsageFlags usage;
         VkSharingMode sharingMode;
         std::vector<uint32_t> queueFamilyIndices;
-        std::optional<Memory> memory;
+        Memory* pMemory;
         // TODO: std::vector<BufferViews> bufferViews = {};
       public:
         Buffer(LogicalDevice* pLogicalDevice, VkBufferCreateFlags& flags, VkDeviceSize& size, VkBufferUsageFlags& usage, VkSharingMode& sharingMode,
                std::vector<uint32_t> queueFamilyIndices = {});
         ~Buffer();
+        
+        VkBuffer getBufferHandle();
+
+        const VkBufferCreateFlags& getFlags() const;
+        const VkDeviceSize& getSize() const;
+        const VkBufferUsageFlags& getUsage() const;
+        const VkSharingMode& getSharingMode() const;
+        const std::vector<uint32_t>& getQueueFamilyIndices() const;
+
+        void bindMemory(Memory* pMemory);
+        const Memory* getMemory() const;
     };
 } // namespace fillcan

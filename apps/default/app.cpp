@@ -13,6 +13,7 @@
 #include <fillcan/shader/shader_module.hpp>
 #include <fillcan/memory/buffer_director.hpp>
 #include <fillcan/memory/buffer.hpp>
+#include <fillcan/memory/memory.hpp>
 
 // std
 #include <iostream>
@@ -63,8 +64,6 @@ namespace app {
         descriptorSetLayoutBuilder.addBinding(1, VK_DESCRIPTOR_TYPE_SAMPLER, 2, VK_SHADER_STAGE_COMPUTE_BIT);
         descriptorSetLayouts.push_back(descriptorSetLayoutBuilder.getResult());
 
-        // descriptorSetLayouts.push_back(std::move(layout1));
-
         fillcan::DescriptorPoolBuilder descriptorPoolBuilder = fillcan::DescriptorPoolBuilder();
         descriptorPoolBuilder.setLogicalDevice(currentDevice);
         descriptorPoolBuilder.setFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT);
@@ -79,6 +78,10 @@ namespace app {
 
         fillcan::BufferDirector bufferDirector = fillcan::BufferDirector(currentDevice);
         std::unique_ptr<fillcan::Buffer> buffer1 = bufferDirector.makeVertexBuffer(4);
+
+        fillcan::Memory memory1 = fillcan::Memory(currentDevice, buffer1.get(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+
+        std::cout << memory1.getMemoryHandle() << "\n";
 
         upFillcan->MainLoop(std::bind(&App::update, this));
     }

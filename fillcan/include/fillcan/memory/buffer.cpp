@@ -26,5 +26,17 @@ namespace fillcan {
             throw std::runtime_error("Failed to create buffer");
         }
     }
-    Buffer::~Buffer() {}
+    Buffer::~Buffer() { vkDestroyBuffer(this->pLogicalDevice->getLogicalDeviceHandle(), this->hBuffer, nullptr); }
+
+    VkBuffer Buffer::getBufferHandle() { return this->hBuffer; }
+
+    const VkBufferCreateFlags& Buffer::getFlags() const { return this->flags; }
+
+    const VkDeviceSize& Buffer::getSize() const { return this->size; }
+
+    const VkBufferUsageFlags& Buffer::getUsage() const { return this->usage; }
+
+    const VkSharingMode& Buffer::getSharingMode() const { return this->sharingMode; }
+
+    const std::vector<uint32_t>& Buffer::getQueueFamilyIndices() const { return this->queueFamilyIndices; }
 } // namespace fillcan
