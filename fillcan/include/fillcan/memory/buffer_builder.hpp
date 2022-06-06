@@ -29,7 +29,7 @@ namespace fillcan {
         void setSize(VkDeviceSize size);
         void setUsage(VkBufferUsageFlags usage);
         void setSharingMode(VkSharingMode sharingMode);
-        void setQueueFamilyIndices(std::vector<uint32_t> queueFamilyIndices);
+        void setQueueFamilyIndices(std::vector<uint32_t>& queueFamilyIndices);
 
         std::unique_ptr<Buffer> getResult();
         void reset();

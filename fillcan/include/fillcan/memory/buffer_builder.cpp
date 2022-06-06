@@ -22,7 +22,7 @@ namespace fillcan {
 
     void BufferBuilder::setSharingMode(VkSharingMode sharingMode) { this->sharingMode = sharingMode; }
 
-    void BufferBuilder::setQueueFamilyIndices(std::vector<uint32_t> queueFamilyIndices) { this->queueFamilyIndices = queueFamilyIndices; }
+    void BufferBuilder::setQueueFamilyIndices(std::vector<uint32_t>& queueFamilyIndices) { this->queueFamilyIndices = queueFamilyIndices; }
 
     std::unique_ptr<Buffer> BufferBuilder::getResult() {
         return std::move(

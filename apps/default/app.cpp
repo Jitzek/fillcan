@@ -12,8 +12,11 @@
 #include <fillcan/shader/descriptor_set_layout_builder.hpp>
 #include <fillcan/shader/shader_module.hpp>
 #include <fillcan/memory/buffer_director.hpp>
+#include <fillcan/memory/image_director.hpp>
+#include <fillcan/memory/image.hpp>
 #include <fillcan/memory/buffer.hpp>
 #include <fillcan/memory/memory.hpp>
+
 
 // std
 #include <iostream>
@@ -76,12 +79,15 @@ namespace app {
         std::vector<char> code = {'t', 'e', 's', 't'};
         fillcan::ShaderModule shaderModule = fillcan::ShaderModule(currentDevice, code, std::move(descriptorSetLayouts), std::move(descriptorPool));
 
-        fillcan::BufferDirector bufferDirector = fillcan::BufferDirector(currentDevice);
-        std::unique_ptr<fillcan::Buffer> buffer1 = bufferDirector.makeVertexBuffer(4);
-
+        fillcan::BufferDirector bufferDirector = fillcan::BufferDirector();
+        std::unique_ptr<fillcan::Buffer> buffer1 = bufferDirector.makeVertexBuffer(currentDevice, 4);
         fillcan::Memory memory1 = fillcan::Memory(currentDevice, buffer1.get(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
-
         std::cout << memory1.getMemoryHandle() << "\n";
+
+        fillcan::ImageDirector imageDirector = fillcan::ImageDirector();
+        std::unique_ptr<fillcan::Image> image1 = imageDirector.make2DTexture(currentDevice, 10, 10, VK_SAMPLE_COUNT_1_BIT);
+        fillcan::Memory memory2 = fillcan::Memory(currentDevice, image1.get(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+        std::cout << memory2.getMemoryHandle() << "\n";
 
         upFillcan->MainLoop(std::bind(&App::update, this));
     }

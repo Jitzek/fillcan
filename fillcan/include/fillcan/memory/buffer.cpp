@@ -30,13 +30,20 @@ namespace fillcan {
 
     VkBuffer Buffer::getBufferHandle() { return this->hBuffer; }
 
-    const VkBufferCreateFlags& Buffer::getFlags() const { return this->flags; }
+    VkBufferCreateFlags Buffer::getFlags() { return this->flags; }
 
-    const VkDeviceSize& Buffer::getSize() const { return this->size; }
+    VkDeviceSize Buffer::getSize() { return this->size; }
 
-    const VkBufferUsageFlags& Buffer::getUsage() const { return this->usage; }
+    VkBufferUsageFlags Buffer::getUsage() { return this->usage; }
 
-    const VkSharingMode& Buffer::getSharingMode() const { return this->sharingMode; }
+    VkSharingMode Buffer::getSharingMode() { return this->sharingMode; }
 
     const std::vector<uint32_t>& Buffer::getQueueFamilyIndices() const { return this->queueFamilyIndices; }
+
+    void Buffer::bindMemory(Memory* pMemory) {
+        // TODO: bind memory
+        this->pMemory = pMemory;
+    }
+
+    const Memory* Buffer::getMemory() const { return this->pMemory; }
 } // namespace fillcan

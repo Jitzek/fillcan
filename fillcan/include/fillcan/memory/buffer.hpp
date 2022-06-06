@@ -29,10 +29,10 @@ namespace fillcan {
         
         VkBuffer getBufferHandle();
 
-        const VkBufferCreateFlags& getFlags() const;
-        const VkDeviceSize& getSize() const;
-        const VkBufferUsageFlags& getUsage() const;
-        const VkSharingMode& getSharingMode() const;
+        VkBufferCreateFlags getFlags();
+        VkDeviceSize getSize();
+        VkBufferUsageFlags getUsage();
+        VkSharingMode getSharingMode();
         const std::vector<uint32_t>& getQueueFamilyIndices() const;
 
         void bindMemory(Memory* pMemory);

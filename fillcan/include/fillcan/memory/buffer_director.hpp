@@ -2,6 +2,7 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
+#include <fillcan/memory/buffer_builder.hpp>
 
 // std
 #include <cstdint>
@@ -13,12 +14,12 @@ namespace fillcan {
     class Buffer;
     class BufferDirector {
       private:
-        LogicalDevice* pLogicalDevice;
+        BufferBuilder builder;
 
       public:
-        BufferDirector(LogicalDevice* pLogicalDevice);
+        BufferDirector();
         ~BufferDirector();
 
-        std::unique_ptr<Buffer> makeVertexBuffer(VkDeviceSize size);
+        std::unique_ptr<Buffer> makeVertexBuffer(LogicalDevice* pLogicalDevice, VkDeviceSize size);
     };
 } // namespace fillcan
