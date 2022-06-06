@@ -40,7 +40,7 @@ namespace fillcan {
             throw std::runtime_error("Failed to create image");
         }
     }
-    Image::~Image() {}
+    Image::~Image() { vkDestroyImage(this->pLogicalDevice->getLogicalDeviceHandle(), this->hImage, nullptr); }
 
     VkImage Image::getImageHandle() { return this->hImage; }
 
@@ -79,10 +79,6 @@ namespace fillcan {
 
     ImageView* Image::createImageView(VkImageViewType viewType, VkFormat format, VkImageSubresourceRange subresourceRange,
                                       VkComponentMapping components) {
-        // TODO: validate if given format is allowed for this image
-        // VkFormatProperties formatProperties;
-        // vkGetPhysicalDeviceFormatProperties(this->pLogicalDevice->getPhysicalDevice()->getPhysicalDeviceHandle(), format, &formatProperties);
-
         this->imageViews.emplace_back(std::make_unique<ImageView>(this->pLogicalDevice, this, viewType, format, subresourceRange, components));
         return this->imageViews.back().get();
     }

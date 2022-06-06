@@ -14,6 +14,7 @@ namespace fillcan {
         LogicalDevice* pLogicalDevice;
         VkDeviceMemory hMemory;
         VkMemoryPropertyFlagBits flag;
+        void* pData = nullptr;
 
         void init(VkMemoryRequirements& memoryRequirements);
       public:
@@ -22,5 +23,11 @@ namespace fillcan {
         ~Memory();
 
         VkDeviceMemory getMemoryHandle();
+
+        void** map(VkDeviceSize offset = 0, VkDeviceSize size = VK_WHOLE_SIZE);
+        void unmap();
+        void** getData();
+        void flush(VkDeviceSize offset = 0, VkDeviceSize size = VK_WHOLE_SIZE);
+        void invalidate(VkDeviceSize offset = 0, VkDeviceSize size = VK_WHOLE_SIZE);
     };
 }

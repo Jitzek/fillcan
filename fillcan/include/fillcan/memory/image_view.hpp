@@ -15,8 +15,8 @@ namespace fillcan {
         VkImageSubresourceRange subresourceRange;
 
       public:
-        ImageView(LogicalDevice* pLogicalDevice, Image* pImage, VkImageViewType viewType, VkFormat format,
-                  VkImageSubresourceRange subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1}, VkComponentMapping components = {});
+        ImageView(LogicalDevice* pLogicalDevice, Image* pImage, VkImageViewType viewType, VkFormat format, VkImageSubresourceRange subresourceRange,
+                  VkComponentMapping components);
         ~ImageView();
 
         VkImageView getImageViewHandle();

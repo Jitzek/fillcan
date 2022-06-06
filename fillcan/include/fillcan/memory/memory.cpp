@@ -23,7 +23,7 @@ namespace fillcan {
         this->init(memoryRequirements);
     }
 
-    Memory::~Memory() {}
+    Memory::~Memory() { this->unmap(); }
 
     void Memory::init(VkMemoryRequirements& memoryRequirements) {
         if (!(memoryRequirements.memoryTypeBits & this->flag)) {
@@ -51,4 +51,31 @@ namespace fillcan {
     }
 
     VkDeviceMemory Memory::getMemoryHandle() { return this->hMemory; }
+
+    void** Memory::map(VkDeviceSize offset, VkDeviceSize size) {
+        if (vkMapMemory(this->pLogicalDevice->getLogicalDeviceHandle(), this->hMemory, offset, size, 0, &this->pData) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to map memory");
+        }
+        return &this->pData;
+    }
+
+    void** Memory::getData() { return &this->pData; }
+
+    void Memory::unmap() { vkUnmapMemory(this->pLogicalDevice->getLogicalDeviceHandle(), this->hMemory); }
+
+    void Memory::flush(VkDeviceSize offset, VkDeviceSize size) {
+        VkMappedMemoryRange mappedMemoryRange = {
+            .sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE, .pNext = nullptr, .memory = this->hMemory, .offset = offset, .size = size};
+        if (vkFlushMappedMemoryRanges(this->pLogicalDevice->getLogicalDeviceHandle(), 1, &mappedMemoryRange) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to flush memory ranges");
+        }
+    }
+
+    void Memory::invalidate(VkDeviceSize offset, VkDeviceSize size) {
+        VkMappedMemoryRange mappedMemoryRange = {
+            .sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE, .pNext = nullptr, .memory = this->hMemory, .offset = offset, .size = size};
+        if (vkInvalidateMappedMemoryRanges(this->pLogicalDevice->getLogicalDeviceHandle(), 1, &mappedMemoryRange) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to invalidate memory ranges");
+        }
+    }
 } // namespace fillcan

@@ -58,10 +58,6 @@ namespace fillcan {
     const Memory* Buffer::getMemory() const { return this->pMemory; }
 
     BufferView* Buffer::createBufferView(VkFormat format, VkDeviceSize size, VkDeviceSize range) {
-        // TODO: validate if given format is allowed for this buffer
-        // VkFormatProperties formatProperties;
-        // vkGetPhysicalDeviceFormatProperties(this->pLogicalDevice->getPhysicalDevice()->getPhysicalDeviceHandle(), format, &formatProperties);
-
         this->bufferViews.emplace_back(std::make_unique<BufferView>(this->pLogicalDevice, this, format, size, range));
         return this->bufferViews.back().get();
     }

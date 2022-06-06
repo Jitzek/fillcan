@@ -4,6 +4,7 @@
 #include "app.hpp"
 
 // fillcan
+#include <cstring>
 #include <fillcan/commands/command_recording.hpp>
 #include <fillcan/commands/queue.hpp>
 #include <fillcan/memory/buffer.hpp>
@@ -28,6 +29,10 @@
 namespace app {
     App::App() {}
     App::~App() {}
+
+    struct TestBufferData {
+        std::string value;
+    };
 
     void App::run() {
         std::string name = "Default Application";
@@ -89,6 +94,12 @@ namespace app {
         std::unique_ptr<fillcan::Image> image1 = imageDirector.make2DTexture(currentDevice, 10, 10, VK_SAMPLE_COUNT_1_BIT);
         fillcan::Memory memory2 = fillcan::Memory(currentDevice, image1.get(), VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
         std::cout << memory2.getMemoryHandle() << "\n";
+
+        void** ppData = memory1.map();
+        TestBufferData testBufferData1 = {.value = "Hello World from Buffer!"};
+        memcpy(*ppData, &testBufferData1, sizeof(testBufferData1));
+        memory1.flush();
+        std::cout << (*reinterpret_cast<TestBufferData*>(*ppData)).value << "\n";
 
         buffer1->bindMemory(&memory1);
         image1->bindMemory(&memory2);
