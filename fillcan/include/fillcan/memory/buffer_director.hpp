@@ -21,5 +21,11 @@ namespace fillcan {
         ~BufferDirector();
 
         std::unique_ptr<Buffer> makeVertexBuffer(LogicalDevice* pLogicalDevice, VkDeviceSize size);
+        std::unique_ptr<Buffer> makeUniformBuffer(LogicalDevice* pLogicalDevice, VkDeviceSize size);
+        std::unique_ptr<Buffer> makeStorageBuffer(LogicalDevice* pLogicalDevice, VkDeviceSize size);
+        std::unique_ptr<Buffer> makeUniformTexelBuffer(LogicalDevice* pLogicalDevice, VkDeviceSize size);
+        std::unique_ptr<Buffer> makeStorageTexelBuffer(LogicalDevice* pLogicalDevice, VkDeviceSize size);
+        std::unique_ptr<Buffer> makeIndexBuffer(LogicalDevice* pLogicalDevice, VkDeviceSize size);
+        std::unique_ptr<Buffer> makeIndirectBuffer(LogicalDevice* pLogicalDevice, VkDeviceSize size);
     };
 } // namespace fillcan

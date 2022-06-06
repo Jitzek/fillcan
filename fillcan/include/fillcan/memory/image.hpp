@@ -2,11 +2,13 @@
 #include "vulkan/vulkan_core.h"
 
 // std
+#include <memory>
 #include <vector>
 
 namespace fillcan {
     class LogicalDevice;
     class Memory;
+    class ImageView;
 
     class Image {
       private:
@@ -25,6 +27,7 @@ namespace fillcan {
         std::vector<uint32_t> queueFamilyIndices;
         VkImageLayout initialLayout;
         Memory* pMemory;
+        std::vector<std::unique_ptr<ImageView>> imageViews;
 
       public:
         Image(LogicalDevice* pLogicalDevice, VkImageCreateFlags flags, VkImageType type, VkFormat format, VkExtent3D extent, unsigned int mipLevels,
@@ -47,7 +50,12 @@ namespace fillcan {
         const std::vector<uint32_t>& getQueueFamilyIndices() const;
         VkImageLayout getInitialLayout();
 
-        void bindMemory(Memory* pMemory);
+        void bindMemory(Memory* pMemory, VkDeviceSize memoryOffset = 0);
         const Memory* getMemory() const;
+
+        ImageView* createImageView(VkImageViewType viewType, VkFormat format,
+                                   VkImageSubresourceRange subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1},
+                                   VkComponentMapping components = {});
+        const std::vector<std::unique_ptr<ImageView>>& getImageViews() const;
     };
 } // namespace fillcan

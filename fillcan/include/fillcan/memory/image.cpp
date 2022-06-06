@@ -4,6 +4,8 @@
 // fillcan
 #include <fillcan/instance/logical_device.hpp>
 #include <fillcan/memory/image.hpp>
+#include <fillcan/memory/image_view.hpp>
+#include <fillcan/memory/memory.hpp>
 
 // std
 #include <stdexcept>
@@ -15,7 +17,7 @@ namespace fillcan {
                  VkSharingMode sharingMode, std::vector<uint32_t>& queueFamilyIndices, VkImageLayout initialLayout)
         : pLogicalDevice(pLogicalDevice), flags(flags), type(type), format(format), extent(extent), mipLevels(mipLevels), arrayLayers(arrayLayers),
           samples(samples), tiling(tiling), usage(usage), sharingMode(sharingMode), queueFamilyIndices(queueFamilyIndices),
-          initialLayout(initialLayout) {
+          initialLayout(initialLayout), imageViews((std::vector<std::unique_ptr<ImageView>>){}) {
         VkImageCreateInfo imageCreateInfo = {};
         imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
         imageCreateInfo.pNext = nullptr;
@@ -29,8 +31,10 @@ namespace fillcan {
         imageCreateInfo.tiling = this->tiling;
         imageCreateInfo.usage = this->usage;
         imageCreateInfo.sharingMode = this->sharingMode;
-        imageCreateInfo.queueFamilyIndexCount = static_cast<uint32_t>(this->queueFamilyIndices.size());
-        imageCreateInfo.pQueueFamilyIndices = queueFamilyIndices.data();
+        if (this->sharingMode == VK_SHARING_MODE_CONCURRENT) {
+            imageCreateInfo.queueFamilyIndexCount = static_cast<uint32_t>(this->queueFamilyIndices.size());
+            imageCreateInfo.pQueueFamilyIndices = queueFamilyIndices.data();
+        }
         imageCreateInfo.initialLayout = this->initialLayout;
         if (vkCreateImage(this->pLogicalDevice->getLogicalDeviceHandle(), &imageCreateInfo, nullptr, &this->hImage) != VK_SUCCESS) {
             throw std::runtime_error("Failed to create image");
@@ -64,12 +68,23 @@ namespace fillcan {
 
     VkImageLayout Image::getInitialLayout() { return this->initialLayout; }
 
-    void Image::bindMemory(Memory* pMemory) {
-      // TODO: bind memory
-      this->pMemory = pMemory;
+    void Image::bindMemory(Memory* pMemory, VkDeviceSize memoryOffset) {
+        if (vkBindImageMemory(this->pLogicalDevice->getLogicalDeviceHandle(), this->hImage, pMemory->getMemoryHandle(), memoryOffset) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to bind memory to image");
+        }
+        this->pMemory = pMemory;
     }
 
-    const Memory* Image::getMemory() const {
-      return this->pMemory;
+    const Memory* Image::getMemory() const { return this->pMemory; }
+
+    ImageView* Image::createImageView(VkImageViewType viewType, VkFormat format, VkImageSubresourceRange subresourceRange,
+                                      VkComponentMapping components) {
+        // TODO: validate if given format is allowed for this image
+        // VkFormatProperties formatProperties;
+        // vkGetPhysicalDeviceFormatProperties(this->pLogicalDevice->getPhysicalDevice()->getPhysicalDeviceHandle(), format, &formatProperties);
+
+        this->imageViews.emplace_back(std::make_unique<ImageView>(this->pLogicalDevice, this, viewType, format, subresourceRange, components));
+        return this->imageViews.back().get();
     }
+    const std::vector<std::unique_ptr<ImageView>>& Image::getImageViews() const { return this->imageViews; }
 } // namespace fillcan

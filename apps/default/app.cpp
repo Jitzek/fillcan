@@ -6,17 +6,18 @@
 // fillcan
 #include <fillcan/commands/command_recording.hpp>
 #include <fillcan/commands/queue.hpp>
+#include <fillcan/memory/buffer.hpp>
+#include <fillcan/memory/buffer_director.hpp>
+#include <fillcan/memory/buffer_view.hpp>
+#include <fillcan/memory/image.hpp>
+#include <fillcan/memory/image_director.hpp>
+#include <fillcan/memory/image_view.hpp>
+#include <fillcan/memory/memory.hpp>
 #include <fillcan/shader/descriptor_pool.hpp>
 #include <fillcan/shader/descriptor_pool_builder.hpp>
 #include <fillcan/shader/descriptor_set_layout.hpp>
 #include <fillcan/shader/descriptor_set_layout_builder.hpp>
 #include <fillcan/shader/shader_module.hpp>
-#include <fillcan/memory/buffer_director.hpp>
-#include <fillcan/memory/image_director.hpp>
-#include <fillcan/memory/image.hpp>
-#include <fillcan/memory/buffer.hpp>
-#include <fillcan/memory/memory.hpp>
-
 
 // std
 #include <iostream>
@@ -80,14 +81,23 @@ namespace app {
         fillcan::ShaderModule shaderModule = fillcan::ShaderModule(currentDevice, code, std::move(descriptorSetLayouts), std::move(descriptorPool));
 
         fillcan::BufferDirector bufferDirector = fillcan::BufferDirector();
-        std::unique_ptr<fillcan::Buffer> buffer1 = bufferDirector.makeVertexBuffer(currentDevice, 4);
+        std::unique_ptr<fillcan::Buffer> buffer1 = bufferDirector.makeUniformTexelBuffer(currentDevice, 4);
         fillcan::Memory memory1 = fillcan::Memory(currentDevice, buffer1.get(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
         std::cout << memory1.getMemoryHandle() << "\n";
 
         fillcan::ImageDirector imageDirector = fillcan::ImageDirector();
         std::unique_ptr<fillcan::Image> image1 = imageDirector.make2DTexture(currentDevice, 10, 10, VK_SAMPLE_COUNT_1_BIT);
-        fillcan::Memory memory2 = fillcan::Memory(currentDevice, image1.get(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+        fillcan::Memory memory2 = fillcan::Memory(currentDevice, image1.get(), VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
         std::cout << memory2.getMemoryHandle() << "\n";
+
+        buffer1->bindMemory(&memory1);
+        image1->bindMemory(&memory2);
+
+        std::cout << buffer1->createBufferView(VK_FORMAT_R8G8B8A8_UNORM)->getBufferViewHandle() << "\n";
+        std::cout << buffer1->getBufferViews()[0]->getBufferViewHandle() << "\n";
+
+        std::cout << image1->createImageView(VK_IMAGE_VIEW_TYPE_2D, VK_FORMAT_R8G8B8A8_SRGB)->getImageViewHandle() << "\n";
+        std::cout << image1->getImageViews()[0]->getImageViewHandle() << "\n";
 
         upFillcan->MainLoop(std::bind(&App::update, this));
     }

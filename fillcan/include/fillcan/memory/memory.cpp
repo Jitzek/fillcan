@@ -36,6 +36,9 @@ namespace fillcan {
             if (physicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & this->flag) {
                 break;
             }
+            if (i >= physicalDeviceMemoryProperties.memoryTypeCount) {
+                throw std::runtime_error("No memory with the requested requirements could be found");
+            }
         }
         VkMemoryAllocateInfo memoryAllocateInfo = {};
         memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;

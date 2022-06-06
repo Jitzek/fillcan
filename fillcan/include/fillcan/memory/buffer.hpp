@@ -5,12 +5,14 @@
 
 // std
 #include <cstdint>
+#include <memory>
 #include <optional>
 #include <vector>
 
 namespace fillcan {
     class LogicalDevice;
     class Memory;
+    class BufferView;
     class Buffer {
       private:
         LogicalDevice* pLogicalDevice;
@@ -21,12 +23,13 @@ namespace fillcan {
         VkSharingMode sharingMode;
         std::vector<uint32_t> queueFamilyIndices;
         Memory* pMemory;
-        // TODO: std::vector<BufferViews> bufferViews = {};
+        std::vector<std::unique_ptr<BufferView>> bufferViews;
+
       public:
         Buffer(LogicalDevice* pLogicalDevice, VkBufferCreateFlags& flags, VkDeviceSize& size, VkBufferUsageFlags& usage, VkSharingMode& sharingMode,
                std::vector<uint32_t> queueFamilyIndices = {});
         ~Buffer();
-        
+
         VkBuffer getBufferHandle();
 
         VkBufferCreateFlags getFlags();
@@ -35,7 +38,10 @@ namespace fillcan {
         VkSharingMode getSharingMode();
         const std::vector<uint32_t>& getQueueFamilyIndices() const;
 
-        void bindMemory(Memory* pMemory);
+        void bindMemory(Memory* pMemory, VkDeviceSize memoryOffset = 0);
         const Memory* getMemory() const;
+
+        BufferView* createBufferView(VkFormat format, VkDeviceSize offset = 0, VkDeviceSize range = VK_WHOLE_SIZE);
+        const std::vector<std::unique_ptr<BufferView>>& getBufferViews() const;
     };
 } // namespace fillcan
