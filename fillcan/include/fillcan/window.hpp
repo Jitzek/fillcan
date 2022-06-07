@@ -46,6 +46,6 @@ namespace fillcan {
 
         void createSurface(Instance* pInstance);
         VkSurfaceKHR getSurface();
-        VkExtent2D getExtend();
+        VkExtent2D getExtent();
     };
 } // namespace fillcan

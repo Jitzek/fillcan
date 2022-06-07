@@ -34,5 +34,5 @@ namespace fillcan {
     }
     VkSurfaceKHR Window::getSurface() { return this->hSurface; }
 
-    VkExtent2D Window::getExtend() { return {.width = this->width, .height = this->height}; }
+    VkExtent2D Window::getExtent() { return {.width = this->width, .height = this->height}; }
 } // namespace fillcan

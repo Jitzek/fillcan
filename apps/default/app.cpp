@@ -19,6 +19,7 @@
 #include <fillcan/shader/descriptor_set_layout.hpp>
 #include <fillcan/shader/descriptor_set_layout_builder.hpp>
 #include <fillcan/shader/shader_module.hpp>
+#include <fillcan/swapchain/swapchain.hpp>
 
 // std
 #include <iostream>
@@ -109,6 +110,11 @@ namespace app {
 
         std::cout << image1->createImageView(VK_IMAGE_VIEW_TYPE_2D, VK_FORMAT_R8G8B8A8_SRGB)->getImageViewHandle() << "\n";
         std::cout << image1->getImageViews()[0]->getImageViewHandle() << "\n";
+
+        fillcan::Swapchain* pSwapchain = upFillcan->createSwapchain();
+        std::cout << pSwapchain->getSwapchainHandle() << "\n";
+        pSwapchain = upFillcan->recreateSwapchain();
+        std::cout << pSwapchain->getSwapchainHandle() << "\n";
 
         upFillcan->MainLoop(std::bind(&App::update, this));
     }

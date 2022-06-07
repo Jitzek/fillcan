@@ -1,3 +1,5 @@
+#pragma once
+
 // vulkan
 #include "vulkan/vulkan_core.h"
 

@@ -59,4 +59,17 @@ namespace fillcan {
 
     LogicalDevice* Fillcan::getCurrentDevice() { return this->upDevicePool->getCurrentDevice(); }
 
+    Swapchain* Fillcan::createSwapchain(BufferMode bufferMode, VkPresentModeKHR presentMode) {
+        this->upSwapchain = std::make_unique<Swapchain>(this->getCurrentDevice(), this->upWindow.get(), bufferMode, presentMode, nullptr);
+        return this->upSwapchain.get();
+    }
+
+    Swapchain* Fillcan::recreateSwapchain(BufferMode bufferMode, VkPresentModeKHR presentMode) {
+        if (this->upSwapchain == nullptr) {
+            return nullptr;
+        }
+        this->upSwapchain =
+            std::make_unique<Swapchain>(this->getCurrentDevice(), this->upWindow.get(), bufferMode, presentMode, this->upSwapchain.get());
+        return this->upSwapchain.get();
+    }
 } // namespace fillcan
