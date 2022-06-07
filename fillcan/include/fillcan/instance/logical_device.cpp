@@ -49,10 +49,6 @@ namespace fillcan {
         upGraphicsQueue = std::make_unique<Queue>(this, pPhysicalDevice->getGraphicsQueueFamilyIndex(), 0);
         upPresentQueue = std::make_unique<Queue>(this, pPhysicalDevice->getPresentQueueFamilyIndex(), 0);
         upComputeQueue = std::make_unique<Queue>(this, pPhysicalDevice->getComputeQueueFamilyIndex(), 0);
-
-#ifndef NDEBUG
-        std::cout << "Logical Device: " << this->pPhysicalDevice->getProperties().deviceName << " created\n";
-#endif
     }
 
     LogicalDevice::~LogicalDevice() {

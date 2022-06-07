@@ -1,6 +1,8 @@
 // vulkan
-#include "fillcan/graphics_pipeline/render_pass_builder.hpp"
+#include "fillcan/commands/command_buffer.hpp"
 #include "fillcan/graphics_pipeline/render_pass.hpp"
+#include "fillcan/graphics_pipeline/render_pass_builder.hpp"
+#include "fillcan/memory/image_builder.hpp"
 #include "vulkan/vulkan_core.h"
 
 #include "app.hpp"
@@ -49,7 +51,6 @@ namespace app {
 
         fillcan::CommandRecording graphicsRecording = currentDevice->getGraphicsQueue()->createRecording(2, 1);
         fillcan::CommandRecording graphicsRecording2 = currentDevice->getGraphicsQueue()->createRecording(1, 1);
-        fillcan::CommandRecording presentRecording = currentDevice->getPresentQueue()->createRecording(2, 1);
         fillcan::CommandRecording computRecording = currentDevice->getComputeQueue()->createRecording(2, 1);
 
         for (std::shared_ptr<fillcan::CommandBuffer>& pCommandBuffer : graphicsRecording.pPrimaryCommandBuffers) {
@@ -116,8 +117,6 @@ namespace app {
 
         fillcan::Swapchain* pSwapchain = upFillcan->createSwapchain();
         std::cout << pSwapchain->getSwapchainHandle() << "\n";
-        pSwapchain = upFillcan->recreateSwapchain();
-        std::cout << pSwapchain->getSwapchainHandle() << "\n";
 
         std::vector<fillcan::DescriptorSet*> pDescriptorSets = shaderModule.getDescriptorPool()->getDescriptorSets();
 
@@ -135,12 +134,25 @@ namespace app {
                                                                .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
                                                                .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
                                                                .finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR};
-        renderPassBuilder.addColorAttachment(colorAttachmentDescription1, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, false, false);
+        renderPassBuilder.addColorAttachment(colorAttachmentDescription1, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
         renderPassBuilder.addSubpass();
         std::unique_ptr<fillcan::RenderPass> renderPass = renderPassBuilder.getResult();
 
         std::cout << "Renderpass: " << renderPass->getRenderPassHandle() << "\n";
         /* */
+
+        fillcan::CommandRecording presentRecording = currentDevice->getPresentQueue()->createRecording(2, 1);
+        fillcan::CommandBuffer* pSwapchainCommandBuffer = presentRecording.pPrimaryCommandBuffers[0].get();
+        pSwapchainCommandBuffer->begin();
+        fillcan::SwapchainImage swapchainImage1 = pSwapchain->getNextImage(pSwapchainCommandBuffer);
+        pSwapchainCommandBuffer->end();
+        std::cout << (swapchainImage1.outOfDate ? "Out of Date " : " ") << swapchainImage1.index << "\n";
+        pSwapchain = upFillcan->recreateSwapchain();
+        std::cout << pSwapchain->getSwapchainHandle() << "\n";
+        pSwapchainCommandBuffer->begin();
+        fillcan::SwapchainImage swapchainImage2 = pSwapchain->getNextImage(pSwapchainCommandBuffer);
+        pSwapchainCommandBuffer->end();
+        std::cout << (swapchainImage2.outOfDate ? "Out of Date " : " ") << swapchainImage2.index << "\n";
 
         upFillcan->MainLoop(std::bind(&App::update, this));
     }
