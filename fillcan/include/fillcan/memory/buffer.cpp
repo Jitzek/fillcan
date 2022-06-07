@@ -16,7 +16,7 @@ namespace fillcan {
     Buffer::Buffer(LogicalDevice* pLogicalDevice, VkBufferCreateFlags& flags, VkDeviceSize& size, VkBufferUsageFlags& usage,
                    VkSharingMode& sharingMode, std::vector<uint32_t> queueFamilyIndices)
         : pLogicalDevice(pLogicalDevice), flags(flags), size(size), usage(usage), sharingMode(sharingMode), queueFamilyIndices(queueFamilyIndices),
-          bufferViews((std::vector<std::unique_ptr<BufferView>>){}) {
+          upBufferViews((std::vector<std::unique_ptr<BufferView>>){}) {
         VkBufferCreateInfo bufferCreateInfo = {};
         bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         bufferCreateInfo.pNext = nullptr;
@@ -58,9 +58,16 @@ namespace fillcan {
     const Memory* Buffer::getMemory() const { return this->pMemory; }
 
     BufferView* Buffer::createBufferView(VkFormat format, VkDeviceSize size, VkDeviceSize range) {
-        this->bufferViews.emplace_back(std::make_unique<BufferView>(this->pLogicalDevice, this, format, size, range));
-        return this->bufferViews.back().get();
+        this->upBufferViews.emplace_back(std::make_unique<BufferView>(this->pLogicalDevice, this, format, size, range));
+        return this->upBufferViews.back().get();
     }
 
-    const std::vector<std::unique_ptr<BufferView>>& Buffer::getBufferViews() const { return this->bufferViews; }
+    std::vector<BufferView*> Buffer::getBufferViews() {
+        std::vector<BufferView*> pBufferViews = {};
+        pBufferViews.reserve(this->upBufferViews.size());
+        for (std::unique_ptr<BufferView>& upImageView : this->upBufferViews) {
+            pBufferViews.push_back(upImageView.get());
+        }
+        return pBufferViews;
+    }
 } // namespace fillcan

@@ -29,7 +29,7 @@ namespace fillcan {
         std::vector<uint32_t> queueFamilyIndices;
         VkImageLayout initialLayout;
         Memory* pMemory;
-        std::vector<std::unique_ptr<ImageView>> imageViews;
+        std::vector<std::unique_ptr<ImageView>> upImageViews;
 
       public:
         Image(LogicalDevice* pLogicalDevice, VkImageCreateFlags flags, VkImageType type, VkFormat format, VkExtent3D extent, unsigned int mipLevels,
@@ -65,6 +65,6 @@ namespace fillcan {
                                                                     .g = VK_COMPONENT_SWIZZLE_IDENTITY,
                                                                     .b = VK_COMPONENT_SWIZZLE_IDENTITY,
                                                                     .a = VK_COMPONENT_SWIZZLE_IDENTITY});
-        const std::vector<std::unique_ptr<ImageView>>& getImageViews() const;
+        std::vector<ImageView*> getImageViews();
     };
 } // namespace fillcan

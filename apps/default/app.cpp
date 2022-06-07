@@ -16,6 +16,7 @@
 #include <fillcan/memory/memory.hpp>
 #include <fillcan/shader/descriptor_pool.hpp>
 #include <fillcan/shader/descriptor_pool_builder.hpp>
+#include <fillcan/shader/descriptor_set.hpp>
 #include <fillcan/shader/descriptor_set_layout.hpp>
 #include <fillcan/shader/descriptor_set_layout_builder.hpp>
 #include <fillcan/shader/shader_module.hpp>
@@ -66,6 +67,7 @@ namespace app {
         fillcan::DescriptorSetLayoutBuilder descriptorSetLayoutBuilder{};
         descriptorSetLayoutBuilder.setLogicalDevice(currentDevice);
         descriptorSetLayoutBuilder.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT);
+        descriptorSetLayoutBuilder.addBinding(1, VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1, VK_SHADER_STAGE_COMPUTE_BIT);
         descriptorSetLayouts.push_back(descriptorSetLayoutBuilder.getResult());
 
         descriptorSetLayoutBuilder.reset();
@@ -79,12 +81,12 @@ namespace app {
         descriptorPoolBuilder.setFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT);
         descriptorPoolBuilder.addSet(descriptorSetLayouts[0].get(), 3);
         descriptorPoolBuilder.addSet(descriptorSetLayouts[1].get(), 1);
-        std::unique_ptr<fillcan::DescriptorPool> descriptorPool = descriptorPoolBuilder.getResult();
-        std::cout << (descriptorPool->freeDescriptorSets() ? "Freed descriptor sets" : "Failed to free descriptor sets") << "\n";
-        std::cout << (descriptorPool->reset() ? "Reset pool" : "Failed to reset pool") << "\n";
+        std::unique_ptr<fillcan::DescriptorPool> upDescriptorPool = descriptorPoolBuilder.getResult();
+        // std::cout << (descriptorPool->freeDescriptorSets() ? "Freed descriptor sets" : "Failed to free descriptor sets") << "\n";
+        // std::cout << (descriptorPool->reset() ? "Reset pool" : "Failed to reset pool") << "\n";
 
         std::vector<char> code = {'t', 'e', 's', 't'};
-        fillcan::ShaderModule shaderModule = fillcan::ShaderModule(currentDevice, code, std::move(descriptorSetLayouts), std::move(descriptorPool));
+        fillcan::ShaderModule shaderModule = fillcan::ShaderModule(currentDevice, code, std::move(descriptorSetLayouts), std::move(upDescriptorPool));
 
         fillcan::BufferDirector bufferDirector = fillcan::BufferDirector();
         std::unique_ptr<fillcan::Buffer> buffer1 = bufferDirector.makeUniformTexelBuffer(currentDevice, 4);

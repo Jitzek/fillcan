@@ -25,7 +25,7 @@ namespace fillcan {
         VkSharingMode sharingMode;
         std::vector<uint32_t> queueFamilyIndices;
         Memory* pMemory;
-        std::vector<std::unique_ptr<BufferView>> bufferViews;
+        std::vector<std::unique_ptr<BufferView>> upBufferViews;
 
       public:
         Buffer(LogicalDevice* pLogicalDevice, VkBufferCreateFlags& flags, VkDeviceSize& size, VkBufferUsageFlags& usage, VkSharingMode& sharingMode,
@@ -44,6 +44,6 @@ namespace fillcan {
         const Memory* getMemory() const;
 
         BufferView* createBufferView(VkFormat format, VkDeviceSize offset = 0, VkDeviceSize range = VK_WHOLE_SIZE);
-        const std::vector<std::unique_ptr<BufferView>>& getBufferViews() const;
+        std::vector<BufferView*> getBufferViews();
     };
 } // namespace fillcan

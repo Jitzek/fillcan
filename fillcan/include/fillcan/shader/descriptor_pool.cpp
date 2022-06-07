@@ -2,6 +2,7 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
+#include <cstddef>
 #include <fillcan/instance/logical_device.hpp>
 #include <fillcan/shader/descriptor_pool.hpp>
 #include <fillcan/shader/descriptor_set_layout.hpp>
@@ -48,15 +49,24 @@ namespace fillcan {
             VK_SUCCESS) {
             return false;
         }
-        this->descriptorSets.reserve(descriptorSetsHandles.size());
+        this->upDescriptorSets.reserve(descriptorSetsHandles.size());
         for (int i = 0; i < descriptorSetsHandles.size(); i++) {
-            this->descriptorSets.emplace_back(this->pLogicalDevice, descriptorSetsHandles[i], pDescriptorSetLayouts[i]);
+            this->upDescriptorSets.push_back(
+                std::make_unique<DescriptorSet>(this->pLogicalDevice, descriptorSetsHandles[i], pDescriptorSetLayouts[i]));
         }
         return true;
     }
 
     VkDescriptorPool DescriptorPool::getDescriptorPoolHandle() { return this->hDescriptorPool; }
-    const std::vector<DescriptorSet>& DescriptorPool::getDescriptorSets() const { return this->descriptorSets; }
+
+    std::vector<DescriptorSet*> DescriptorPool::getDescriptorSets() {
+        std::vector<DescriptorSet*> pDescriptorSets = {};
+        pDescriptorSets.reserve(this->upDescriptorSets.size());
+        for (std::unique_ptr<DescriptorSet>& upDescriptorSet : this->upDescriptorSets) {
+            pDescriptorSets.push_back(upDescriptorSet.get());
+        }
+        return pDescriptorSets;
+    }
 
     bool DescriptorPool::freeDescriptorSets(std::vector<std::shared_ptr<DescriptorSet>> pDescriptorSets) {
         if (!(this->flags & VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)) {
@@ -78,9 +88,9 @@ namespace fillcan {
             return false;
         }
         std::vector<VkDescriptorSet> descriptorSetsHandles = {};
-        descriptorSetsHandles.reserve(this->descriptorSets.size());
-        for (DescriptorSet& rDescriptorSet : this->descriptorSets) {
-            descriptorSetsHandles.push_back(rDescriptorSet.getDescriptorSetHandle());
+        descriptorSetsHandles.reserve(this->upDescriptorSets.size());
+        for (std::unique_ptr<DescriptorSet>& upDescriptorSet : this->upDescriptorSets) {
+            descriptorSetsHandles.push_back(upDescriptorSet->getDescriptorSetHandle());
         }
         return vkFreeDescriptorSets(this->pLogicalDevice->getLogicalDeviceHandle(), this->hDescriptorPool, descriptorSetsHandles.size(),
                                     descriptorSetsHandles.data()) == VK_SUCCESS

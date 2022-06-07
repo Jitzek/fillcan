@@ -37,9 +37,6 @@ namespace fillcan {
                 this->descriptorsAndCounts.push_back(newDescriptorAndCount);
             }
         }
-        for (std::pair<VkDescriptorType, unsigned int> thing : this->descriptorsAndCounts) {
-            std::cout << thing.first << " " << thing.second << "\n";
-        }
     }
 
     std::unique_ptr<DescriptorPool> DescriptorPoolBuilder::getResult() {

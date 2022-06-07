@@ -20,7 +20,7 @@ namespace fillcan {
         VkDescriptorPoolCreateFlags flags;
         unsigned int maxSets;
         std::vector<VkDescriptorPoolSize> poolSizes;
-        std::vector<DescriptorSet> descriptorSets = {};
+        std::vector<std::unique_ptr<DescriptorSet>> upDescriptorSets = {};
 
       public:
         DescriptorPool(LogicalDevice* pLogicalDevice, VkDescriptorPoolCreateFlags flags, unsigned int maxSets,
@@ -29,8 +29,8 @@ namespace fillcan {
 
         bool allocateDescriptorSets(std::vector<DescriptorSetLayout*> pDescriptorSetLayouts);
 
-         VkDescriptorPool getDescriptorPoolHandle();
-        const std::vector<DescriptorSet>& getDescriptorSets() const;
+        VkDescriptorPool getDescriptorPoolHandle();
+        std::vector<DescriptorSet*> getDescriptorSets();
 
         bool freeDescriptorSets();
         bool freeDescriptorSets(std::vector<std::shared_ptr<DescriptorSet>> pDescriptorSets);

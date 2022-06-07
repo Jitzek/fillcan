@@ -17,7 +17,7 @@ namespace fillcan {
                  VkSharingMode sharingMode, std::vector<uint32_t>& queueFamilyIndices, VkImageLayout initialLayout)
         : pLogicalDevice(pLogicalDevice), flags(flags), type(type), format(format), extent(extent), mipLevels(mipLevels), arrayLayers(arrayLayers),
           samples(samples), tiling(tiling), usage(usage), sharingMode(sharingMode), queueFamilyIndices(queueFamilyIndices),
-          initialLayout(initialLayout), imageViews((std::vector<std::unique_ptr<ImageView>>){}) {
+          initialLayout(initialLayout), upImageViews((std::vector<std::unique_ptr<ImageView>>){}) {
         VkImageCreateInfo imageCreateInfo = {};
         imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
         imageCreateInfo.pNext = nullptr;
@@ -79,8 +79,15 @@ namespace fillcan {
 
     ImageView* Image::createImageView(VkImageViewType viewType, VkFormat format, VkImageSubresourceRange subresourceRange,
                                       VkComponentMapping components) {
-        this->imageViews.emplace_back(std::make_unique<ImageView>(this->pLogicalDevice, this, viewType, format, subresourceRange, components));
-        return this->imageViews.back().get();
+        this->upImageViews.emplace_back(std::make_unique<ImageView>(this->pLogicalDevice, this, viewType, format, subresourceRange, components));
+        return this->upImageViews.back().get();
     }
-    const std::vector<std::unique_ptr<ImageView>>& Image::getImageViews() const { return this->imageViews; }
+    std::vector<ImageView*> Image::getImageViews() {
+        std::vector<ImageView*> pImageViews = {};
+        pImageViews.reserve(this->upImageViews.size());
+        for (std::unique_ptr<ImageView>& upImageView : this->upImageViews) {
+            pImageViews.push_back(upImageView.get());
+        }
+        return pImageViews;
+    }
 } // namespace fillcan

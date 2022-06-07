@@ -10,11 +10,17 @@
 namespace fillcan {
     class LogicalDevice;
     class DescriptorSetLayout;
+    class ImageView;
     class DescriptorSet {
       private:
         VkDescriptorSet hDescriptorSet;
         LogicalDevice* pLogicalDevice;
         DescriptorSetLayout* pDescriptorSetLayout;
+
+        void update(VkWriteDescriptorSet* pWrite, VkCopyDescriptorSet* pCopy);
+
+        void write(VkDescriptorSetLayoutBinding binding, VkDescriptorImageInfo* pImageInfo, VkDescriptorBufferInfo* pBufferInfo,
+                   VkBufferView* pTexelBufferView);
 
       public:
         DescriptorSet(LogicalDevice* pLogicalDevice, VkDescriptorSet hDescriptorSet, DescriptorSetLayout* pDescriptorSetLayout);
@@ -22,7 +28,7 @@ namespace fillcan {
 
         VkDescriptorSet getDescriptorSetHandle();
         DescriptorSetLayout* getLayout();
-        // TODO: writeImage
+        void writeImage(VkDescriptorSetLayoutBinding binding, ImageView* pImageView, VkImageLayout imageLayout);
         // TODO: writeBuffer
         // TODO: writeTexelBufferView
         // TODO: copy
