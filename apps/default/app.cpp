@@ -1,4 +1,6 @@
 // vulkan
+#include "fillcan/graphics_pipeline/render_pass_builder.hpp"
+#include "fillcan/graphics_pipeline/render_pass.hpp"
 #include "vulkan/vulkan_core.h"
 
 #include "app.hpp"
@@ -7,6 +9,7 @@
 #include <cstring>
 #include <fillcan/commands/command_recording.hpp>
 #include <fillcan/commands/queue.hpp>
+#include <fillcan/graphics_pipeline/render_pass_builder.hpp>
 #include <fillcan/memory/buffer.hpp>
 #include <fillcan/memory/buffer_director.hpp>
 #include <fillcan/memory/buffer_view.hpp>
@@ -117,6 +120,27 @@ namespace app {
         std::cout << pSwapchain->getSwapchainHandle() << "\n";
 
         std::vector<fillcan::DescriptorSet*> pDescriptorSets = shaderModule.getDescriptorPool()->getDescriptorSets();
+
+        /**
+            Renderpass
+        */
+        fillcan::RenderPassBuilder renderPassBuilder = fillcan::RenderPassBuilder();
+        renderPassBuilder.setLogicalDevice(currentDevice);
+        VkAttachmentDescription colorAttachmentDescription1 = {.flags = 0,
+                                                               .format = pSwapchain->getSurfaceFormat().format,
+                                                               .samples = VK_SAMPLE_COUNT_1_BIT,
+                                                               .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+                                                               .storeOp = VK_ATTACHMENT_STORE_OP_STORE,
+                                                               .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+                                                               .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+                                                               .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+                                                               .finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR};
+        renderPassBuilder.addColorAttachment(colorAttachmentDescription1, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, false, false);
+        renderPassBuilder.addSubpass();
+        std::unique_ptr<fillcan::RenderPass> renderPass = renderPassBuilder.getResult();
+
+        std::cout << "Renderpass: " << renderPass->getRenderPassHandle() << "\n";
+        /* */
 
         upFillcan->MainLoop(std::bind(&App::update, this));
     }

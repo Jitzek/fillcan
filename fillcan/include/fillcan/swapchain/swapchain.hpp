@@ -27,8 +27,9 @@ namespace fillcan {
         ~Swapchain();
 
         VkSwapchainKHR getSwapchainHandle();
-
         SwapchainImage& getNextImage();
+        VkSurfaceFormatKHR getSurfaceFormat();
+
         void present(SwapchainImage& swapchainImage, VkSemaphore* pSemaphore = nullptr);
     };
 } // namespace fillcan

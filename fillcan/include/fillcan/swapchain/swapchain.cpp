@@ -54,5 +54,9 @@ namespace fillcan {
 
     SwapchainImage& Swapchain::getNextImage() {}
 
+    VkSurfaceFormatKHR Swapchain::getSurfaceFormat() {
+        return this->surfaceFormat;
+    }
+
     void Swapchain::present(SwapchainImage& swapchainImage, VkSemaphore* pSemaphore) {}
 } // namespace fillcan
