@@ -2,7 +2,6 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include <cstddef>
 #include <fillcan/instance/logical_device.hpp>
 #include <fillcan/shader/descriptor_pool.hpp>
 #include <fillcan/shader/descriptor_set_layout.hpp>
@@ -11,6 +10,8 @@
 #include <memory>
 #include <stdexcept>
 #include <vector>
+#include <algorithm>
+#include <cstddef>
 
 namespace fillcan {
     DescriptorPool::DescriptorPool(LogicalDevice* pLogicalDevice, VkDescriptorPoolCreateFlags flags, unsigned int maxSets,
@@ -61,21 +62,19 @@ namespace fillcan {
 
     std::vector<DescriptorSet*> DescriptorPool::getDescriptorSets() {
         std::vector<DescriptorSet*> pDescriptorSets = {};
-        pDescriptorSets.reserve(this->upDescriptorSets.size());
-        for (std::unique_ptr<DescriptorSet>& upDescriptorSet : this->upDescriptorSets) {
-            pDescriptorSets.push_back(upDescriptorSet.get());
-        }
+        std::transform(this->upDescriptorSets.begin(), this->upDescriptorSets.end(), std::back_inserter(pDescriptorSets),
+                       [](const std::unique_ptr<DescriptorSet>& upDescriptorSet) { return upDescriptorSet.get(); });
         return pDescriptorSets;
     }
 
-    bool DescriptorPool::freeDescriptorSets(std::vector<std::shared_ptr<DescriptorSet>> pDescriptorSets) {
+    bool DescriptorPool::freeDescriptorSets(std::vector<DescriptorSet*> pDescriptorSets) {
         if (!(this->flags & VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)) {
             return false;
         }
         std::vector<VkDescriptorSet> descriptorSetsHandles = {};
         descriptorSetsHandles.reserve(pDescriptorSets.size());
-        for (std::shared_ptr<DescriptorSet> spDescriptorSet : pDescriptorSets) {
-            descriptorSetsHandles.push_back(spDescriptorSet->getDescriptorSetHandle());
+        for (DescriptorSet* pDescriptorSet : pDescriptorSets) {
+            descriptorSetsHandles.push_back(pDescriptorSet->getDescriptorSetHandle());
         }
         return vkFreeDescriptorSets(this->pLogicalDevice->getLogicalDeviceHandle(), this->hDescriptorPool, descriptorSetsHandles.size(),
                                     descriptorSetsHandles.data()) == VK_SUCCESS

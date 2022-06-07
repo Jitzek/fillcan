@@ -8,6 +8,7 @@
 #include <fillcan/memory/memory.hpp>
 
 // std
+#include <algorithm>
 #include <stdexcept>
 #include <vector>
 
@@ -84,10 +85,8 @@ namespace fillcan {
     }
     std::vector<ImageView*> Image::getImageViews() {
         std::vector<ImageView*> pImageViews = {};
-        pImageViews.reserve(this->upImageViews.size());
-        for (std::unique_ptr<ImageView>& upImageView : this->upImageViews) {
-            pImageViews.push_back(upImageView.get());
-        }
+        std::transform(this->upImageViews.begin(), this->upImageViews.end(), std::back_inserter(pImageViews),
+                       [](const std::unique_ptr<ImageView>& upImageView) { return upImageView.get(); });
         return pImageViews;
     }
 } // namespace fillcan

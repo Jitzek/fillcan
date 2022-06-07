@@ -8,8 +8,8 @@
 #include <fillcan/shader/descriptor_set.hpp>
 
 // std
-#include <vector>
 #include <memory>
+#include <vector>
 
 namespace fillcan {
     class LogicalDevice;
@@ -33,7 +33,7 @@ namespace fillcan {
         std::vector<DescriptorSet*> getDescriptorSets();
 
         bool freeDescriptorSets();
-        bool freeDescriptorSets(std::vector<std::shared_ptr<DescriptorSet>> pDescriptorSets);
+        bool freeDescriptorSets(std::vector<DescriptorSet*> pDescriptorSets);
 
         bool reset();
     };

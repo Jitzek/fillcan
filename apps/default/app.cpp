@@ -81,12 +81,10 @@ namespace app {
         descriptorPoolBuilder.setFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT);
         descriptorPoolBuilder.addSet(descriptorSetLayouts[0].get(), 3);
         descriptorPoolBuilder.addSet(descriptorSetLayouts[1].get(), 1);
-        std::unique_ptr<fillcan::DescriptorPool> upDescriptorPool = descriptorPoolBuilder.getResult();
-        // std::cout << (descriptorPool->freeDescriptorSets() ? "Freed descriptor sets" : "Failed to free descriptor sets") << "\n";
-        // std::cout << (descriptorPool->reset() ? "Reset pool" : "Failed to reset pool") << "\n";
 
         std::vector<char> code = {'t', 'e', 's', 't'};
-        fillcan::ShaderModule shaderModule = fillcan::ShaderModule(currentDevice, code, std::move(descriptorSetLayouts), std::move(upDescriptorPool));
+        fillcan::ShaderModule shaderModule =
+            fillcan::ShaderModule(currentDevice, code, std::move(descriptorSetLayouts), std::move(descriptorPoolBuilder.getResult()));
 
         fillcan::BufferDirector bufferDirector = fillcan::BufferDirector();
         std::unique_ptr<fillcan::Buffer> buffer1 = bufferDirector.makeUniformTexelBuffer(currentDevice, 4);
@@ -117,6 +115,8 @@ namespace app {
         std::cout << pSwapchain->getSwapchainHandle() << "\n";
         pSwapchain = upFillcan->recreateSwapchain();
         std::cout << pSwapchain->getSwapchainHandle() << "\n";
+
+        std::vector<fillcan::DescriptorSet*> pDescriptorSets = shaderModule.getDescriptorPool()->getDescriptorSets();
 
         upFillcan->MainLoop(std::bind(&App::update, this));
     }
