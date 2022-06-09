@@ -128,7 +128,7 @@ namespace app {
         /* */
 
         fillcan::CommandRecording presentRecording = currentDevice->getPresentQueue()->createRecording(2, 1);
-        fillcan::CommandBuffer* pSwapchainCommandBuffer = presentRecording.pPrimaryCommandBuffers[0].get();
+        fillcan::CommandBuffer* pSwapchainCommandBuffer = presentRecording.pPrimaryCommandBuffers[0];
         pSwapchainCommandBuffer->begin();
         fillcan::SwapchainImage swapchainImage1 = pSwapchain->getNextImage(pSwapchainCommandBuffer);
         pSwapchainCommandBuffer->end();
@@ -142,7 +142,11 @@ namespace app {
 
         fillcan::CommandRecording graphicsRecording = currentDevice->getGraphicsQueue()->createRecording(1, 0);
 
-        // renderPass->begin(graphicsRecording.pPrimaryCommandBuffers[0].get(), &framebuffer1);
+        std::vector<VkClearValue> clearValues = {};
+        clearValues.reserve(1);
+        clearValues.emplace_back((VkClearValue){.color = (VkClearColorValue){.float32 = {0.0f, 0.0f, 0.0f, 1.0f}}});
+        graphicsRecording.pPrimaryCommandBuffers[0]->begin();
+        renderPass->begin(graphicsRecording.pPrimaryCommandBuffers[0], &framebuffer1, &clearValues);
 
         upFillcan->MainLoop(std::bind(&App::update, this));
     }

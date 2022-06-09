@@ -3,6 +3,8 @@
 
 // fillcan
 #include <fillcan/instance/logical_device.hpp>
+#include <fillcan/memory/buffer.hpp>
+#include <fillcan/memory/buffer_view.hpp>
 #include <fillcan/memory/image_view.hpp>
 #include <fillcan/shader/descriptor_set.hpp>
 #include <fillcan/shader/descriptor_set_layout.hpp>
@@ -45,5 +47,33 @@ namespace fillcan {
         descriptorImageInfo.imageView = pImageView->getImageViewHandle();
         descriptorImageInfo.imageLayout = imageLayout;
         this->write(binding, &descriptorImageInfo, nullptr, nullptr);
+    }
+
+    void DescriptorSet::writeBuffer(VkDescriptorSetLayoutBinding binding, Buffer* pBuffer, VkDeviceSize offset, VkDeviceSize range) {
+        VkDescriptorBufferInfo descriptorBufferInfo = {};
+        descriptorBufferInfo.buffer = pBuffer->getBufferHandle();
+        descriptorBufferInfo.offset = offset;
+        descriptorBufferInfo.range = range;
+        this->write(binding, nullptr, &descriptorBufferInfo, nullptr);
+    }
+
+    void DescriptorSet::writeTexelBufferView(VkDescriptorSetLayoutBinding binding, BufferView* pTexelBufferView) {
+        VkBufferView hTexelBufferViews[1] = {pTexelBufferView->getBufferViewHandle()};
+        this->write(binding, nullptr, nullptr, hTexelBufferViews);
+    }
+
+    void DescriptorSet::copy(VkDescriptorSetLayoutBinding srcDescriptorSetBinding, DescriptorSet* pDstDescriptorSet,
+                             VkDescriptorSetLayoutBinding dstDescriptorSetBinding) {
+        VkCopyDescriptorSet copyDescriptorSet = {};
+        copyDescriptorSet.sType = VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET;
+        copyDescriptorSet.pNext = nullptr;
+        copyDescriptorSet.srcSet = this->hDescriptorSet;
+        copyDescriptorSet.srcBinding = srcDescriptorSetBinding.binding;
+        copyDescriptorSet.srcArrayElement = 0;
+        copyDescriptorSet.dstSet = pDstDescriptorSet->getDescriptorSetHandle();
+        copyDescriptorSet.dstBinding = dstDescriptorSetBinding.binding;
+        copyDescriptorSet.dstArrayElement = 0;
+        copyDescriptorSet.descriptorCount = 1;
+        this->update(nullptr, &copyDescriptorSet);
     }
 } // namespace fillcan

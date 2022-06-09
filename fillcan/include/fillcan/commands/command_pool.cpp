@@ -26,7 +26,7 @@ namespace fillcan {
     }
     CommandPool::~CommandPool() {}
 
-    std::vector<std::shared_ptr<CommandBuffer>> CommandPool::allocateCommandBuffers(VkCommandBufferLevel level, unsigned int commandBufferCount) {
+    std::vector<CommandBuffer*> CommandPool::allocateCommandBuffers(VkCommandBufferLevel level, unsigned int commandBufferCount) {
         std::vector<VkCommandBuffer> commandBufferHandles(commandBufferCount);
         VkCommandBufferAllocateInfo commandBufferAllocateInfo = {};
         commandBufferAllocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -38,33 +38,33 @@ namespace fillcan {
             VK_SUCCESS) {
             throw std::runtime_error("Failed to allocate primary command buffers");
         }
-        std::vector<std::shared_ptr<CommandBuffer>> allocatedCommandBuffers;
+        std::vector<CommandBuffer*> allocatedCommandBuffers;
         allocatedCommandBuffers.reserve(commandBufferHandles.size());
         for (VkCommandBuffer& commandBufferHandle : commandBufferHandles) {
-            this->commandBuffers.emplace_back(commandBufferHandle, level);
-            allocatedCommandBuffers.push_back(std::make_shared<CommandBuffer>(this->commandBuffers.back()));
+            this->upCommandBuffers.emplace_back(std::make_unique<CommandBuffer>(commandBufferHandle, level));
+            allocatedCommandBuffers.push_back(this->upCommandBuffers.back().get());
         }
         return allocatedCommandBuffers;
     }
 
-    void CommandPool::freeCommandBuffers(std::vector<std::shared_ptr<CommandBuffer>> pCommandBuffers) {
+    void CommandPool::freeCommandBuffers(std::vector<CommandBuffer*> pCommandBuffers) {
         // Get the handle to the VkCommandBuffer from the CommandBuffer wrapper
-        std::vector<VkCommandBuffer> commandBuffersToBeFreed = {};
-        for (std::shared_ptr<CommandBuffer> pCommandBuffer : pCommandBuffers) {
-            commandBuffersToBeFreed.emplace_back(pCommandBuffer->getCommandBufferHandle());
+        std::vector<VkCommandBuffer> hCommandBuffersToBeFreed = {};
+        for (CommandBuffer* pCommandBuffer : pCommandBuffers) {
+            hCommandBuffersToBeFreed.emplace_back(pCommandBuffer->getCommandBufferHandle());
         }
 
         // Free the command buffers using their handles
-        vkFreeCommandBuffers(this->pLogicalDevice->getLogicalDeviceHandle(), this->hCommandPool, commandBuffers.size(),
-                             commandBuffersToBeFreed.data());
+        vkFreeCommandBuffers(this->pLogicalDevice->getLogicalDeviceHandle(), this->hCommandPool, hCommandBuffersToBeFreed.size(),
+                             hCommandBuffersToBeFreed.data());
 
         // Remove the freed command buffers from the list of command buffers
-        for (VkCommandBuffer& freedCommandBuffer : commandBuffersToBeFreed) {
-            auto remove_if =
-                std::remove_if(this->commandBuffers.begin(), this->commandBuffers.end(), [freedCommandBuffer](CommandBuffer& commandBuffer) {
-                    return freedCommandBuffer == commandBuffer.getCommandBufferHandle();
-                });
-            this->commandBuffers.erase(remove_if, this->commandBuffers.end());
+        for (VkCommandBuffer& freedCommandBuffer : hCommandBuffersToBeFreed) {
+            auto remove_if = std::remove_if(this->upCommandBuffers.begin(), this->upCommandBuffers.end(),
+                                            [freedCommandBuffer](std::unique_ptr<CommandBuffer>& commandBuffer) {
+                                                return freedCommandBuffer == commandBuffer->getCommandBufferHandle();
+                                            });
+            this->upCommandBuffers.erase(remove_if, this->upCommandBuffers.end());
         }
     }
 

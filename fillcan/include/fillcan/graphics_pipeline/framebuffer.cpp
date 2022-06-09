@@ -38,7 +38,7 @@ namespace fillcan {
             throw std::runtime_error("Failed to create framebuffer");
         }
     }
-    Framebuffer::~Framebuffer() {}
+    Framebuffer::~Framebuffer() { vkDestroyFramebuffer(this->pLogicalDevice->getLogicalDeviceHandle(), this->hFramebuffer, nullptr); }
 
     VkFramebuffer Framebuffer::getFramebufferHandle() { return this->hFramebuffer; }
     VkExtent2D Framebuffer::getExtent() { return this->extent; }

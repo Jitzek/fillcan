@@ -13,8 +13,8 @@ namespace fillcan {
     class Queue;
     struct CommandRecording {
         Queue* queue;
-        std::vector<std::shared_ptr<CommandBuffer>> pPrimaryCommandBuffers = {};
-        std::vector<std::shared_ptr<CommandBuffer>> pSecondaryCommandBuffers = {};
+        std::vector<CommandBuffer*> pPrimaryCommandBuffers = {};
+        std::vector<CommandBuffer*> pSecondaryCommandBuffers = {};
         std::vector<VkSemaphore> waitSemaphores = {};
         VkPipelineStageFlags waitDstStageMask = 0;
         std::vector<VkSemaphore> signalSemaphores = {};

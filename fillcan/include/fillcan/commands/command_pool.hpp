@@ -17,7 +17,7 @@ namespace fillcan {
         LogicalDevice* pLogicalDevice;
         VkCommandPoolCreateFlags flags;
         unsigned int queueFamilyIndex;
-        std::vector<CommandBuffer> commandBuffers = {};
+        std::vector<std::unique_ptr<CommandBuffer>> upCommandBuffers = {};
 
       public:
         CommandPool(LogicalDevice* pLogicalDevice, VkCommandPoolCreateFlags flags, unsigned int queueFamilyIndex);
@@ -26,8 +26,8 @@ namespace fillcan {
         CommandPool(const CommandPool&) = delete;
         CommandPool& operator=(const CommandPool&) = delete;
 
-        std::vector<std::shared_ptr<CommandBuffer>> allocateCommandBuffers(VkCommandBufferLevel level, unsigned int commandBufferCount);
-        void freeCommandBuffers(std::vector<std::shared_ptr<CommandBuffer>> pCommandBuffers);
+        std::vector<CommandBuffer*> allocateCommandBuffers(VkCommandBufferLevel level, unsigned int commandBufferCount);
+        void freeCommandBuffers(std::vector<CommandBuffer*> pCommandBuffers);
 
         bool reset(VkCommandPoolResetFlags flags);
     };

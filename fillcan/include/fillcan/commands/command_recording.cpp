@@ -15,22 +15,22 @@ namespace fillcan {
 
     bool CommandRecording::endAll() {
         bool successfulEnd = true;
-        for (std::shared_ptr<CommandBuffer> primaryCommandBuffer : this->pPrimaryCommandBuffers) {
-            successfulEnd = successfulEnd && primaryCommandBuffer->end() ? true : false;
+        for (CommandBuffer* pPrimaryCommandBuffer : this->pPrimaryCommandBuffers) {
+            successfulEnd = successfulEnd && pPrimaryCommandBuffer->end() ? true : false;
         }
-        for (std::shared_ptr<CommandBuffer> secondaryCommandBuffer : this->pSecondaryCommandBuffers) {
-            successfulEnd = successfulEnd && secondaryCommandBuffer->end() ? true : false;
+        for (CommandBuffer* pSecondaryCommandBuffer : this->pSecondaryCommandBuffers) {
+            successfulEnd = successfulEnd && pSecondaryCommandBuffer->end() ? true : false;
         }
         return successfulEnd;
     }
 
     bool CommandRecording::resetAll(VkCommandBufferResetFlags flags) {
         bool successfulReset = true;
-        for (std::shared_ptr<CommandBuffer> primaryCommandBuffer : this->pPrimaryCommandBuffers) {
-            successfulReset = successfulReset && primaryCommandBuffer->reset(flags) ? true : false;
+        for (CommandBuffer* pPrimaryCommandBuffer : this->pPrimaryCommandBuffers) {
+            successfulReset = successfulReset && pPrimaryCommandBuffer->reset(flags) ? true : false;
         }
-        for (std::shared_ptr<CommandBuffer> secondaryCommandBuffer : this->pSecondaryCommandBuffers) {
-            successfulReset = successfulReset && secondaryCommandBuffer->reset(flags) ? true : false;
+        for (CommandBuffer* pSecondaryCommandBuffer : this->pSecondaryCommandBuffers) {
+            successfulReset = successfulReset && pSecondaryCommandBuffer->reset(flags) ? true : false;
         }
         return successfulReset;
     }

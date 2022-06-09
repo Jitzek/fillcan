@@ -47,8 +47,8 @@ namespace fillcan {
             submitInfo.pWaitDstStageMask = &pCommandRecording->waitDstStageMask;
             std::vector<VkCommandBuffer> commandBufferHandles = {};
             int i = 0;
-            for (std::shared_ptr<CommandBuffer>& spCommandBuffer : pCommandRecording->pPrimaryCommandBuffers) {
-                commandBufferHandles.push_back(spCommandBuffer->getCommandBufferHandle());
+            for (CommandBuffer* pCommandBuffer : pCommandRecording->pPrimaryCommandBuffers) {
+                commandBufferHandles.push_back(pCommandBuffer->getCommandBufferHandle());
             }
             submitInfo.commandBufferCount = commandBufferHandles.size();
             submitInfo.pCommandBuffers = commandBufferHandles.data();
@@ -62,10 +62,10 @@ namespace fillcan {
     bool resetRecording(CommandRecording& pCommandRecording);
 
     void Queue::freeRecording(CommandRecording& pCommandRecording) {
-        std::vector<std::shared_ptr<CommandBuffer>> commandBuffers = pCommandRecording.pPrimaryCommandBuffers;
-        commandBuffers.insert(commandBuffers.end(), pCommandRecording.pSecondaryCommandBuffers.begin(),
-                              pCommandRecording.pSecondaryCommandBuffers.end());
-        this->upCommandPool->freeCommandBuffers(commandBuffers);
+        std::vector<CommandBuffer*> pCommandBuffers = pCommandRecording.pPrimaryCommandBuffers;
+        pCommandBuffers.insert(pCommandBuffers.end(), pCommandRecording.pSecondaryCommandBuffers.begin(),
+                               pCommandRecording.pSecondaryCommandBuffers.end());
+        this->upCommandPool->freeCommandBuffers(pCommandBuffers);
     }
 
     bool Queue::waitIdle() { return vkQueueWaitIdle(this->hQueue); }

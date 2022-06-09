@@ -47,8 +47,13 @@ namespace fillcan {
         renderPassBeginInfo.renderPass = this->hRenderPass;
         renderPassBeginInfo.framebuffer = pFramebuffer->getFramebufferHandle();
         renderPassBeginInfo.renderArea = (VkRect2D){.offset = {0, 0}, .extent = pFramebuffer->getExtent()};
-        renderPassBeginInfo.clearValueCount = static_cast<uint32_t>(pClearValues->size());
-        renderPassBeginInfo.pClearValues = pClearValues->data();
+        if (pClearValues == nullptr) {
+            renderPassBeginInfo.clearValueCount = 0;
+            renderPassBeginInfo.pClearValues = nullptr;
+        } else {
+            renderPassBeginInfo.clearValueCount = static_cast<uint32_t>(pClearValues->size());
+            renderPassBeginInfo.pClearValues = pClearValues->data();
+        }
         vkCmdBeginRenderPass(this->pCommandBuffer->getCommandBufferHandle(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
     }
 
