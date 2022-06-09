@@ -42,11 +42,11 @@ namespace fillcan {
         void addColorAttachment(VkAttachmentDescription attachment, VkImageLayout layout, bool preserve = false, bool resolve = false);
         void addResolveAttachment(VkAttachmentDescription attachment, VkImageLayout layout, bool preserve = false);
         void setDepthStencilAttachment(VkAttachmentDescription attachment, VkImageLayout layout, bool preserve = false);
-        void addSubpass();
+        void constructSubpass();
 
         void setSubpassSrcDependency(VkPipelineStageFlags srcStageMask, VkAccessFlags srcAccessMask);
         void setSubpassDstDependency(VkPipelineStageFlags dstStageMask, VkAccessFlags dstAccessMask);
-        void addSubpassDependency(VkDependencyFlags dependencyFlags);
+        void constructSubpassDependency(VkDependencyFlags dependencyFlags);
 
         void reset();
         std::unique_ptr<RenderPass> getResult();

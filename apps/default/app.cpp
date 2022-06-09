@@ -1,21 +1,21 @@
 // vulkan
-#include "fillcan/commands/command_buffer.hpp"
-#include "fillcan/graphics_pipeline/render_pass.hpp"
-#include "fillcan/graphics_pipeline/render_pass_builder.hpp"
-#include "fillcan/memory/image_builder.hpp"
 #include "vulkan/vulkan_core.h"
 
 #include "app.hpp"
 
 // fillcan
 #include <cstring>
+#include <fillcan/commands/command_buffer.hpp>
 #include <fillcan/commands/command_recording.hpp>
 #include <fillcan/commands/queue.hpp>
+#include <fillcan/graphics_pipeline/framebuffer.hpp>
+#include <fillcan/graphics_pipeline/render_pass.hpp>
 #include <fillcan/graphics_pipeline/render_pass_builder.hpp>
 #include <fillcan/memory/buffer.hpp>
 #include <fillcan/memory/buffer_director.hpp>
 #include <fillcan/memory/buffer_view.hpp>
 #include <fillcan/memory/image.hpp>
+#include <fillcan/memory/image_builder.hpp>
 #include <fillcan/memory/image_director.hpp>
 #include <fillcan/memory/image_view.hpp>
 #include <fillcan/memory/memory.hpp>
@@ -49,22 +49,8 @@ namespace app {
         // Select any device
         fillcan::LogicalDevice* currentDevice = upFillcan->selectDevice(0);
 
-        fillcan::CommandRecording graphicsRecording = currentDevice->getGraphicsQueue()->createRecording(2, 1);
         fillcan::CommandRecording graphicsRecording2 = currentDevice->getGraphicsQueue()->createRecording(1, 1);
         fillcan::CommandRecording computRecording = currentDevice->getComputeQueue()->createRecording(2, 1);
-
-        for (std::shared_ptr<fillcan::CommandBuffer>& pCommandBuffer : graphicsRecording.pPrimaryCommandBuffers) {
-            std::cout << pCommandBuffer->begin() << "\n";
-        }
-        for (std::shared_ptr<fillcan::CommandBuffer>& pCommandBuffer : graphicsRecording.pSecondaryCommandBuffers) {
-            VkCommandBufferInheritanceInfo test = {.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO};
-            std::cout << pCommandBuffer->begin(0, &test) << "\n";
-        }
-        std::cout << graphicsRecording.endAll() << "\n";
-        currentDevice->getGraphicsQueue()->submitRecordings({&graphicsRecording}, nullptr);
-        currentDevice->getGraphicsQueue()->waitIdle();
-        graphicsRecording.resetAll();
-        currentDevice->getGraphicsQueue()->freeRecording(graphicsRecording);
 
         std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> descriptorSetLayouts = {};
 
@@ -135,7 +121,7 @@ namespace app {
                                                                .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
                                                                .finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR};
         renderPassBuilder.addColorAttachment(colorAttachmentDescription1, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
-        renderPassBuilder.addSubpass();
+        renderPassBuilder.constructSubpass();
         std::unique_ptr<fillcan::RenderPass> renderPass = renderPassBuilder.getResult();
 
         std::cout << "Renderpass: " << renderPass->getRenderPassHandle() << "\n";
@@ -147,12 +133,16 @@ namespace app {
         fillcan::SwapchainImage swapchainImage1 = pSwapchain->getNextImage(pSwapchainCommandBuffer);
         pSwapchainCommandBuffer->end();
         std::cout << (swapchainImage1.outOfDate ? "Out of Date " : " ") << swapchainImage1.index << "\n";
-        pSwapchain = upFillcan->recreateSwapchain();
-        std::cout << pSwapchain->getSwapchainHandle() << "\n";
-        pSwapchainCommandBuffer->begin();
-        fillcan::SwapchainImage swapchainImage2 = pSwapchain->getNextImage(pSwapchainCommandBuffer);
-        pSwapchainCommandBuffer->end();
-        std::cout << (swapchainImage2.outOfDate ? "Out of Date " : " ") << swapchainImage2.index << "\n";
+
+        std::vector<fillcan::ImageView*> pAttachments = {
+            swapchainImage1.image.createImageView(VK_IMAGE_VIEW_TYPE_2D, pSwapchain->getSurfaceFormat().format)};
+        fillcan::Framebuffer framebuffer1 =
+            fillcan::Framebuffer(currentDevice, renderPass.get(), pAttachments, pSwapchain->getExtent().width, pSwapchain->getExtent().height, 1);
+        std::cout << "Framebuffer: " << framebuffer1.getFramebufferHandle() << "\n";
+
+        fillcan::CommandRecording graphicsRecording = currentDevice->getGraphicsQueue()->createRecording(1, 0);
+
+        // renderPass->begin(graphicsRecording.pPrimaryCommandBuffers[0].get(), &framebuffer1);
 
         upFillcan->MainLoop(std::bind(&App::update, this));
     }

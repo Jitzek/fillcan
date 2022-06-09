@@ -1,12 +1,15 @@
 // vulkan
+#include "fillcan/memory/image.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include <cstdint>
 #include <fillcan/commands/queue.hpp>
 #include <fillcan/instance/logical_device.hpp>
 #include <fillcan/swapchain/swapchain.hpp>
 #include <fillcan/window.hpp>
+
+// std
+#include <cstdint>
 #include <stdexcept>
 #include <vector>
 
@@ -98,16 +101,21 @@ namespace fillcan {
         VkResult acquireNextImageResult = vkAcquireNextImageKHR(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSwapchain, UINT64_MAX,
                                                                 hSemaphore, VK_NULL_HANDLE, &imageIndex);
         if (acquireNextImageResult == VK_ERROR_OUT_OF_DATE_KHR) {
-            return (SwapchainImage){.outOfDate = true, .index = 0, .hImage = nullptr, .hSemaphore = nullptr};
+            return (SwapchainImage){.outOfDate = true, .index = 0, .image = Image(this->pLogicalDevice, VK_NULL_HANDLE), .hSemaphore = nullptr};
         }
         if (acquireNextImageResult != VK_SUCCESS) {
             throw std::runtime_error("Failed to acquire next swapchain image");
         }
 
-        return (SwapchainImage){.outOfDate = false, .index = imageIndex, .hImage = this->hSwapchainImages[imageIndex], .hSemaphore = hSemaphore};
+        return (SwapchainImage){.outOfDate = false,
+                                .index = imageIndex,
+                                .image = Image(this->pLogicalDevice, this->hSwapchainImages[imageIndex]),
+                                .hSemaphore = hSemaphore};
     }
 
     VkSurfaceFormatKHR Swapchain::getSurfaceFormat() { return this->surfaceFormat; }
 
     void Swapchain::present(SwapchainImage& swapchainImage, VkSemaphore* pSemaphore) {}
+
+    VkExtent2D Swapchain::getExtent() { return this->pWindow->getExtent(); }
 } // namespace fillcan

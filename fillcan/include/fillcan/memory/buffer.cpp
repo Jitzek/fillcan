@@ -65,6 +65,7 @@ namespace fillcan {
 
     std::vector<BufferView*> Buffer::getBufferViews() {
         std::vector<BufferView*> pBufferViews = {};
+        pBufferViews.reserve(this->upBufferViews.size());
         std::transform(this->upBufferViews.begin(), this->upBufferViews.end(), std::back_inserter(pBufferViews),
                        [](const std::unique_ptr<BufferView>& upBufferView) { return upBufferView.get(); });
         return pBufferViews;

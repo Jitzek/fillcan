@@ -35,6 +35,7 @@ namespace fillcan {
         Image(LogicalDevice* pLogicalDevice, VkImageCreateFlags flags, VkImageType type, VkFormat format, VkExtent3D extent, unsigned int mipLevels,
               unsigned int arrayLayers, VkSampleCountFlagBits samples, VkImageTiling tiling, VkImageUsageFlags usage, VkSharingMode sharingMode,
               std::vector<uint32_t>& queueFamilyIndices, VkImageLayout initialLayout);
+        Image(LogicalDevice* pLogicalDevice, VkImage hImage);
         ~Image();
 
         VkImage getImageHandle();

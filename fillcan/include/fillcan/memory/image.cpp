@@ -41,6 +41,8 @@ namespace fillcan {
             throw std::runtime_error("Failed to create image");
         }
     }
+    Image::Image(LogicalDevice* pLogicalDevice, VkImage hImage) : pLogicalDevice(pLogicalDevice), hImage(hImage) {}
+
     Image::~Image() { vkDestroyImage(this->pLogicalDevice->getLogicalDeviceHandle(), this->hImage, nullptr); }
 
     VkImage Image::getImageHandle() { return this->hImage; }
@@ -83,8 +85,10 @@ namespace fillcan {
         this->upImageViews.emplace_back(std::make_unique<ImageView>(this->pLogicalDevice, this, viewType, format, subresourceRange, components));
         return this->upImageViews.back().get();
     }
+
     std::vector<ImageView*> Image::getImageViews() {
         std::vector<ImageView*> pImageViews = {};
+        pImageViews.reserve(this->upImageViews.size());
         std::transform(this->upImageViews.begin(), this->upImageViews.end(), std::back_inserter(pImageViews),
                        [](const std::unique_ptr<ImageView>& upImageView) { return upImageView.get(); });
         return pImageViews;

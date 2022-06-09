@@ -2,9 +2,13 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
+#include <fillcan/graphics_pipeline/framebuffer.hpp>
 #include <fillcan/graphics_pipeline/render_pass.hpp>
 #include <fillcan/instance/logical_device.hpp>
+
+// std
 #include <stdexcept>
+#include <vector>
 
 namespace fillcan {
     RenderPass::RenderPass(LogicalDevice* pLogicalDevice, std::vector<VkAttachmentDescription> attachments,
@@ -25,7 +29,34 @@ namespace fillcan {
         }
     }
 
-    RenderPass::~RenderPass() {}
+    RenderPass::~RenderPass() { vkDestroyRenderPass(this->pLogicalDevice->getLogicalDeviceHandle(), this->hRenderPass, nullptr); }
 
     VkRenderPass RenderPass::getRenderPassHandle() { return this->hRenderPass; }
+
+    std::vector<VkAttachmentDescription>& RenderPass::getAttachments() { return this->attachments; }
+
+    std::vector<VkSubpassDescription>& RenderPass::getSubpasses() { return this->subpasses; }
+
+    std::vector<VkSubpassDependency>& RenderPass::getDependencies() { return this->dependencies; }
+
+    void RenderPass::begin(CommandBuffer* pCommandBuffer, Framebuffer* pFramebuffer, std::vector<VkClearValue>* pClearValues) {
+        this->pCommandBuffer = pCommandBuffer;
+        VkRenderPassBeginInfo renderPassBeginInfo = {};
+        renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        renderPassBeginInfo.pNext = nullptr;
+        renderPassBeginInfo.renderPass = this->hRenderPass;
+        renderPassBeginInfo.framebuffer = pFramebuffer->getFramebufferHandle();
+        renderPassBeginInfo.renderArea = (VkRect2D){.offset = {0, 0}, .extent = pFramebuffer->getExtent()};
+        renderPassBeginInfo.clearValueCount = static_cast<uint32_t>(pClearValues->size());
+        renderPassBeginInfo.pClearValues = pClearValues->data();
+        vkCmdBeginRenderPass(this->pCommandBuffer->getCommandBufferHandle(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+    }
+
+    void RenderPass::end() {
+        if (this->pCommandBuffer == nullptr) {
+            throw std::runtime_error("Attempting to end renderpass when it has not begun");
+        }
+        vkCmdEndRenderPass(this->pCommandBuffer->getCommandBufferHandle());
+        this->pCommandBuffer = nullptr;
+    }
 } // namespace fillcan

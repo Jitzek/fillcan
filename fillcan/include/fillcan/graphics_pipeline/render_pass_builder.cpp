@@ -42,7 +42,7 @@ namespace fillcan {
             (VkAttachmentReference{.attachment = static_cast<uint32_t>(this->attachments.size() - 1), .layout = layout});
     }
 
-    void RenderPassBuilder::addSubpass() {
+    void RenderPassBuilder::constructSubpass() {
         VkSubpassDescription subpassDescription = {};
         subpassDescription.flags = 0;
         subpassDescription.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
@@ -86,7 +86,7 @@ namespace fillcan {
         this->dstAccessMask = dstAccessMask;
     }
 
-    void RenderPassBuilder::addSubpassDependency(VkDependencyFlags dependencyFlags) {
+    void RenderPassBuilder::constructSubpassDependency(VkDependencyFlags dependencyFlags) {
         if (this->srcSubpass == -1) {
             throw std::runtime_error("Source subpass dependency not set");
         }

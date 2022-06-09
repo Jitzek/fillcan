@@ -1,6 +1,7 @@
 #pragma once
 
 // vulkan
+#include "fillcan/memory/image.hpp"
 #include "vulkan/vulkan_core.h"
 #include <vector>
 
@@ -13,7 +14,7 @@ namespace fillcan {
     struct SwapchainImage {
         bool outOfDate;
         unsigned int index;
-        VkImage hImage;
+        Image image;
         VkSemaphore hSemaphore;
     };
 
@@ -40,5 +41,7 @@ namespace fillcan {
         bool isSwapchainImageValid(SwapchainImage& swapchainImage);
 
         void present(SwapchainImage& swapchainImage, VkSemaphore* pSemaphore = nullptr);
+
+        VkExtent2D getExtent();
     };
 } // namespace fillcan
