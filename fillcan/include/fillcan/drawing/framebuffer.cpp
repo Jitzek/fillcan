@@ -2,8 +2,8 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include <fillcan/graphics_pipeline/framebuffer.hpp>
-#include <fillcan/graphics_pipeline/render_pass.hpp>
+#include <fillcan/drawing/framebuffer.hpp>
+#include <fillcan/drawing/render_pass.hpp>
 #include <fillcan/instance/logical_device.hpp>
 #include <fillcan/memory/image_view.hpp>
 

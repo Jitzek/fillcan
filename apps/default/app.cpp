@@ -4,13 +4,15 @@
 #include "app.hpp"
 
 // fillcan
+#include "fillcan/computing/compute_pipeline_builder.hpp"
+#include "fillcan/shader/pipeline_builder.hpp"
 #include <cstring>
 #include <fillcan/commands/command_buffer.hpp>
 #include <fillcan/commands/command_recording.hpp>
 #include <fillcan/commands/queue.hpp>
-#include <fillcan/graphics_pipeline/framebuffer.hpp>
-#include <fillcan/graphics_pipeline/render_pass.hpp>
-#include <fillcan/graphics_pipeline/render_pass_builder.hpp>
+#include <fillcan/drawing/framebuffer.hpp>
+#include <fillcan/drawing/render_pass.hpp>
+#include <fillcan/drawing/render_pass_builder.hpp>
 #include <fillcan/memory/buffer.hpp>
 #include <fillcan/memory/buffer_director.hpp>
 #include <fillcan/memory/buffer_view.hpp>
@@ -26,6 +28,9 @@
 #include <fillcan/shader/descriptor_set_layout_builder.hpp>
 #include <fillcan/shader/shader_module.hpp>
 #include <fillcan/swapchain/swapchain.hpp>
+#include "fillcan/computing/compute_pipeline.hpp"
+#include "fillcan/shader/pipeline.hpp"
+#include "fillcan/shader/pipeline_layout.hpp"
 
 // std
 #include <iostream>
@@ -147,6 +152,18 @@ namespace app {
         clearValues.emplace_back((VkClearValue){.color = (VkClearColorValue){.float32 = {0.0f, 0.0f, 0.0f, 1.0f}}});
         graphicsRecording.pPrimaryCommandBuffers[0]->begin();
         renderPass->begin(graphicsRecording.pPrimaryCommandBuffers[0], &framebuffer1, &clearValues);
+
+        /*
+            Compute Pipeline
+        */
+        fillcan::ComputePipelineBuilder computePipelineBuilder = fillcan::ComputePipelineBuilder();
+        computePipelineBuilder.setLogicalDevice(currentDevice);
+        computePipelineBuilder.setFlags(0);
+        computePipelineBuilder.setShaderStage(
+            fillcan::PipelineShaderStage{.stage = VK_SHADER_STAGE_COMPUTE_BIT, .pShaderModule = &shaderModule, .name = "main"});
+        fillcan::ComputePipeline computePipeline = computePipelineBuilder.getResult();
+        std::cout << computePipeline.getPipelineLayout()->getDescriptorSetLayouts().size() << "\n";
+        /* */
 
         upFillcan->MainLoop(std::bind(&App::update, this));
     }

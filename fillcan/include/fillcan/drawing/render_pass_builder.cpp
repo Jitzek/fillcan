@@ -1,8 +1,8 @@
 
-#include "fillcan/graphics_pipeline/render_pass.hpp"
+#include "fillcan/drawing/render_pass.hpp"
 #include "vulkan/vulkan_core.h"
 #include <algorithm>
-#include <fillcan/graphics_pipeline/render_pass_builder.hpp>
+#include <fillcan/drawing/render_pass_builder.hpp>
 #include <memory>
 #include <stdexcept>
 

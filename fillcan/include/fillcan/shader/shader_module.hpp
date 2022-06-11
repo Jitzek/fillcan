@@ -27,7 +27,7 @@ namespace fillcan {
         ~ShaderModule();
 
         VkShaderModule getShaderModuleHandle();
-        const std::vector<std::unique_ptr<DescriptorSetLayout>>& getDescriptorSetLayouts() const;
+        std::vector<DescriptorSetLayout*> getDescriptorSetLayouts();
         DescriptorPool* getDescriptorPool() const;
     };
 } // namespace fillcan

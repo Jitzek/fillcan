@@ -35,7 +35,8 @@ namespace fillcan {
         std::vector<VkSubpassDescription>& getSubpasses();
         std::vector<VkSubpassDependency>& getDependencies();
 
-        void begin(CommandBuffer* pCommandBuffer, Framebuffer* pFramebuffer, std::vector<VkClearValue>* pClearValues = nullptr);
+        void begin(CommandBuffer* pCommandBuffer, Framebuffer* pFramebuffer, std::vector<VkClearValue>* pClearValues = nullptr,
+                   VkRect2D* pRenderArea = nullptr);
         void end();
     };
 } // namespace fillcan

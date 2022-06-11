@@ -5,6 +5,7 @@
 #include <fillcan/shader/shader_module.hpp>
 
 // std
+#include <algorithm>
 #include <iostream>
 #include <string>
 
@@ -27,6 +28,12 @@ namespace fillcan {
     ShaderModule::~ShaderModule() {}
 
     VkShaderModule ShaderModule::getShaderModuleHandle() { return this->hShaderModule; }
-    const std::vector<std::unique_ptr<DescriptorSetLayout>>& ShaderModule::getDescriptorSetLayouts() const { return this->upDescriptorSetLayouts; }
+    std::vector<DescriptorSetLayout*> ShaderModule::getDescriptorSetLayouts() {
+        std::vector<DescriptorSetLayout*> pDescriptorSetLayouts = {};
+        pDescriptorSetLayouts.reserve(this->upDescriptorSetLayouts.size());
+        std::transform(this->upDescriptorSetLayouts.begin(), this->upDescriptorSetLayouts.end(), std::back_inserter(pDescriptorSetLayouts),
+                       [](const std::unique_ptr<DescriptorSetLayout>& upDescriptorSetLayout) { return upDescriptorSetLayout.get(); });
+        return pDescriptorSetLayouts;
+    }
     DescriptorPool* ShaderModule::getDescriptorPool() const { return this->upDescriptorPool.get(); }
 } // namespace fillcan

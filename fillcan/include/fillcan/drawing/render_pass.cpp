@@ -2,8 +2,8 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include <fillcan/graphics_pipeline/framebuffer.hpp>
-#include <fillcan/graphics_pipeline/render_pass.hpp>
+#include <fillcan/drawing/framebuffer.hpp>
+#include <fillcan/drawing/render_pass.hpp>
 #include <fillcan/instance/logical_device.hpp>
 
 // std
@@ -39,20 +39,24 @@ namespace fillcan {
 
     std::vector<VkSubpassDependency>& RenderPass::getDependencies() { return this->dependencies; }
 
-    void RenderPass::begin(CommandBuffer* pCommandBuffer, Framebuffer* pFramebuffer, std::vector<VkClearValue>* pClearValues) {
+    void RenderPass::begin(CommandBuffer* pCommandBuffer, Framebuffer* pFramebuffer, std::vector<VkClearValue>* pClearValues, VkRect2D* pRenderArea) {
         this->pCommandBuffer = pCommandBuffer;
         VkRenderPassBeginInfo renderPassBeginInfo = {};
         renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPassBeginInfo.pNext = nullptr;
         renderPassBeginInfo.renderPass = this->hRenderPass;
         renderPassBeginInfo.framebuffer = pFramebuffer->getFramebufferHandle();
-        renderPassBeginInfo.renderArea = (VkRect2D){.offset = {0, 0}, .extent = pFramebuffer->getExtent()};
-        if (pClearValues == nullptr) {
-            renderPassBeginInfo.clearValueCount = 0;
-            renderPassBeginInfo.pClearValues = nullptr;
+        if (pRenderArea != nullptr) {
+            renderPassBeginInfo.renderArea = *pRenderArea;
         } else {
+            renderPassBeginInfo.renderArea = (VkRect2D){.offset = {0, 0}, .extent = pFramebuffer->getExtent()};
+        }
+        if (pClearValues != nullptr) {
             renderPassBeginInfo.clearValueCount = static_cast<uint32_t>(pClearValues->size());
             renderPassBeginInfo.pClearValues = pClearValues->data();
+        } else {
+            renderPassBeginInfo.clearValueCount = 0;
+            renderPassBeginInfo.pClearValues = nullptr;
         }
         vkCmdBeginRenderPass(this->pCommandBuffer->getCommandBufferHandle(), &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
     }
