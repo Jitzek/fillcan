@@ -13,6 +13,7 @@
 
 namespace fillcan {
     class LogicalDevice;
+    class Fence;
     class Queue {
       private:
         VkQueue hQueue;
@@ -21,6 +22,7 @@ namespace fillcan {
         unsigned int queueIndex;
         std::unique_ptr<CommandPool> upCommandPool;
         std::vector<CommandRecording> recordings = {};
+
       public:
         Queue(LogicalDevice* pLogicalDevice, unsigned int queueFamilyIndex, unsigned int queueIndex);
         ~Queue();
@@ -29,7 +31,7 @@ namespace fillcan {
         Queue& operator=(const Queue&) = delete;
 
         CommandRecording& createRecording(unsigned int primaryCommandBufferCount, unsigned int secondaryCommandBufferCount);
-        bool submitRecordings(std::vector<CommandRecording*> pCommandRecordings, VkFence fence = VK_NULL_HANDLE);
+        bool submitRecordings(std::vector<CommandRecording*> pCommandRecordings, Fence* pFence = nullptr);
         bool resetRecording(CommandRecording& pCommandRecording);
         void freeRecording(CommandRecording& pCommandRecording);
         bool waitIdle();

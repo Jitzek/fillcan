@@ -1,17 +1,17 @@
-#pragma once
 // vulkan
 #include "vulkan/vulkan_core.h"
 
 // fillcan
 #include <fillcan/commands/command_recording.hpp>
 #include <fillcan/commands/queue.hpp>
+#include <fillcan/memory/fence.hpp>
 
 // std
 #include <memory>
 #include <vector>
 
 namespace fillcan {
-    bool CommandRecording::submitAll(VkFence fence) { return this->queue->submitRecordings({this}, fence); }
+    bool CommandRecording::submitAll(Fence* pFence) { return this->queue->submitRecordings({this}, pFence); }
 
     bool CommandRecording::endAll() {
         bool successfulEnd = true;

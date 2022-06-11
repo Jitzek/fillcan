@@ -1,14 +1,9 @@
 #include "app.hpp"
-#include "fillcan/commands/command_buffer.hpp"
-#include "fillcan/commands/command_recording.hpp"
+#include "fillcan/memory/fence.hpp"
 #include "glm/detail/precision.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include <algorithm>
-#include <cstddef>
-#include <cstdint>
-#include <cstring>
 #include <fillcan/memory/buffer.hpp>
 #include <fillcan/memory/buffer_director.hpp>
 #include <fillcan/memory/memory.hpp>
@@ -24,7 +19,14 @@
 #include <fillcan/computing/compute_pipeline.hpp>
 #include <fillcan/computing/compute_pipeline_builder.hpp>
 
+#include <fillcan/commands/command_buffer.hpp>
+#include <fillcan/commands/command_recording.hpp>
+
 // std
+#include <algorithm>
+#include <cstddef>
+#include <cstdint>
+#include <cstring>
 #include <fstream>
 #include <iterator>
 #include <memory>
@@ -59,12 +61,17 @@ namespace app_compute_pipeline_test {
     void App::run() {
         std::string name = "Compute Pipeline Test Application";
         std::cout << "Running App \"" << name << "\"\n";
+
+        /*
+            Instance Fillcan
+        */
         upFillcan = std::make_unique<fillcan::Fillcan>(name.c_str(), 1.0, 800, 600, (VkPhysicalDeviceFeatures){.samplerAnisotropy = true});
 
         // Select any device
         upFillcan->selectDevice(0);
 
         std::cout << "Using Device: " << upFillcan->getCurrentDevice()->getPhysicalDevice()->getProperties().deviceName << "\n";
+        /* */
 
         /*
             Create the descriptor set layouts to bind the needed uniform buffer and two storage buffers
@@ -73,7 +80,7 @@ namespace app_compute_pipeline_test {
         /* */
 
         /*
-            Create a descriptor pool with the descriptor set layouts, descriptor sets should be automatically allocated
+            Create a descriptor pool with the descriptor set layouts, descriptor sets will be automatically allocated
         */
         std::unique_ptr<fillcan::DescriptorPool> upDescriptorPool = this->createDescriptorPool(upDescriptorSetLayouts);
         /* */
@@ -173,17 +180,18 @@ namespace app_compute_pipeline_test {
             Fill buffers with data
         */
         int integerCount = 4096;
+
         Config config = {.transform = 10, .integerCount = integerCount};
         memcpy(*ppConfigData, &config, sizeof(config));
-
-        std::vector<int> data = {};
-        data.reserve(integerCount);
 
         InputBuffer inputBuffer = {.integers = {}};
         for (int i = 0; i < integerCount; i++) {
             inputBuffer.integers[i] = i;
         }
         memcpy(*ppInputData, &inputBuffer, sizeof(inputBuffer));
+
+        // Flush memory because the host has changed it
+        uniformBufferConfigMemory.flush();
         storageBufferInputBufferMemory.flush();
         /* */
 
@@ -200,6 +208,7 @@ namespace app_compute_pipeline_test {
                 std::cout << "\n";
             }
         }
+        std::cout << "\n\n";
 
         // Begin compute recording commands
         pComputePrimaryCommandBuffer->begin();
@@ -209,16 +218,10 @@ namespace app_compute_pipeline_test {
         pComputePrimaryCommandBuffer->end();
 
         // Create and wait for Fence
-        VkFenceCreateInfo fenceCreateInfo = {};
-        fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-        fenceCreateInfo.pNext = nullptr;
-        fenceCreateInfo.flags = 0;
-        VkFence hComputeFence;
-        vkCreateFence(this->upFillcan->getCurrentDevice()->getLogicalDeviceHandle(), &fenceCreateInfo, nullptr, &hComputeFence);
-        this->upFillcan->getCurrentDevice()->getComputeQueue()->submitRecordings({&rComputeCommandRecording}, hComputeFence);
-        vkWaitForFences(this->upFillcan->getCurrentDevice()->getLogicalDeviceHandle(), 1, &hComputeFence, VK_TRUE, UINT64_MAX);
-        vkDestroyFence(this->upFillcan->getCurrentDevice()->getLogicalDeviceHandle(), hComputeFence, nullptr);
-        
+        fillcan::Fence computeFence = fillcan::Fence(this->upFillcan->getCurrentDevice());
+        this->upFillcan->getCurrentDevice()->getComputeQueue()->submitRecordings({&rComputeCommandRecording}, &computeFence);
+        computeFence.waitFor();
+
         // Invalidate buffer memory because the device has changed it
         storageBufferOutputBufferMemory.invalidate();
 

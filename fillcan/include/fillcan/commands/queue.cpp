@@ -7,6 +7,7 @@
 #include "fillcan/commands/command_recording.hpp"
 #include <fillcan/commands/queue.hpp>
 #include <fillcan/instance/logical_device.hpp>
+#include <fillcan/memory/fence.hpp>
 
 // std
 #include <iostream>
@@ -36,7 +37,7 @@ namespace fillcan {
         return this->recordings.back();
     }
 
-    bool Queue::submitRecordings(std::vector<CommandRecording*> pCommandRecordings, VkFence fence) {
+    bool Queue::submitRecordings(std::vector<CommandRecording*> pCommandRecordings, Fence* pFence) {
         bool success = true;
         for (CommandRecording* pCommandRecording : pCommandRecordings) {
             VkSubmitInfo submitInfo = {};
@@ -54,7 +55,7 @@ namespace fillcan {
             submitInfo.pCommandBuffers = commandBufferHandles.data();
             submitInfo.signalSemaphoreCount = pCommandRecording->signalSemaphores.size();
             submitInfo.pSignalSemaphores = pCommandRecording->signalSemaphores.data();
-            success = success && vkQueueSubmit(this->hQueue, 1, &submitInfo, fence) == VK_SUCCESS ? true : false;
+            success = success && vkQueueSubmit(this->hQueue, 1, &submitInfo, pFence->getFenceHandle()) == VK_SUCCESS ? true : false;
         }
         return success;
     }

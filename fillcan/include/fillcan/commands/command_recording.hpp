@@ -11,6 +11,7 @@
 
 namespace fillcan {
     class Queue;
+    class Fence;
     struct CommandRecording {
         Queue* queue;
         std::vector<CommandBuffer*> pPrimaryCommandBuffers = {};
@@ -20,7 +21,7 @@ namespace fillcan {
         std::vector<VkSemaphore> signalSemaphores = {};
 
         bool endAll();
-        bool submitAll(VkFence fence);
+        bool submitAll(Fence* pFence);
         bool resetAll(VkCommandBufferResetFlags flags = 0);
     };
 } // namespace fillcan
