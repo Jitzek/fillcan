@@ -20,6 +20,6 @@ namespace fillcan {
 
         void reset() override;
 
-        ComputePipeline getResult();
+        std::unique_ptr<ComputePipeline> getResult();
     };
 } // namespace fillcan

@@ -37,10 +37,9 @@ namespace fillcan {
 
       protected:
         void setBindPoint(VkPipelineBindPoint pipelineBindPoint);
-        void bindDescriptorSets();
 
       public:
-        Pipeline(LogicalDevice* pLogicalDevice, VkPipelineCreateFlags flags, std::vector<PipelineShaderStage> shaderStages,
+        Pipeline(LogicalDevice* pLogicalDevice, CommandBuffer* pCommandBuffer, VkPipelineCreateFlags flags, std::vector<PipelineShaderStage> shaderStages,
                  VkPipelineCache pipelineCache = VK_NULL_HANDLE, Pipeline* pBasePipeline = nullptr);
         virtual ~Pipeline();
 
@@ -48,6 +47,9 @@ namespace fillcan {
 
         PipelineLayout* getPipelineLayout();
         void bindToCommandBuffer(CommandBuffer* pCommandBuffer);
+        void bindDescriptorSets();
         CommandBuffer* getCommandBuffer();
+
+        void start();
     };
 } // namespace fillcan

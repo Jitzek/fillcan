@@ -161,8 +161,8 @@ namespace app {
         computePipelineBuilder.setFlags(0);
         computePipelineBuilder.setShaderStage(
             fillcan::PipelineShaderStage{.stage = VK_SHADER_STAGE_COMPUTE_BIT, .pShaderModule = &shaderModule, .name = "main"});
-        fillcan::ComputePipeline computePipeline = computePipelineBuilder.getResult();
-        std::cout << computePipeline.getPipelineLayout()->getDescriptorSetLayouts().size() << "\n";
+        std::unique_ptr<fillcan::ComputePipeline> upComputePipeline = computePipelineBuilder.getResult();
+        std::cout << upComputePipeline->getPipelineLayout()->getDescriptorSetLayouts().size() << "\n";
         /* */
 
         upFillcan->MainLoop(std::bind(&App::update, this));

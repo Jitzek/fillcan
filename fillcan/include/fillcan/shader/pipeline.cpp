@@ -15,9 +15,9 @@
 #include <vector>
 
 namespace fillcan {
-    Pipeline::Pipeline(LogicalDevice* pLogicalDevice, VkPipelineCreateFlags flags, std::vector<PipelineShaderStage> shaderStages,
-                       VkPipelineCache pipelineCache, Pipeline* pBasePipeline)
-        : pLogicalDevice(pLogicalDevice), flags(flags), shaderStages(shaderStages) {
+    Pipeline::Pipeline(LogicalDevice* pLogicalDevice, CommandBuffer* pCommandBuffer, VkPipelineCreateFlags flags,
+                       std::vector<PipelineShaderStage> shaderStages, VkPipelineCache pipelineCache, Pipeline* pBasePipeline)
+        : pLogicalDevice(pLogicalDevice), pCommandBuffer(pCommandBuffer), flags(flags), shaderStages(shaderStages) {
         for (PipelineShaderStage shaderStage : this->shaderStages) {
             std::vector<DescriptorSetLayout*> shaderStageDescriptorSetLayouts = shaderStage.pShaderModule->getDescriptorSetLayouts();
             this->pDescriptorSetLayouts.insert(this->pDescriptorSetLayouts.begin(), shaderStageDescriptorSetLayouts.begin(),
@@ -34,6 +34,15 @@ namespace fillcan {
     PipelineLayout* Pipeline::getPipelineLayout() { return this->layout.get(); }
 
     void Pipeline::setBindPoint(VkPipelineBindPoint bindPoint) { this->bindPoint = bindPoint; }
+
+    void Pipeline::bindToCommandBuffer(CommandBuffer* pCommandBuffer) {
+        if (this->bindPoint == VK_PIPELINE_BIND_POINT_MAX_ENUM) {
+            throw std::runtime_error(
+                "Pipeline bind point not set before binding command buffer, please use Pipeline::setPipelineBindPoint before calling this function");
+        }
+        vkCmdBindPipeline(pCommandBuffer->getCommandBufferHandle(), this->bindPoint, this->hPipeline);
+        this->pCommandBuffer = pCommandBuffer;
+    }
 
     void Pipeline::bindDescriptorSets() {
         if (this->bindPoint == VK_PIPELINE_BIND_POINT_MAX_ENUM) {
@@ -52,14 +61,13 @@ namespace fillcan {
                                 static_cast<uint32_t>(hDescriptorSets.size()), hDescriptorSets.data(), 0, nullptr);
     }
 
-    void Pipeline::bindToCommandBuffer(CommandBuffer* pCommandBuffer) {
-        if (this->bindPoint == VK_PIPELINE_BIND_POINT_MAX_ENUM) {
-            throw std::runtime_error(
-                "Pipeline bind point not set before binding command buffer, please use Pipeline::setPipelineBindPoint before calling this function");
-        }
-        vkCmdBindPipeline(pCommandBuffer->getCommandBufferHandle(), this->bindPoint, this->hPipeline);
-        this->pCommandBuffer = pCommandBuffer;
-    }
-
     CommandBuffer* Pipeline::getCommandBuffer() { return this->pCommandBuffer; }
+
+    void Pipeline::start() {
+        if (this->pCommandBuffer == nullptr) {
+            std::runtime_error("Failed to start pipeline because no commandbuffer was bound");
+        }
+        this->bindToCommandBuffer(this->pCommandBuffer);
+        this->bindDescriptorSets();
+    }
 } // namespace fillcan

@@ -1,6 +1,10 @@
-#include "fillcan/computing/compute_pipeline.hpp"
-#include "fillcan/shader/pipeline_builder.hpp"
+// fillcan
+#include <fillcan/computing/compute_pipeline.hpp>
 #include <fillcan/computing/compute_pipeline_builder.hpp>
+#include <fillcan/shader/pipeline_builder.hpp>
+
+// std
+#include <memory>
 #include <stdexcept>
 #include <vector>
 
@@ -15,5 +19,9 @@ namespace fillcan {
         this->pipelineShaderStage.reset();
     }
 
-    ComputePipeline ComputePipelineBuilder::getResult() { return ComputePipeline(this->pLogicalDevice, this->flags, {pipelineShaderStage.value()}); }
+    std::unique_ptr<ComputePipeline> ComputePipelineBuilder::getResult() {
+        return std::move(std::make_unique<ComputePipeline>(this->pLogicalDevice, this->pCommandBuffer, this->flags,
+                                                           (std::vector<PipelineShaderStage>){pipelineShaderStage.value()}, this->pipelineCache,
+                                                           this->pBasePipeline));
+    }
 } // namespace fillcan
