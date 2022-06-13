@@ -39,6 +39,14 @@ namespace fillcan {
         }
     }
 
+    void DescriptorPoolBuilder::reset() {
+        this->pLogicalDevice = nullptr;
+        this->flags = 0;
+        this->maxSets = 0;
+        this->pDescriptorSetLayouts.clear();
+        this->descriptorsAndCounts.clear();
+    }
+
     std::unique_ptr<DescriptorPool> DescriptorPoolBuilder::getResult() {
         std::vector<VkDescriptorPoolSize> poolSizes = {};
         poolSizes.reserve(this->descriptorsAndCounts.size());

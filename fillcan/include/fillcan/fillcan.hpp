@@ -3,10 +3,10 @@
 // fillcan
 #include "fillcan/commands/command_pool.hpp"
 #include "vulkan/vulkan_core.h"
+#include <fillcan/graphics/swapchain.hpp>
 #include <fillcan/instance/device_pool.hpp>
 #include <fillcan/instance/instance.hpp>
 #include <fillcan/instance/physical_device.hpp>
-#include <fillcan/swapchain/swapchain.hpp>
 #include <fillcan/window.hpp>
 
 // std
@@ -36,7 +36,8 @@ namespace fillcan {
 
         LogicalDevice* getCurrentDevice();
 
-        Swapchain* createSwapchain(BufferMode bufferMode = FILLCAN_TRIPLE_BUFFERING, VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR);
-        Swapchain* recreateSwapchain(BufferMode bufferMode = FILLCAN_TRIPLE_BUFFERING, VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR);
+        Swapchain* createSwapchain(BufferMode bufferMode = FILLCAN_BUFFERING_TRIPLE, VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR);
+        Swapchain* recreateSwapchain(BufferMode bufferMode = FILLCAN_BUFFERING_TRIPLE, VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR);
+        Swapchain* getSwapchain();
     };
 } // namespace fillcan

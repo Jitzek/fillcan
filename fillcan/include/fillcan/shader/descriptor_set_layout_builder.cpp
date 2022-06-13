@@ -32,6 +32,6 @@ namespace fillcan {
 
     void DescriptorSetLayoutBuilder::reset() {
         this->pLogicalDevice = nullptr;
-        this->bindings = {};
+        this->bindings.clear();
     }
 } // namespace fillcan

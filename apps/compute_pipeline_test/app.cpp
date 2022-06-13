@@ -153,8 +153,8 @@ namespace app_compute_pipeline_test {
             Get commandbuffer to execute work
         */
         // Create recording to gain access to a primary commandbuffer
-        fillcan::CommandRecording rComputeCommandRecording = upFillcan->getCurrentDevice()->getComputeQueue()->createRecording(1, 0);
-        fillcan::CommandBuffer* pComputePrimaryCommandBuffer = rComputeCommandRecording.pPrimaryCommandBuffers[0];
+        fillcan::CommandRecording* pComputeCommandRecording = upFillcan->getCurrentDevice()->getComputeQueue()->createRecording(1, 0);
+        fillcan::CommandBuffer* pComputePrimaryCommandBuffer = pComputeCommandRecording->pPrimaryCommandBuffers[0];
         /* */
 
         /*
@@ -219,7 +219,7 @@ namespace app_compute_pipeline_test {
 
         // Create and wait for Fence
         fillcan::Fence computeFence = fillcan::Fence(this->upFillcan->getCurrentDevice());
-        this->upFillcan->getCurrentDevice()->getComputeQueue()->submitRecordings({&rComputeCommandRecording}, &computeFence);
+        this->upFillcan->getCurrentDevice()->getComputeQueue()->submitRecordings({pComputeCommandRecording}, &computeFence);
         computeFence.waitFor();
 
         // Invalidate buffer memory because the device has changed it

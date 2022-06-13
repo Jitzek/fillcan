@@ -28,7 +28,7 @@ namespace fillcan {
         pipelineShaderStageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
         pipelineShaderStageCreateInfo.pNext = nullptr;
         pipelineShaderStageCreateInfo.flags = 0;
-        pipelineShaderStageCreateInfo.stage = VK_SHADER_STAGE_COMPUTE_BIT;
+        pipelineShaderStageCreateInfo.stage = this->shaderStages[0].stage;
         pipelineShaderStageCreateInfo.module = this->shaderStages[0].pShaderModule->getShaderModuleHandle();
         pipelineShaderStageCreateInfo.pName = this->shaderStages[0].name.c_str();
         // pipelineShaderStageCreateInfo.pSpecializationInfo = this->shaderStages[0]. // TODO: Specialization Info
@@ -38,8 +38,7 @@ namespace fillcan {
         computePipelineCreateInfo.layout = this->layout->getPipelineLayoutHandle();
         if (pBasePipeline != nullptr) {
             computePipelineCreateInfo.basePipelineHandle = pBasePipeline->getPipelineHandle();
-        }
-        else {
+        } else {
             computePipelineCreateInfo.basePipelineHandle = nullptr;
         }
         computePipelineCreateInfo.basePipelineIndex = 0;

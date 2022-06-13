@@ -1,8 +1,12 @@
-
-#include "fillcan/drawing/render_pass.hpp"
+// vulkan
 #include "vulkan/vulkan_core.h"
+
+// fillcan
+#include <fillcan/graphics/render_pass.hpp>
+#include <fillcan/graphics/render_pass_builder.hpp>
+
+// std
 #include <algorithm>
-#include <fillcan/drawing/render_pass_builder.hpp>
 #include <memory>
 #include <stdexcept>
 
@@ -38,8 +42,8 @@ namespace fillcan {
 
     void RenderPassBuilder::setDepthStencilAttachment(VkAttachmentDescription attachment, VkImageLayout layout, bool preserve) {
         this->addAttachment(attachment, preserve);
-        this->depthStencilAttachmentReference =
-            (VkAttachmentReference{.attachment = static_cast<uint32_t>(this->attachments.size() - 1), .layout = layout});
+        this->upDepthStencilAttachmentReference = std::make_unique<VkAttachmentReference>(
+            (VkAttachmentReference{.attachment = static_cast<uint32_t>(this->attachments.size() - 1), .layout = layout}));
     }
 
     void RenderPassBuilder::constructSubpass() {
@@ -53,10 +57,10 @@ namespace fillcan {
         if (this->resolve) {
             subpassDescription.pResolveAttachments = this->resolveAttachmentReferences.data();
         } else {
-            subpassDescription.pResolveAttachments = NULL;
+            subpassDescription.pResolveAttachments = nullptr;
         }
-        if (this->depthStencilAttachmentReference.attachment != VK_ATTACHMENT_UNUSED) {
-            subpassDescription.pDepthStencilAttachment = &this->depthStencilAttachmentReference;
+        if (this->upDepthStencilAttachmentReference != nullptr) {
+            subpassDescription.pDepthStencilAttachment = this->upDepthStencilAttachmentReference.get();
         } else {
             subpassDescription.pDepthStencilAttachment = nullptr;
         }
@@ -66,11 +70,11 @@ namespace fillcan {
         this->subpasses.push_back(subpassDescription);
 
         // Reset attachment reference variables for next subpass
-        this->inputAttachmentReferences = {};
-        this->colorAttachmentReferences = {};
-        this->resolveAttachmentReferences = {};
-        this->depthStencilAttachmentReference = {};
-        this->preserveAttachmentReferences = {};
+        this->inputAttachmentReferences.clear();
+        this->colorAttachmentReferences.clear();
+        this->resolveAttachmentReferences.clear();
+        this->upDepthStencilAttachmentReference = nullptr;
+        this->preserveAttachmentReferences.clear();
         this->resolve = false;
     }
 
@@ -115,14 +119,14 @@ namespace fillcan {
     void RenderPassBuilder::reset() {
         this->pLogicalDevice = nullptr;
         this->attachments = {};
-        this->inputAttachmentReferences = {};
-        this->colorAttachmentReferences = {};
-        this->resolveAttachmentReferences = {};
-        this->depthStencilAttachmentReference = {};
-        this->preserveAttachmentReferences = {};
+        this->inputAttachmentReferences.clear();
+        this->colorAttachmentReferences.clear();
+        this->resolveAttachmentReferences.clear();
+        this->upDepthStencilAttachmentReference = nullptr;
+        this->preserveAttachmentReferences.clear();
         this->resolve = false;
-        this->subpasses = {};
-        this->dependencies = {};
+        this->subpasses.clear();
+        this->dependencies.clear();
         this->srcSubpass = -1;
         this->dstSubpass = -1;
         this->srcStageMask = 0;

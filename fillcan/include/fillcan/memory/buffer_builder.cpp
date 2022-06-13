@@ -35,6 +35,6 @@ namespace fillcan {
         this->size = 0;
         this->usage = 0;
         this->sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-        this->queueFamilyIndices = {};
+        this->queueFamilyIndices.clear();
     }
 } // namespace fillcan

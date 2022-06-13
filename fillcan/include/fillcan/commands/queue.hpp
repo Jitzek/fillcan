@@ -30,7 +30,9 @@ namespace fillcan {
         Queue(const Queue&) = delete;
         Queue& operator=(const Queue&) = delete;
 
-        CommandRecording& createRecording(unsigned int primaryCommandBufferCount, unsigned int secondaryCommandBufferCount);
+        VkQueue getQueueHandle();
+
+        CommandRecording* createRecording(unsigned int primaryCommandBufferCount, unsigned int secondaryCommandBufferCount);
         bool submitRecordings(std::vector<CommandRecording*> pCommandRecordings, Fence* pFence = nullptr);
         bool resetRecording(CommandRecording& pCommandRecording);
         void freeRecording(CommandRecording& pCommandRecording);

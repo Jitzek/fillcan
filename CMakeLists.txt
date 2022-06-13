@@ -12,7 +12,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/Release)
 
 file(GLOB SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/apps/**/*.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/app/**/*.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/apps/**/*.hpp
 )
 
 set(SOURCE main.cpp)
@@ -21,8 +21,6 @@ add_executable(${PROJECT_NAME} ${SOURCE} ${SOURCES})
 
 ## Only do these if this is the main project, and not if it is included through add_subdirectory
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-  set (CMAKE_CXX_STANDARD 17)
-
   set(CMAKE_CXX_EXTENSIONS OFF)
 
   set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -54,7 +52,7 @@ endif()
 
 set(Fillcan_DIRECTORY "${CMAKE_SOURCE_DIR}/fillcan")
 target_include_directories(${PROJECT_NAME} PUBLIC ${Fillcan_DIRECTORY} ${PROJECT_BINARY_DIR})
-target_link_libraries (${PROJECT_NAME} ${Boost_LIBRARIES})
+# target_link_libraries (${PROJECT_NAME} ${Boost_LIBRARIES})
 
 ## Include Fillcan Library
 add_subdirectory(${Fillcan_DIRECTORY})

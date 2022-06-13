@@ -50,7 +50,7 @@ namespace fillcan {
         this->tiling = VK_IMAGE_TILING_OPTIMAL;
         this->usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT;
         this->sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-        this->queueFamilyIndices = {};
+        this->queueFamilyIndices.clear();
         this->initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     }
 

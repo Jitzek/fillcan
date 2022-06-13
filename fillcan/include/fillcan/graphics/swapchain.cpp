@@ -1,15 +1,18 @@
 // vulkan
-#include "fillcan/memory/image.hpp"
+#include "fillcan/memory/image_director.hpp"
+#include "fillcan/memory/image_view.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
 #include <fillcan/commands/queue.hpp>
+#include <fillcan/graphics/swapchain.hpp>
 #include <fillcan/instance/logical_device.hpp>
-#include <fillcan/swapchain/swapchain.hpp>
+#include <fillcan/memory/image.hpp>
 #include <fillcan/window.hpp>
 
 // std
 #include <cstdint>
+#include <memory>
 #include <stdexcept>
 #include <vector>
 
@@ -64,9 +67,19 @@ namespace fillcan {
         }
     }
 
-    Swapchain::~Swapchain() {}
+    Swapchain::~Swapchain() { vkDestroySwapchainKHR(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSwapchain, nullptr); }
 
     VkSwapchainKHR Swapchain::getSwapchainHandle() { return this->hSwapchain; }
+
+    BufferMode Swapchain::getBufferMode() { return this->bufferMode; }
+
+    unsigned int Swapchain::getImageArrayLayers() { return this->imageArrayLayers; }
+
+    VkImageUsageFlags Swapchain::getImageUsage() { return this->imageUsage; }
+
+    VkSharingMode Swapchain::getImageSharingMode() { return this->imageSharingMode; }
+
+    std::vector<uint32_t>& Swapchain::getQueueFamilyIndices() { return this->queueFamilyIndices; }
 
     SwapchainImage Swapchain::getNextImage(CommandBuffer* pCommandBuffer) {
         uint32_t imageIndex = 0;
@@ -101,21 +114,49 @@ namespace fillcan {
         VkResult acquireNextImageResult = vkAcquireNextImageKHR(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSwapchain, UINT64_MAX,
                                                                 hSemaphore, VK_NULL_HANDLE, &imageIndex);
         if (acquireNextImageResult == VK_ERROR_OUT_OF_DATE_KHR) {
-            return (SwapchainImage){.outOfDate = true, .index = 0, .image = Image(this->pLogicalDevice, VK_NULL_HANDLE), .hSemaphore = nullptr};
+            return (SwapchainImage){.outOfDate = true, .index = 0, .upImage = nullptr, .hSemaphore = VK_NULL_HANDLE};
         }
         if (acquireNextImageResult != VK_SUCCESS) {
             throw std::runtime_error("Failed to acquire next swapchain image");
         }
 
-        return (SwapchainImage){.outOfDate = false,
-                                .index = imageIndex,
-                                .image = Image(this->pLogicalDevice, this->hSwapchainImages[imageIndex]),
-                                .hSemaphore = hSemaphore};
+        // std::unique_ptr<SwapchainImage> test = std::make_unique<SwapchainImage>((SwapchainImage){
+        //     .index = imageIndex, .image = Image(this->pLogicalDevice, this->hSwapchainImages[imageIndex]), .hSemaphore = hSemaphore});
+        // upSwapchainImages.push_back(std::move(test));
+
+        //  &
+        // swapchainImages.push_back(Image(this->pLogicalDevice, this, this->hSwapchainImages[imageIndex]));
+        return std::move(
+            (SwapchainImage){.outOfDate = false,
+                             .index = imageIndex,
+                             .upImage = std::move(std::make_unique<Image>(this->pLogicalDevice, this, this->hSwapchainImages[imageIndex])),
+                             .hSemaphore = hSemaphore});
     }
 
     VkSurfaceFormatKHR Swapchain::getSurfaceFormat() { return this->surfaceFormat; }
 
-    void Swapchain::present(SwapchainImage& swapchainImage, VkSemaphore* pSemaphore) {}
+    void Swapchain::present(SwapchainImage* pSwapchainImage, std::vector<VkSemaphore> semaphores) {
+        if (pSwapchainImage == nullptr) {
+            throw std::runtime_error("Failed to present swapchain image: Image was invalid");
+        }
+        VkPresentInfoKHR presentInfo = {};
+        presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+        presentInfo.pNext = nullptr;
+        if (semaphores.size() > 0) {
+            presentInfo.waitSemaphoreCount = static_cast<uint32_t>(semaphores.size());
+            presentInfo.pWaitSemaphores = semaphores.data();
+        } else {
+            presentInfo.waitSemaphoreCount = 0;
+            presentInfo.pWaitSemaphores = nullptr;
+        }
+        presentInfo.swapchainCount = 1;
+        presentInfo.pSwapchains = &this->hSwapchain;
+        presentInfo.pImageIndices = &pSwapchainImage->index;
 
-    VkExtent2D Swapchain::getExtent() { return this->pWindow->getExtent(); }
+        if (vkQueuePresentKHR(this->pQueue->getQueueHandle(), &presentInfo) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to present swapchain image");
+        }
+    }
+
+    VkExtent2D Swapchain::getImageExtent() { return this->pWindow->getExtent(); }
 } // namespace fillcan

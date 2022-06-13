@@ -1,6 +1,7 @@
 // vulkan
 
 // fillcan
+#include "fillcan/instance/logical_device.hpp"
 #include "vulkan/vulkan_core.h"
 #include <fillcan/memory/image.hpp>
 #include <fillcan/memory/image_director.hpp>

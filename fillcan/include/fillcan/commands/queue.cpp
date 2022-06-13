@@ -23,7 +23,9 @@ namespace fillcan {
     }
     Queue::~Queue() {}
 
-    CommandRecording& Queue::createRecording(unsigned int primaryCommandBufferCount, unsigned int secondaryCommandBufferCount) {
+    VkQueue Queue::getQueueHandle() { return this->hQueue; }
+
+    CommandRecording* Queue::createRecording(unsigned int primaryCommandBufferCount, unsigned int secondaryCommandBufferCount) {
         CommandRecording recording = {};
         if (primaryCommandBufferCount > 0) {
             recording.pPrimaryCommandBuffers =
@@ -34,7 +36,7 @@ namespace fillcan {
                 this->upCommandPool->allocateCommandBuffers(VK_COMMAND_BUFFER_LEVEL_SECONDARY, secondaryCommandBufferCount);
         }
         this->recordings.push_back(recording);
-        return this->recordings.back();
+        return &this->recordings.back();
     }
 
     bool Queue::submitRecordings(std::vector<CommandRecording*> pCommandRecordings, Fence* pFence) {

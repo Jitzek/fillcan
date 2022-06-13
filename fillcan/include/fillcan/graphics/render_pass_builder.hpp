@@ -17,7 +17,7 @@ namespace fillcan {
         std::vector<VkAttachmentReference> inputAttachmentReferences = {};
         std::vector<VkAttachmentReference> colorAttachmentReferences = {};
         std::vector<VkAttachmentReference> resolveAttachmentReferences = {};
-        VkAttachmentReference depthStencilAttachmentReference = (VkAttachmentReference){.attachment = VK_ATTACHMENT_UNUSED};
+        std::unique_ptr<VkAttachmentReference> upDepthStencilAttachmentReference = nullptr;
         std::vector<uint32_t> preserveAttachmentReferences = {};
         bool resolve = false;
 

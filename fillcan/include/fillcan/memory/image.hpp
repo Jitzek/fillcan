@@ -3,6 +3,9 @@
 // vulkan
 #include "vulkan/vulkan_core.h"
 
+// fillcan
+#include <fillcan/memory/image_view.hpp>
+
 // std
 #include <memory>
 #include <vector>
@@ -10,7 +13,7 @@
 namespace fillcan {
     class LogicalDevice;
     class Memory;
-    class ImageView;
+    class Swapchain;
 
     class Image {
       private:
@@ -35,7 +38,7 @@ namespace fillcan {
         Image(LogicalDevice* pLogicalDevice, VkImageCreateFlags flags, VkImageType type, VkFormat format, VkExtent3D extent, unsigned int mipLevels,
               unsigned int arrayLayers, VkSampleCountFlagBits samples, VkImageTiling tiling, VkImageUsageFlags usage, VkSharingMode sharingMode,
               std::vector<uint32_t>& queueFamilyIndices, VkImageLayout initialLayout);
-        Image(LogicalDevice* pLogicalDevice, VkImage hImage);
+        Image(LogicalDevice* pLogicalDevice, Swapchain* pSwapchain, VkImage hImage);
         ~Image();
 
         VkImage getImageHandle();

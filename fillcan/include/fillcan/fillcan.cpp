@@ -73,4 +73,7 @@ namespace fillcan {
                                                         bufferMode, presentMode, this->upSwapchain.get());
         return this->upSwapchain.get();
     }
+
+    Swapchain* Fillcan::getSwapchain() { return this->upSwapchain.get(); }
+
 } // namespace fillcan
