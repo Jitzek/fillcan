@@ -78,6 +78,16 @@ namespace fillcan {
         this->resolve = false;
     }
 
+    void RenderPassBuilder::addSubpassDependency(unsigned int srcSubpassIndex, unsigned int dstSubpassIndex, VkPipelineStageFlags srcStageMask,
+                                                 VkPipelineStageFlags dstStageMask, VkAccessFlags srcAccessMask, VkAccessFlags dstAccessMask) {
+        this->srcSubpass = srcSubpassIndex;
+        this->dstSubpass = dstSubpassIndex;
+        this->srcStageMask = srcStageMask;
+        this->dstStageMask = dstStageMask;
+        this->srcAccessMask = srcAccessMask;
+        this->dstAccessMask = dstAccessMask;
+    }
+
     void RenderPassBuilder::setSubpassSrcDependency(VkPipelineStageFlags srcStageMask, VkAccessFlags srcAccessMask) {
         this->srcSubpass = this->subpasses.size() - 1;
         this->srcStageMask = srcStageMask;

@@ -31,7 +31,7 @@ namespace app_graphics_pipeline_test {
         /*
             Instance Fillcan
         */
-        upFillcan = std::make_unique<fillcan::Fillcan>(name.c_str(), 1.0, 800, 600, (VkPhysicalDeviceFeatures){.samplerAnisotropy = true});
+        upFillcan = std::make_unique<fillcan::FillcanGraphics>(name.c_str(), 1.0, 800, 600, (VkPhysicalDeviceFeatures){.samplerAnisotropy = true});
 
         // Select any device
         upFillcan->selectDevice(0);
@@ -48,7 +48,7 @@ namespace app_graphics_pipeline_test {
         /*
             Create a renderpass
         */
-        this->upRenderPass = this->createRenderPass();
+        // this->upRenderPass = this->createRenderPass();
         /* */
 
         /*
@@ -90,15 +90,37 @@ namespace app_graphics_pipeline_test {
                 .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT, .baseMipLevel = 0, .levelCount = 1, .baseArrayLayer = 0, .layerCount = 1}));
         /* */
 
+        std::vector<fillcan::SubpassAttachment> colorAttachments = {};
+        colorAttachments.push_back(
+            (fillcan::SubpassAttachment){.description = (VkAttachmentDescription){.flags = 0,
+                                                                                  .format = upFillcan->getSwapchain()->getSurfaceFormat().format,
+                                                                                  .samples = VK_SAMPLE_COUNT_1_BIT,
+                                                                                  .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+                                                                                  .storeOp = VK_ATTACHMENT_STORE_OP_STORE,
+                                                                                  .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+                                                                                  .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+                                                                                  .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+                                                                                  .finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR},
+                                         .layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                                         .preserve = false});
+        std::vector<fillcan::Subpass> subpasses = {};
+        subpasses.push_back((fillcan::Subpass){.colorAttachments = colorAttachments, .resolve = false});
+        this->upFillcan->createRenderPass(subpasses);
+
         /*
             Create framebuffer
         */
-        fillcan::Framebuffer framebuffer = fillcan::Framebuffer(this->upFillcan->getCurrentDevice(), this->upRenderPass.get(), pAttachments,
-                                                                this->upFillcan->getSwapchain()->getImageExtent().width,
-                                                                this->upFillcan->getSwapchain()->getImageExtent().height, 1);
+        this->upFillcan->getRenderPass()->createFramebuffer(pAttachments, this->upFillcan->getSwapchain()->getImageExtent().width,
+                                                            this->upFillcan->getSwapchain()->getImageExtent().height,
+                                                            this->upFillcan->getSwapchain()->getImageArrayLayers());
+        fillcan::Framebuffer* pFramebuffer = this->upFillcan->getRenderPass()->getFramebuffer();
+
         /* */
 
-        /** **/
+        swapchainImage.upImage->createImageView(
+            VK_IMAGE_VIEW_TYPE_2D, this->upFillcan->getSwapchain()->getSurfaceFormat().format,
+            (VkImageSubresourceRange){
+                .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT, .baseMipLevel = 0, .levelCount = 1, .baseArrayLayer = 0, .layerCount = 1});
 
         upFillcan->MainLoop(std::bind(&App::update, this));
     }

@@ -1,8 +1,10 @@
 #pragma once
 
-// fillcan
-#include "fillcan/commands/command_pool.hpp"
+// vulkan
 #include "vulkan/vulkan_core.h"
+
+// fillcan
+#include <fillcan/commands/command_pool.hpp>
 #include <fillcan/graphics/swapchain.hpp>
 #include <fillcan/instance/device_pool.hpp>
 #include <fillcan/instance/instance.hpp>
@@ -16,11 +18,10 @@
 
 namespace fillcan {
     class Fillcan {
-      private:
+      protected:
         std::unique_ptr<Instance> upInstance{};
         std::unique_ptr<Window> upWindow{};
         std::unique_ptr<DevicePool> upDevicePool{};
-        std::unique_ptr<Swapchain> upSwapchain{};
 
       public:
         Fillcan(const char* pApplicationName, uint32_t applicationVersion, unsigned int windowWidth, unsigned int windowHeight,
@@ -35,9 +36,5 @@ namespace fillcan {
         LogicalDevice* selectDevice(unsigned int deviceIndex = 0);
 
         LogicalDevice* getCurrentDevice();
-
-        Swapchain* createSwapchain(BufferMode bufferMode = FILLCAN_BUFFERING_TRIPLE, VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR);
-        Swapchain* recreateSwapchain(BufferMode bufferMode = FILLCAN_BUFFERING_TRIPLE, VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR);
-        Swapchain* getSwapchain();
     };
 } // namespace fillcan

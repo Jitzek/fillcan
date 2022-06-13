@@ -1,6 +1,7 @@
 #pragma once
 
 // vulkan
+#include "fillcan/graphics/render_pass.hpp"
 #include "vulkan/vulkan_core.h"
 
 // std
@@ -44,6 +45,8 @@ namespace fillcan {
         void setDepthStencilAttachment(VkAttachmentDescription attachment, VkImageLayout layout, bool preserve = false);
         void constructSubpass();
 
+        void addSubpassDependency(unsigned int srcSubpassIndex, unsigned int dstSubpassIndex, VkPipelineStageFlags srcStageMask,
+                                  VkPipelineStageFlags dstStageMask, VkAccessFlags srcAccessMask, VkAccessFlags dstAccessMask);
         void setSubpassSrcDependency(VkPipelineStageFlags srcStageMask, VkAccessFlags srcAccessMask);
         void setSubpassDstDependency(VkPipelineStageFlags dstStageMask, VkAccessFlags dstAccessMask);
         void constructSubpassDependency(VkDependencyFlags dependencyFlags);
