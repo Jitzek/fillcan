@@ -27,7 +27,7 @@ namespace app_graphics_pipeline_test {
         void run();
         void update();
 
-        std::unique_ptr<fillcan::RenderPass> createRenderPass();
+        void createRenderPass();
         std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> createDescriptorSetLayouts();
         std::unique_ptr<fillcan::DescriptorPool>
         createDescriptorPool(std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>>& upDescriptorSetLayouts);

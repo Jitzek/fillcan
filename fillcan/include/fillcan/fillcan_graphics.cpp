@@ -43,32 +43,8 @@ namespace fillcan {
 
     void FillcanGraphics::destroySwapchain(unsigned int index) { this->upSwapchains.erase(this->upSwapchains.begin() + index); }
 
-    unsigned int FillcanGraphics::createRenderPass(std::vector<Subpass>& subpasses) {
-        RenderPassBuilder renderPassBuilder = RenderPassBuilder();
-        renderPassBuilder.setLogicalDevice(this->getCurrentDevice());
-        unsigned int i = 0;
-        for (Subpass& subpass : subpasses) {
-            subpass.id = i++;
-        }
-        for (Subpass& subpass : subpasses) {
-            for (SubpassAttachment& inputAttachment : subpass.inputAttachments) {
-                renderPassBuilder.addInputAttachment(inputAttachment.description, inputAttachment.layout, inputAttachment.preserve);
-            }
-            for (SubpassAttachment& colorAttachment : subpass.colorAttachments) {
-                renderPassBuilder.addColorAttachment(colorAttachment.description, colorAttachment.layout, colorAttachment.preserve, subpass.resolve);
-            }
-            if (subpass.pDepthStencilAttachment != nullptr) {
-                renderPassBuilder.setDepthStencilAttachment(subpass.pDepthStencilAttachment->description, subpass.pDepthStencilAttachment->layout,
-                                                            subpass.pDepthStencilAttachment->preserve);
-            }
-            if (subpass.dependency != nullptr) {
-                renderPassBuilder.addSubpassDependency(subpass.id, subpass.dependency->id, subpass.stageMask, subpass.dependency->stageMask,
-                                                       subpass.accessMask, subpass.dependency->accessMask);
-                renderPassBuilder.constructSubpassDependency(subpass.dependencyFlags);
-            }
-            renderPassBuilder.constructSubpass();
-        }
-        this->upRenderPasses.push_back(std::move(renderPassBuilder.getResult()));
+    unsigned int FillcanGraphics::createRenderPass(RenderPassBuilder& builder) {
+        this->upRenderPasses.push_back(std::move(builder.getResult()));
         return this->upRenderPasses.size() - 1;
     }
 
