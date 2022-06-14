@@ -16,8 +16,8 @@
 namespace fillcan {
     GraphicsPipeline::GraphicsPipeline(
         LogicalDevice* pLogicalDevice, CommandBuffer* pCommandBuffer, VkPipelineCreateFlags flags, std::vector<PipelineShaderStage> shaderStages,
-        VkPipelineCache pipelineCache, Pipeline* pBasePipeline, VkPipelineVertexInputStateCreateInfo* pVertexInputState,
-        VkPipelineInputAssemblyStateCreateInfo* pInputAssemblyState, VkPipelineTessellationStateCreateInfo* pTessellationState,
+        VkPipelineCache pipelineCache, Pipeline* pBasePipeline, VkPipelineInputAssemblyStateCreateInfo* pInputAssemblyState,
+        VkPipelineVertexInputStateCreateInfo* pVertexInputState, VkPipelineTessellationStateCreateInfo* pTessellationState,
         std::vector<VkPipelineViewportStateCreateInfo>& viewportState, VkPipelineRasterizationStateCreateInfo* pRasterizationState,
         VkPipelineMultisampleStateCreateInfo* pMultisampleState, VkPipelineDepthStencilStateCreateInfo* pDepthStencilState,
         VkPipelineColorBlendStateCreateInfo* pColorBlendState, VkPipelineDynamicStateCreateInfo* pDynamicState, RenderPass* pRenderPass,
@@ -59,10 +59,15 @@ namespace fillcan {
         graphicsPipelineCreateInfo.layout = this->layout->getPipelineLayoutHandle();
         graphicsPipelineCreateInfo.renderPass = pRenderPass->getRenderPassHandle();
         graphicsPipelineCreateInfo.subpass = this->subpass;
-        graphicsPipelineCreateInfo.basePipelineHandle = pBasePipeline->getPipelineHandle();
+        if (pBasePipeline != nullptr) {
+            graphicsPipelineCreateInfo.basePipelineHandle = pBasePipeline->getPipelineHandle();
+        } else {
+            graphicsPipelineCreateInfo.basePipelineHandle = VK_NULL_HANDLE;
+        }
         graphicsPipelineCreateInfo.basePipelineIndex = 0;
 
-        if (vkCreateGraphicsPipelines(this->pLogicalDevice->getLogicalDeviceHandle(), pipelineCache, 1, &graphicsPipelineCreateInfo, nullptr, &this->hPipeline) != VK_SUCCESS) {
+        if (vkCreateGraphicsPipelines(this->pLogicalDevice->getLogicalDeviceHandle(), pipelineCache, 1, &graphicsPipelineCreateInfo, nullptr,
+                                      &this->hPipeline) != VK_SUCCESS) {
             throw std::runtime_error("Failed to create graphics pipeline");
         }
     }

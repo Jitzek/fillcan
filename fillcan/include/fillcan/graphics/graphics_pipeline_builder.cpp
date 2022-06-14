@@ -1,9 +1,15 @@
+// vulkan
+#include "vulkan/vulkan_core.h"
 
+// fillcan
 #include "fillcan/graphics/graphics_pipeline.hpp"
 #include "fillcan/shader/pipeline_builder.hpp"
-#include "vulkan/vulkan_core.h"
 #include <fillcan/graphics/graphics_pipeline_builder.hpp>
+
+// std
+#include <array>
 #include <memory>
+#include <vector>
 
 namespace fillcan {
     GraphicsPipelineBuilder::GraphicsPipelineBuilder() {}
@@ -21,14 +27,8 @@ namespace fillcan {
      * @param primitiveRestartEnable Used to restart primitive topologies of type "strip" and "fan". Requires an indexed draw.
      * @return void
      */
-    void GraphicsPipelineBuilder::setInputAssemblyState(VkPrimitiveTopology topology, VkBool32 primitiveRestartEnable) {
-        VkPipelineInputAssemblyStateCreateInfo inputAssemblyStateCreateInfo = {};
-        inputAssemblyStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-        inputAssemblyStateCreateInfo.pNext = nullptr;
-        inputAssemblyStateCreateInfo.flags = 0;
-        inputAssemblyStateCreateInfo.topology = topology;
-        inputAssemblyStateCreateInfo.primitiveRestartEnable = primitiveRestartEnable;
-        this->upInputAssemblyState = std::make_unique<VkPipelineInputAssemblyStateCreateInfo>(inputAssemblyStateCreateInfo);
+    void GraphicsPipelineBuilder::setInputAssemblyState(PipelineInputAssemblyState inputAssemblyState) {
+        this->upInputAssemblyState = std::make_unique<PipelineInputAssemblyState>(inputAssemblyState);
     }
 
     /**
@@ -40,18 +40,9 @@ namespace fillcan {
      * @param vertexInputAttributeDescriptions Descriptions of the vertex-attributes.
      * @return Whether the descriptions are supported by the device.
      */
-    bool GraphicsPipelineBuilder::setVertexInputState(std::vector<VkVertexInputBindingDescription> vertexInputBindingDescriptions,
-                                                      std::vector<VkVertexInputAttributeDescription> vertexInputAttributeDescriptions) {
+    bool GraphicsPipelineBuilder::setVertexInputState(PipelineVertexInputState vertexInputState) {
         // TODO: Check whether the descriptions are supported by the device.
-        VkPipelineVertexInputStateCreateInfo vertexInputStateCreateInfo = {};
-        vertexInputStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-        vertexInputStateCreateInfo.pNext = nullptr;
-        vertexInputStateCreateInfo.flags = 0;
-        vertexInputStateCreateInfo.vertexBindingDescriptionCount = static_cast<uint32_t>(vertexInputBindingDescriptions.size());
-        vertexInputStateCreateInfo.pVertexBindingDescriptions = vertexInputBindingDescriptions.data();
-        vertexInputStateCreateInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(vertexInputAttributeDescriptions.size());
-        vertexInputStateCreateInfo.pVertexAttributeDescriptions = vertexInputAttributeDescriptions.data();
-        this->upVertexInputState = std::make_unique<VkPipelineVertexInputStateCreateInfo>(vertexInputStateCreateInfo);
+        this->upVertexInputState = std::make_unique<PipelineVertexInputState>(vertexInputState);
         return true;
     }
 
@@ -67,13 +58,8 @@ namespace fillcan {
      * @param patchControlPoints The amount of controlpoints that will be grouped in a single primitive.
      * @return void
      */
-    void GraphicsPipelineBuilder::setTessellationState(unsigned int patchControlPoints) {
-        VkPipelineTessellationStateCreateInfo tessellationStateCreateInfo = {};
-        tessellationStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO;
-        tessellationStateCreateInfo.pNext = nullptr;
-        tessellationStateCreateInfo.flags = 0;
-        tessellationStateCreateInfo.patchControlPoints = patchControlPoints;
-        this->upTessellationState = std::make_unique<VkPipelineTessellationStateCreateInfo>(tessellationStateCreateInfo);
+    void GraphicsPipelineBuilder::setTessellationState(PipelineTessellationState tessellationState) {
+        this->upTessellationState = std::make_unique<PipelineTessellationState>(tessellationState);
     }
 
     /**
@@ -86,17 +72,9 @@ namespace fillcan {
      * @param scissors The scissor rectangles of each viewport.
      * @return Whether the viewports are supported by the device.
      */
-    bool GraphicsPipelineBuilder::addViewportState(std::vector<VkViewport> viewports, std::vector<VkRect2D> scissors) {
+    bool GraphicsPipelineBuilder::addViewportState(PipelineViewPortState viewportState) {
         // TODO: Check whether the amount of viewports is supported by the device
-        VkPipelineViewportStateCreateInfo viewPortStateCreateInfo = {};
-        viewPortStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-        viewPortStateCreateInfo.pNext = nullptr;
-        viewPortStateCreateInfo.flags = 0;
-        viewPortStateCreateInfo.viewportCount = static_cast<uint32_t>(viewports.size());
-        viewPortStateCreateInfo.pViewports = viewports.data();
-        viewPortStateCreateInfo.scissorCount = static_cast<uint32_t>(scissors.size());
-        viewPortStateCreateInfo.pScissors = scissors.data();
-        this->viewportState.push_back(viewPortStateCreateInfo);
+        this->upViewPortStates.push_back(std::move(std::make_unique<PipelineViewPortState>(viewportState)));
         return true;
     }
 
@@ -122,26 +100,9 @@ namespace fillcan {
      * @param lineWidth The width of line primitives, in pixels. This applies to all lines gridded with the pipeline.
      * @return Whether the given parameters are supported by the device.
      */
-    bool GraphicsPipelineBuilder::setRasterizationState(VkBool32 depthClampEnable, VkBool32 rasterizerDiscardEnable, VkPolygonMode polygonMode,
-                                                        VkCullModeFlags cullmode, VkFrontFace frontFace, VkBool32 depthBiasEnable,
-                                                        float depthBiasConstantFactor, float depthBiasClamp, float depthBiasSlopeFactor,
-                                                        float lineWidth) {
+    bool GraphicsPipelineBuilder::setRasterizationState(PipelineRasterizationState rasterizationState) {
         // TODO: Check whether the parameters are supported by the device
-        VkPipelineRasterizationStateCreateInfo rasterizationStateCreateInfo = {};
-        rasterizationStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-        rasterizationStateCreateInfo.pNext = nullptr;
-        rasterizationStateCreateInfo.flags = 0;
-        rasterizationStateCreateInfo.depthClampEnable = depthClampEnable;
-        rasterizationStateCreateInfo.rasterizerDiscardEnable = rasterizerDiscardEnable;
-        rasterizationStateCreateInfo.polygonMode = polygonMode;
-        rasterizationStateCreateInfo.cullMode = cullmode;
-        rasterizationStateCreateInfo.frontFace = frontFace;
-        rasterizationStateCreateInfo.depthBiasEnable = depthBiasEnable;
-        rasterizationStateCreateInfo.depthBiasConstantFactor = depthBiasConstantFactor;
-        rasterizationStateCreateInfo.depthBiasClamp = depthBiasClamp;
-        rasterizationStateCreateInfo.depthBiasSlopeFactor = depthBiasSlopeFactor;
-        rasterizationStateCreateInfo.lineWidth = lineWidth;
-        this->upRasterizationState = std::make_unique<VkPipelineRasterizationStateCreateInfo>(rasterizationStateCreateInfo);
+        this->upRasterizationState = std::make_unique<PipelineRasterizationState>(rasterizationState);
         return true;
     }
 
@@ -178,23 +139,8 @@ namespace fillcan {
      * @param maxDepthBounds The maximum depth limit used in the depth limit test.
      * @return void
      */
-    void GraphicsPipelineBuilder::setDepthStencilState(VkBool32 depthTestEnable, VkBool32 depthWriteEnable, VkCompareOp depthCompareOp,
-                                                       VkBool32 depthBoundsTestEnable, VkBool32 stencilTestEnable, VkStencilOpState front,
-                                                       VkStencilOpState back, float minDepthBounds, float maxDepthBounds) {
-        VkPipelineDepthStencilStateCreateInfo depthStencilStateCreateInfo = {};
-        depthStencilStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-        depthStencilStateCreateInfo.pNext = nullptr;
-        depthStencilStateCreateInfo.flags = 0;
-        depthStencilStateCreateInfo.depthTestEnable = depthTestEnable;
-        depthStencilStateCreateInfo.depthWriteEnable = depthWriteEnable;
-        depthStencilStateCreateInfo.depthCompareOp = depthCompareOp;
-        depthStencilStateCreateInfo.depthBoundsTestEnable = depthBoundsTestEnable;
-        depthStencilStateCreateInfo.stencilTestEnable = stencilTestEnable;
-        depthStencilStateCreateInfo.front = front;
-        depthStencilStateCreateInfo.back = back;
-        depthStencilStateCreateInfo.minDepthBounds = minDepthBounds;
-        depthStencilStateCreateInfo.maxDepthBounds = maxDepthBounds;
-        this->upDepthStencilState = std::make_unique<VkPipelineDepthStencilStateCreateInfo>(depthStencilStateCreateInfo);
+    void GraphicsPipelineBuilder::setDepthStencilState(PipelineDepthStencilState depthStencilState) {
+        this->upDepthStencilState = std::make_unique<PipelineDepthStencilState>(depthStencilState);
     }
 
     /**
@@ -211,21 +157,8 @@ namespace fillcan {
      *                       mixing factor.
      * @return void
      */
-    void GraphicsPipelineBuilder::setColorBlendState(VkBool32 logicOpEnable, VkLogicOp logicOp,
-                                                     std::vector<VkPipelineColorBlendAttachmentState> attachments, float blendConstants[4]) {
-        VkPipelineColorBlendStateCreateInfo colorBlendStateCreateInfo = {};
-        colorBlendStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-        colorBlendStateCreateInfo.pNext = nullptr;
-        colorBlendStateCreateInfo.flags = 0;
-        colorBlendStateCreateInfo.logicOpEnable = logicOpEnable;
-        colorBlendStateCreateInfo.logicOp = logicOp;
-        colorBlendStateCreateInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
-        colorBlendStateCreateInfo.pAttachments = attachments.data();
-        colorBlendStateCreateInfo.blendConstants[0] = blendConstants[0];
-        colorBlendStateCreateInfo.blendConstants[1] = blendConstants[1];
-        colorBlendStateCreateInfo.blendConstants[2] = blendConstants[2];
-        colorBlendStateCreateInfo.blendConstants[3] = blendConstants[3];
-        this->upColorBlendState = std::make_unique<VkPipelineColorBlendStateCreateInfo>(colorBlendStateCreateInfo);
+    void GraphicsPipelineBuilder::setColorBlendState(PipelineColorBlendState colorBlendState) {
+        this->upColorBlendState = std::make_unique<PipelineColorBlendState>(colorBlendState);
     }
 
     /**
@@ -238,14 +171,8 @@ namespace fillcan {
      * @param dynamicStates The states to make dynamic.
      * @return void
      */
-    void GraphicsPipelineBuilder::setDynamicState(std::vector<VkDynamicState> dynamicStates) {
-        VkPipelineDynamicStateCreateInfo dynamicStateCreateInfo = {};
-        dynamicStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-        dynamicStateCreateInfo.pNext = nullptr;
-        dynamicStateCreateInfo.flags = 0;
-        dynamicStateCreateInfo.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
-        dynamicStateCreateInfo.pDynamicStates = dynamicStates.data();
-        this->upDynamicState = std::make_unique<VkPipelineDynamicStateCreateInfo>(dynamicStateCreateInfo);
+    void GraphicsPipelineBuilder::setDynamicState(PipelineDynamicState dynamicState) {
+        this->upDynamicState = std::make_unique<PipelineDynamicState>(dynamicState);
     }
 
     void GraphicsPipelineBuilder::setRenderPass(RenderPass* pRenderPass) { this->pRenderPass = pRenderPass; }
@@ -258,7 +185,7 @@ namespace fillcan {
         this->upVertexInputState = nullptr;
         this->upInputAssemblyState = nullptr;
         this->upTessellationState = nullptr;
-        this->viewportState.clear();
+        this->upViewPortStates.clear();
         this->upRasterizationState = nullptr;
         this->upMultisampleState = nullptr;
         this->upDepthStencilState = nullptr;
@@ -269,6 +196,67 @@ namespace fillcan {
     }
 
     std::unique_ptr<GraphicsPipeline> GraphicsPipelineBuilder::getResult() {
+        VkPipelineInputAssemblyStateCreateInfo inputAssemblyStateCreateInfo = {};
+        if (this->upInputAssemblyState != nullptr) {
+            inputAssemblyStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+            inputAssemblyStateCreateInfo.pNext = nullptr;
+            inputAssemblyStateCreateInfo.flags = 0;
+            inputAssemblyStateCreateInfo.topology = this->upInputAssemblyState->topology;
+            inputAssemblyStateCreateInfo.primitiveRestartEnable = this->upInputAssemblyState->primitiveRestartEnable;
+        }
+
+        VkPipelineVertexInputStateCreateInfo vertexInputStateCreateInfo = {};
+        if (this->upVertexInputState != nullptr) {
+            vertexInputStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+            vertexInputStateCreateInfo.pNext = nullptr;
+            vertexInputStateCreateInfo.flags = 0;
+            vertexInputStateCreateInfo.vertexBindingDescriptionCount =
+                static_cast<uint32_t>(this->upVertexInputState->vertexInputBindingDescriptions.size());
+            vertexInputStateCreateInfo.pVertexBindingDescriptions = this->upVertexInputState->vertexInputBindingDescriptions.data();
+            vertexInputStateCreateInfo.vertexAttributeDescriptionCount =
+                static_cast<uint32_t>(this->upVertexInputState->vertexInputAttributeDescriptions.size());
+            vertexInputStateCreateInfo.pVertexAttributeDescriptions = this->upVertexInputState->vertexInputAttributeDescriptions.data();
+        }
+
+        VkPipelineTessellationStateCreateInfo tessellationStateCreateInfo = {};
+        if (this->upTessellationState != nullptr) {
+            tessellationStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO;
+            tessellationStateCreateInfo.pNext = nullptr;
+            tessellationStateCreateInfo.flags = 0;
+            tessellationStateCreateInfo.patchControlPoints = this->upTessellationState->patchControlPoints;
+        }
+
+        std::vector<VkPipelineViewportStateCreateInfo> viewPortStateCreateInfos = {};
+        viewPortStateCreateInfos.reserve(this->upViewPortStates.size());
+        for (std::unique_ptr<PipelineViewPortState>& upViewPortState : this->upViewPortStates) {
+            VkPipelineViewportStateCreateInfo viewPortStateCreateInfo = {};
+            viewPortStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+            viewPortStateCreateInfo.pNext = nullptr;
+            viewPortStateCreateInfo.flags = 0;
+            viewPortStateCreateInfo.viewportCount = static_cast<uint32_t>(upViewPortState->viewports.size());
+            viewPortStateCreateInfo.pViewports = upViewPortState->viewports.data();
+            viewPortStateCreateInfo.scissorCount = static_cast<uint32_t>(upViewPortState->scissors.size());
+            viewPortStateCreateInfo.pScissors = upViewPortState->scissors.data();
+            viewPortStateCreateInfos.push_back(viewPortStateCreateInfo);
+        }
+
+        VkPipelineRasterizationStateCreateInfo rasterizationStateCreateInfo = {};
+        if (this->upRasterizationState != nullptr) {
+            rasterizationStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+            rasterizationStateCreateInfo.pNext = nullptr;
+            rasterizationStateCreateInfo.flags = 0;
+            rasterizationStateCreateInfo.depthClampEnable = this->upRasterizationState->depthClampEnable;
+            rasterizationStateCreateInfo.rasterizerDiscardEnable = this->upRasterizationState->rasterizerDiscardEnable;
+            rasterizationStateCreateInfo.polygonMode = this->upRasterizationState->polygonMode;
+            rasterizationStateCreateInfo.cullMode = this->upRasterizationState->cullmode;
+            rasterizationStateCreateInfo.frontFace = this->upRasterizationState->frontFace;
+            rasterizationStateCreateInfo.depthBiasEnable = this->upRasterizationState->depthBiasEnable;
+            rasterizationStateCreateInfo.depthBiasConstantFactor = this->upRasterizationState->depthBiasConstantFactor;
+            rasterizationStateCreateInfo.depthBiasClamp = this->upRasterizationState->depthBiasClamp;
+            rasterizationStateCreateInfo.depthBiasSlopeFactor = this->upRasterizationState->depthBiasSlopeFactor;
+            rasterizationStateCreateInfo.lineWidth = this->upRasterizationState->lineWidth;
+        }
+
         VkPipelineMultisampleStateCreateInfo multisampleStateCreateInfo = {};
         if (upMultisampleState != nullptr) {
             multisampleStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
@@ -282,10 +270,50 @@ namespace fillcan {
             multisampleStateCreateInfo.alphaToOneEnable = this->upMultisampleState->alphaToOneEnable;
         }
 
-        return std::make_unique<GraphicsPipeline>(this->pLogicalDevice, this->pCommandBuffer, this->flags, this->shaderStages, this->pipelineCache,
-                                                  this->pBasePipeline, this->upVertexInputState.get(), this->upInputAssemblyState.get(),
-                                                  this->upTessellationState.get(), this->viewportState, this->upRasterizationState.get(),
-                                                  &multisampleStateCreateInfo, this->upDepthStencilState.get(), this->upColorBlendState.get(),
-                                                  this->upDynamicState.get(), this->pRenderPass, this->subpass);
+        VkPipelineDepthStencilStateCreateInfo depthStencilStateCreateInfo = {};
+        if (this->upDepthStencilState != nullptr) {
+            depthStencilStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+            depthStencilStateCreateInfo.pNext = nullptr;
+            depthStencilStateCreateInfo.flags = 0;
+            depthStencilStateCreateInfo.depthTestEnable = this->upDepthStencilState->depthTestEnable;
+            depthStencilStateCreateInfo.depthWriteEnable = this->upDepthStencilState->depthWriteEnable;
+            depthStencilStateCreateInfo.depthCompareOp = this->upDepthStencilState->depthCompareOp;
+            depthStencilStateCreateInfo.depthBoundsTestEnable = this->upDepthStencilState->depthBoundsTestEnable;
+            depthStencilStateCreateInfo.stencilTestEnable = this->upDepthStencilState->stencilTestEnable;
+            depthStencilStateCreateInfo.front = this->upDepthStencilState->front;
+            depthStencilStateCreateInfo.back = this->upDepthStencilState->back;
+            depthStencilStateCreateInfo.minDepthBounds = this->upDepthStencilState->minDepthBounds;
+            depthStencilStateCreateInfo.maxDepthBounds = this->upDepthStencilState->maxDepthBounds;
+        }
+
+        VkPipelineColorBlendStateCreateInfo colorBlendStateCreateInfo = {};
+        if (this->upColorBlendState != nullptr) {
+            colorBlendStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+            colorBlendStateCreateInfo.pNext = nullptr;
+            colorBlendStateCreateInfo.flags = 0;
+            colorBlendStateCreateInfo.logicOpEnable = this->upColorBlendState->logicOpEnable;
+            colorBlendStateCreateInfo.logicOp = this->upColorBlendState->logicOp;
+            colorBlendStateCreateInfo.attachmentCount = static_cast<uint32_t>(this->upColorBlendState->attachments.size());
+            colorBlendStateCreateInfo.pAttachments = this->upColorBlendState->attachments.data();
+            colorBlendStateCreateInfo.blendConstants[0] = this->upColorBlendState->blendConstants[0];
+            colorBlendStateCreateInfo.blendConstants[1] = this->upColorBlendState->blendConstants[1];
+            colorBlendStateCreateInfo.blendConstants[2] = this->upColorBlendState->blendConstants[2];
+            colorBlendStateCreateInfo.blendConstants[3] = this->upColorBlendState->blendConstants[3];
+        }
+
+        VkPipelineDynamicStateCreateInfo dynamicStateCreateInfo = {};
+        dynamicStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+        if (this->upDynamicState != nullptr) {
+            dynamicStateCreateInfo.pNext = nullptr;
+            dynamicStateCreateInfo.flags = 0;
+            dynamicStateCreateInfo.dynamicStateCount = static_cast<uint32_t>(this->upDynamicState->dynamicStates.size());
+            dynamicStateCreateInfo.pDynamicStates = this->upDynamicState->dynamicStates.data();
+        }
+
+        return std::move(std::make_unique<GraphicsPipeline>(this->pLogicalDevice, this->pCommandBuffer, this->flags, this->shaderStages,
+                                                            this->pipelineCache, this->pBasePipeline, &inputAssemblyStateCreateInfo,
+                                                            &vertexInputStateCreateInfo, &tessellationStateCreateInfo, viewPortStateCreateInfos,
+                                                            &rasterizationStateCreateInfo, &multisampleStateCreateInfo, &depthStencilStateCreateInfo,
+                                                            &colorBlendStateCreateInfo, &dynamicStateCreateInfo, this->pRenderPass, this->subpass));
     }
 } // namespace fillcan

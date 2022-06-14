@@ -20,10 +20,13 @@ namespace fillcan {
         : pLogicalDevice(pLogicalDevice), pCommandBuffer(pCommandBuffer), flags(flags), shaderStages(shaderStages) {
         for (PipelineShaderStage shaderStage : this->shaderStages) {
             std::vector<DescriptorSetLayout*> shaderStageDescriptorSetLayouts = shaderStage.pShaderModule->getDescriptorSetLayouts();
-            this->pDescriptorSetLayouts.insert(this->pDescriptorSetLayouts.begin(), shaderStageDescriptorSetLayouts.begin(),
-                                               shaderStageDescriptorSetLayouts.end());
-            std::vector<DescriptorSet*> shaderStageDescriptorSets = shaderStage.pShaderModule->getDescriptorPool()->getDescriptorSets();
-            this->pDescriptorSets.insert(this->pDescriptorSets.begin(), shaderStageDescriptorSets.begin(), shaderStageDescriptorSets.end());
+            if (shaderStage.pShaderModule->getDescriptorSetLayouts().size() > 0 && shaderStage.pShaderModule->getDescriptorPool() != nullptr) {
+
+                this->pDescriptorSetLayouts.insert(this->pDescriptorSetLayouts.begin(), shaderStageDescriptorSetLayouts.begin(),
+                                                   shaderStageDescriptorSetLayouts.end());
+                std::vector<DescriptorSet*> shaderStageDescriptorSets = shaderStage.pShaderModule->getDescriptorPool()->getDescriptorSets();
+                this->pDescriptorSets.insert(this->pDescriptorSets.begin(), shaderStageDescriptorSets.begin(), shaderStageDescriptorSets.end());
+            }
         }
         this->layout = std::make_unique<PipelineLayout>(this->pLogicalDevice, this->pDescriptorSetLayouts);
     }

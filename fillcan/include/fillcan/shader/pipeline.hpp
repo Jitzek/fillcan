@@ -29,8 +29,8 @@ namespace fillcan {
         LogicalDevice* pLogicalDevice;
         VkPipelineCreateFlags flags;
         std::vector<PipelineShaderStage> shaderStages;
-        std::vector<DescriptorSetLayout*> pDescriptorSetLayouts;
-        std::vector<DescriptorSet*> pDescriptorSets;
+        std::vector<DescriptorSetLayout*> pDescriptorSetLayouts = {};
+        std::vector<DescriptorSet*> pDescriptorSets = {};
         std::unique_ptr<PipelineLayout> layout;
         CommandBuffer* pCommandBuffer = nullptr;
         VkPipelineBindPoint bindPoint = VK_PIPELINE_BIND_POINT_MAX_ENUM;

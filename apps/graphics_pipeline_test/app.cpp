@@ -19,6 +19,7 @@
 #include "fillcan/graphics/swapchain.hpp"
 #include "fillcan/memory/buffer_director.hpp"
 #include "fillcan/memory/image_view.hpp"
+#include <array>
 #include <cstddef>
 #include <cstring>
 #include <fillcan/graphics/graphics_pipeline_builder.hpp>
@@ -157,8 +158,44 @@ namespace app_graphics_pipeline_test {
         vertexInputAttributeDescriptions.push_back((VkVertexInputAttributeDescription){
             .location = 1, .binding = 0, .format = VK_FORMAT_R32G32B32_SFLOAT, .offset = offsetof(Vertex, color)});
 
-        graphicsPipelineBuilder.setInputAssemblyState(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, VK_FALSE);
-        graphicsPipelineBuilder.setVertexInputState(vertexInputBindingDescriptions, vertexInputAttributeDescriptions);
+        graphicsPipelineBuilder.setInputAssemblyState({VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, VK_FALSE});
+        graphicsPipelineBuilder.setVertexInputState({vertexInputBindingDescriptions, vertexInputAttributeDescriptions});
+
+        std::vector<VkViewport> viewports = {};
+        viewports.reserve(1);
+        viewports.push_back((VkViewport){.x = 0.0f,
+                                         .y = 0.0f,
+                                         .width = static_cast<float>(this->upFillcan->getSwapchain()->getImageExtent().width),
+                                         .height = static_cast<float>(this->upFillcan->getSwapchain()->getImageExtent().height),
+                                         .minDepth = 0.0f,
+                                         .maxDepth = 1.0f});
+        std::vector<VkRect2D> scissors = {};
+        scissors.reserve(1);
+        scissors.push_back((VkRect2D){.offset = {0, 0}, .extent = this->upFillcan->getSwapchain()->getImageExtent()});
+        graphicsPipelineBuilder.addViewportState({viewports, scissors});
+
+        graphicsPipelineBuilder.setRasterizationState({});
+
+        graphicsPipelineBuilder.setMultisampleState((fillcan::PipelineMultisampleState){.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT,
+                                                                                        .sampleShadingEnable = VK_FALSE,
+                                                                                        .minSampleShading = 1.0f,
+                                                                                        .sampleMask = 0,
+                                                                                        .alphaToCoverageEnable = VK_FALSE,
+                                                                                        .alphaToOneEnable = VK_FALSE});
+
+        std::vector<VkPipelineColorBlendAttachmentState> colorBlendAttachments = {};
+        colorBlendAttachments.push_back((VkPipelineColorBlendAttachmentState){.blendEnable = VK_TRUE,
+                                                                              .srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA,
+                                                                              .dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+                                                                              .colorBlendOp = VK_BLEND_OP_ADD,
+                                                                              .srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE,
+                                                                              .dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO,
+                                                                              .alphaBlendOp = VK_BLEND_OP_ADD});
+        graphicsPipelineBuilder.setColorBlendState({VK_FALSE, VK_LOGIC_OP_COPY, colorBlendAttachments, std::array<float, 4>{0.0f, 0.0f, 0.0f, 0.0f}});
+
+        graphicsPipelineBuilder.setRenderPass(this->upFillcan->getRenderPass());
+
+        std::unique_ptr<fillcan::GraphicsPipeline> upGraphicsPipeline = graphicsPipelineBuilder.getResult();
         /* */
 
         /*
