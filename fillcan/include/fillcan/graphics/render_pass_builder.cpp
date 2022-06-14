@@ -66,6 +66,7 @@ namespace fillcan {
         subpassDescription.preserveAttachmentCount = static_cast<uint32_t>(this->preserveAttachments.size());
         subpassDescription.pPreserveAttachments = this->preserveAttachments.data();
         this->subpassDescriptions.push_back(subpassDescription);
+        return this->subpassDescriptions.size() - 1;
     }
 
     void RenderPassBuilder::addDependency(VkSubpassDependency dependency) { this->dependencyDescriptions.push_back(dependency); }

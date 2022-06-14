@@ -104,6 +104,16 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)
 ##################
 
 ##############
+## 	Shaderc	##
+##############
+set(SHADERC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/shaderc")
+target_link_libraries(${PROJECT_NAME} libshaderc_shared.so ${SHADERC_DIR}/lib/libshaderc.a)
+target_include_directories(${PROJECT_NAME} PRIVATE ${SHADERC_DIR}/include)
+####################
+##  ENDOF Shaderc ##
+####################
+
+##############
 ## 	GLM		##
 ##############
 set(GLM_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/glm")

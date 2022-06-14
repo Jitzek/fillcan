@@ -29,8 +29,10 @@ namespace app_graphics_pipeline_test {
 
         void createRenderPass();
         std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> createDescriptorSetLayouts();
+
         std::unique_ptr<fillcan::DescriptorPool>
         createDescriptorPool(std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>>& upDescriptorSetLayouts);
+        
         std::unique_ptr<fillcan::GraphicsPipeline> createGraphicsPipeline();
     };
 } // namespace app_graphics_pipeline_test

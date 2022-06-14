@@ -142,7 +142,6 @@ namespace app_compute_pipeline_test {
         // Go to the start of the file and put all data in buffer
         computeShaderFile.seekg(0);
         computeShaderFile.read(computeShaderFileBuffer.data(), computeShaderFileSize);
-
         computeShaderFile.close();
 
         fillcan::ShaderModule computeShaderModule = fillcan::ShaderModule(this->upFillcan->getCurrentDevice(), computeShaderFileBuffer,
