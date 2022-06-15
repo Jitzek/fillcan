@@ -13,13 +13,14 @@
 
 // std
 #include <cstdint>
+#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <utility>
 #include <vector>
 
 namespace fillcan {
-    Swapchain::Swapchain(LogicalDevice* pLogicalDevice, Window* pWindow, Queue* pPresentQueue, BufferMode bufferMode, VkPresentModeKHR presentMode,
+    Swapchain::Swapchain(LogicalDevice* pLogicalDevice, Window* pWindow, Queue* pPresentQueue, uint32_t imageCount, VkPresentModeKHR presentMode,
                          Swapchain* pOldSwapchain)
         : pLogicalDevice(pLogicalDevice), pWindow(pWindow), pQueue(pPresentQueue) {
 
@@ -33,22 +34,23 @@ namespace fillcan {
                 this->surfaceFormat = surfaceFormat;
             }
         }
+        VkSurfaceCapabilitiesKHR surfaceCapabilities = this->pLogicalDevice->getPhysicalDevice()->getSurfaceCapabilitiesKHR();
 
         VkSwapchainCreateInfoKHR swapchainCreateInfo = {};
         swapchainCreateInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
         swapchainCreateInfo.pNext = nullptr;
         swapchainCreateInfo.flags = 0;
         swapchainCreateInfo.surface = this->pWindow->getSurface();
-        swapchainCreateInfo.minImageCount = bufferMode;
+        swapchainCreateInfo.minImageCount = imageCount;
         swapchainCreateInfo.imageFormat = this->surfaceFormat.format;
         swapchainCreateInfo.imageColorSpace = this->surfaceFormat.colorSpace;
-        swapchainCreateInfo.imageExtent = this->pWindow->getExtent();
+        swapchainCreateInfo.imageExtent = surfaceCapabilities.currentExtent;
         swapchainCreateInfo.imageArrayLayers = 1;
         swapchainCreateInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
         swapchainCreateInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
         swapchainCreateInfo.queueFamilyIndexCount = 0;
         swapchainCreateInfo.pQueueFamilyIndices = nullptr;
-        swapchainCreateInfo.preTransform = pLogicalDevice->getPhysicalDevice()->getSurfaceCapabilitiesKHR().currentTransform;
+        swapchainCreateInfo.preTransform = surfaceCapabilities.currentTransform;
         swapchainCreateInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
         swapchainCreateInfo.presentMode = presentMode;
         swapchainCreateInfo.clipped = VK_TRUE;
@@ -74,11 +76,21 @@ namespace fillcan {
         this->upSemaphores.resize(this->hSwapchainImages.size());
     }
 
-    Swapchain::~Swapchain() { vkDestroySwapchainKHR(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSwapchain, nullptr); }
+    Swapchain::~Swapchain() {
+        if (this->pLogicalDevice == nullptr) {
+            std::cerr << "Failed to destroy Swapchain: Logical Device was NULL"
+                      << "\n";
+        }
+        if (this->hSwapchain == VK_NULL_HANDLE) {
+            std::cerr << "Failed to destroy Swapchain: Handle was VK_NULL_HANDLE"
+                      << "\n";
+        }
+        vkDestroySwapchainKHR(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSwapchain, nullptr);
+    }
 
     VkSwapchainKHR Swapchain::getSwapchainHandle() { return this->hSwapchain; }
 
-    BufferMode Swapchain::getBufferMode() { return this->bufferMode; }
+    uint32_t Swapchain::getImageCount() { return this->imageCount; }
 
     unsigned int Swapchain::getImageArrayLayers() { return this->imageArrayLayers; }
 
@@ -88,7 +100,7 @@ namespace fillcan {
 
     std::vector<uint32_t>& Swapchain::getQueueFamilyIndices() { return this->queueFamilyIndices; }
 
-    SwapchainImage Swapchain::getNextImage() {
+    SwapchainImage Swapchain::getNextImage(Fence* pFence) {
         uint32_t imageIndex = 0;
         std::unique_ptr<Semaphore> upSemaphore = std::make_unique<Semaphore>(this->pLogicalDevice);
 
@@ -109,13 +121,14 @@ namespace fillcan {
         //                                                                 .layerCount = VK_REMAINING_ARRAY_LAYERS};
         // vkCmdPipelineBarrier(pCommandBuffer->getCommandBufferHandle(), VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
         //                      VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &imageMemoryBarrier);
-        VkResult acquireNextImageResult = vkAcquireNextImageKHR(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSwapchain, UINT64_MAX,
-                                                                upSemaphore->getSemaphoreHandle(), VK_NULL_HANDLE, &imageIndex);
+        VkResult acquireNextImageResult =
+            vkAcquireNextImageKHR(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSwapchain, UINT64_MAX, upSemaphore->getSemaphoreHandle(),
+                                  pFence != nullptr ? pFence->getFenceHandle() : VK_NULL_HANDLE, &imageIndex);
         this->upSemaphores[imageIndex] = std::move(upSemaphore);
-        if (acquireNextImageResult == VK_ERROR_OUT_OF_DATE_KHR || acquireNextImageResult == VK_SUBOPTIMAL_KHR) {
+        if (acquireNextImageResult == VK_ERROR_OUT_OF_DATE_KHR) {
             return {.outOfDate = true, .index = 0, .pImage = nullptr, .pSemaphore = nullptr};
         }
-        if (acquireNextImageResult != VK_SUCCESS) {
+        if (acquireNextImageResult != VK_SUCCESS && acquireNextImageResult != VK_SUBOPTIMAL_KHR) {
             throw std::runtime_error("Failed to acquire next swapchain image");
         }
 
@@ -128,9 +141,10 @@ namespace fillcan {
 
     VkSurfaceFormatKHR Swapchain::getSurfaceFormat() { return this->surfaceFormat; }
 
-    void Swapchain::present(SwapchainImage* pSwapchainImage, std::vector<VkSemaphore> waitSemaphores) {
+    bool Swapchain::present(SwapchainImage* pSwapchainImage, std::vector<VkSemaphore> waitSemaphores) {
         if (pSwapchainImage == nullptr) {
-            throw std::runtime_error("Failed to present swapchain image: Image was invalid");
+            return false;
+            // throw std::runtime_error("Failed to present swapchain image: Image was invalid");
         }
         VkPresentInfoKHR presentInfo = {};
         presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -147,8 +161,10 @@ namespace fillcan {
         presentInfo.pImageIndices = &pSwapchainImage->index;
 
         if (vkQueuePresentKHR(this->pQueue->getQueueHandle(), &presentInfo) != VK_SUCCESS) {
-            throw std::runtime_error("Failed to present swapchain image");
+            return false;
+            // throw std::runtime_error("Failed to present swapchain image");
         }
+        return true;
     }
 
     VkExtent2D Swapchain::getImageExtent() { return this->pWindow->getExtent(); }

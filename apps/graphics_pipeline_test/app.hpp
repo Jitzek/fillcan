@@ -2,6 +2,7 @@
 
 // fillcan
 #include "fillcan/commands/command_recording.hpp"
+#include "fillcan/graphics/framebuffer.hpp"
 #include "fillcan/graphics/render_pass.hpp"
 #include "fillcan/shader/shader_module.hpp"
 #include <fillcan/commands/command_buffer.hpp>
@@ -27,6 +28,14 @@ namespace app_graphics_pipeline_test {
         std::unique_ptr<fillcan::GraphicsPipeline> upGraphicsPipeline;
         std::unique_ptr<fillcan::Buffer> upVertexBuffer = nullptr;
         std::unique_ptr<fillcan::Buffer> upIndexBuffer = nullptr;
+        
+        std::vector<std::unique_ptr<fillcan::Semaphore>> upSemaphores;
+        std::vector<std::unique_ptr<fillcan::Fence>> upFrameFences;
+        std::unique_ptr<fillcan::Semaphore> upGraphicsSemaphore;
+        std::vector<fillcan::CommandRecording*> pCommandRecordings;
+        std::vector<std::unique_ptr<fillcan::Framebuffer>> upFramebuffers;
+
+        uint32_t currentFrame = 0;
 
       public:
         App();

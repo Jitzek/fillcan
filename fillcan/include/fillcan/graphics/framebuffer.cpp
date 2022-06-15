@@ -9,6 +9,7 @@
 
 // std
 #include <algorithm>
+#include <iostream>
 #include <stdexcept>
 #include <vector>
 
@@ -38,7 +39,17 @@ namespace fillcan {
             throw std::runtime_error("Failed to create framebuffer");
         }
     }
-    Framebuffer::~Framebuffer() { vkDestroyFramebuffer(this->pLogicalDevice->getLogicalDeviceHandle(), this->hFramebuffer, nullptr); }
+    Framebuffer::~Framebuffer() {
+        if (this->pLogicalDevice == nullptr) {
+            std::cerr << "Failed to destroy Framebuffer: Logical Device was NULL"
+                      << "\n";
+        }
+        if (this->hFramebuffer == VK_NULL_HANDLE) {
+            std::cerr << "Failed to destroy Framebuffer: Handle was VK_NULL_HANDLE"
+                      << "\n";
+        }
+        vkDestroyFramebuffer(this->pLogicalDevice->getLogicalDeviceHandle(), this->hFramebuffer, nullptr);
+    }
 
     VkFramebuffer Framebuffer::getFramebufferHandle() { return this->hFramebuffer; }
     VkExtent2D Framebuffer::getExtent() { return this->extent; }

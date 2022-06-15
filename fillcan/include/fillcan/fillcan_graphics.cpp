@@ -4,6 +4,7 @@
 #include "fillcan/graphics/render_pass.hpp"
 #include "fillcan/graphics/render_pass_builder.hpp"
 #include "fillcan/graphics/swapchain.hpp"
+#include <algorithm>
 #include <fillcan/fillcan_graphics.hpp>
 #include <iterator>
 #include <vector>
@@ -13,25 +14,26 @@ namespace fillcan {
                                      VkPhysicalDeviceFeatures requiredDeviceFeatures)
         : Fillcan(pApplicationName, applicationVersion, windowWidth, windowHeight, requiredDeviceFeatures) {}
 
-    FillcanGraphics::~FillcanGraphics() { 
+    FillcanGraphics::~FillcanGraphics() {
         this->upRenderPasses.clear();
         this->upSwapchains.clear();
     }
 
-    unsigned int FillcanGraphics::createSwapchain(BufferMode bufferMode, VkPresentModeKHR presentMode) {
-        this->upSwapchains.push_back(std::move(std::make_unique<Swapchain>(
-            this->getCurrentDevice(), this->upWindow.get(), this->getCurrentDevice()->getPresentQueue(), bufferMode, presentMode, nullptr)));
+    unsigned int FillcanGraphics::createSwapchain(uint32_t imageCount, VkPresentModeKHR presentMode) {
+        this->upSwapchains.emplace_back(std::move(std::make_unique<Swapchain>(
+            this->getCurrentDevice(), this->upWindow.get(), this->getCurrentDevice()->getPresentQueue(), imageCount, presentMode, nullptr)));
         return this->upSwapchains.size() - 1;
     }
 
-    unsigned int FillcanGraphics::recreateSwapchain(BufferMode bufferMode, VkPresentModeKHR presentMode, unsigned int index) {
+    unsigned int FillcanGraphics::recreateSwapchain(uint32_t imageCount, VkPresentModeKHR presentMode, unsigned int index) {
         this->getCurrentDevice()->waitIdle();
         if (this->upSwapchains[index] == nullptr) {
             return -1;
         }
-        this->upSwapchains[index] =
+        this->upSwapchains.at(index) =
             std::move(std::make_unique<Swapchain>(this->getCurrentDevice(), this->upWindow.get(), this->getCurrentDevice()->getPresentQueue(),
-                                                  bufferMode, presentMode, this->upSwapchains[index].get()));
+                                                  imageCount, presentMode, this->upSwapchains[index].get()));
+        std::cout << this->upSwapchains.size() << "\n";
         return index;
     }
 

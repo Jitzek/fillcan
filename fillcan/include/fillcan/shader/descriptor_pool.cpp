@@ -31,7 +31,17 @@ namespace fillcan {
         }
     }
 
-    DescriptorPool::~DescriptorPool() { vkDestroyDescriptorPool(this->pLogicalDevice->getLogicalDeviceHandle(), this->hDescriptorPool, nullptr); }
+    DescriptorPool::~DescriptorPool() {
+        if (this->pLogicalDevice == nullptr) {
+            std::cerr << "Failed to destroy Descriptor Pool: Logical Device was NULL"
+                      << "\n";
+        }
+        if (this->hDescriptorPool == VK_NULL_HANDLE) {
+            std::cerr << "Failed to destroy Descriptor Pool: Handle was VK_NULL_HANDLE"
+                      << "\n";
+        }
+        vkDestroyDescriptorPool(this->pLogicalDevice->getLogicalDeviceHandle(), this->hDescriptorPool, nullptr);
+    }
 
     bool DescriptorPool::allocateDescriptorSets(std::vector<DescriptorSetLayout*> pDescriptorSetLayouts) {
         std::vector<VkDescriptorSetLayout> descriptorSetLayoutsHandles = {};

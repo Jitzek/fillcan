@@ -76,7 +76,7 @@ namespace fillcan {
 #endif
     }
 
-    DevicePool::~DevicePool() {}
+    DevicePool::~DevicePool() { this->supportedPhysicalDevices.clear(); }
 
     std::vector<PhysicalDevice> DevicePool::getSupportedPhysicalDevices() { return this->supportedPhysicalDevices; }
 

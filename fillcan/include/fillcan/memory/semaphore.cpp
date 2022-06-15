@@ -18,7 +18,17 @@ namespace fillcan {
         }
     }
 
-    Semaphore::~Semaphore() { vkDestroySemaphore(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSemaphore, nullptr); }
+    Semaphore::~Semaphore() {
+        if (this->pLogicalDevice == nullptr) {
+            std::cerr << "Failed to destroy Semaphore: Logical Device was NULL"
+                      << "\n";
+        }
+        if (this->hSemaphore == VK_NULL_HANDLE) {
+            std::cerr << "Failed to destroy Semaphore: Handle was VK_NULL_HANDLE"
+                      << "\n";
+        }
+        vkDestroySemaphore(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSemaphore, nullptr);
+    }
 
     VkSemaphore Semaphore::getSemaphoreHandle() { return this->hSemaphore; }
 } // namespace fillcan

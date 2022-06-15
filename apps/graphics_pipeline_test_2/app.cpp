@@ -2,6 +2,7 @@
 #include "app.hpp"
 
 // vulkan
+#include "fillcan/fillcan_graphics.hpp"
 #include "shaderc/shaderc.h"
 #include "vulkan/vulkan_core.h"
 
@@ -44,102 +45,46 @@
 #include <glm/detail/type_vec.hpp>
 #include <glm/glm.hpp>
 
-namespace app_graphics_pipeline_test {
-    App::App() {}
-    App::~App() {}
-
+namespace app_graphics_pipeline_test_2 {
     struct Vertex {
         glm::vec3 position;
         glm::vec3 color;
     };
 
+    App::App() {}
+    App::~App() {}
+
     void App::run() {
-        std::string name = "Graphics Pipeline Test Application";
+        std::string name = "Graphics Pipeline Test 2 Application";
         std::cout << "Running App \"" << name << "\"\n";
 
-        /*
-            Instance Fillcan
-        */
-        upFillcan = std::make_unique<fillcan::FillcanGraphics>(name.c_str(), 1.0, 800, 600, (VkPhysicalDeviceFeatures){.samplerAnisotropy = true});
+        this->upFillcan =
+            std::make_unique<fillcan::FillcanGraphics>(name.c_str(), 1.0, 800, 600, (VkPhysicalDeviceFeatures){.samplerAnisotropy = true});
 
-        // Select any device
-        upFillcan->selectDevice(0);
-
+        this->upFillcan->selectDevice(0);
         std::cout << "Using Device: " << upFillcan->getCurrentDevice()->getPhysicalDevice()->getProperties().deviceName << "\n";
-        /* */
 
-        /*
-            Create a swapchain
-        */
-        this->upFillcan->createSwapchain(2, VK_PRESENT_MODE_FIFO_KHR);
-        /* */
-
-        /*
-            Create a renderpass
-        */
-        // this->upRenderPass = this->createRenderPass();
-        /* */
-
-        /*
-            Create a framebuffer
-        */
-        // fillcan::Framebuffer framebuffer = fillcan::Framebuffer(this->upFillcan->getCurrentDevice(), upRenderPass.get(), );
-        /* */
-
-        // std::unique_ptr<fillcan::GraphicsPipeline> upGraphicsPipeline = this->createGraphicsPipeline();
-
-        /** TODO: PUT IN UPDATE **/
-
-        /*
-            Create Render Pass
-        */
-        this->createRenderPass();
-        /* */
-
-        /*
-            Create shader modules
-        */
         std::unique_ptr<fillcan::ShaderModule> upVertexShaderModule = this->upFillcan->createShaderModule(
-            "./apps/graphics_pipeline_test/shaders", "simple.vert", shaderc_vertex_shader, {}, nullptr, true, false);
+            "./apps/graphics_pipeline_test_2/shaders", "simple.vert", shaderc_vertex_shader, {}, nullptr, true, false);
         std::unique_ptr<fillcan::ShaderModule> upFragmentShaderModule = this->upFillcan->createShaderModule(
-            "./apps/graphics_pipeline_test/shaders", "simple.frag", shaderc_fragment_shader, {}, nullptr, true, false);
-        /* */
+            "./apps/graphics_pipeline_test_2/shaders", "simple.frag", shaderc_fragment_shader, {}, nullptr, true, false);
 
-        /*
-            Create Graphics Pipeline
-        */
+        this->createSwapchain();
+
+        this->createRenderPass();
+
         this->createGraphicsPipeline(upVertexShaderModule.get(), upFragmentShaderModule.get());
-        /* */
 
-        /*
-            Prepare vertices to draw
-        */
         const std::vector<Vertex> vertices = {
             {{0.0f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}}, {{0.5f, 0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}}, {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}}};
-        /* */
 
-        /*
-            Prepare indices of vertices
-        */
         const std::vector<uint16_t> indices = {0, 1, 2};
-        /* */
 
-        /*
-            Create vertexbuffer
-        */
         fillcan::BufferDirector bufferDirector{};
         this->upVertexBuffer = bufferDirector.makeVertexBuffer(this->upFillcan->getCurrentDevice(), sizeof(vertices[0]) * vertices.size());
-        /* */
 
-        /*
-            Create indexbuffer
-        */
         this->upIndexBuffer = bufferDirector.makeIndexBuffer(this->upFillcan->getCurrentDevice(), sizeof(indices[0]) * indices.size());
-        /* */
 
-        /*
-            Bind memory to resources
-        */
         fillcan::Memory vertexBufferMemory =
             fillcan::Memory(this->upFillcan->getCurrentDevice(), upVertexBuffer.get(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
         fillcan::Memory indexBufferMemory =
@@ -147,138 +92,34 @@ namespace app_graphics_pipeline_test {
 
         upVertexBuffer->bindMemory(&vertexBufferMemory);
         upIndexBuffer->bindMemory(&indexBufferMemory);
-        /* */
 
-        /*
-            Map memory
-        */
         void** ppVertexData = this->upVertexBuffer->getMemory()->map();
         void** ppIndexData = this->upIndexBuffer->getMemory()->map();
-        /* */
 
-        /*
-            Fill buffers with data
-        */
         memcpy(*ppVertexData, vertices.data(), upVertexBuffer->getSize());
         memcpy(*ppIndexData, indices.data(), upIndexBuffer->getSize());
-        /* */
 
-        /*
-            Unmap memory
-        */
         this->upVertexBuffer->getMemory()->unmap();
         this->upIndexBuffer->getMemory()->unmap();
-        /* */
 
-        this->upSemaphores.resize(this->upFillcan->getSwapchain()->getImageCount());
-        this->upFrameFences.resize(this->upFillcan->getSwapchain()->getImageCount());
+        fillcan::CommandRecording* pCommandRecording =
+            this->upFillcan->getCurrentDevice()->getGraphicsQueue()->createRecording(this->upFillcan->getSwapchain()->getImageCount(), 0);
+        this->pGraphicsCommandBuffers = pCommandRecording->pPrimaryCommandBuffers;
 
-        for (size_t i = 0; i < this->upFillcan->getSwapchain()->getImageCount(); i++) {
-            this->pCommandRecordings.push_back(this->upFillcan->getCurrentDevice()->getGraphicsQueue()->createRecording(1, 0));
-            this->upFrameFences[i] =
-                std::move(std::make_unique<fillcan::Fence>(this->upFillcan->getCurrentDevice(), VK_FENCE_CREATE_SIGNALED_BIT));
-        }
-
-        this->upFramebuffers.resize(this->upFillcan->getSwapchain()->getImageCount());
-
-        /**
-            UPDATE
-        **/
-
-        int i = 0;
         while (!this->upFillcan->getWindow()->shouldClose()) {
             this->upFillcan->pollEvents();
             this->update();
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
-        std::cout << "Done: " << i;
-
         // upFillcan->MainLoop(std::bind(&App::update, this, std::placeholders::_1));
     }
 
     void App::update(/*std::chrono::duration<double> deltaTime*/) {
-        fillcan::SwapchainImage swapchainImage = this->upFillcan->getSwapchain()->getNextImage();
-        this->upFrameFences[currentFrame]->reset();
+        fillcan::CommandBuffer* pGraphicsCommandBuffer = this->pGraphicsCommandBuffers[currentFrameIndex];
 
-        // Check if swapchain image is valid
-        if (swapchainImage.outOfDate || this->upFillcan->getWindow()->wasResized()) {
-            this->upFillcan->recreateSwapchain(2, VK_PRESENT_MODE_FIFO_KHR);
-            // swapchainImage = this->upFillcan->getSwapchain()->getNextImage();
-            return;
-        }
-
-        fillcan::CommandRecording* pGraphicsCommandRecording = this->pCommandRecordings[this->currentFrame];
-        fillcan::CommandBuffer* pGraphicsCommandBuffer = pGraphicsCommandRecording->pPrimaryCommandBuffers[0];
-        pGraphicsCommandRecording->resetAll();
-        pGraphicsCommandBuffer->begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
-
-        // Define semaphore for when image is ready
-        pGraphicsCommandRecording->pWaitSemaphores.push_back(swapchainImage.pSemaphore);
-        pGraphicsCommandRecording->waitDstStageMask = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
-        this->upSemaphores[this->currentFrame] = std::move(std::make_unique<fillcan::Semaphore>(this->upFillcan->getCurrentDevice()));
-        pGraphicsCommandRecording->pSignalSemaphores.push_back(this->upSemaphores[this->currentFrame].get());
-
-        // Create imageviews which will be used as attachments
-        std::vector<fillcan::ImageView*> pAttachments = {};
-        pAttachments.reserve(1);
-        pAttachments.push_back(swapchainImage.pImage->createImageView(
-            VK_IMAGE_VIEW_TYPE_2D, this->upFillcan->getSwapchain()->getSurfaceFormat().format,
-            (VkImageSubresourceRange){
-                .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT, .baseMipLevel = 0, .levelCount = 1, .baseArrayLayer = 0, .layerCount = 1}));
-        /* */
-
-        /*
-            Create framebuffer
-        */
-        this->upFramebuffers[this->currentFrame] = std::move(std::make_unique<fillcan::Framebuffer>(
-            this->upFillcan->getCurrentDevice(), this->upFillcan->getRenderPass(), pAttachments,
-            this->upFillcan->getSwapchain()->getImageExtent().width, this->upFillcan->getSwapchain()->getImageExtent().height,
-            this->upFillcan->getSwapchain()->getImageArrayLayers()));
-        /* */
-
-        std::vector<VkClearValue> clearValues = {(VkClearValue){.color = (VkClearColorValue){.float32 = {0.0f, 0.0f, 0.0f, 1.0f}}}};
-        this->upFillcan->getRenderPass()->begin(pGraphicsCommandBuffer, this->upFramebuffers[this->currentFrame].get(), &clearValues);
-
-        upGraphicsPipeline->bindToCommandBuffer(pGraphicsCommandBuffer);
-        upGraphicsPipeline->start();
-        VkViewport viewport = (VkViewport){.x = 0.0f,
-                                           .y = 0.0f,
-                                           .width = static_cast<float>(this->upFillcan->getSwapchain()->getImageExtent().width),
-                                           .height = static_cast<float>(this->upFillcan->getSwapchain()->getImageExtent().height),
-                                           .minDepth = 0.0f,
-                                           .maxDepth = 1.0f};
-        VkRect2D scissor = (VkRect2D){.offset = {0, 0}, .extent = this->upFillcan->getSwapchain()->getImageExtent()};
-        vkCmdSetViewport(pGraphicsCommandBuffer->getCommandBufferHandle(), 0, 1, &viewport);
-        vkCmdSetScissor(pGraphicsCommandBuffer->getCommandBufferHandle(), 0, 1, &scissor);
-
-        /*
-            Bind the vertex buffer
-        */
-        std::vector<fillcan::Buffer*> pVertexBuffers = {upVertexBuffer.get()};
-        this->upGraphicsPipeline->bindVertexBuffers(pVertexBuffers);
-        /* */
-        /*
-            Bind the index buffer
-        */
-        this->upGraphicsPipeline->bindIndexBuffer(upIndexBuffer.get(), VK_INDEX_TYPE_UINT16);
-        /* */
-
-        // upGraphicsPipeline->draw(3);
-        upGraphicsPipeline->drawIndexed(3);
-
-        this->upFillcan->getRenderPass()->end();
-
-        // this->upFrameFence->reset();
-        pGraphicsCommandRecording->endAll();
-        pGraphicsCommandRecording->submitAll(this->upFrameFences[currentFrame].get());
-        // this->upFrameFence->waitFor();
-
-        this->upFillcan->getSwapchain()->present(&swapchainImage, {this->upSemaphores[currentFrame]->getSemaphoreHandle()});
-        // pGraphicsCommandRecording->free();
-
-        this->upFrameFences[currentFrame]->waitFor();
-        this->currentFrame = (currentFrame + 1) % this->upFillcan->getSwapchain()->getImageCount();
+        // currentFrameIndex = this->upFillcan->getSwapchain()->getNextImage().index;
     }
+
+    void App::createSwapchain() { this->upFillcan->createSwapchain(2, VK_PRESENT_MODE_FIFO_KHR); }
 
     void App::createRenderPass() {
         fillcan::RenderPassBuilder renderPassBuilder = {};
@@ -303,10 +144,6 @@ namespace app_graphics_pipeline_test {
                                                               .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT});
         this->upFillcan->createRenderPass(renderPassBuilder);
     }
-
-    // std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> App::createDescriptorSetLayouts() {}
-
-    // std::unique_ptr<fillcan::DescriptorPool>
 
     void App::createGraphicsPipeline(fillcan::ShaderModule* pVertexShaderModule, fillcan::ShaderModule* pFragmentShaderModule) {
         fillcan::GraphicsPipelineBuilder graphicsPipelineBuilder{};
@@ -371,4 +208,4 @@ namespace app_graphics_pipeline_test {
 
         this->upGraphicsPipeline = graphicsPipelineBuilder.getResult();
     }
-} // namespace app_graphics_pipeline_test
+} // namespace app_graphics_pipeline_test_2

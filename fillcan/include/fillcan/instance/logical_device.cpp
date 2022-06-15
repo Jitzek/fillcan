@@ -52,6 +52,10 @@ namespace fillcan {
     }
 
     LogicalDevice::~LogicalDevice() {
+        if (this->hLogicalDevice == VK_NULL_HANDLE) {
+            std::cerr << "Failed to destroy Logical Device: Handle was VK_NULL_HANDLE"
+                      << "\n";
+        }
         this->waitIdle();
         this->upGraphicsQueue.reset();
         this->upPresentQueue.reset();

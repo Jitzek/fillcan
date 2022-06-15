@@ -22,7 +22,17 @@ namespace fillcan {
             throw std::runtime_error("Failed to create buffer view");
         }
     }
-    BufferView::~BufferView() { vkDestroyBufferView(this->pLogicalDevice->getLogicalDeviceHandle(), this->hBufferView, nullptr); }
+    BufferView::~BufferView() {
+        if (this->pLogicalDevice == nullptr) {
+            std::cerr << "Failed to destroy Buffer View: Logical Device was NULL"
+                      << "\n";
+        }
+        if (this->hBufferView == VK_NULL_HANDLE) {
+            std::cerr << "Failed to destroy Buffer View: Handle was VK_NULL_HANDLE"
+                      << "\n";
+        }
+        vkDestroyBufferView(this->pLogicalDevice->getLogicalDeviceHandle(), this->hBufferView, nullptr);
+    }
 
     VkBufferView BufferView::getBufferViewHandle() { return this->hBufferView; }
 } // namespace fillcan

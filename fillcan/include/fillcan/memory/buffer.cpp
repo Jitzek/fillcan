@@ -34,7 +34,17 @@ namespace fillcan {
             throw std::runtime_error("Failed to create buffer");
         }
     }
-    Buffer::~Buffer() { vkDestroyBuffer(this->pLogicalDevice->getLogicalDeviceHandle(), this->hBuffer, nullptr); }
+    Buffer::~Buffer() {
+        if (this->pLogicalDevice == nullptr) {
+            std::cerr << "Failed to destroy Buffer: Logical Device was NULL"
+                      << "\n";
+        }
+        if (this->hBuffer == VK_NULL_HANDLE) {
+            std::cerr << "Failed to destroy Buffer: Handle was VK_NULL_HANDLE"
+                      << "\n";
+        }
+        vkDestroyBuffer(this->pLogicalDevice->getLogicalDeviceHandle(), this->hBuffer, nullptr);
+    }
 
     VkBuffer Buffer::getBufferHandle() { return this->hBuffer; }
 

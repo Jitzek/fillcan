@@ -24,8 +24,8 @@ namespace fillcan {
                         VkPhysicalDeviceFeatures requiredDeviceFeatures = {});
         ~FillcanGraphics();
 
-        unsigned int createSwapchain(BufferMode bufferMode = FILLCAN_BUFFERING_TRIPLE, VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR);
-        unsigned int recreateSwapchain(BufferMode bufferMode = FILLCAN_BUFFERING_TRIPLE, VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR, unsigned int index = 0);
+        unsigned int createSwapchain(uint32_t imageCount = 2, VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR);
+        unsigned int recreateSwapchain(uint32_t imageCount = 2, VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR, unsigned int index = 0);
         Swapchain* getSwapchain(unsigned int index = 0);
         std::vector<Swapchain*> getSwapchains();
         void destroySwapchain(unsigned int index = 0);

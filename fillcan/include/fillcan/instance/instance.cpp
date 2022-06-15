@@ -82,6 +82,10 @@ namespace fillcan {
             func(this->hInstance, debugMessenger, nullptr);
         }
 #endif
+        if (this->hInstance == VK_NULL_HANDLE) {
+            std::cerr << "Failed to destroy Instance: Handle was VK_NULL_HANDLE"
+                      << "\n";
+        }
         vkDestroyInstance(this->hInstance, nullptr);
     }
 

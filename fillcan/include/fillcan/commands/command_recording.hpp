@@ -14,9 +14,6 @@ namespace fillcan {
     class Queue;
     class Fence;
     struct CommandRecording {
-        // Automatically set
-        uint64_t id = 0;
-
         Queue* pQueue;
         std::vector<CommandBuffer*> pPrimaryCommandBuffers = {};
         std::vector<CommandBuffer*> pSecondaryCommandBuffers = {};

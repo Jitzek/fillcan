@@ -25,6 +25,14 @@ namespace fillcan {
     }
 
     Memory::~Memory() {
+        if (this->pLogicalDevice == nullptr) {
+            std::cerr << "Failed to free Memory: Logical Device was NULL"
+                      << "\n";
+        }
+        if (this->hMemory == VK_NULL_HANDLE) {
+            std::cerr << "Failed to free Memory: Handle was VK_NULL_HANDLE"
+                      << "\n";
+        }
         vkFreeMemory(this->pLogicalDevice->getLogicalDeviceHandle(), this->hMemory, nullptr);
         if (this->pData != nullptr) {
             this->unmap();
@@ -67,8 +75,8 @@ namespace fillcan {
 
     void** Memory::getData() { return &this->pData; }
 
-    void Memory::unmap() { 
-        vkUnmapMemory(this->pLogicalDevice->getLogicalDeviceHandle(), this->hMemory); 
+    void Memory::unmap() {
+        vkUnmapMemory(this->pLogicalDevice->getLogicalDeviceHandle(), this->hMemory);
         this->pData = nullptr;
     }
 

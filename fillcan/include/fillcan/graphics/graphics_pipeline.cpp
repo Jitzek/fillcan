@@ -80,9 +80,7 @@ namespace fillcan {
         Pipeline::hPipeline = this->hPipeline;
     }
 
-    GraphicsPipeline::~GraphicsPipeline() { 
-        // Pipeline::~Pipeline(); 
-        // vkDestroyPipeline(this->pLogicalDevice->getLogicalDeviceHandle(), this->hPipeline, nullptr);
+    GraphicsPipeline::~GraphicsPipeline() {
     }
 
     RenderPass* GraphicsPipeline::getRenderPass() { return this->pRenderPass; }

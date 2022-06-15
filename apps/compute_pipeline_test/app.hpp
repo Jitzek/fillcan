@@ -9,6 +9,8 @@
 
 #include <fillcan/computing/compute_pipeline.hpp>
 
+#include <fillcan/memory/fence.hpp>
+
 // std
 #include <memory>
 #include <vector>

@@ -32,7 +32,17 @@ namespace fillcan {
         }
     }
 
-    RenderPass::~RenderPass() { vkDestroyRenderPass(this->pLogicalDevice->getLogicalDeviceHandle(), this->hRenderPass, nullptr); }
+    RenderPass::~RenderPass() {
+        if (this->pLogicalDevice == nullptr) {
+            std::cerr << "Failed to destroy RenderPass: Logical Device was NULL"
+                      << "\n";
+        }
+        if (this->hRenderPass == VK_NULL_HANDLE) {
+            std::cerr << "Failed to destroy RenderPass: Handle was VK_NULL_HANDLE"
+                      << "\n";
+        }
+        vkDestroyRenderPass(this->pLogicalDevice->getLogicalDeviceHandle(), this->hRenderPass, nullptr);
+    }
 
     VkRenderPass RenderPass::getRenderPassHandle() { return this->hRenderPass; }
 

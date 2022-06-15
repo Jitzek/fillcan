@@ -25,6 +25,14 @@ namespace fillcan {
         }
     }
     CommandPool::~CommandPool() {
+        if (this->pLogicalDevice == nullptr) {
+            std::cerr << "Failed to destroy CommandPool: Logical Device was NULL"
+                      << "\n";
+        }
+        if (this->hCommandPool == VK_NULL_HANDLE) {
+            std::cerr << "Failed to destroy CommandPool: Handle was VK_NULL_HANDLE"
+                      << "\n";
+        }
         this->upCommandBuffers.clear();
         vkDestroyCommandPool(this->pLogicalDevice->getLogicalDeviceHandle(), this->hCommandPool, nullptr);
     }

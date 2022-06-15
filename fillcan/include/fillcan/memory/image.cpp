@@ -55,6 +55,14 @@ namespace fillcan {
 
     Image::~Image() {
         if (!this->isSwapchainImage) {
+            if (this->pLogicalDevice == nullptr) {
+                std::cerr << "Failed to destroy Image: Logical Device was NULL"
+                          << "\n";
+            }
+            if (this->hImage == VK_NULL_HANDLE) {
+                std::cerr << "Failed to destroy Image: Handle was VK_NULL_HANDLE"
+                          << "\n";
+            }
             vkDestroyImage(this->pLogicalDevice->getLogicalDeviceHandle(), this->hImage, nullptr);
         }
     }

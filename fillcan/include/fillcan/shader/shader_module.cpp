@@ -42,6 +42,14 @@ namespace fillcan {
         }
     }
     ShaderModule::~ShaderModule() {
+        if (this->pLogicalDevice == nullptr) {
+            std::cerr << "Failed to destroy Shader Module: Logical Device was NULL"
+                      << "\n";
+        }
+        if (this->hShaderModule == VK_NULL_HANDLE) {
+            std::cerr << "Failed to destroy Shader Module: Handle was VK_NULL_HANDLE"
+                      << "\n";
+        }
         vkDestroyShaderModule(this->pLogicalDevice->getLogicalDeviceHandle(), this->hShaderModule, nullptr);
     }
 

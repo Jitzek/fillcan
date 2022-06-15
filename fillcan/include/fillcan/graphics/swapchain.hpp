@@ -4,6 +4,8 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
+#include <cstdint>
+#include <fillcan/memory/fence.hpp>
 #include <fillcan/memory/image.hpp>
 #include <fillcan/memory/semaphore.hpp>
 
@@ -25,8 +27,6 @@ namespace fillcan {
         Semaphore* pSemaphore = nullptr;
     };
 
-    enum BufferMode { FILLCAN_BUFFERING_UNDEFINED = -1, FILLCAN_BUFFERING_SINGLE = 1, FILLCAN_BUFFERING_DOUBLE = 2, FILLCAN_BUFFERING_TRIPLE = 3 };
-
     class Swapchain {
       private:
         VkSwapchainKHR hSwapchain;
@@ -34,7 +34,7 @@ namespace fillcan {
         Window* pWindow;
         Queue* pQueue;
         VkSurfaceFormatKHR surfaceFormat{.format = VK_FORMAT_UNDEFINED, .colorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR};
-        BufferMode bufferMode = FILLCAN_BUFFERING_UNDEFINED;
+        uint32_t imageCount = 3;
         unsigned int imageArrayLayers = 1;
         VkImageUsageFlags imageUsage = 0;
         VkSharingMode imageSharingMode = VK_SHARING_MODE_MAX_ENUM;
@@ -44,21 +44,21 @@ namespace fillcan {
         std::vector<VkImage> hSwapchainImages = {};
 
       public:
-        Swapchain(LogicalDevice* pLogicalDevice, Window* pWindow, Queue* pPresentQueue, BufferMode bufferMode = FILLCAN_BUFFERING_TRIPLE,
+        Swapchain(LogicalDevice* pLogicalDevice, Window* pWindow, Queue* pPresentQueue, uint32_t imageCount = 3,
                   VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR, Swapchain* pOldSwapchain = VK_NULL_HANDLE);
         ~Swapchain();
 
         VkSwapchainKHR getSwapchainHandle();
-        SwapchainImage getNextImage();
+        SwapchainImage getNextImage(Fence* pFence = nullptr);
         VkSurfaceFormatKHR getSurfaceFormat();
 
-        BufferMode getBufferMode();
+        uint32_t getImageCount();
         unsigned int getImageArrayLayers();
         VkImageUsageFlags getImageUsage();
         VkSharingMode getImageSharingMode();
         std::vector<uint32_t>& getQueueFamilyIndices();
 
-        void present(SwapchainImage* pSwapchainImage, std::vector<VkSemaphore> waitSemaphores);
+        bool present(SwapchainImage* pSwapchainImage, std::vector<VkSemaphore> waitSemaphores);
 
         VkExtent2D getImageExtent();
     };

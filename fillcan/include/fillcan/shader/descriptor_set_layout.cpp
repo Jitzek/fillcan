@@ -25,6 +25,14 @@ namespace fillcan {
     }
 
     DescriptorSetLayout::~DescriptorSetLayout() {
+        if (this->pLogicalDevice == nullptr) {
+            std::cerr << "Failed to destroy Descriptor Set Layout: Logical Device was NULL"
+                      << "\n";
+        }
+        if (this->hDescriptorSetLayout == VK_NULL_HANDLE) {
+            std::cerr << "Failed to destroy Descriptor Set Layout: Handle was VK_NULL_HANDLE"
+                      << "\n";
+        }
         vkDestroyDescriptorSetLayout(this->pLogicalDevice->getLogicalDeviceHandle(), this->hDescriptorSetLayout, nullptr);
     }
 

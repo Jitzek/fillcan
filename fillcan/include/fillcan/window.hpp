@@ -26,6 +26,10 @@ namespace fillcan {
 
         void initWindow();
 
+        bool framebufferResized = false;
+
+        static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
+
       public:
         Window(unsigned int width, unsigned int height, std::string name);
         ~Window();
@@ -41,6 +45,7 @@ namespace fillcan {
         Window& operator=(const Window&) = delete;
 
         bool shouldClose();
+        bool wasResized();
 
         std::vector<const char*> getRequiredExtensions();
 

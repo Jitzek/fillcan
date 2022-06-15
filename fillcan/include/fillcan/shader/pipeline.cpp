@@ -30,7 +30,17 @@ namespace fillcan {
         }
         this->layout = std::make_unique<PipelineLayout>(this->pLogicalDevice, this->pDescriptorSetLayouts);
     }
-    Pipeline::~Pipeline() { vkDestroyPipeline(this->pLogicalDevice->getLogicalDeviceHandle(), this->hPipeline, nullptr); }
+    Pipeline::~Pipeline() {
+        if (this->pLogicalDevice == nullptr) {
+            std::cerr << "Failed to destroy Pipeline: Logical Device was NULL"
+                      << "\n";
+        }
+        if (this->hPipeline == VK_NULL_HANDLE) {
+            std::cerr << "Failed to destroy Pipeline: Handle was VK_NULL_HANDLE"
+                      << "\n";
+        }
+        vkDestroyPipeline(this->pLogicalDevice->getLogicalDeviceHandle(), this->hPipeline, nullptr);
+    }
 
     VkPipeline Pipeline::getPipelineHandle() { return this->hPipeline; }
 
