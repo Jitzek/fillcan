@@ -51,7 +51,7 @@ namespace fillcan {
         VkSampleCountFlagBits rasterizationSamples;
         VkBool32 sampleShadingEnable;
         float minSampleShading;
-        VkSampleMask sampleMask;
+        std::vector<VkSampleMask> sampleMask;
         VkBool32 alphaToCoverageEnable;
         VkBool32 alphaToOneEnable;
     };

@@ -265,7 +265,7 @@ namespace fillcan {
             multisampleStateCreateInfo.rasterizationSamples = this->upMultisampleState->rasterizationSamples;
             multisampleStateCreateInfo.sampleShadingEnable = this->upMultisampleState->sampleShadingEnable;
             multisampleStateCreateInfo.minSampleShading = this->upMultisampleState->minSampleShading;
-            multisampleStateCreateInfo.pSampleMask = &this->upMultisampleState->sampleMask;
+            multisampleStateCreateInfo.pSampleMask = this->upMultisampleState->sampleMask.data();
             multisampleStateCreateInfo.alphaToCoverageEnable = this->upMultisampleState->alphaToCoverageEnable;
             multisampleStateCreateInfo.alphaToOneEnable = this->upMultisampleState->alphaToOneEnable;
         }

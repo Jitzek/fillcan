@@ -319,7 +319,7 @@ namespace app_graphics_pipeline_test {
         graphicsPipelineBuilder.setMultisampleState((fillcan::PipelineMultisampleState){.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT,
                                                                                         .sampleShadingEnable = VK_FALSE,
                                                                                         .minSampleShading = 1.0f,
-                                                                                        .sampleMask = 0,
+                                                                                        .sampleMask = {},
                                                                                         .alphaToCoverageEnable = VK_FALSE,
                                                                                         .alphaToOneEnable = VK_FALSE});
 
