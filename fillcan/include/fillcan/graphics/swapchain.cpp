@@ -1,9 +1,10 @@
 // vulkan
-#include "fillcan/memory/image_director.hpp"
-#include "fillcan/memory/image_view.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
+#include "fillcan/memory/image_director.hpp"
+#include "fillcan/memory/image_view.hpp"
+#include <algorithm>
 #include <fillcan/commands/queue.hpp>
 #include <fillcan/graphics/swapchain.hpp>
 #include <fillcan/instance/logical_device.hpp>
@@ -14,6 +15,7 @@
 #include <cstdint>
 #include <memory>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 namespace fillcan {
@@ -60,7 +62,7 @@ namespace fillcan {
         if (vkGetSwapchainImagesKHR(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSwapchain, &swapchainImageCount, nullptr) != VK_SUCCESS) {
             throw std::runtime_error("Failed to get swapchain images");
         }
-        this->hSwapchainImages.reserve(swapchainImageCount);
+        this->hSwapchainImages.resize(swapchainImageCount);
         if (vkGetSwapchainImagesKHR(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSwapchain, &swapchainImageCount,
                                     this->hSwapchainImages.data()) != VK_SUCCESS) {
             throw std::runtime_error("Failed to get swapchain images");
@@ -81,56 +83,39 @@ namespace fillcan {
 
     std::vector<uint32_t>& Swapchain::getQueueFamilyIndices() { return this->queueFamilyIndices; }
 
-    SwapchainImage Swapchain::getNextImage(CommandBuffer* pCommandBuffer) {
+    SwapchainImage Swapchain::getNextImage() {
         uint32_t imageIndex = 0;
-        VkSemaphore hSemaphore = VK_NULL_HANDLE;
+        this->upSemaphores.push_back(std::move(std::make_unique<Semaphore>(this->pLogicalDevice)));
 
-        if (pCommandBuffer != nullptr) {
-            VkSemaphoreCreateInfo semaphoreCreateInfo = {};
-            semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-            semaphoreCreateInfo.pNext = nullptr;
-            semaphoreCreateInfo.flags = 0;
-            if (vkCreateSemaphore(this->pLogicalDevice->getLogicalDeviceHandle(), &semaphoreCreateInfo, nullptr, &hSemaphore) != VK_SUCCESS) {
-                throw std::runtime_error("Failed to create semphore needed for acquiring the next swapchain image");
-            }
-            VkImageMemoryBarrier imageMemoryBarrier = {};
-            imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-            imageMemoryBarrier.pNext = nullptr;
-            imageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-            imageMemoryBarrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-            imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-            imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-            imageMemoryBarrier.srcQueueFamilyIndex = 0;
-            imageMemoryBarrier.dstQueueFamilyIndex = 0;
-            imageMemoryBarrier.image = this->hSwapchainImages[imageIndex];
-            imageMemoryBarrier.subresourceRange = (VkImageSubresourceRange){.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
-                                                                            .baseMipLevel = 0,
-                                                                            .levelCount = VK_REMAINING_MIP_LEVELS,
-                                                                            .baseArrayLayer = 0,
-                                                                            .layerCount = VK_REMAINING_ARRAY_LAYERS};
-            vkCmdPipelineBarrier(pCommandBuffer->getCommandBufferHandle(), VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-                                 VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &imageMemoryBarrier);
-        }
+        // VkImageMemoryBarrier imageMemoryBarrier = {};
+        // imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        // imageMemoryBarrier.pNext = nullptr;
+        // imageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+        // imageMemoryBarrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+        // imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+        // imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+        // imageMemoryBarrier.srcQueueFamilyIndex = 0;
+        // imageMemoryBarrier.dstQueueFamilyIndex = 0;
+        // imageMemoryBarrier.image = this->hSwapchainImages[imageIndex];
+        // imageMemoryBarrier.subresourceRange = (VkImageSubresourceRange){.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+        //                                                                 .baseMipLevel = 0,
+        //                                                                 .levelCount = VK_REMAINING_MIP_LEVELS,
+        //                                                                 .baseArrayLayer = 0,
+        //                                                                 .layerCount = VK_REMAINING_ARRAY_LAYERS};
+        // vkCmdPipelineBarrier(pCommandBuffer->getCommandBufferHandle(), VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+        //                      VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &imageMemoryBarrier);
         VkResult acquireNextImageResult = vkAcquireNextImageKHR(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSwapchain, UINT64_MAX,
-                                                                hSemaphore, VK_NULL_HANDLE, &imageIndex);
+                                                                this->upSemaphores.back()->getSemaphoreHandle(), VK_NULL_HANDLE, &imageIndex);
         if (acquireNextImageResult == VK_ERROR_OUT_OF_DATE_KHR) {
-            return (SwapchainImage){.outOfDate = true, .index = 0, .upImage = nullptr, .hSemaphore = VK_NULL_HANDLE};
+            return {.outOfDate = true, .index = 0, .pImage = nullptr, .pSemaphore = nullptr};
         }
         if (acquireNextImageResult != VK_SUCCESS) {
             throw std::runtime_error("Failed to acquire next swapchain image");
         }
-
-        // std::unique_ptr<SwapchainImage> test = std::make_unique<SwapchainImage>((SwapchainImage){
-        //     .index = imageIndex, .image = Image(this->pLogicalDevice, this->hSwapchainImages[imageIndex]), .hSemaphore = hSemaphore});
-        // upSwapchainImages.push_back(std::move(test));
-
-        //  &
-        // swapchainImages.push_back(Image(this->pLogicalDevice, this, this->hSwapchainImages[imageIndex]));
-        return std::move(
-            (SwapchainImage){.outOfDate = false,
-                             .index = imageIndex,
-                             .upImage = std::move(std::make_unique<Image>(this->pLogicalDevice, this, this->hSwapchainImages[imageIndex])),
-                             .hSemaphore = hSemaphore});
+        
+        this->upSwapchainImages.push_back(std::move(std::make_unique<Image>(this->pLogicalDevice, this, this->hSwapchainImages[imageIndex])));
+        return (SwapchainImage){
+            .outOfDate = false, .index = imageIndex, .pImage = upSwapchainImages.back().get(), .pSemaphore = this->upSemaphores.back().get()};
     }
 
     VkSurfaceFormatKHR Swapchain::getSurfaceFormat() { return this->surfaceFormat; }

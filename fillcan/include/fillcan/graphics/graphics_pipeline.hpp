@@ -16,7 +16,8 @@ namespace fillcan {
       private:
         RenderPass* pRenderPass;
         unsigned int subpass;
-        std::vector<Buffer> vertexBuffers = {};
+        std::vector<Buffer*> pVertexBuffers = {};
+        Buffer* pIndexBuffer = nullptr;
 
       public:
         GraphicsPipeline(LogicalDevice* pLogicalDevice, CommandBuffer* pCommandBuffer, VkPipelineCreateFlags flags,
@@ -30,8 +31,12 @@ namespace fillcan {
 
         RenderPass* getRenderPass();
 
-        void bindVertexBuffers(std::vector<Buffer>& vertexBuffers);
+        void bindVertexBuffers(std::vector<Buffer*>& pVertexBuffers);
+
+        void bindIndexBuffer(Buffer* pIndexBuffer, VkIndexType indexType = VK_INDEX_TYPE_UINT16);
 
         void draw(unsigned int vertexCount, unsigned int instanceCount = 1, unsigned int firstVertex = 0, unsigned int firstInstance = 0);
+
+        void drawIndexed(unsigned int indexCount, unsigned int instanceCount = 1, unsigned int firstIndex = 0, unsigned int vertexOffset = 0, unsigned int firstInstance = 0);
     };
 } // namespace fillcan

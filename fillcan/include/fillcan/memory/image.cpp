@@ -43,15 +43,21 @@ namespace fillcan {
             throw std::runtime_error("Failed to create image");
         }
     }
-    
+
     Image::Image(LogicalDevice* pLogicalDevice, Swapchain* pSwapchain, VkImage hImage)
         : pLogicalDevice(pLogicalDevice), hImage(hImage), flags(0), type(VK_IMAGE_TYPE_2D), format(pSwapchain->getSurfaceFormat().format),
           extent((VkExtent3D){.width = pSwapchain->getImageExtent().width, .height = pSwapchain->getImageExtent().height, .depth = 1}), mipLevels(1),
           arrayLayers(pSwapchain->getImageArrayLayers()), samples(VK_SAMPLE_COUNT_FLAG_BITS_MAX_ENUM), tiling(VK_IMAGE_TILING_MAX_ENUM),
           usage(pSwapchain->getImageUsage()), sharingMode(pSwapchain->getImageSharingMode()), queueFamilyIndices(pSwapchain->getQueueFamilyIndices()),
-          initialLayout(VK_IMAGE_LAYOUT_UNDEFINED), upImageViews(std::vector<std::unique_ptr<ImageView>>()) {}
+          initialLayout(VK_IMAGE_LAYOUT_UNDEFINED), upImageViews(std::vector<std::unique_ptr<ImageView>>()) {
+        this->isSwapchainImage = true;
+    }
 
-    Image::~Image() { vkDestroyImage(this->pLogicalDevice->getLogicalDeviceHandle(), this->hImage, nullptr); }
+    Image::~Image() {
+        if (!this->isSwapchainImage) {
+            vkDestroyImage(this->pLogicalDevice->getLogicalDeviceHandle(), this->hImage, nullptr);
+        }
+    }
 
     VkImage Image::getImageHandle() { return this->hImage; }
 

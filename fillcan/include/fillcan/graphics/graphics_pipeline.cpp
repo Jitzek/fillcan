@@ -1,7 +1,9 @@
 // vulkan
+#include "fillcan/memory/buffer.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
+#include <cstddef>
 #include <fillcan/graphics/graphics_pipeline.hpp>
 #include <fillcan/graphics/render_pass.hpp>
 
@@ -9,7 +11,11 @@
 #include <fillcan/shader/pipeline_layout.hpp>
 #include <fillcan/shader/shader_module.hpp>
 
+#include <fillcan/memory/buffer.hpp>
+
 // std
+#include <algorithm>
+#include <iterator>
 #include <stdexcept>
 #include <vector>
 
@@ -23,6 +29,7 @@ namespace fillcan {
         VkPipelineColorBlendStateCreateInfo* pColorBlendState, VkPipelineDynamicStateCreateInfo* pDynamicState, RenderPass* pRenderPass,
         unsigned int subpass)
         : Pipeline(pLogicalDevice, pCommandBuffer, flags, shaderStages), pRenderPass(pRenderPass), subpass(subpass) {
+        this->setBindPoint(VK_PIPELINE_BIND_POINT_GRAPHICS);
         VkGraphicsPipelineCreateInfo graphicsPipelineCreateInfo = {};
         graphicsPipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
         graphicsPipelineCreateInfo.pNext = nullptr;
@@ -35,9 +42,9 @@ namespace fillcan {
             pipelineShaderStageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
             pipelineShaderStageCreateInfo.pNext = nullptr;
             pipelineShaderStageCreateInfo.flags = 0;
-            pipelineShaderStageCreateInfo.stage = this->shaderStages[0].stage;
-            pipelineShaderStageCreateInfo.module = this->shaderStages[0].pShaderModule->getShaderModuleHandle();
-            pipelineShaderStageCreateInfo.pName = this->shaderStages[0].name.c_str();
+            pipelineShaderStageCreateInfo.stage = shaderStage.stage;
+            pipelineShaderStageCreateInfo.module = shaderStage.pShaderModule->getShaderModuleHandle();
+            pipelineShaderStageCreateInfo.pName = shaderStage.name.c_str();
             pipelineShaderStageCreateInfos.push_back(pipelineShaderStageCreateInfo);
         }
         graphicsPipelineCreateInfo.stageCount = static_cast<uint32_t>(pipelineShaderStageCreateInfos.size());
@@ -72,4 +79,52 @@ namespace fillcan {
         }
     }
     GraphicsPipeline::~GraphicsPipeline() { Pipeline::~Pipeline(); }
+
+    RenderPass* GraphicsPipeline::getRenderPass() { return this->pRenderPass; }
+
+    void GraphicsPipeline::bindVertexBuffers(std::vector<Buffer*>& pVertexBuffers) {
+        if (this->pCommandBuffer == nullptr) {
+            throw std::runtime_error(
+                "Not bound to a command buffer before binding vertex buffers, please use Pipeline::bindToCommandBuffer before calling this function");
+        }
+        this->pVertexBuffers = pVertexBuffers;
+        std::vector<VkBuffer> hVertexBuffers = {};
+        hVertexBuffers.reserve(this->pVertexBuffers.size());
+        std::transform(this->pVertexBuffers.begin(), this->pVertexBuffers.end(), std::back_inserter(hVertexBuffers),
+                       [](Buffer* pBuffer) { return pBuffer->getBufferHandle(); });
+        std::vector<VkDeviceSize> offsets = {};
+        offsets.reserve(hVertexBuffers.size());
+        for (size_t i = 0; i < this->pVertexBuffers.size(); i++) {
+            offsets.push_back(0);
+        }
+        vkCmdBindVertexBuffers(this->pCommandBuffer->getCommandBufferHandle(), 0, static_cast<uint32_t>(hVertexBuffers.size()), hVertexBuffers.data(),
+                               offsets.data());
+    }
+
+    void GraphicsPipeline::bindIndexBuffer(Buffer* pIndexBuffer, VkIndexType indexType) {
+        if (this->pCommandBuffer == nullptr) {
+            throw std::runtime_error(
+                "Not bound to a command buffer before binding index buffer, please use Pipeline::bindToCommandBuffer before calling this function");
+        }
+        this->pIndexBuffer = pIndexBuffer;
+        vkCmdBindIndexBuffer(this->pCommandBuffer->getCommandBufferHandle(), this->pIndexBuffer->getBufferHandle(), 0, indexType);
+    }
+
+    void GraphicsPipeline::draw(unsigned int vertexCount, unsigned int instanceCount, unsigned int firstVertex, unsigned int firstInstance) {
+        if (this->pCommandBuffer == nullptr) {
+            throw std::runtime_error(
+                "Not bound to a command buffer before drawing, please use Pipeline::bindToCommandBuffer before calling this function");
+        }
+        vkCmdDraw(this->pCommandBuffer->getCommandBufferHandle(), vertexCount, instanceCount, firstVertex, firstInstance);
+    }
+
+    void GraphicsPipeline::drawIndexed(unsigned int indexCount, unsigned int instanceCount, unsigned int firstIndex, unsigned int vertexOffset,
+                                       unsigned int firstInstance) {
+        if (this->pCommandBuffer == nullptr) {
+            throw std::runtime_error(
+                "Not bound to a command buffer before drawing, please use Pipeline::bindToCommandBuffer before calling this function");
+        }
+        vkCmdDrawIndexed(this->pCommandBuffer->getCommandBufferHandle(), indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
+    }
+
 } // namespace fillcan

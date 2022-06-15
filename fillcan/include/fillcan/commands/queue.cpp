@@ -35,6 +35,7 @@ namespace fillcan {
             recording.pSecondaryCommandBuffers =
                 this->upCommandPool->allocateCommandBuffers(VK_COMMAND_BUFFER_LEVEL_SECONDARY, secondaryCommandBufferCount);
         }
+        recording.pQueue = this;
         this->recordings.push_back(recording);
         return &this->recordings.back();
     }
@@ -49,7 +50,6 @@ namespace fillcan {
             submitInfo.pWaitSemaphores = pCommandRecording->waitSemaphores.data();
             submitInfo.pWaitDstStageMask = &pCommandRecording->waitDstStageMask;
             std::vector<VkCommandBuffer> commandBufferHandles = {};
-            int i = 0;
             for (CommandBuffer* pCommandBuffer : pCommandRecording->pPrimaryCommandBuffers) {
                 commandBufferHandles.push_back(pCommandBuffer->getCommandBufferHandle());
             }
@@ -57,7 +57,10 @@ namespace fillcan {
             submitInfo.pCommandBuffers = commandBufferHandles.data();
             submitInfo.signalSemaphoreCount = pCommandRecording->signalSemaphores.size();
             submitInfo.pSignalSemaphores = pCommandRecording->signalSemaphores.data();
-            success = success && vkQueueSubmit(this->hQueue, 1, &submitInfo, pFence->getFenceHandle()) == VK_SUCCESS ? true : false;
+            success =
+                success && vkQueueSubmit(this->hQueue, 1, &submitInfo, pFence != nullptr ? pFence->getFenceHandle() : VK_NULL_HANDLE) == VK_SUCCESS
+                    ? true
+                    : false;
         }
         return success;
     }

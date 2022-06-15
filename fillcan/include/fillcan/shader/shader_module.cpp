@@ -18,7 +18,7 @@ namespace fillcan {
         shaderModuleCreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
         shaderModuleCreateInfo.pNext = nullptr;
         shaderModuleCreateInfo.flags = 0;
-        shaderModuleCreateInfo.codeSize = code.size() * sizeof(uint32_t);
+        shaderModuleCreateInfo.codeSize = code.size();
         shaderModuleCreateInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
         if (vkCreateShaderModule(this->pLogicalDevice->getLogicalDeviceHandle(), &shaderModuleCreateInfo, nullptr, &this->hShaderModule) !=
             VK_SUCCESS) {

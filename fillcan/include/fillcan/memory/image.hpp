@@ -33,6 +33,7 @@ namespace fillcan {
         VkImageLayout initialLayout;
         Memory* pMemory;
         std::vector<std::unique_ptr<ImageView>> upImageViews;
+        bool isSwapchainImage = false;
 
       public:
         Image(LogicalDevice* pLogicalDevice, VkImageCreateFlags flags, VkImageType type, VkFormat format, VkExtent3D extent, unsigned int mipLevels,

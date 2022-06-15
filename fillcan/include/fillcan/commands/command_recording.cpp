@@ -11,7 +11,7 @@
 #include <vector>
 
 namespace fillcan {
-    bool CommandRecording::submitAll(Fence* pFence) { return this->queue->submitRecordings({this}, pFence); }
+    bool CommandRecording::submitAll(Fence* pFence) { return this->pQueue->submitRecordings({this}, pFence); }
 
     bool CommandRecording::endAll() {
         bool successfulEnd = true;

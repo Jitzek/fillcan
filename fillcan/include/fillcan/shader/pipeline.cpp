@@ -71,6 +71,8 @@ namespace fillcan {
             std::runtime_error("Failed to start pipeline because no commandbuffer was bound");
         }
         this->bindToCommandBuffer(this->pCommandBuffer);
-        this->bindDescriptorSets();
+        if (this->pDescriptorSets.size() > 0) {
+            this->bindDescriptorSets();
+        }
     }
 } // namespace fillcan

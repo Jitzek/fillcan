@@ -71,22 +71,4 @@ namespace fillcan {
         vkCmdEndRenderPass(this->pCommandBuffer->getCommandBufferHandle());
         this->pCommandBuffer = nullptr;
     }
-
-    unsigned int RenderPass::createFramebuffer(std::vector<ImageView*> pAttachments, unsigned int width, unsigned int height, unsigned int layers) {
-        this->upFramebuffers.push_back(
-            std::move(std::make_unique<Framebuffer>(Framebuffer(this->pLogicalDevice, this, pAttachments, width, height, layers))));
-        return this->upFramebuffers.size() - 1;
-    }
-
-    Framebuffer* RenderPass::getFramebuffer(unsigned int index) { return this->upFramebuffers[index].get(); }
-
-    std::vector<Framebuffer*> RenderPass::getFramebuffers() {
-        std::vector<Framebuffer*> pFramebuffers = {};
-        pFramebuffers.reserve(this->upFramebuffers.size());
-        std::transform(this->upFramebuffers.begin(), this->upFramebuffers.end(), std::back_inserter(pFramebuffers),
-                       [](const std::unique_ptr<Framebuffer>& upFramebuffer) { return upFramebuffer.get(); });
-        return pFramebuffers;
-    }
-
-    void RenderPass::destroyFramebuffer(unsigned int index) { this->upFramebuffers.erase(this->upFramebuffers.begin() + index); }
 } // namespace fillcan

@@ -5,9 +5,11 @@
 
 // fillcan
 #include <fillcan/memory/image.hpp>
+#include <fillcan/memory/semaphore.hpp>
 
 // std
 #include <memory>
+#include <utility>
 #include <vector>
 
 namespace fillcan {
@@ -19,8 +21,12 @@ namespace fillcan {
     struct SwapchainImage {
         bool outOfDate;
         unsigned int index;
-        std::unique_ptr<Image> upImage;
-        VkSemaphore hSemaphore = VK_NULL_HANDLE;
+        Image* pImage;
+        Semaphore* pSemaphore = nullptr;
+
+        // SwapchainImage(bool outOfDate, unsigned int index, std::unique_ptr<Image> upImage, std::unique_ptr<Semaphore> upSemaphore = nullptr)
+        //     : outOfDate(outOfDate), index(index), upImage(std::move(upImage)), upSemaphore(std::move(upSemaphore)) {}
+        // ~SwapchainImage();
     };
 
     enum BufferMode { FILLCAN_BUFFERING_UNDEFINED = -1, FILLCAN_BUFFERING_SINGLE = 1, FILLCAN_BUFFERING_DOUBLE = 2, FILLCAN_BUFFERING_TRIPLE = 3 };
@@ -37,7 +43,8 @@ namespace fillcan {
         VkImageUsageFlags imageUsage = 0;
         VkSharingMode imageSharingMode = VK_SHARING_MODE_MAX_ENUM;
         std::vector<uint32_t> queueFamilyIndices = {};
-        std::vector<Image> swapchainImages = {};
+        std::vector<std::unique_ptr<Image>> upSwapchainImages = {};
+        std::vector<std::unique_ptr<Semaphore>> upSemaphores = {};
         std::vector<VkImage> hSwapchainImages = {};
 
       public:
@@ -46,7 +53,7 @@ namespace fillcan {
         ~Swapchain();
 
         VkSwapchainKHR getSwapchainHandle();
-        SwapchainImage getNextImage(CommandBuffer* pCommandBuffer = nullptr);
+        SwapchainImage getNextImage();
         VkSurfaceFormatKHR getSurfaceFormat();
 
         BufferMode getBufferMode();

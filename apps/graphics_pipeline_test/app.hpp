@@ -2,6 +2,7 @@
 
 // fillcan
 #include "fillcan/graphics/render_pass.hpp"
+#include "fillcan/shader/shader_module.hpp"
 #include <fillcan/commands/command_buffer.hpp>
 #include <fillcan/fillcan_graphics.hpp>
 
@@ -19,7 +20,7 @@ namespace app_graphics_pipeline_test {
     class App {
       private:
         std::unique_ptr<fillcan::FillcanGraphics> upFillcan;
-        std::unique_ptr<fillcan::RenderPass> upRenderPass;
+        std::unique_ptr<fillcan::GraphicsPipeline> upGraphicsPipeline;
 
       public:
         App();
@@ -32,7 +33,8 @@ namespace app_graphics_pipeline_test {
 
         std::unique_ptr<fillcan::DescriptorPool>
         createDescriptorPool(std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>>& upDescriptorSetLayouts);
-        
-        std::unique_ptr<fillcan::GraphicsPipeline> createGraphicsPipeline();
+
+        void createGraphicsPipeline(fillcan::CommandBuffer* pCommandBuffer, fillcan::ShaderModule* pVertexShaderModule,
+                                    fillcan::ShaderModule* pFragmentShaderModule);
     };
 } // namespace app_graphics_pipeline_test
