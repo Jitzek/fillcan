@@ -28,6 +28,6 @@ namespace app_compute_pipeline_test {
         std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> createDescriptorSetLayouts();
         std::unique_ptr<fillcan::DescriptorPool>
         createDescriptorPool(std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>>& upDescriptorSetLayouts);
-        std::unique_ptr<fillcan::ComputePipeline> createComputePipeline(fillcan::CommandBuffer* pCommandBuffer, fillcan::PipelineShaderStage pipelineShaderStage);
+        std::unique_ptr<fillcan::ComputePipeline> createComputePipeline(fillcan::PipelineShaderStage pipelineShaderStage);
     };
 } // namespace app_compute_pipeline_test

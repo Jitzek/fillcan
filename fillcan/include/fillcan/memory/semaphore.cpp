@@ -1,6 +1,11 @@
-#include "fillcan/instance/logical_device.hpp"
+// vulkan
 #include "vulkan/vulkan_core.h"
+
+#include "fillcan/instance/logical_device.hpp"
 #include <fillcan/memory/semaphore.hpp>
+
+// std
+#include <stdexcept>
 
 namespace fillcan {
     Semaphore::Semaphore(LogicalDevice* pLogicalDevice) : pLogicalDevice(pLogicalDevice) {
@@ -12,6 +17,7 @@ namespace fillcan {
             throw std::runtime_error("Failed to create sempahore");
         }
     }
+
     Semaphore::~Semaphore() { vkDestroySemaphore(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSemaphore, nullptr); }
 
     VkSemaphore Semaphore::getSemaphoreHandle() { return this->hSemaphore; }

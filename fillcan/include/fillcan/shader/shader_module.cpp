@@ -1,6 +1,7 @@
 
 // fillcan
 #include "fillcan/instance/logical_device.hpp"
+#include "vulkan/vulkan_core.h"
 #include <fillcan/shader/descriptor_set_layout.hpp>
 #include <fillcan/shader/shader_module.hpp>
 
@@ -40,7 +41,9 @@ namespace fillcan {
             throw std::runtime_error("Failed to create shader module");
         }
     }
-    ShaderModule::~ShaderModule() {}
+    ShaderModule::~ShaderModule() {
+        vkDestroyShaderModule(this->pLogicalDevice->getLogicalDeviceHandle(), this->hShaderModule, nullptr);
+    }
 
     VkShaderModule ShaderModule::getShaderModuleHandle() { return this->hShaderModule; }
     std::vector<DescriptorSetLayout*> ShaderModule::getDescriptorSetLayouts() {

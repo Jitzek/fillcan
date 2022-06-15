@@ -1,11 +1,13 @@
 
 // fillcan
 #include "fillcan/shader/shader_module.hpp"
+#include "vulkan/vulkan_core.h"
 #include <cstddef>
 #include <fillcan/fillcan.hpp>
 #include <fillcan/instance/logical_device.hpp>
 
 // std
+#include <chrono>
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -51,14 +53,26 @@ namespace fillcan {
             std::make_unique<DevicePool>(this->upInstance.get(), this->upWindow.get(), requiredDeviceExtensions, requiredDeviceFeatures);
     }
 
-    Fillcan::~Fillcan() {}
+    Fillcan::~Fillcan() {
+        vkDestroySurfaceKHR(this->upInstance->getInstanceHandle(), this->upWindow->getSurface(), nullptr);
+        this->upDevicePool.reset();
+        this->upInstance.reset();
+    }
 
-    void Fillcan::MainLoop(std::function<void()> callback) {
+    void Fillcan::MainLoop(std::function<void(std::chrono::duration<double>)> callback) {
+        std::chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
+        std::chrono::high_resolution_clock::time_point previousTime = currentTime;
+        std::chrono::duration<double> deltaTime = previousTime - currentTime;
         while (!upWindow->shouldClose()) {
+            // previousTime = currentTime;
+            // currentTime = std::chrono::high_resolution_clock::now();
+            // deltaTime = currentTime - previousTime;
+
             glfwPollEvents();
 
-            callback();
+            callback(deltaTime);
         }
+        this->getCurrentDevice()->waitIdle();
     }
 
     const std::vector<PhysicalDevice> Fillcan::getSupportedPhysicalDevices() const { return this->upDevicePool->getSupportedPhysicalDevices(); }
@@ -66,6 +80,10 @@ namespace fillcan {
     LogicalDevice* Fillcan::selectDevice(unsigned int deviceIndex) { return this->upDevicePool->selectDevice(deviceIndex); }
 
     LogicalDevice* Fillcan::getCurrentDevice() { return this->upDevicePool->getCurrentDevice(); }
+
+    Window* Fillcan::getWindow() { return this->upWindow.get(); }
+
+    void Fillcan::pollEvents() { glfwPollEvents(); }
 
     std::vector<char> Fillcan::readFile(std::string fileLocation, size_t* fileSize) {
         std::ifstream fileStream(fileLocation, std::ios::ate | std::ios::binary);

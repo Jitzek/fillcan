@@ -10,8 +10,6 @@ namespace fillcan {
 
     void PipelineBuilder::setLogicalDevice(LogicalDevice* pLogicalDevice) { this->pLogicalDevice = pLogicalDevice; }
 
-    void PipelineBuilder::setCommandBuffer(CommandBuffer* pCommandBuffer) { this->pCommandBuffer = pCommandBuffer; }
-
     void PipelineBuilder::setFlags(VkPipelineCreateFlags flags) { this->flags = flags; }
 
     void PipelineBuilder::setPipelineCache(VkPipelineCache pipelineCache) { this->pipelineCache = pipelineCache; }

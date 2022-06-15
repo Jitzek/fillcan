@@ -77,8 +77,13 @@ namespace fillcan {
                                       &this->hPipeline) != VK_SUCCESS) {
             throw std::runtime_error("Failed to create graphics pipeline");
         }
+        Pipeline::hPipeline = this->hPipeline;
     }
-    GraphicsPipeline::~GraphicsPipeline() { Pipeline::~Pipeline(); }
+
+    GraphicsPipeline::~GraphicsPipeline() { 
+        // Pipeline::~Pipeline(); 
+        // vkDestroyPipeline(this->pLogicalDevice->getLogicalDeviceHandle(), this->hPipeline, nullptr);
+    }
 
     RenderPass* GraphicsPipeline::getRenderPass() { return this->pRenderPass; }
 

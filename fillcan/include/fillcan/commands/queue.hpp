@@ -21,7 +21,7 @@ namespace fillcan {
         unsigned int queueFamilyIndex;
         unsigned int queueIndex;
         std::unique_ptr<CommandPool> upCommandPool;
-        std::vector<CommandRecording> recordings = {};
+        std::vector<std::unique_ptr<CommandRecording>> upCommandRecordings = {};
 
       public:
         Queue(LogicalDevice* pLogicalDevice, unsigned int queueFamilyIndex, unsigned int queueIndex);
@@ -34,8 +34,8 @@ namespace fillcan {
 
         CommandRecording* createRecording(unsigned int primaryCommandBufferCount, unsigned int secondaryCommandBufferCount);
         bool submitRecordings(std::vector<CommandRecording*> pCommandRecordings, Fence* pFence = nullptr);
-        bool resetRecording(CommandRecording& pCommandRecording);
-        void freeRecording(CommandRecording& pCommandRecording);
+        bool resetRecording(CommandRecording* pCommandRecording, VkCommandBufferResetFlags flags);
+        void freeRecording(CommandRecording* pCommandRecording);
         bool waitIdle();
     };
 } // namespace fillcan

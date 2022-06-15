@@ -17,7 +17,6 @@ namespace fillcan {
         PipelineBuilder();
         virtual ~PipelineBuilder();
         virtual void setLogicalDevice(LogicalDevice* pLogicalDevice);
-        virtual void setCommandBuffer(CommandBuffer* pCommandBUffer);
         virtual void setFlags(VkPipelineCreateFlags flags);
         virtual void setPipelineCache(VkPipelineCache pipelineCache);
         virtual void setBasePipeline(Pipeline* pBasePipeline);

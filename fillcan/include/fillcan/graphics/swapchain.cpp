@@ -67,6 +67,11 @@ namespace fillcan {
                                     this->hSwapchainImages.data()) != VK_SUCCESS) {
             throw std::runtime_error("Failed to get swapchain images");
         }
+        // for (VkImage hSwapchainImage : hSwapchainImages) {
+        //     this->upSwapchainImages.push_back(std::move(std::make_unique<Image>(this->pLogicalDevice, this, hSwapchainImage)));
+        // }
+        this->upSwapchainImages.resize(this->hSwapchainImages.size());
+        this->upSemaphores.resize(this->hSwapchainImages.size());
     }
 
     Swapchain::~Swapchain() { vkDestroySwapchainKHR(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSwapchain, nullptr); }
@@ -85,7 +90,7 @@ namespace fillcan {
 
     SwapchainImage Swapchain::getNextImage() {
         uint32_t imageIndex = 0;
-        this->upSemaphores.push_back(std::move(std::make_unique<Semaphore>(this->pLogicalDevice)));
+        std::unique_ptr<Semaphore> upSemaphore = std::make_unique<Semaphore>(this->pLogicalDevice);
 
         // VkImageMemoryBarrier imageMemoryBarrier = {};
         // imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -105,31 +110,34 @@ namespace fillcan {
         // vkCmdPipelineBarrier(pCommandBuffer->getCommandBufferHandle(), VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
         //                      VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &imageMemoryBarrier);
         VkResult acquireNextImageResult = vkAcquireNextImageKHR(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSwapchain, UINT64_MAX,
-                                                                this->upSemaphores.back()->getSemaphoreHandle(), VK_NULL_HANDLE, &imageIndex);
-        if (acquireNextImageResult == VK_ERROR_OUT_OF_DATE_KHR) {
+                                                                upSemaphore->getSemaphoreHandle(), VK_NULL_HANDLE, &imageIndex);
+        this->upSemaphores[imageIndex] = std::move(upSemaphore);
+        if (acquireNextImageResult == VK_ERROR_OUT_OF_DATE_KHR || acquireNextImageResult == VK_SUBOPTIMAL_KHR) {
             return {.outOfDate = true, .index = 0, .pImage = nullptr, .pSemaphore = nullptr};
         }
         if (acquireNextImageResult != VK_SUCCESS) {
             throw std::runtime_error("Failed to acquire next swapchain image");
         }
-        
-        this->upSwapchainImages.push_back(std::move(std::make_unique<Image>(this->pLogicalDevice, this, this->hSwapchainImages[imageIndex])));
-        return (SwapchainImage){
-            .outOfDate = false, .index = imageIndex, .pImage = upSwapchainImages.back().get(), .pSemaphore = this->upSemaphores.back().get()};
+
+        this->upSwapchainImages[imageIndex] = std::move(std::make_unique<Image>(this->pLogicalDevice, this, this->hSwapchainImages[imageIndex]));
+        return (SwapchainImage){.outOfDate = false,
+                                .index = imageIndex,
+                                .pImage = this->upSwapchainImages[imageIndex].get(),
+                                .pSemaphore = this->upSemaphores[imageIndex].get()};
     }
 
     VkSurfaceFormatKHR Swapchain::getSurfaceFormat() { return this->surfaceFormat; }
 
-    void Swapchain::present(SwapchainImage* pSwapchainImage, std::vector<VkSemaphore> semaphores) {
+    void Swapchain::present(SwapchainImage* pSwapchainImage, std::vector<VkSemaphore> waitSemaphores) {
         if (pSwapchainImage == nullptr) {
             throw std::runtime_error("Failed to present swapchain image: Image was invalid");
         }
         VkPresentInfoKHR presentInfo = {};
         presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
         presentInfo.pNext = nullptr;
-        if (semaphores.size() > 0) {
-            presentInfo.waitSemaphoreCount = static_cast<uint32_t>(semaphores.size());
-            presentInfo.pWaitSemaphores = semaphores.data();
+        if (waitSemaphores.size() > 0) {
+            presentInfo.waitSemaphoreCount = static_cast<uint32_t>(waitSemaphores.size());
+            presentInfo.pWaitSemaphores = waitSemaphores.data();
         } else {
             presentInfo.waitSemaphoreCount = 0;
             presentInfo.pWaitSemaphores = nullptr;

@@ -8,6 +8,7 @@
 #include <fillcan/memory/buffer.hpp>
 #include <fillcan/memory/image.hpp>
 #include <fillcan/memory/memory.hpp>
+#include <iostream>
 #include <stdexcept>
 
 namespace fillcan {
@@ -23,7 +24,12 @@ namespace fillcan {
         this->init(memoryRequirements);
     }
 
-    Memory::~Memory() { this->unmap(); }
+    Memory::~Memory() {
+        vkFreeMemory(this->pLogicalDevice->getLogicalDeviceHandle(), this->hMemory, nullptr);
+        if (this->pData != nullptr) {
+            this->unmap();
+        }
+    }
 
     void Memory::init(VkMemoryRequirements& memoryRequirements) {
         if (!(memoryRequirements.memoryTypeBits & this->flag)) {
@@ -61,7 +67,10 @@ namespace fillcan {
 
     void** Memory::getData() { return &this->pData; }
 
-    void Memory::unmap() { vkUnmapMemory(this->pLogicalDevice->getLogicalDeviceHandle(), this->hMemory); }
+    void Memory::unmap() { 
+        vkUnmapMemory(this->pLogicalDevice->getLogicalDeviceHandle(), this->hMemory); 
+        this->pData = nullptr;
+    }
 
     void Memory::flush(VkDeviceSize offset, VkDeviceSize size) {
         VkMappedMemoryRange mappedMemoryRange = {

@@ -27,12 +27,23 @@ namespace fillcan {
 
         bool waitFor(uint64_t timeout = UINT64_MAX);
 
+        bool reset();
+
         static bool waitForAll(LogicalDevice* pLogicalDevice, std::vector<Fence*> pFences, uint64_t timeout = UINT64_MAX) {
             std::vector<VkFence> hFences;
             hFences.reserve(pFences.size());
             std::transform(pFences.begin(), pFences.end(), std::back_inserter(hFences), [](const Fence* pFence) { return pFence->hFence; });
             return vkWaitForFences(pLogicalDevice->getLogicalDeviceHandle(), static_cast<uint32_t>(hFences.size()), hFences.data(), true, timeout) ==
                            VK_SUCCESS
+                       ? true
+                       : false;
+        }
+
+        static bool resetAll(LogicalDevice* pLogicalDevice, std::vector<Fence*> pFences) {
+            std::vector<VkFence> hFences;
+            hFences.reserve(pFences.size());
+            std::transform(pFences.begin(), pFences.end(), std::back_inserter(hFences), [](const Fence* pFence) { return pFence->hFence; });
+            return vkResetFences(pLogicalDevice->getLogicalDeviceHandle(), static_cast<uint32_t>(hFences.size()), hFences.data()) == VK_SUCCESS
                        ? true
                        : false;
         }

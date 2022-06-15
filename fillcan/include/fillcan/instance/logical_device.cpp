@@ -52,12 +52,18 @@ namespace fillcan {
     }
 
     LogicalDevice::~LogicalDevice() {
-        vkDeviceWaitIdle(this->hLogicalDevice);
+        this->waitIdle();
+        this->upGraphicsQueue.reset();
+        this->upPresentQueue.reset();
+        this->upComputeQueue.reset();
         vkDestroyDevice(this->hLogicalDevice, nullptr);
     }
 
     const VkDevice LogicalDevice::getLogicalDeviceHandle() const { return this->hLogicalDevice; }
+
     const PhysicalDevice* LogicalDevice::getPhysicalDevice() const { return this->pPhysicalDevice; }
+
+    void LogicalDevice::waitIdle() { vkDeviceWaitIdle(this->hLogicalDevice); }
 
     Queue* LogicalDevice::getGraphicsQueue() const { return this->upGraphicsQueue.get(); }
     Queue* LogicalDevice::getPresentQueue() const { return this->upPresentQueue.get(); }

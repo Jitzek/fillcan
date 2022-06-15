@@ -24,7 +24,10 @@ namespace fillcan {
             throw std::runtime_error("Failed to create command pool");
         }
     }
-    CommandPool::~CommandPool() {}
+    CommandPool::~CommandPool() {
+        this->upCommandBuffers.clear();
+        vkDestroyCommandPool(this->pLogicalDevice->getLogicalDeviceHandle(), this->hCommandPool, nullptr);
+    }
 
     std::vector<CommandBuffer*> CommandPool::allocateCommandBuffers(VkCommandBufferLevel level, unsigned int commandBufferCount) {
         std::vector<VkCommandBuffer> commandBufferHandles(commandBufferCount);

@@ -56,7 +56,7 @@ namespace fillcan {
         this->pMemory = pMemory;
     }
 
-    const Memory* Buffer::getMemory() const { return this->pMemory; }
+    Memory* Buffer::getMemory() const { return this->pMemory; }
 
     BufferView* Buffer::createBufferView(VkFormat format, VkDeviceSize size, VkDeviceSize range) {
         this->upBufferViews.emplace_back(std::make_unique<BufferView>(this->pLogicalDevice, this, format, size, range));

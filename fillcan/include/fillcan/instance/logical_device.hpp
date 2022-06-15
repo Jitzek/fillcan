@@ -23,7 +23,10 @@ namespace fillcan {
         ~LogicalDevice();
 
         const VkDevice getLogicalDeviceHandle() const;
+
         const PhysicalDevice* getPhysicalDevice() const;
+
+        void waitIdle();
         
         Queue* getGraphicsQueue() const;
         Queue* getPresentQueue() const;

@@ -13,7 +13,10 @@ namespace fillcan {
                                      VkPhysicalDeviceFeatures requiredDeviceFeatures)
         : Fillcan(pApplicationName, applicationVersion, windowWidth, windowHeight, requiredDeviceFeatures) {}
 
-    FillcanGraphics::~FillcanGraphics() { Fillcan::~Fillcan(); }
+    FillcanGraphics::~FillcanGraphics() { 
+        this->upRenderPasses.clear();
+        this->upSwapchains.clear();
+    }
 
     unsigned int FillcanGraphics::createSwapchain(BufferMode bufferMode, VkPresentModeKHR presentMode) {
         this->upSwapchains.push_back(std::move(std::make_unique<Swapchain>(
@@ -22,6 +25,7 @@ namespace fillcan {
     }
 
     unsigned int FillcanGraphics::recreateSwapchain(BufferMode bufferMode, VkPresentModeKHR presentMode, unsigned int index) {
+        this->getCurrentDevice()->waitIdle();
         if (this->upSwapchains[index] == nullptr) {
             return -1;
         }

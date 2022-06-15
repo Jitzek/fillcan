@@ -1,4 +1,5 @@
 // vulkan
+#include "fillcan/shader/descriptor_set.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
@@ -7,11 +8,11 @@
 #include <fillcan/shader/descriptor_set_layout.hpp>
 
 // std
+#include <algorithm>
+#include <cstddef>
 #include <memory>
 #include <stdexcept>
 #include <vector>
-#include <algorithm>
-#include <cstddef>
 
 namespace fillcan {
     DescriptorPool::DescriptorPool(LogicalDevice* pLogicalDevice, VkDescriptorPoolCreateFlags flags, unsigned int maxSets,
@@ -76,10 +77,17 @@ namespace fillcan {
         for (DescriptorSet* pDescriptorSet : pDescriptorSets) {
             descriptorSetsHandles.push_back(pDescriptorSet->getDescriptorSetHandle());
         }
-        return vkFreeDescriptorSets(this->pLogicalDevice->getLogicalDeviceHandle(), this->hDescriptorPool, descriptorSetsHandles.size(),
-                                    descriptorSetsHandles.data()) == VK_SUCCESS
-                   ? true
-                   : false;
+        bool succesful = vkFreeDescriptorSets(this->pLogicalDevice->getLogicalDeviceHandle(), this->hDescriptorPool, descriptorSetsHandles.size(),
+                                              descriptorSetsHandles.data()) == VK_SUCCESS
+                             ? true
+                             : false;
+
+        for (DescriptorSet* pDescriptorSet : pDescriptorSets) {
+            this->upDescriptorSets.erase(std::remove_if(
+                this->upDescriptorSets.begin(), this->upDescriptorSets.end(),
+                [pDescriptorSet](std::unique_ptr<DescriptorSet>& rupDescriptorSet) { return rupDescriptorSet.get() == pDescriptorSet; }));
+        }
+        return succesful;
     }
 
     bool DescriptorPool::freeDescriptorSets() {

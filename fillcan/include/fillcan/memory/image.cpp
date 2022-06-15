@@ -107,4 +107,6 @@ namespace fillcan {
                        [](const std::unique_ptr<ImageView>& upImageView) { return upImageView.get(); });
         return pImageViews;
     }
+
+    void Image::destroyImageViews() { this->upImageViews.clear(); }
 } // namespace fillcan

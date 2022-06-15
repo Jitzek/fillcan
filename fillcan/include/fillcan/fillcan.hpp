@@ -18,6 +18,7 @@
 #include <memory>
 #include <shaderc/status.h>
 #include <vector>
+#include <chrono>
 
 // shaderc
 #include <shaderc/shaderc.hpp>
@@ -41,12 +42,16 @@ namespace fillcan {
         Fillcan(const Fillcan&) = delete;
         Fillcan& operator=(const Fillcan&) = delete;
 
-        void MainLoop(std::function<void()> callback);
+        void MainLoop(std::function<void(std::chrono::duration<double>)> callback);
 
         const std::vector<PhysicalDevice> getSupportedPhysicalDevices() const;
         LogicalDevice* selectDevice(unsigned int deviceIndex = 0);
 
         LogicalDevice* getCurrentDevice();
+
+        Window* getWindow();
+
+        void pollEvents();
 
         std::unique_ptr<ShaderModule> createShaderModule(const std::string shaderDirectory, const std::string shaderFileName,
                                                          shaderc_shader_kind shaderKind,

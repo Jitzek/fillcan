@@ -149,22 +149,13 @@ namespace app_compute_pipeline_test {
         /* */
 
         /*
-            Get commandbuffer to execute work
-        */
-        // Create recording to gain access to a primary commandbuffer
-        fillcan::CommandRecording* pComputeCommandRecording = upFillcan->getCurrentDevice()->getComputeQueue()->createRecording(1, 0);
-        fillcan::CommandBuffer* pComputePrimaryCommandBuffer = pComputeCommandRecording->pPrimaryCommandBuffers[0];
-        /* */
-
-        /*
             Create Compute Pipeline
         */
-        std::unique_ptr<fillcan::ComputePipeline> upComputePipeline =
-            this->createComputePipeline(pComputePrimaryCommandBuffer, (fillcan::PipelineShaderStage){
-                                                                          .stage = VK_SHADER_STAGE_COMPUTE_BIT,
-                                                                          .pShaderModule = &computeShaderModule,
-                                                                          .name = "main",
-                                                                      });
+        std::unique_ptr<fillcan::ComputePipeline> upComputePipeline = this->createComputePipeline((fillcan::PipelineShaderStage){
+            .stage = VK_SHADER_STAGE_COMPUTE_BIT,
+            .pShaderModule = &computeShaderModule,
+            .name = "main",
+        });
         /* */
 
         /*
@@ -209,8 +200,13 @@ namespace app_compute_pipeline_test {
         }
         std::cout << "\n\n";
 
+        // Create recording to gain access to a primary commandbuffer
+        fillcan::CommandRecording* pComputeCommandRecording = upFillcan->getCurrentDevice()->getComputeQueue()->createRecording(1, 0);
+        fillcan::CommandBuffer* pComputePrimaryCommandBuffer = pComputeCommandRecording->pPrimaryCommandBuffers[0];
+
         // Begin compute recording commands
         pComputePrimaryCommandBuffer->begin();
+        upComputePipeline->bindToCommandBuffer(pComputePrimaryCommandBuffer);
         upComputePipeline->start();
         int groupCount = ((integerCount) / 256) + 1;
         vkCmdDispatch(pComputePrimaryCommandBuffer->getCommandBufferHandle(), groupCount, 1, 1);
@@ -270,11 +266,9 @@ namespace app_compute_pipeline_test {
         return std::move(descriptorPoolBuilder.getResult());
     }
 
-    std::unique_ptr<fillcan::ComputePipeline> App::createComputePipeline(fillcan::CommandBuffer* pCommandBuffer,
-                                                                         fillcan::PipelineShaderStage pipelineShaderStage) {
+    std::unique_ptr<fillcan::ComputePipeline> App::createComputePipeline(fillcan::PipelineShaderStage pipelineShaderStage) {
         fillcan::ComputePipelineBuilder computePipelineBuilder{};
         computePipelineBuilder.setLogicalDevice(this->upFillcan->getCurrentDevice());
-        computePipelineBuilder.setCommandBuffer(pCommandBuffer);
         computePipelineBuilder.setFlags(0);
         computePipelineBuilder.setBasePipeline(nullptr);
         computePipelineBuilder.setShaderStage(pipelineShaderStage);

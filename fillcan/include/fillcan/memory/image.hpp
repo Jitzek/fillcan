@@ -71,5 +71,6 @@ namespace fillcan {
                                                                     .b = VK_COMPONENT_SWIZZLE_IDENTITY,
                                                                     .a = VK_COMPONENT_SWIZZLE_IDENTITY});
         std::vector<ImageView*> getImageViews();
+        void destroyImageViews();
     };
 } // namespace fillcan

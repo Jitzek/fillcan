@@ -1,4 +1,5 @@
 // fillcan
+#include "vulkan/vulkan_core.h"
 #include <fillcan/window.hpp>
 
 namespace fillcan {

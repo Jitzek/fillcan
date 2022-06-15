@@ -18,7 +18,9 @@ namespace fillcan {
 
     VkFence Fence::getFenceHandle() { return this->hFence; }
 
+    bool Fence::reset() { return vkResetFences(this->pLogicalDevice->getLogicalDeviceHandle(), 1, &this->hFence) == VK_SUCCESS; }
+
     bool Fence::waitFor(uint64_t timeout) {
-        return vkWaitForFences(pLogicalDevice->getLogicalDeviceHandle(), 1, &this->hFence, true, timeout) == VK_SUCCESS ? true : false;
+        return vkWaitForFences(pLogicalDevice->getLogicalDeviceHandle(), 1, &this->hFence, true, timeout) == VK_SUCCESS;
     }
 } // namespace fillcan

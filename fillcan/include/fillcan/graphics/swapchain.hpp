@@ -23,10 +23,6 @@ namespace fillcan {
         unsigned int index;
         Image* pImage;
         Semaphore* pSemaphore = nullptr;
-
-        // SwapchainImage(bool outOfDate, unsigned int index, std::unique_ptr<Image> upImage, std::unique_ptr<Semaphore> upSemaphore = nullptr)
-        //     : outOfDate(outOfDate), index(index), upImage(std::move(upImage)), upSemaphore(std::move(upSemaphore)) {}
-        // ~SwapchainImage();
     };
 
     enum BufferMode { FILLCAN_BUFFERING_UNDEFINED = -1, FILLCAN_BUFFERING_SINGLE = 1, FILLCAN_BUFFERING_DOUBLE = 2, FILLCAN_BUFFERING_TRIPLE = 3 };
@@ -62,7 +58,7 @@ namespace fillcan {
         VkSharingMode getImageSharingMode();
         std::vector<uint32_t>& getQueueFamilyIndices();
 
-        void present(SwapchainImage* pSwapchainImage, std::vector<VkSemaphore> semaphores);
+        void present(SwapchainImage* pSwapchainImage, std::vector<VkSemaphore> waitSemaphores);
 
         VkExtent2D getImageExtent();
     };

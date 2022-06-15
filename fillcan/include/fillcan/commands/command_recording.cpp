@@ -16,22 +16,20 @@ namespace fillcan {
     bool CommandRecording::endAll() {
         bool successfulEnd = true;
         for (CommandBuffer* pPrimaryCommandBuffer : this->pPrimaryCommandBuffers) {
-            successfulEnd = successfulEnd && pPrimaryCommandBuffer->end() ? true : false;
+            if (!pPrimaryCommandBuffer->end()) {
+                successfulEnd = false;
+            }
         }
         for (CommandBuffer* pSecondaryCommandBuffer : this->pSecondaryCommandBuffers) {
-            successfulEnd = successfulEnd && pSecondaryCommandBuffer->end() ? true : false;
+            if (!pSecondaryCommandBuffer->end()) {
+                successfulEnd = false;
+            }
         }
         return successfulEnd;
     }
 
-    bool CommandRecording::resetAll(VkCommandBufferResetFlags flags) {
-        bool successfulReset = true;
-        for (CommandBuffer* pPrimaryCommandBuffer : this->pPrimaryCommandBuffers) {
-            successfulReset = successfulReset && pPrimaryCommandBuffer->reset(flags) ? true : false;
-        }
-        for (CommandBuffer* pSecondaryCommandBuffer : this->pSecondaryCommandBuffers) {
-            successfulReset = successfulReset && pSecondaryCommandBuffer->reset(flags) ? true : false;
-        }
-        return successfulReset;
-    }
+    bool CommandRecording::resetAll(VkCommandBufferResetFlags flags) { return this->pQueue->resetRecording(this, flags); }
+
+    void CommandRecording::free() { this->pQueue->freeRecording(this); }
+
 } // namespace fillcan
