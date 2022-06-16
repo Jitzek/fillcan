@@ -53,25 +53,24 @@ namespace fillcan {
 
             std::vector<VkSemaphore> hWaitSemaphores = {};
             hWaitSemaphores.reserve(pCommandRecording->pWaitSemaphores.size());
-            for (Semaphore* pSemaphore : pCommandRecording->pWaitSemaphores) {
-                hWaitSemaphores.emplace_back(pSemaphore->getSemaphoreHandle());
-            }
+            std::transform(pCommandRecording->pWaitSemaphores.begin(), pCommandRecording->pWaitSemaphores.end(), std::back_inserter(hWaitSemaphores),
+                           [](Semaphore* pWaitSemaphore) { return pWaitSemaphore->getSemaphoreHandle(); });
             submitInfo.waitSemaphoreCount = hWaitSemaphores.size();
             submitInfo.pWaitSemaphores = hWaitSemaphores.data();
 
             submitInfo.pWaitDstStageMask = &pCommandRecording->waitDstStageMask;
-            std::vector<VkCommandBuffer> commandBufferHandles = {};
-            for (CommandBuffer* pCommandBuffer : pCommandRecording->pPrimaryCommandBuffers) {
-                commandBufferHandles.push_back(pCommandBuffer->getCommandBufferHandle());
-            }
-            submitInfo.commandBufferCount = commandBufferHandles.size();
-            submitInfo.pCommandBuffers = commandBufferHandles.data();
+            std::vector<VkCommandBuffer> hCommandBuffers = {};
+            hCommandBuffers.reserve(pCommandRecording->pPrimaryCommandBuffers.size());
+            std::transform(pCommandRecording->pPrimaryCommandBuffers.begin(), pCommandRecording->pPrimaryCommandBuffers.end(),
+                           std::back_inserter(hCommandBuffers),
+                           [](CommandBuffer* pCommandBuffer) { return pCommandBuffer->getCommandBufferHandle(); });
+            submitInfo.commandBufferCount = hCommandBuffers.size();
+            submitInfo.pCommandBuffers = hCommandBuffers.data();
 
             std::vector<VkSemaphore> hSignalSemaphores = {};
-            hSignalSemaphores.reserve(pCommandRecording->pWaitSemaphores.size());
-            for (Semaphore* pSemaphore : pCommandRecording->pSignalSemaphores) {
-                hSignalSemaphores.emplace_back(pSemaphore->getSemaphoreHandle());
-            }
+            hSignalSemaphores.reserve(pCommandRecording->pSignalSemaphores.size());
+            std::transform(pCommandRecording->pSignalSemaphores.begin(), pCommandRecording->pSignalSemaphores.end(),
+                           std::back_inserter(hSignalSemaphores), [](Semaphore* pSignalSemaphore) { return pSignalSemaphore->getSemaphoreHandle(); });
             submitInfo.signalSemaphoreCount = hSignalSemaphores.size();
             submitInfo.pSignalSemaphores = hSignalSemaphores.data();
             success =

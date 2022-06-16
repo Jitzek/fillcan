@@ -80,8 +80,7 @@ namespace fillcan {
         Pipeline::hPipeline = this->hPipeline;
     }
 
-    GraphicsPipeline::~GraphicsPipeline() {
-    }
+    GraphicsPipeline::~GraphicsPipeline() {}
 
     RenderPass* GraphicsPipeline::getRenderPass() { return this->pRenderPass; }
 

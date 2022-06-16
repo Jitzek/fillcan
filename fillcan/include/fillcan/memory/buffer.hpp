@@ -4,6 +4,7 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
+#include <fillcan/memory/buffer_view.hpp>
 
 // std
 #include <cstdint>
@@ -25,7 +26,7 @@ namespace fillcan {
         VkSharingMode sharingMode;
         std::vector<uint32_t> queueFamilyIndices;
         Memory* pMemory;
-        std::vector<std::unique_ptr<BufferView>> upBufferViews;
+        std::vector<std::unique_ptr<BufferView>> upBufferViews = {};
 
       public:
         Buffer(LogicalDevice* pLogicalDevice, VkBufferCreateFlags& flags, VkDeviceSize& size, VkBufferUsageFlags& usage, VkSharingMode& sharingMode,

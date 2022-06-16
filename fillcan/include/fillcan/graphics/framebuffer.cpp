@@ -16,7 +16,7 @@
 namespace fillcan {
     Framebuffer::Framebuffer(LogicalDevice* pLogicalDevice, RenderPass* pRenderPass, std::vector<ImageView*> pAttachments, unsigned int width,
                              unsigned int height, unsigned int layers)
-        : pLogicalDevice(pLogicalDevice), pAttachments(pAttachments), extent((VkExtent2D){.width = width, .height = height}), layers(layers) {
+        : pLogicalDevice(pLogicalDevice), pAttachments(pAttachments), extent({.width = width, .height = height}), layers(layers) {
         VkFramebufferCreateInfo framebufferCreateInfo = {};
         framebufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
         framebufferCreateInfo.pNext = nullptr;

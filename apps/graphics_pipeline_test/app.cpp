@@ -56,7 +56,8 @@ namespace app_graphics_pipeline_test {
         /*
             Instance Fillcan
         */
-        upFillcan = std::make_unique<fillcan::FillcanGraphics>(name.c_str(), 1.0, 800, 600, (VkPhysicalDeviceFeatures){.samplerAnisotropy = true});
+        VkPhysicalDeviceFeatures requiredDeviceFeatures = {.samplerAnisotropy = true};
+        upFillcan = std::make_unique<fillcan::FillcanGraphics>(name.c_str(), 1.0, 800, 600, requiredDeviceFeatures);
 
         // Select any device
         upFillcan->selectDevice(0);
@@ -89,6 +90,9 @@ namespace app_graphics_pipeline_test {
             Create Graphics Pipeline
         */
         this->createGraphicsPipeline(upVertexShaderModule.get(), upFragmentShaderModule.get());
+        if (this->upGraphicsPipeline->getDescriptorSets().size() > 0) {
+            this->upGraphicsPipeline->bindDescriptorSets();
+        }
         /* */
 
         /*
@@ -133,8 +137,8 @@ namespace app_graphics_pipeline_test {
         /*
             Unmap memory
         */
-        // this->upVertexBuffer->getMemory()->unmap();
-        // this->upIndexBuffer->getMemory()->unmap();
+        this->upVertexBuffer->getMemory()->unmap();
+        this->upIndexBuffer->getMemory()->unmap();
         /* */
 
         for (size_t i = 0; i < this->upFillcan->getSwapchain()->getImageCount(); i++) {
@@ -150,7 +154,7 @@ namespace app_graphics_pipeline_test {
     void App::update(double deltaTime) {
         // Recreate swapchain if window was resized
         if (this->upFillcan->getWindow()->wasResized()) {
-            this->upFillcan->recreateSwapchain(2, VK_PRESENT_MODE_FIFO_KHR);
+            this->upFillcan->recreateSwapchain();
             return;
         }
 
@@ -158,7 +162,7 @@ namespace app_graphics_pipeline_test {
         fillcan::CommandRecording* pCurrentGraphicsCommandRecording = this->pCommandRecordings[this->currentFrameIndex];
         fillcan::CommandBuffer* pCurrentGraphicsCommandBuffer = pCurrentGraphicsCommandRecording->pPrimaryCommandBuffers[0];
 
-        // Wait for the last command recording to have finished
+        // Wait for the command recording to have finished
         pCurrentGraphicsCommandRecording->waitForFence();
         pCurrentGraphicsCommandRecording->reset();
 
@@ -172,43 +176,41 @@ namespace app_graphics_pipeline_test {
         }
 
         // Define semaphore for when image is ready to be rendered to
-        pCurrentGraphicsCommandRecording->pWaitSemaphores.push_back(swapchainImage.pSemaphoreImageReady);
+        pCurrentGraphicsCommandRecording->pWaitSemaphores.emplace_back(swapchainImage.pSemaphoreImageReady);
+        // Define the stage(s) at where the semaphore should be waited for
         pCurrentGraphicsCommandRecording->waitDstStageMask = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+
         // Define semphore for when image is ready to present
-        // this->upSemaphores[this->currentFrameIndex] = std::move(std::make_unique<fillcan::Semaphore>(this->upFillcan->getCurrentDevice()));
-        // pCurrentGraphicsCommandRecording->pSignalSemaphores.push_back(this->upSemaphores[this->currentFrameIndex].get());
         pCurrentGraphicsCommandRecording->pSignalSemaphores.push_back(swapchainImage.pSemaphorePresentReady);
 
         // Create imageviews which will be used as attachments
         std::vector<fillcan::ImageView*> pAttachments = {};
         pAttachments.reserve(1);
-        pAttachments.push_back(swapchainImage.pImage->createImageView(
+        pAttachments.emplace_back(swapchainImage.pImage->createImageView(
             VK_IMAGE_VIEW_TYPE_2D, this->upFillcan->getSwapchain()->getSurfaceFormat().format,
-            (VkImageSubresourceRange){
-                .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT, .baseMipLevel = 0, .levelCount = 1, .baseArrayLayer = 0, .layerCount = 1}));
+            {.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT, .baseMipLevel = 0, .levelCount = 1, .baseArrayLayer = 0, .layerCount = 1}));
         /* */
 
         /*
             Create framebuffer
         */
-        this->upFramebuffers[this->currentFrameIndex] = std::move(std::make_unique<fillcan::Framebuffer>(
+        this->upFramebuffers.at(this->currentFrameIndex) = std::move(std::make_unique<fillcan::Framebuffer>(
             this->upFillcan->getCurrentDevice(), this->upFillcan->getRenderPass(), pAttachments,
             this->upFillcan->getSwapchain()->getImageExtent().width, this->upFillcan->getSwapchain()->getImageExtent().height,
             this->upFillcan->getSwapchain()->getImageArrayLayers()));
         /* */
 
-        std::vector<VkClearValue> clearValues = {(VkClearValue){.color = (VkClearColorValue){.float32 = {0.0f, 0.0f, 0.0f, 1.0f}}}};
+        std::vector<VkClearValue> clearValues = {{.color = {.float32 = {0.0f, 0.0f, 0.0f, 1.0f}}}};
         this->upFillcan->getRenderPass()->begin(pCurrentGraphicsCommandBuffer, this->upFramebuffers[this->currentFrameIndex].get(), &clearValues);
 
         upGraphicsPipeline->bindToCommandBuffer(pCurrentGraphicsCommandBuffer);
-        upGraphicsPipeline->start();
-        VkViewport viewport = (VkViewport){.x = 0.0f,
-                                           .y = 0.0f,
-                                           .width = static_cast<float>(this->upFillcan->getSwapchain()->getImageExtent().width),
-                                           .height = static_cast<float>(this->upFillcan->getSwapchain()->getImageExtent().height),
-                                           .minDepth = 0.0f,
-                                           .maxDepth = 1.0f};
-        VkRect2D scissor = (VkRect2D){.offset = {0, 0}, .extent = this->upFillcan->getSwapchain()->getImageExtent()};
+        VkViewport viewport = {.x = 0.0f,
+                               .y = 0.0f,
+                               .width = static_cast<float>(this->upFillcan->getSwapchain()->getImageExtent().width),
+                               .height = static_cast<float>(this->upFillcan->getSwapchain()->getImageExtent().height),
+                               .minDepth = 0.0f,
+                               .maxDepth = 1.0f};
+        VkRect2D scissor = {.offset = {0, 0}, .extent = this->upFillcan->getSwapchain()->getImageExtent()};
         vkCmdSetViewport(pCurrentGraphicsCommandBuffer->getCommandBufferHandle(), 0, 1, &viewport);
         vkCmdSetScissor(pCurrentGraphicsCommandBuffer->getCommandBufferHandle(), 0, 1, &scissor);
 
@@ -232,7 +234,9 @@ namespace app_graphics_pipeline_test {
         pCurrentGraphicsCommandRecording->endAll();
         pCurrentGraphicsCommandRecording->submit();
 
-        this->upFillcan->getSwapchain()->present(&swapchainImage, {swapchainImage.pSemaphorePresentReady->getSemaphoreHandle()});
+        if (!this->upFillcan->getSwapchain()->present(&swapchainImage, {swapchainImage.pSemaphorePresentReady->getSemaphoreHandle()})) {
+            return;
+        }
 
         this->currentFrameIndex = (currentFrameIndex + 1) % this->upFillcan->getSwapchain()->getImageCount();
     }
@@ -240,24 +244,23 @@ namespace app_graphics_pipeline_test {
     void App::createRenderPass() {
         fillcan::RenderPassBuilder renderPassBuilder = {};
         renderPassBuilder.setLogicalDevice(this->upFillcan->getCurrentDevice());
-        unsigned int swapChainAttachmentIndex =
-            renderPassBuilder.addAttachment((VkAttachmentDescription){.flags = 0,
-                                                                      .format = this->upFillcan->getSwapchain()->getSurfaceFormat().format,
-                                                                      .samples = VK_SAMPLE_COUNT_1_BIT,
-                                                                      .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
-                                                                      .storeOp = VK_ATTACHMENT_STORE_OP_STORE,
-                                                                      .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
-                                                                      .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
-                                                                      .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
-                                                                      .finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR});
+        unsigned int swapChainAttachmentIndex = renderPassBuilder.addAttachment({.flags = 0,
+                                                                                 .format = this->upFillcan->getSwapchain()->getSurfaceFormat().format,
+                                                                                 .samples = VK_SAMPLE_COUNT_1_BIT,
+                                                                                 .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+                                                                                 .storeOp = VK_ATTACHMENT_STORE_OP_STORE,
+                                                                                 .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+                                                                                 .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+                                                                                 .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+                                                                                 .finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR});
         renderPassBuilder.addColorAttachment(swapChainAttachmentIndex, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, false);
         unsigned int subpassIndex = renderPassBuilder.constructSubpass();
-        renderPassBuilder.addDependency((VkSubpassDependency){.srcSubpass = VK_SUBPASS_EXTERNAL,
-                                                              .dstSubpass = subpassIndex,
-                                                              .srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-                                                              .dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-                                                              .srcAccessMask = 0,
-                                                              .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT});
+        renderPassBuilder.addDependency({.srcSubpass = VK_SUBPASS_EXTERNAL,
+                                         .dstSubpass = subpassIndex,
+                                         .srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+                                         .dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+                                         .srcAccessMask = 0,
+                                         .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT});
         this->upFillcan->createRenderPass(renderPassBuilder);
     }
 
@@ -268,23 +271,20 @@ namespace app_graphics_pipeline_test {
     void App::createGraphicsPipeline(fillcan::ShaderModule* pVertexShaderModule, fillcan::ShaderModule* pFragmentShaderModule) {
         fillcan::GraphicsPipelineBuilder graphicsPipelineBuilder{};
         graphicsPipelineBuilder.setLogicalDevice(this->upFillcan->getCurrentDevice());
-        graphicsPipelineBuilder.addShaderStage(
-            (fillcan::PipelineShaderStage){.stage = VK_SHADER_STAGE_VERTEX_BIT, .pShaderModule = pVertexShaderModule, .name = "main"});
-        graphicsPipelineBuilder.addShaderStage(
-            (fillcan::PipelineShaderStage){.stage = VK_SHADER_STAGE_FRAGMENT_BIT, .pShaderModule = pFragmentShaderModule, .name = "main"});
+        graphicsPipelineBuilder.addShaderStage({.stage = VK_SHADER_STAGE_VERTEX_BIT, .pShaderModule = pVertexShaderModule, .name = "main"});
+        graphicsPipelineBuilder.addShaderStage({.stage = VK_SHADER_STAGE_FRAGMENT_BIT, .pShaderModule = pFragmentShaderModule, .name = "main"});
         graphicsPipelineBuilder.setInputAssemblyState({VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, VK_FALSE});
 
         std::vector<VkVertexInputBindingDescription> vertexInputBindingDescriptions = {};
         vertexInputBindingDescriptions.reserve(1);
-        vertexInputBindingDescriptions.push_back(
-            (VkVertexInputBindingDescription){.binding = 0, .stride = sizeof(Vertex), .inputRate = VK_VERTEX_INPUT_RATE_VERTEX});
+        vertexInputBindingDescriptions.push_back({.binding = 0, .stride = sizeof(Vertex), .inputRate = VK_VERTEX_INPUT_RATE_VERTEX});
 
         std::vector<VkVertexInputAttributeDescription> vertexInputAttributeDescriptions = {};
         vertexInputAttributeDescriptions.reserve(2);
-        vertexInputAttributeDescriptions.push_back((VkVertexInputAttributeDescription){
-            .location = 0, .binding = 0, .format = VK_FORMAT_R32G32B32_SFLOAT, .offset = offsetof(Vertex, position)});
-        vertexInputAttributeDescriptions.push_back((VkVertexInputAttributeDescription){
-            .location = 1, .binding = 0, .format = VK_FORMAT_R32G32B32_SFLOAT, .offset = offsetof(Vertex, color)});
+        vertexInputAttributeDescriptions.push_back(
+            {.location = 0, .binding = 0, .format = VK_FORMAT_R32G32B32_SFLOAT, .offset = offsetof(Vertex, position)});
+        vertexInputAttributeDescriptions.push_back(
+            {.location = 1, .binding = 0, .format = VK_FORMAT_R32G32B32_SFLOAT, .offset = offsetof(Vertex, color)});
         graphicsPipelineBuilder.setVertexInputState({vertexInputBindingDescriptions, vertexInputAttributeDescriptions});
 
         std::vector<VkViewport> viewports = {};
@@ -302,27 +302,30 @@ namespace app_graphics_pipeline_test {
 
         graphicsPipelineBuilder.setRasterizationState({});
 
-        graphicsPipelineBuilder.setMultisampleState((fillcan::PipelineMultisampleState){.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT,
-                                                                                        .sampleShadingEnable = VK_FALSE,
-                                                                                        .minSampleShading = 1.0f,
-                                                                                        .sampleMask = {},
-                                                                                        .alphaToCoverageEnable = VK_FALSE,
-                                                                                        .alphaToOneEnable = VK_FALSE});
+        graphicsPipelineBuilder.setMultisampleState({.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT,
+                                                     .sampleShadingEnable = VK_FALSE,
+                                                     .minSampleShading = 1.0f,
+                                                     .sampleMask = {},
+                                                     .alphaToCoverageEnable = VK_FALSE,
+                                                     .alphaToOneEnable = VK_FALSE});
 
         std::vector<VkPipelineColorBlendAttachmentState> colorBlendAttachments = {};
-        colorBlendAttachments.push_back((VkPipelineColorBlendAttachmentState){.blendEnable = VK_FALSE,
-                                                                              .srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA,
-                                                                              .dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
-                                                                              .colorBlendOp = VK_BLEND_OP_ADD,
-                                                                              .srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE,
-                                                                              .dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO,
-                                                                              .alphaBlendOp = VK_BLEND_OP_ADD,
-                                                                              .colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
-                                                                                                VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT});
+        VkPipelineColorBlendAttachmentState colorBlendAttachment = {};
+        colorBlendAttachment.blendEnable = VK_FALSE;
+        colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+        colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+        colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
+        colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+        colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+        colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
+        colorBlendAttachment.colorWriteMask =
+            VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+
+        colorBlendAttachments.push_back(colorBlendAttachment);
         graphicsPipelineBuilder.setColorBlendState({VK_FALSE, VK_LOGIC_OP_COPY, colorBlendAttachments, std::array<float, 4>{0.0f, 0.0f, 0.0f, 0.0f}});
 
         std::vector<VkDynamicState> dynamicStates = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
-        graphicsPipelineBuilder.setDynamicState((fillcan::PipelineDynamicState){.dynamicStates = dynamicStates});
+        graphicsPipelineBuilder.setDynamicState({.dynamicStates = dynamicStates});
 
         graphicsPipelineBuilder.setRenderPass(this->upFillcan->getRenderPass());
 

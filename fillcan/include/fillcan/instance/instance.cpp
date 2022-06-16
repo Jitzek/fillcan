@@ -65,7 +65,7 @@ namespace fillcan {
         }
 
 #ifndef NDEBUG
-        auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(this->hInstance, "vkCreateDebugUtilsMessengerEXT");
+        auto func = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(this->hInstance, "vkCreateDebugUtilsMessengerEXT"));
         if (func == nullptr) {
             throw std::runtime_error("Failed to set up debug messenger");
         }
@@ -112,8 +112,8 @@ namespace fillcan {
 
         return true;
     }
-    bool Instance::checkExtensionSupport(std::vector<const char*> extensions) { return true; }
+    bool Instance::checkExtensionSupport(std::vector<const char*> extensions) { /* TODO: */ return true; }
 
-    const VkInstance Instance::getInstanceHandle() const { return this->hInstance; }
+    VkInstance Instance::getInstanceHandle() const { return this->hInstance; }
 
 } // namespace fillcan

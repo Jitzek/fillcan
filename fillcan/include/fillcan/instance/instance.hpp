@@ -29,6 +29,6 @@ namespace fillcan {
         Instance(const Instance&) = delete;
         Instance& operator=(const Instance&) = delete;
 
-        const VkInstance getInstanceHandle() const;
+        VkInstance getInstanceHandle() const;
     };
 } // namespace fillcan

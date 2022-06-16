@@ -25,7 +25,8 @@ namespace fillcan {
         ~FillcanGraphics();
 
         unsigned int createSwapchain(uint32_t imageCount = 2, VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR);
-        unsigned int recreateSwapchain(uint32_t imageCount = 2, VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR, unsigned int index = 0);
+        unsigned int recreateSwapchain(unsigned int index = 0);
+        unsigned int recreateSwapchain(uint32_t imageCount, VkPresentModeKHR presentMode, unsigned int index = 0);
         Swapchain* getSwapchain(unsigned int index = 0);
         std::vector<Swapchain*> getSwapchains();
         void destroySwapchain(unsigned int index = 0);

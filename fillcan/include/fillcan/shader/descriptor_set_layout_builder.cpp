@@ -18,12 +18,11 @@ namespace fillcan {
 
     void DescriptorSetLayoutBuilder::addBinding(unsigned int binding, VkDescriptorType descriptorType, unsigned int descriptorCount,
                                                 VkShaderStageFlags stageFlags, std::vector<VkSampler> immutableSamplers) {
-        bindings.emplace_back(
-            (VkDescriptorSetLayoutBinding){.binding = binding,
-                                           .descriptorType = descriptorType,
-                                           .descriptorCount = descriptorCount,
-                                           .stageFlags = stageFlags,
-                                           .pImmutableSamplers = immutableSamplers.size() > 0 ? immutableSamplers.data() : nullptr});
+        bindings.push_back({.binding = binding,
+                            .descriptorType = descriptorType,
+                            .descriptorCount = descriptorCount,
+                            .stageFlags = stageFlags,
+                            .pImmutableSamplers = immutableSamplers.size() > 0 ? immutableSamplers.data() : nullptr});
     }
 
     std::unique_ptr<DescriptorSetLayout> DescriptorSetLayoutBuilder::getResult() {

@@ -36,6 +36,12 @@ namespace fillcan {
         }
         VkSurfaceCapabilitiesKHR surfaceCapabilities = this->pLogicalDevice->getPhysicalDevice()->getSurfaceCapabilitiesKHR();
 
+        const std::vector<VkPresentModeKHR> surfacePresentModes = this->pLogicalDevice->getPhysicalDevice()->getSurfacePresentModesKHR();
+        if (!std::count(surfacePresentModes.begin(), surfacePresentModes.end(), presentMode)) {
+            // Requested present mode is not supported, using fallback present mode
+            presentMode = VK_PRESENT_MODE_FIFO_KHR;
+        }
+
         VkSwapchainCreateInfoKHR swapchainCreateInfo = {};
         swapchainCreateInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
         swapchainCreateInfo.pNext = nullptr;
@@ -75,6 +81,10 @@ namespace fillcan {
         this->upSwapchainImages.resize(swapchainImageCount);
         this->upImageReadySemaphores.resize(swapchainImageCount);
         this->upPresentReadySemaphores.resize(swapchainImageCount);
+        for (size_t i = 0; i < this->getImageCount(); i++) {
+            this->upImageReadySemaphores.at(i) = std::move(std::make_unique<Semaphore>(this->pLogicalDevice));
+            this->upPresentReadySemaphores.at(i) = std::move(std::make_unique<Semaphore>(this->pLogicalDevice));
+        }
     }
 
     Swapchain::~Swapchain() {
@@ -99,11 +109,13 @@ namespace fillcan {
 
     VkSharingMode Swapchain::getImageSharingMode() { return this->imageSharingMode; }
 
+    VkPresentModeKHR Swapchain::getPresentMode() { return this->presentMode; }
+
     std::vector<uint32_t>& Swapchain::getQueueFamilyIndices() { return this->queueFamilyIndices; }
 
     SwapchainImage Swapchain::getNextImage(Fence* pFence) {
-        uint32_t imageIndex = 0;
-        std::unique_ptr<Semaphore> upSemaphore = std::make_unique<Semaphore>(this->pLogicalDevice);
+        uint32_t swapchainImageIndex = 0;
+        // this->upImageReadySemaphores[this->currentImageIndex] = std::move(std::make_unique<Semaphore>(this->pLogicalDevice));
 
         // VkImageMemoryBarrier imageMemoryBarrier = {};
         // imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -122,11 +134,10 @@ namespace fillcan {
         //                                                                 .layerCount = VK_REMAINING_ARRAY_LAYERS};
         // vkCmdPipelineBarrier(pCommandBuffer->getCommandBufferHandle(), VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
         //                      VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &imageMemoryBarrier);
-        VkResult acquireNextImageResult =
-            vkAcquireNextImageKHR(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSwapchain, UINT64_MAX, upSemaphore->getSemaphoreHandle(),
-                                  pFence != nullptr ? pFence->getFenceHandle() : VK_NULL_HANDLE, &imageIndex);
-        this->upImageReadySemaphores[this->currentImageIndex] = std::move(upSemaphore);
-        this->upPresentReadySemaphores[this->currentImageIndex] = std::move(std::make_unique<Semaphore>(this->pLogicalDevice));
+        VkResult acquireNextImageResult = vkAcquireNextImageKHR(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSwapchain, UINT64_MAX,
+                                                                this->upImageReadySemaphores.at(this->currentImageIndex)->getSemaphoreHandle(),
+                                                                pFence != nullptr ? pFence->getFenceHandle() : VK_NULL_HANDLE, &swapchainImageIndex);
+        // this->upPresentReadySemaphores[this->currentImageIndex] = std::move(std::make_unique<Semaphore>(this->pLogicalDevice));
         if (acquireNextImageResult == VK_ERROR_OUT_OF_DATE_KHR) {
             return {.outOfDate = true, .index = 0, .pImage = nullptr, .pSemaphoreImageReady = nullptr};
         }
@@ -135,12 +146,12 @@ namespace fillcan {
         }
 
         this->upSwapchainImages[this->currentImageIndex] =
-            std::move(std::make_unique<Image>(this->pLogicalDevice, this, this->hSwapchainImages[imageIndex]));
-        SwapchainImage returnImage = (SwapchainImage){.outOfDate = false,
-                                                      .index = imageIndex,
-                                                      .pImage = this->upSwapchainImages[this->currentImageIndex].get(),
-                                                      .pSemaphoreImageReady = this->upImageReadySemaphores[this->currentImageIndex].get(),
-                                                      .pSemaphorePresentReady = this->upPresentReadySemaphores[this->currentImageIndex].get()};
+            std::move(std::make_unique<Image>(this->pLogicalDevice, this, this->hSwapchainImages.at(swapchainImageIndex)));
+        SwapchainImage returnImage = {.outOfDate = false,
+                                      .index = swapchainImageIndex,
+                                      .pImage = this->upSwapchainImages.at(this->currentImageIndex).get(),
+                                      .pSemaphoreImageReady = this->upImageReadySemaphores[this->currentImageIndex].get(),
+                                      .pSemaphorePresentReady = this->upPresentReadySemaphores.at(this->currentImageIndex).get()};
         this->currentImageIndex = (this->currentImageIndex + 1) % (this->getImageCount());
         return returnImage;
     }
@@ -150,7 +161,6 @@ namespace fillcan {
     bool Swapchain::present(SwapchainImage* pSwapchainImage, std::vector<VkSemaphore> waitSemaphores) {
         if (pSwapchainImage == nullptr) {
             return false;
-            // throw std::runtime_error("Failed to present swapchain image: Image was invalid");
         }
         VkPresentInfoKHR presentInfo = {};
         presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -168,7 +178,6 @@ namespace fillcan {
 
         if (vkQueuePresentKHR(this->pQueue->getQueueHandle(), &presentInfo) != VK_SUCCESS) {
             return false;
-            // throw std::runtime_error("Failed to present swapchain image");
         }
         return true;
     }

@@ -61,15 +61,9 @@ namespace fillcan {
         const Memory* getMemory() const;
 
         ImageView* createImageView(VkImageViewType viewType, VkFormat format,
-                                   VkImageSubresourceRange subresourceRange = {.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
-                                                                               .baseMipLevel = 0,
-                                                                               .levelCount = 1,
-                                                                               .baseArrayLayer = 0,
-                                                                               .layerCount = 1},
-                                   VkComponentMapping components = {.r = VK_COMPONENT_SWIZZLE_IDENTITY,
-                                                                    .g = VK_COMPONENT_SWIZZLE_IDENTITY,
-                                                                    .b = VK_COMPONENT_SWIZZLE_IDENTITY,
-                                                                    .a = VK_COMPONENT_SWIZZLE_IDENTITY});
+                                   VkImageSubresourceRange subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1},
+                                   VkComponentMapping components = {VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY,
+                                                                    VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY});
         std::vector<ImageView*> getImageViews();
         void destroyImageViews();
     };

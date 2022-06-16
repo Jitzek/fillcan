@@ -74,6 +74,10 @@ namespace fillcan {
                                 static_cast<uint32_t>(hDescriptorSets.size()), hDescriptorSets.data(), 0, nullptr);
     }
 
+    std::vector<DescriptorSet*>& Pipeline::getDescriptorSets() {
+        return this->pDescriptorSets;
+    }
+
     CommandBuffer* Pipeline::getCommandBuffer() { return this->pCommandBuffer; }
 
     void Pipeline::start() {

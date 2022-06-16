@@ -48,6 +48,7 @@ namespace fillcan {
         PipelineLayout* getPipelineLayout();
         void bindToCommandBuffer(CommandBuffer* pCommandBuffer);
         void bindDescriptorSets();
+        std::vector<DescriptorSet*>& getDescriptorSets();
         CommandBuffer* getCommandBuffer();
 
         void start();

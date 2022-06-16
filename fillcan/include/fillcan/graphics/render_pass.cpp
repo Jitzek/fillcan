@@ -62,7 +62,7 @@ namespace fillcan {
         if (pRenderArea != nullptr) {
             renderPassBeginInfo.renderArea = *pRenderArea;
         } else {
-            renderPassBeginInfo.renderArea = (VkRect2D){.offset = {0, 0}, .extent = pFramebuffer->getExtent()};
+            renderPassBeginInfo.renderArea = {.offset = {0, 0}, .extent = pFramebuffer->getExtent()};
         }
         if (pClearValues != nullptr) {
             renderPassBeginInfo.clearValueCount = static_cast<uint32_t>(pClearValues->size());

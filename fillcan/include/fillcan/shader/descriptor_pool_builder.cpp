@@ -51,7 +51,7 @@ namespace fillcan {
         std::vector<VkDescriptorPoolSize> poolSizes = {};
         poolSizes.reserve(this->descriptorsAndCounts.size());
         for (std::pair<VkDescriptorType, unsigned int>& descriptorAndCount : this->descriptorsAndCounts) {
-            poolSizes.emplace_back((VkDescriptorPoolSize){.type = descriptorAndCount.first, .descriptorCount = descriptorAndCount.second});
+            poolSizes.push_back({.type = descriptorAndCount.first, .descriptorCount = descriptorAndCount.second});
         }
         std::unique_ptr<DescriptorPool> upDescriptorPool =
             std::make_unique<DescriptorPool>(this->pLogicalDevice, this->flags, this->maxSets, poolSizes);

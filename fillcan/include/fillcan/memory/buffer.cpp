@@ -16,8 +16,7 @@
 namespace fillcan {
     Buffer::Buffer(LogicalDevice* pLogicalDevice, VkBufferCreateFlags& flags, VkDeviceSize& size, VkBufferUsageFlags& usage,
                    VkSharingMode& sharingMode, std::vector<uint32_t> queueFamilyIndices)
-        : pLogicalDevice(pLogicalDevice), flags(flags), size(size), usage(usage), sharingMode(sharingMode), queueFamilyIndices(queueFamilyIndices),
-          upBufferViews((std::vector<std::unique_ptr<BufferView>>){}) {
+        : pLogicalDevice(pLogicalDevice), flags(flags), size(size), usage(usage), sharingMode(sharingMode), queueFamilyIndices(queueFamilyIndices) {
         VkBufferCreateInfo bufferCreateInfo = {};
         bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         bufferCreateInfo.pNext = nullptr;

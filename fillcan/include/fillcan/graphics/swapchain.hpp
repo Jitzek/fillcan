@@ -35,11 +35,12 @@ namespace fillcan {
         LogicalDevice* pLogicalDevice;
         Window* pWindow;
         Queue* pQueue;
-        VkSurfaceFormatKHR surfaceFormat{.format = VK_FORMAT_UNDEFINED, .colorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR};
+        VkSurfaceFormatKHR surfaceFormat = {VK_FORMAT_UNDEFINED, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR};
         uint32_t imageCount = 3;
         unsigned int imageArrayLayers = 1;
         VkImageUsageFlags imageUsage = 0;
         VkSharingMode imageSharingMode = VK_SHARING_MODE_MAX_ENUM;
+        VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR;
         std::vector<uint32_t> queueFamilyIndices = {};
         std::vector<std::unique_ptr<Image>> upSwapchainImages = {};
         std::vector<std::unique_ptr<Semaphore>> upImageReadySemaphores = {};
@@ -60,6 +61,7 @@ namespace fillcan {
         unsigned int getImageArrayLayers();
         VkImageUsageFlags getImageUsage();
         VkSharingMode getImageSharingMode();
+        VkPresentModeKHR getPresentMode();
         std::vector<uint32_t>& getQueueFamilyIndices();
 
         bool present(SwapchainImage* pSwapchainImage, std::vector<VkSemaphore> waitSemaphores);

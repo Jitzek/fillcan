@@ -25,6 +25,10 @@ namespace fillcan {
         return this->upSwapchains.size() - 1;
     }
 
+    unsigned int FillcanGraphics::recreateSwapchain(unsigned int index) {
+        return this->recreateSwapchain(this->upSwapchains.at(index)->getImageCount(), this->upSwapchains.at(index)->getPresentMode(), index);
+    }
+
     unsigned int FillcanGraphics::recreateSwapchain(uint32_t imageCount, VkPresentModeKHR presentMode, unsigned int index) {
         this->getCurrentDevice()->waitIdle();
         if (this->upSwapchains[index] == nullptr) {
@@ -32,7 +36,7 @@ namespace fillcan {
         }
         this->upSwapchains.at(index) =
             std::move(std::make_unique<Swapchain>(this->getCurrentDevice(), this->upWindow.get(), this->getCurrentDevice()->getPresentQueue(),
-                                                  imageCount, presentMode, this->upSwapchains[index].get()));
+                                                  imageCount, presentMode, this->upSwapchains.at(index).get()));
         return index;
     }
 

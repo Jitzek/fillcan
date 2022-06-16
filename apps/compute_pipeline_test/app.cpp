@@ -65,7 +65,8 @@ namespace app_compute_pipeline_test {
         /*
             Instance Fillcan
         */
-        upFillcan = std::make_unique<fillcan::Fillcan>(name.c_str(), 1.0, 800, 600, (VkPhysicalDeviceFeatures){.samplerAnisotropy = true});
+        VkPhysicalDeviceFeatures requiredDeviceFeatures = {};
+        upFillcan = std::make_unique<fillcan::Fillcan>(name.c_str(), 1.0, 800, 600, requiredDeviceFeatures);
 
         // Select any device
         upFillcan->selectDevice(0);
@@ -151,7 +152,7 @@ namespace app_compute_pipeline_test {
         /*
             Create Compute Pipeline
         */
-        std::unique_ptr<fillcan::ComputePipeline> upComputePipeline = this->createComputePipeline((fillcan::PipelineShaderStage){
+        std::unique_ptr<fillcan::ComputePipeline> upComputePipeline = this->createComputePipeline({
             .stage = VK_SHADER_STAGE_COMPUTE_BIT,
             .pShaderModule = &computeShaderModule,
             .name = "main",
