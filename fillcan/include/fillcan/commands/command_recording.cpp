@@ -2,16 +2,18 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
+#include <cstdint>
 #include <fillcan/commands/command_recording.hpp>
 #include <fillcan/commands/queue.hpp>
 #include <fillcan/memory/fence.hpp>
 
 // std
 #include <memory>
+#include <utility>
 #include <vector>
 
 namespace fillcan {
-    bool CommandRecording::submitAll(Fence* pFence) { return this->pQueue->submitRecordings({this}, pFence); }
+    bool CommandRecording::submit() { return this->pQueue->submitRecordings({this}, this->upFenceWorkCompleted.get()); }
 
     bool CommandRecording::endAll() {
         bool successfulEnd = true;
@@ -28,8 +30,23 @@ namespace fillcan {
         return successfulEnd;
     }
 
-    bool CommandRecording::resetAll(VkCommandBufferResetFlags flags) { return this->pQueue->resetRecording(this, flags); }
+    bool CommandRecording::reset(VkCommandBufferResetFlags flags) {
+        bool result = this->pQueue->resetRecording(this, flags);
+        this->pWaitSemaphores.clear();
+        this->waitDstStageMask = 0;
+        this->pSignalSemaphores.clear();
+        this->upFenceWorkCompleted->reset();
+        return result;
+    }
 
     void CommandRecording::free() { this->pQueue->freeRecording(this); }
+
+    void CommandRecording::createFence(LogicalDevice* pLogicalDevice, VkFenceCreateFlags flags) {
+        this->upFenceWorkCompleted = std::make_unique<Fence>(pLogicalDevice, flags);
+    }
+    
+    void CommandRecording::waitForFence(uint64_t timeout) {
+        this->upFenceWorkCompleted->waitFor(timeout);
+    }
 
 } // namespace fillcan

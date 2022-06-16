@@ -30,12 +30,12 @@ namespace app_graphics_pipeline_test {
         std::unique_ptr<fillcan::Buffer> upIndexBuffer = nullptr;
         
         std::vector<std::unique_ptr<fillcan::Semaphore>> upSemaphores;
-        std::vector<std::unique_ptr<fillcan::Fence>> upFrameFences;
+        // std::vector<std::unique_ptr<fillcan::Fence>> upFrameFences;
         std::unique_ptr<fillcan::Semaphore> upGraphicsSemaphore;
         std::vector<fillcan::CommandRecording*> pCommandRecordings;
         std::vector<std::unique_ptr<fillcan::Framebuffer>> upFramebuffers;
 
-        uint32_t currentFrame = 0;
+        uint32_t currentFrameIndex = 0;
 
       public:
         App();

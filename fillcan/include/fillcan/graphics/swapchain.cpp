@@ -72,8 +72,8 @@ namespace fillcan {
         // for (VkImage hSwapchainImage : hSwapchainImages) {
         //     this->upSwapchainImages.push_back(std::move(std::make_unique<Image>(this->pLogicalDevice, this, hSwapchainImage)));
         // }
-        this->upSwapchainImages.resize(this->hSwapchainImages.size());
-        this->upSemaphores.resize(this->hSwapchainImages.size());
+        this->upSwapchainImages.resize(swapchainImageCount);
+        this->upSemaphores.resize(swapchainImageCount);
     }
 
     Swapchain::~Swapchain() {
@@ -90,7 +90,7 @@ namespace fillcan {
 
     VkSwapchainKHR Swapchain::getSwapchainHandle() { return this->hSwapchain; }
 
-    uint32_t Swapchain::getImageCount() { return this->imageCount; }
+    uint32_t Swapchain::getImageCount() { return this->hSwapchainImages.size(); }
 
     unsigned int Swapchain::getImageArrayLayers() { return this->imageArrayLayers; }
 
@@ -124,19 +124,23 @@ namespace fillcan {
         VkResult acquireNextImageResult =
             vkAcquireNextImageKHR(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSwapchain, UINT64_MAX, upSemaphore->getSemaphoreHandle(),
                                   pFence != nullptr ? pFence->getFenceHandle() : VK_NULL_HANDLE, &imageIndex);
-        this->upSemaphores[imageIndex] = std::move(upSemaphore);
+        std::cout << this->currentImageIndex << "\n";
+        this->upSemaphores[this->currentImageIndex] = std::move(upSemaphore);
         if (acquireNextImageResult == VK_ERROR_OUT_OF_DATE_KHR) {
-            return {.outOfDate = true, .index = 0, .pImage = nullptr, .pSemaphore = nullptr};
+            return {.outOfDate = true, .index = 0, .pImage = nullptr, .pSemaphoreImageReady = nullptr};
         }
         if (acquireNextImageResult != VK_SUCCESS && acquireNextImageResult != VK_SUBOPTIMAL_KHR) {
             throw std::runtime_error("Failed to acquire next swapchain image");
         }
 
-        this->upSwapchainImages[imageIndex] = std::move(std::make_unique<Image>(this->pLogicalDevice, this, this->hSwapchainImages[imageIndex]));
-        return (SwapchainImage){.outOfDate = false,
-                                .index = imageIndex,
-                                .pImage = this->upSwapchainImages[imageIndex].get(),
-                                .pSemaphore = this->upSemaphores[imageIndex].get()};
+        this->upSwapchainImages[this->currentImageIndex] = std::move(std::make_unique<Image>(this->pLogicalDevice, this, this->hSwapchainImages[imageIndex]));
+        SwapchainImage returnImage = (SwapchainImage){.outOfDate = false,
+                                                      .index = imageIndex,
+                                                      .pImage = this->upSwapchainImages[this->currentImageIndex].get(),
+                                                      .pSemaphoreImageReady = this->upSemaphores[this->currentImageIndex].get()};
+        this->currentImageIndex = (this->currentImageIndex + 1) % (this->getImageCount());
+        std::cout << this->currentImageIndex << "\n\n";
+        return returnImage;
     }
 
     VkSurfaceFormatKHR Swapchain::getSurfaceFormat() { return this->surfaceFormat; }

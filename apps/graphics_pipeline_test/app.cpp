@@ -34,6 +34,7 @@
 #include <cstring>
 #include <fstream>
 #include <functional>
+#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <thread>
@@ -171,12 +172,13 @@ namespace app_graphics_pipeline_test {
         /* */
 
         this->upSemaphores.resize(this->upFillcan->getSwapchain()->getImageCount());
-        this->upFrameFences.resize(this->upFillcan->getSwapchain()->getImageCount());
+        // this->upFrameFences.resize(this->upFillcan->getSwapchain()->getImageCount());
 
         for (size_t i = 0; i < this->upFillcan->getSwapchain()->getImageCount(); i++) {
             this->pCommandRecordings.push_back(this->upFillcan->getCurrentDevice()->getGraphicsQueue()->createRecording(1, 0));
-            this->upFrameFences[i] =
-                std::move(std::make_unique<fillcan::Fence>(this->upFillcan->getCurrentDevice(), VK_FENCE_CREATE_SIGNALED_BIT));
+            this->pCommandRecordings[i]->createFence(this->upFillcan->getCurrentDevice(),VK_FENCE_CREATE_SIGNALED_BIT);
+            // this->upFrameFences[i] = std::move(std::make_unique<fillcan::Fence>(this->upFillcan->getCurrentDevice(),
+            // VK_FENCE_CREATE_SIGNALED_BIT));
         }
 
         this->upFramebuffers.resize(this->upFillcan->getSwapchain()->getImageCount());
@@ -197,26 +199,27 @@ namespace app_graphics_pipeline_test {
     }
 
     void App::update(/*std::chrono::duration<double> deltaTime*/) {
+        fillcan::CommandRecording* pCurrentGraphicsCommandRecording = this->pCommandRecordings[this->currentFrameIndex];
+        fillcan::CommandBuffer* pCurrentGraphicsCommandBuffer = pCurrentGraphicsCommandRecording->pPrimaryCommandBuffers[0];
+        pCurrentGraphicsCommandRecording->waitForFence();
+        pCurrentGraphicsCommandRecording->reset();
+        pCurrentGraphicsCommandBuffer->begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+    
         fillcan::SwapchainImage swapchainImage = this->upFillcan->getSwapchain()->getNextImage();
-        this->upFrameFences[currentFrame]->reset();
+        // this->upFrameFences[currentFrameIndex]->reset();
 
         // Check if swapchain image is valid
         if (swapchainImage.outOfDate || this->upFillcan->getWindow()->wasResized()) {
             this->upFillcan->recreateSwapchain(2, VK_PRESENT_MODE_FIFO_KHR);
-            // swapchainImage = this->upFillcan->getSwapchain()->getNextImage();
-            return;
+            swapchainImage = this->upFillcan->getSwapchain()->getNextImage();
+            // return;
         }
 
-        fillcan::CommandRecording* pGraphicsCommandRecording = this->pCommandRecordings[this->currentFrame];
-        fillcan::CommandBuffer* pGraphicsCommandBuffer = pGraphicsCommandRecording->pPrimaryCommandBuffers[0];
-        pGraphicsCommandRecording->resetAll();
-        pGraphicsCommandBuffer->begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
-
         // Define semaphore for when image is ready
-        pGraphicsCommandRecording->pWaitSemaphores.push_back(swapchainImage.pSemaphore);
-        pGraphicsCommandRecording->waitDstStageMask = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
-        this->upSemaphores[this->currentFrame] = std::move(std::make_unique<fillcan::Semaphore>(this->upFillcan->getCurrentDevice()));
-        pGraphicsCommandRecording->pSignalSemaphores.push_back(this->upSemaphores[this->currentFrame].get());
+        pCurrentGraphicsCommandRecording->pWaitSemaphores.push_back(swapchainImage.pSemaphoreImageReady);
+        pCurrentGraphicsCommandRecording->waitDstStageMask = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+        this->upSemaphores[this->currentFrameIndex] = std::move(std::make_unique<fillcan::Semaphore>(this->upFillcan->getCurrentDevice()));
+        pCurrentGraphicsCommandRecording->pSignalSemaphores.push_back(this->upSemaphores[this->currentFrameIndex].get());
 
         // Create imageviews which will be used as attachments
         std::vector<fillcan::ImageView*> pAttachments = {};
@@ -230,16 +233,16 @@ namespace app_graphics_pipeline_test {
         /*
             Create framebuffer
         */
-        this->upFramebuffers[this->currentFrame] = std::move(std::make_unique<fillcan::Framebuffer>(
+        this->upFramebuffers[this->currentFrameIndex] = std::move(std::make_unique<fillcan::Framebuffer>(
             this->upFillcan->getCurrentDevice(), this->upFillcan->getRenderPass(), pAttachments,
             this->upFillcan->getSwapchain()->getImageExtent().width, this->upFillcan->getSwapchain()->getImageExtent().height,
             this->upFillcan->getSwapchain()->getImageArrayLayers()));
         /* */
 
         std::vector<VkClearValue> clearValues = {(VkClearValue){.color = (VkClearColorValue){.float32 = {0.0f, 0.0f, 0.0f, 1.0f}}}};
-        this->upFillcan->getRenderPass()->begin(pGraphicsCommandBuffer, this->upFramebuffers[this->currentFrame].get(), &clearValues);
+        this->upFillcan->getRenderPass()->begin(pCurrentGraphicsCommandBuffer, this->upFramebuffers[this->currentFrameIndex].get(), &clearValues);
 
-        upGraphicsPipeline->bindToCommandBuffer(pGraphicsCommandBuffer);
+        upGraphicsPipeline->bindToCommandBuffer(pCurrentGraphicsCommandBuffer);
         upGraphicsPipeline->start();
         VkViewport viewport = (VkViewport){.x = 0.0f,
                                            .y = 0.0f,
@@ -248,8 +251,8 @@ namespace app_graphics_pipeline_test {
                                            .minDepth = 0.0f,
                                            .maxDepth = 1.0f};
         VkRect2D scissor = (VkRect2D){.offset = {0, 0}, .extent = this->upFillcan->getSwapchain()->getImageExtent()};
-        vkCmdSetViewport(pGraphicsCommandBuffer->getCommandBufferHandle(), 0, 1, &viewport);
-        vkCmdSetScissor(pGraphicsCommandBuffer->getCommandBufferHandle(), 0, 1, &scissor);
+        vkCmdSetViewport(pCurrentGraphicsCommandBuffer->getCommandBufferHandle(), 0, 1, &viewport);
+        vkCmdSetScissor(pCurrentGraphicsCommandBuffer->getCommandBufferHandle(), 0, 1, &scissor);
 
         /*
             Bind the vertex buffer
@@ -269,15 +272,16 @@ namespace app_graphics_pipeline_test {
         this->upFillcan->getRenderPass()->end();
 
         // this->upFrameFence->reset();
-        pGraphicsCommandRecording->endAll();
-        pGraphicsCommandRecording->submitAll(this->upFrameFences[currentFrame].get());
+        pCurrentGraphicsCommandRecording->endAll();
+        pCurrentGraphicsCommandRecording->submit();
         // this->upFrameFence->waitFor();
-
-        this->upFillcan->getSwapchain()->present(&swapchainImage, {this->upSemaphores[currentFrame]->getSemaphoreHandle()});
+        
+        this->upFillcan->getSwapchain()->present(&swapchainImage, {this->upSemaphores[currentFrameIndex]->getSemaphoreHandle()});
         // pGraphicsCommandRecording->free();
 
-        this->upFrameFences[currentFrame]->waitFor();
-        this->currentFrame = (currentFrame + 1) % this->upFillcan->getSwapchain()->getImageCount();
+        // this->upFrameFences[currentFrameIndex]->waitFor();
+        // pCurrentGraphicsCommandRecording->waitForFence();
+        this->currentFrameIndex = (currentFrameIndex + 1) % this->upFillcan->getSwapchain()->getImageCount();
     }
 
     void App::createRenderPass() {

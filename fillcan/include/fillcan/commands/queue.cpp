@@ -24,9 +24,7 @@ namespace fillcan {
             this->pLogicalDevice, VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT, this->queueFamilyIndex);
     }
 
-    Queue::~Queue() {
-        this->upCommandPool.reset();
-    }
+    Queue::~Queue() { this->upCommandPool.reset(); }
 
     VkQueue Queue::getQueueHandle() { return this->hQueue; }
 
@@ -41,7 +39,8 @@ namespace fillcan {
                 this->upCommandPool->allocateCommandBuffers(VK_COMMAND_BUFFER_LEVEL_SECONDARY, secondaryCommandBufferCount);
         }
         recording.pQueue = this;
-        this->upCommandRecordings.emplace_back(std::make_unique<CommandRecording>(recording));
+        // recording.createFence(this->pLogicalDevice, 0);
+        this->upCommandRecordings.emplace_back(std::move(std::make_unique<CommandRecording>(std::move(recording))));
         return this->upCommandRecordings.back().get();
     }
 
@@ -95,9 +94,6 @@ namespace fillcan {
                 successfulReset = false;
             }
         }
-        pCommandRecording->pWaitSemaphores.clear();
-        pCommandRecording->waitDstStageMask = 0;
-        pCommandRecording->pSignalSemaphores.clear();
         return successfulReset;
     }
 

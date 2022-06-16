@@ -11,6 +11,7 @@
 
 // std
 #include <memory>
+#include <sys/types.h>
 #include <utility>
 #include <vector>
 
@@ -24,7 +25,7 @@ namespace fillcan {
         bool outOfDate;
         unsigned int index;
         Image* pImage;
-        Semaphore* pSemaphore = nullptr;
+        Semaphore* pSemaphoreImageReady = nullptr;
     };
 
     class Swapchain {
@@ -42,6 +43,7 @@ namespace fillcan {
         std::vector<std::unique_ptr<Image>> upSwapchainImages = {};
         std::vector<std::unique_ptr<Semaphore>> upSemaphores = {};
         std::vector<VkImage> hSwapchainImages = {};
+        uint32_t currentImageIndex = 0;
 
       public:
         Swapchain(LogicalDevice* pLogicalDevice, Window* pWindow, Queue* pPresentQueue, uint32_t imageCount = 3,
