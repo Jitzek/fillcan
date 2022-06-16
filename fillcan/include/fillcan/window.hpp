@@ -46,6 +46,7 @@ namespace fillcan {
 
         bool shouldClose();
         bool wasResized();
+        void pollEvents();
 
         std::vector<const char*> getRequiredExtensions();
 

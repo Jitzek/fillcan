@@ -33,7 +33,6 @@ namespace fillcan {
         this->upSwapchains.at(index) =
             std::move(std::make_unique<Swapchain>(this->getCurrentDevice(), this->upWindow.get(), this->getCurrentDevice()->getPresentQueue(),
                                                   imageCount, presentMode, this->upSwapchains[index].get()));
-        std::cout << this->upSwapchains.size() << "\n";
         return index;
     }
 

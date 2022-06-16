@@ -32,6 +32,8 @@ namespace fillcan {
         return returnValue;
     }
 
+    void Window::pollEvents() { glfwPollEvents(); }
+
     std::vector<const char*> Window::getRequiredExtensions() {
         uint32_t glfwExtensionCount = 0;
         const char** glfwExtensions;

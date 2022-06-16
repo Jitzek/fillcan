@@ -59,18 +59,20 @@ namespace fillcan {
         this->upInstance.reset();
     }
 
-    void Fillcan::MainLoop(std::function<void(std::chrono::duration<double>)> callback) {
+    void Fillcan::MainLoop(std::function<void(double)> callback) {
         std::chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
         std::chrono::high_resolution_clock::time_point previousTime = currentTime;
         std::chrono::duration<double> deltaTime = previousTime - currentTime;
-        while (!upWindow->shouldClose()) {
-            // previousTime = currentTime;
-            // currentTime = std::chrono::high_resolution_clock::now();
-            // deltaTime = currentTime - previousTime;
 
-            glfwPollEvents();
+        while (!this->upWindow->shouldClose()) {
+            this->upWindow->pollEvents();
 
-            callback(deltaTime);
+            previousTime = currentTime;
+            currentTime = std::chrono::high_resolution_clock::now();
+            deltaTime = currentTime - previousTime;
+
+            callback(deltaTime.count());
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
         this->getCurrentDevice()->waitIdle();
     }
@@ -82,8 +84,6 @@ namespace fillcan {
     LogicalDevice* Fillcan::getCurrentDevice() { return this->upDevicePool->getCurrentDevice(); }
 
     Window* Fillcan::getWindow() { return this->upWindow.get(); }
-
-    void Fillcan::pollEvents() { glfwPollEvents(); }
 
     std::vector<char> Fillcan::readFile(std::string fileLocation, size_t* fileSize) {
         std::ifstream fileStream(fileLocation, std::ios::ate | std::ios::binary);

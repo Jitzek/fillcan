@@ -73,7 +73,8 @@ namespace fillcan {
         //     this->upSwapchainImages.push_back(std::move(std::make_unique<Image>(this->pLogicalDevice, this, hSwapchainImage)));
         // }
         this->upSwapchainImages.resize(swapchainImageCount);
-        this->upSemaphores.resize(swapchainImageCount);
+        this->upImageReadySemaphores.resize(swapchainImageCount);
+        this->upPresentReadySemaphores.resize(swapchainImageCount);
     }
 
     Swapchain::~Swapchain() {
@@ -124,8 +125,8 @@ namespace fillcan {
         VkResult acquireNextImageResult =
             vkAcquireNextImageKHR(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSwapchain, UINT64_MAX, upSemaphore->getSemaphoreHandle(),
                                   pFence != nullptr ? pFence->getFenceHandle() : VK_NULL_HANDLE, &imageIndex);
-        std::cout << this->currentImageIndex << "\n";
-        this->upSemaphores[this->currentImageIndex] = std::move(upSemaphore);
+        this->upImageReadySemaphores[this->currentImageIndex] = std::move(upSemaphore);
+        this->upPresentReadySemaphores[this->currentImageIndex] = std::move(std::make_unique<Semaphore>(this->pLogicalDevice));
         if (acquireNextImageResult == VK_ERROR_OUT_OF_DATE_KHR) {
             return {.outOfDate = true, .index = 0, .pImage = nullptr, .pSemaphoreImageReady = nullptr};
         }
@@ -133,13 +134,14 @@ namespace fillcan {
             throw std::runtime_error("Failed to acquire next swapchain image");
         }
 
-        this->upSwapchainImages[this->currentImageIndex] = std::move(std::make_unique<Image>(this->pLogicalDevice, this, this->hSwapchainImages[imageIndex]));
+        this->upSwapchainImages[this->currentImageIndex] =
+            std::move(std::make_unique<Image>(this->pLogicalDevice, this, this->hSwapchainImages[imageIndex]));
         SwapchainImage returnImage = (SwapchainImage){.outOfDate = false,
                                                       .index = imageIndex,
                                                       .pImage = this->upSwapchainImages[this->currentImageIndex].get(),
-                                                      .pSemaphoreImageReady = this->upSemaphores[this->currentImageIndex].get()};
+                                                      .pSemaphoreImageReady = this->upImageReadySemaphores[this->currentImageIndex].get(),
+                                                      .pSemaphorePresentReady = this->upPresentReadySemaphores[this->currentImageIndex].get()};
         this->currentImageIndex = (this->currentImageIndex + 1) % (this->getImageCount());
-        std::cout << this->currentImageIndex << "\n\n";
         return returnImage;
     }
 

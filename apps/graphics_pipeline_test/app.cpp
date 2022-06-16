@@ -49,11 +49,6 @@ namespace app_graphics_pipeline_test {
     App::App() {}
     App::~App() {}
 
-    struct Vertex {
-        glm::vec3 position;
-        glm::vec3 color;
-    };
-
     void App::run() {
         std::string name = "Graphics Pipeline Test Application";
         std::cout << "Running App \"" << name << "\"\n";
@@ -76,22 +71,6 @@ namespace app_graphics_pipeline_test {
         /* */
 
         /*
-            Create a renderpass
-        */
-        // this->upRenderPass = this->createRenderPass();
-        /* */
-
-        /*
-            Create a framebuffer
-        */
-        // fillcan::Framebuffer framebuffer = fillcan::Framebuffer(this->upFillcan->getCurrentDevice(), upRenderPass.get(), );
-        /* */
-
-        // std::unique_ptr<fillcan::GraphicsPipeline> upGraphicsPipeline = this->createGraphicsPipeline();
-
-        /** TODO: PUT IN UPDATE **/
-
-        /*
             Create Render Pass
         */
         this->createRenderPass();
@@ -110,19 +89,6 @@ namespace app_graphics_pipeline_test {
             Create Graphics Pipeline
         */
         this->createGraphicsPipeline(upVertexShaderModule.get(), upFragmentShaderModule.get());
-        /* */
-
-        /*
-            Prepare vertices to draw
-        */
-        const std::vector<Vertex> vertices = {
-            {{0.0f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}}, {{0.5f, 0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}}, {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}}};
-        /* */
-
-        /*
-            Prepare indices of vertices
-        */
-        const std::vector<uint16_t> indices = {0, 1, 2};
         /* */
 
         /*
@@ -153,8 +119,8 @@ namespace app_graphics_pipeline_test {
         /*
             Map memory
         */
-        void** ppVertexData = this->upVertexBuffer->getMemory()->map();
-        void** ppIndexData = this->upIndexBuffer->getMemory()->map();
+        this->ppVertexData = this->upVertexBuffer->getMemory()->map();
+        this->ppIndexData = this->upIndexBuffer->getMemory()->map();
         /* */
 
         /*
@@ -167,59 +133,51 @@ namespace app_graphics_pipeline_test {
         /*
             Unmap memory
         */
-        this->upVertexBuffer->getMemory()->unmap();
-        this->upIndexBuffer->getMemory()->unmap();
+        // this->upVertexBuffer->getMemory()->unmap();
+        // this->upIndexBuffer->getMemory()->unmap();
         /* */
-
-        this->upSemaphores.resize(this->upFillcan->getSwapchain()->getImageCount());
-        // this->upFrameFences.resize(this->upFillcan->getSwapchain()->getImageCount());
 
         for (size_t i = 0; i < this->upFillcan->getSwapchain()->getImageCount(); i++) {
             this->pCommandRecordings.push_back(this->upFillcan->getCurrentDevice()->getGraphicsQueue()->createRecording(1, 0));
-            this->pCommandRecordings[i]->createFence(this->upFillcan->getCurrentDevice(),VK_FENCE_CREATE_SIGNALED_BIT);
-            // this->upFrameFences[i] = std::move(std::make_unique<fillcan::Fence>(this->upFillcan->getCurrentDevice(),
-            // VK_FENCE_CREATE_SIGNALED_BIT));
+            this->pCommandRecordings[i]->createFence(this->upFillcan->getCurrentDevice(), VK_FENCE_CREATE_SIGNALED_BIT);
         }
 
         this->upFramebuffers.resize(this->upFillcan->getSwapchain()->getImageCount());
 
-        /**
-            UPDATE
-        **/
-
-        int i = 0;
-        while (!this->upFillcan->getWindow()->shouldClose()) {
-            this->upFillcan->pollEvents();
-            this->update();
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
-        }
-        std::cout << "Done: " << i;
-
-        // upFillcan->MainLoop(std::bind(&App::update, this, std::placeholders::_1));
+        upFillcan->MainLoop(std::bind(&App::update, this, std::placeholders::_1));
     }
 
-    void App::update(/*std::chrono::duration<double> deltaTime*/) {
-        fillcan::CommandRecording* pCurrentGraphicsCommandRecording = this->pCommandRecordings[this->currentFrameIndex];
-        fillcan::CommandBuffer* pCurrentGraphicsCommandBuffer = pCurrentGraphicsCommandRecording->pPrimaryCommandBuffers[0];
-        pCurrentGraphicsCommandRecording->waitForFence();
-        pCurrentGraphicsCommandRecording->reset();
-        pCurrentGraphicsCommandBuffer->begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
-    
-        fillcan::SwapchainImage swapchainImage = this->upFillcan->getSwapchain()->getNextImage();
-        // this->upFrameFences[currentFrameIndex]->reset();
-
-        // Check if swapchain image is valid
-        if (swapchainImage.outOfDate || this->upFillcan->getWindow()->wasResized()) {
+    void App::update(double deltaTime) {
+        // Recreate swapchain if window was resized
+        if (this->upFillcan->getWindow()->wasResized()) {
             this->upFillcan->recreateSwapchain(2, VK_PRESENT_MODE_FIFO_KHR);
-            swapchainImage = this->upFillcan->getSwapchain()->getNextImage();
-            // return;
+            return;
         }
 
-        // Define semaphore for when image is ready
+        // Get current command recording
+        fillcan::CommandRecording* pCurrentGraphicsCommandRecording = this->pCommandRecordings[this->currentFrameIndex];
+        fillcan::CommandBuffer* pCurrentGraphicsCommandBuffer = pCurrentGraphicsCommandRecording->pPrimaryCommandBuffers[0];
+
+        // Wait for the last command recording to have finished
+        pCurrentGraphicsCommandRecording->waitForFence();
+        pCurrentGraphicsCommandRecording->reset();
+
+        // Start new command recording
+        pCurrentGraphicsCommandBuffer->begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
+
+        fillcan::SwapchainImage swapchainImage = this->upFillcan->getSwapchain()->getNextImage();
+
+        if (swapchainImage.outOfDate) {
+            return;
+        }
+
+        // Define semaphore for when image is ready to be rendered to
         pCurrentGraphicsCommandRecording->pWaitSemaphores.push_back(swapchainImage.pSemaphoreImageReady);
         pCurrentGraphicsCommandRecording->waitDstStageMask = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
-        this->upSemaphores[this->currentFrameIndex] = std::move(std::make_unique<fillcan::Semaphore>(this->upFillcan->getCurrentDevice()));
-        pCurrentGraphicsCommandRecording->pSignalSemaphores.push_back(this->upSemaphores[this->currentFrameIndex].get());
+        // Define semphore for when image is ready to present
+        // this->upSemaphores[this->currentFrameIndex] = std::move(std::make_unique<fillcan::Semaphore>(this->upFillcan->getCurrentDevice()));
+        // pCurrentGraphicsCommandRecording->pSignalSemaphores.push_back(this->upSemaphores[this->currentFrameIndex].get());
+        pCurrentGraphicsCommandRecording->pSignalSemaphores.push_back(swapchainImage.pSemaphorePresentReady);
 
         // Create imageviews which will be used as attachments
         std::vector<fillcan::ImageView*> pAttachments = {};
@@ -266,21 +224,16 @@ namespace app_graphics_pipeline_test {
         this->upGraphicsPipeline->bindIndexBuffer(upIndexBuffer.get(), VK_INDEX_TYPE_UINT16);
         /* */
 
-        // upGraphicsPipeline->draw(3);
-        upGraphicsPipeline->drawIndexed(3);
+        // upGraphicsPipeline->draw(this->vertices.size());
+        upGraphicsPipeline->drawIndexed(this->indices.size());
 
         this->upFillcan->getRenderPass()->end();
 
-        // this->upFrameFence->reset();
         pCurrentGraphicsCommandRecording->endAll();
         pCurrentGraphicsCommandRecording->submit();
-        // this->upFrameFence->waitFor();
-        
-        this->upFillcan->getSwapchain()->present(&swapchainImage, {this->upSemaphores[currentFrameIndex]->getSemaphoreHandle()});
-        // pGraphicsCommandRecording->free();
 
-        // this->upFrameFences[currentFrameIndex]->waitFor();
-        // pCurrentGraphicsCommandRecording->waitForFence();
+        this->upFillcan->getSwapchain()->present(&swapchainImage, {swapchainImage.pSemaphorePresentReady->getSemaphoreHandle()});
+
         this->currentFrameIndex = (currentFrameIndex + 1) % this->upFillcan->getSwapchain()->getImageCount();
     }
 

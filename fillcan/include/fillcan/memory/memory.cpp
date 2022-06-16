@@ -33,10 +33,10 @@ namespace fillcan {
             std::cerr << "Failed to free Memory: Handle was VK_NULL_HANDLE"
                       << "\n";
         }
-        vkFreeMemory(this->pLogicalDevice->getLogicalDeviceHandle(), this->hMemory, nullptr);
         if (this->pData != nullptr) {
             this->unmap();
         }
+        vkFreeMemory(this->pLogicalDevice->getLogicalDeviceHandle(), this->hMemory, nullptr);
     }
 
     void Memory::init(VkMemoryRequirements& memoryRequirements) {

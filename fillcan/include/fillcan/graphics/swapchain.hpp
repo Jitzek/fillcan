@@ -26,6 +26,7 @@ namespace fillcan {
         unsigned int index;
         Image* pImage;
         Semaphore* pSemaphoreImageReady = nullptr;
+        Semaphore* pSemaphorePresentReady = nullptr;
     };
 
     class Swapchain {
@@ -41,7 +42,8 @@ namespace fillcan {
         VkSharingMode imageSharingMode = VK_SHARING_MODE_MAX_ENUM;
         std::vector<uint32_t> queueFamilyIndices = {};
         std::vector<std::unique_ptr<Image>> upSwapchainImages = {};
-        std::vector<std::unique_ptr<Semaphore>> upSemaphores = {};
+        std::vector<std::unique_ptr<Semaphore>> upImageReadySemaphores = {};
+        std::vector<std::unique_ptr<Semaphore>> upPresentReadySemaphores = {};
         std::vector<VkImage> hSwapchainImages = {};
         uint32_t currentImageIndex = 0;
 
