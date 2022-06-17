@@ -13,8 +13,6 @@
 // std
 #include <iostream>
 #include <memory>
-#include <pstl/glue_algorithm_defs.h>
-#include <vector>
 
 namespace fillcan {
     Queue::Queue(LogicalDevice* pLogicalDevice, unsigned int queueFamilyIndex, unsigned int queueIndex)

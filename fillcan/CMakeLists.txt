@@ -106,9 +106,15 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)
 ##############
 ## 	Shaderc	##
 ##############
+set(DSHADERC_ENABLE_SHARED_CRT ON)
 set(SHADERC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/shaderc")
-target_link_libraries(${PROJECT_NAME} libshaderc_shared.so ${SHADERC_DIR}/lib/libshaderc.a)
-target_include_directories(${PROJECT_NAME} PRIVATE ${SHADERC_DIR}/include)
+# target_include_directories(${PROJECT_NAME} PRIVATE ${SHADERC_DIR}/include)
+IF(WIN32)
+	target_link_libraries(${PROJECT_NAME} ${SHADERC_DIR}/lib/shaderc_shared.lib ${SHADERC_DIR}/lib/shaderc.lib)
+ENDIF()
+IF (UNIX)
+	target_link_libraries(${PROJECT_NAME} libshaderc_shared.so ${SHADERC_DIR}/lib/libshaderc.a)
+ENDIF()
 ####################
 ##  ENDOF Shaderc ##
 ####################

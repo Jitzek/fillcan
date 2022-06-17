@@ -52,60 +52,60 @@ namespace fillcan {
     bool PhysicalDevice::areFeaturesSupported() {
         VkPhysicalDeviceFeatures supportedFeatures = getFeatures();
         VkPhysicalDeviceFeatures features = this->requiredFeatures;
-        return (features.robustBufferAccess ? supportedFeatures.robustBufferAccess == true : true) &&
-               (features.fullDrawIndexUint32 ? supportedFeatures.fullDrawIndexUint32 == true : true) &&
-               (features.imageCubeArray ? supportedFeatures.imageCubeArray == true : true) &&
-               (features.independentBlend ? supportedFeatures.independentBlend == true : true) &&
-               (features.geometryShader ? supportedFeatures.geometryShader == true : true) &&
-               (features.tessellationShader ? supportedFeatures.tessellationShader == true : true) &&
-               (features.sampleRateShading ? supportedFeatures.tessellationShader == true : true) &&
-               (features.logicOp ? supportedFeatures.logicOp == true : true) &&
-               (features.multiDrawIndirect ? supportedFeatures.multiDrawIndirect == true : true) &&
-               (features.drawIndirectFirstInstance ? supportedFeatures.drawIndirectFirstInstance == true : true) &&
-               (features.depthClamp ? supportedFeatures.depthClamp == true : true) &&
-               (features.depthBiasClamp ? supportedFeatures.depthBiasClamp == true : true) &&
-               (features.fillModeNonSolid ? supportedFeatures.fillModeNonSolid == true : true) &&
-               (features.depthBounds ? supportedFeatures.depthBounds == true : true) &&
-               (features.wideLines ? supportedFeatures.wideLines == true : true) &&
-               (features.largePoints ? supportedFeatures.largePoints == true : true) &&
-               (features.alphaToOne ? supportedFeatures.alphaToOne == true : true) &&
-               (features.multiViewport ? supportedFeatures.multiViewport == true : true) &&
-               (features.samplerAnisotropy ? supportedFeatures.samplerAnisotropy == true : true) &&
-               (features.textureCompressionETC2 ? supportedFeatures.textureCompressionETC2 == true : true) &&
-               (features.textureCompressionASTC_LDR ? supportedFeatures.textureCompressionASTC_LDR == true : true) &&
-               (features.textureCompressionBC ? supportedFeatures.textureCompressionBC == true : true) &&
-               (features.occlusionQueryPrecise ? supportedFeatures.occlusionQueryPrecise == true : true) &&
-               (features.pipelineStatisticsQuery ? supportedFeatures.pipelineStatisticsQuery == true : true) &&
-               (features.vertexPipelineStoresAndAtomics ? supportedFeatures.vertexPipelineStoresAndAtomics == true : true) &&
-               (features.fragmentStoresAndAtomics ? supportedFeatures.fragmentStoresAndAtomics == true : true) &&
-               (features.shaderTessellationAndGeometryPointSize ? supportedFeatures.shaderTessellationAndGeometryPointSize == true : true) &&
-               (features.shaderImageGatherExtended ? supportedFeatures.shaderImageGatherExtended == true : true) &&
-               (features.shaderStorageImageExtendedFormats ? supportedFeatures.shaderStorageImageExtendedFormats == true : true) &&
-               (features.shaderStorageImageMultisample ? supportedFeatures.shaderStorageImageMultisample == true : true) &&
-               (features.shaderStorageImageReadWithoutFormat ? supportedFeatures.shaderStorageImageReadWithoutFormat == true : true) &&
-               (features.shaderStorageImageWriteWithoutFormat ? supportedFeatures.shaderStorageImageWriteWithoutFormat == true : true) &&
-               (features.shaderUniformBufferArrayDynamicIndexing ? supportedFeatures.shaderUniformBufferArrayDynamicIndexing == true : true) &&
-               (features.shaderSampledImageArrayDynamicIndexing ? supportedFeatures.shaderSampledImageArrayDynamicIndexing == true : true) &&
-               (features.shaderStorageBufferArrayDynamicIndexing ? supportedFeatures.shaderStorageBufferArrayDynamicIndexing == true : true) &&
-               (features.shaderStorageImageArrayDynamicIndexing ? supportedFeatures.shaderStorageImageArrayDynamicIndexing == true : true) &&
-               (features.shaderClipDistance ? supportedFeatures.shaderClipDistance == true : true) &&
-               (features.shaderCullDistance ? supportedFeatures.shaderCullDistance == true : true) &&
-               (features.shaderFloat64 ? supportedFeatures.shaderFloat64 == true : true) &&
-               (features.shaderInt64 ? supportedFeatures.shaderInt64 == true : true) &&
-               (features.shaderInt16 ? supportedFeatures.shaderInt16 == true : true) &&
-               (features.shaderResourceResidency ? supportedFeatures.shaderResourceResidency == true : true) &&
-               (features.shaderResourceMinLod ? supportedFeatures.shaderResourceMinLod == true : true) &&
-               (features.sparseBinding ? supportedFeatures.sparseBinding == true : true) &&
-               (features.sparseResidencyBuffer ? supportedFeatures.sparseResidencyBuffer == true : true) &&
-               (features.sparseResidencyImage2D ? supportedFeatures.sparseResidencyImage2D == true : true) &&
-               (features.sparseResidencyImage3D ? supportedFeatures.sparseResidencyImage3D == true : true) &&
-               (features.sparseResidency2Samples ? supportedFeatures.sparseResidency2Samples == true : true) &&
-               (features.sparseResidency4Samples ? supportedFeatures.sparseResidency4Samples == true : true) &&
-               (features.sparseResidency8Samples ? supportedFeatures.sparseResidency8Samples == true : true) &&
-               (features.sparseResidency16Samples ? supportedFeatures.sparseResidency16Samples == true : true) &&
-               (features.sparseResidencyAliased ? supportedFeatures.sparseResidencyAliased == true : true) &&
-               (features.variableMultisampleRate ? supportedFeatures.variableMultisampleRate == true : true) &&
-               (features.inheritedQueries ? supportedFeatures.inheritedQueries == true : true);
+        return (features.robustBufferAccess ? supportedFeatures.robustBufferAccess == VK_TRUE : true) &&
+               (features.fullDrawIndexUint32 ? supportedFeatures.fullDrawIndexUint32 == VK_TRUE : true) &&
+               (features.imageCubeArray ? supportedFeatures.imageCubeArray == VK_TRUE : true) &&
+               (features.independentBlend ? supportedFeatures.independentBlend == VK_TRUE : true) &&
+               (features.geometryShader ? supportedFeatures.geometryShader == VK_TRUE : true) &&
+               (features.tessellationShader ? supportedFeatures.tessellationShader == VK_TRUE : true) &&
+               (features.sampleRateShading ? supportedFeatures.tessellationShader == VK_TRUE : true) &&
+               (features.logicOp ? supportedFeatures.logicOp == VK_TRUE : true) &&
+               (features.multiDrawIndirect ? supportedFeatures.multiDrawIndirect == VK_TRUE : true) &&
+               (features.drawIndirectFirstInstance ? supportedFeatures.drawIndirectFirstInstance == VK_TRUE : true) &&
+               (features.depthClamp ? supportedFeatures.depthClamp == VK_TRUE : true) &&
+               (features.depthBiasClamp ? supportedFeatures.depthBiasClamp == VK_TRUE : true) &&
+               (features.fillModeNonSolid ? supportedFeatures.fillModeNonSolid == VK_TRUE : true) &&
+               (features.depthBounds ? supportedFeatures.depthBounds == VK_TRUE : true) &&
+               (features.wideLines ? supportedFeatures.wideLines == VK_TRUE : true) &&
+               (features.largePoints ? supportedFeatures.largePoints == VK_TRUE : true) &&
+               (features.alphaToOne ? supportedFeatures.alphaToOne == VK_TRUE : true) &&
+               (features.multiViewport ? supportedFeatures.multiViewport == VK_TRUE : true) &&
+               (features.samplerAnisotropy ? supportedFeatures.samplerAnisotropy == VK_TRUE : true) &&
+               (features.textureCompressionETC2 ? supportedFeatures.textureCompressionETC2 == VK_TRUE : true) &&
+               (features.textureCompressionASTC_LDR ? supportedFeatures.textureCompressionASTC_LDR == VK_TRUE : true) &&
+               (features.textureCompressionBC ? supportedFeatures.textureCompressionBC == VK_TRUE : true) &&
+               (features.occlusionQueryPrecise ? supportedFeatures.occlusionQueryPrecise == VK_TRUE : true) &&
+               (features.pipelineStatisticsQuery ? supportedFeatures.pipelineStatisticsQuery == VK_TRUE : true) &&
+               (features.vertexPipelineStoresAndAtomics ? supportedFeatures.vertexPipelineStoresAndAtomics == VK_TRUE : true) &&
+               (features.fragmentStoresAndAtomics ? supportedFeatures.fragmentStoresAndAtomics == VK_TRUE : true) &&
+               (features.shaderTessellationAndGeometryPointSize ? supportedFeatures.shaderTessellationAndGeometryPointSize == VK_TRUE : true) &&
+               (features.shaderImageGatherExtended ? supportedFeatures.shaderImageGatherExtended == VK_TRUE : true) &&
+               (features.shaderStorageImageExtendedFormats ? supportedFeatures.shaderStorageImageExtendedFormats == VK_TRUE : true) &&
+               (features.shaderStorageImageMultisample ? supportedFeatures.shaderStorageImageMultisample == VK_TRUE : true) &&
+               (features.shaderStorageImageReadWithoutFormat ? supportedFeatures.shaderStorageImageReadWithoutFormat == VK_TRUE : true) &&
+               (features.shaderStorageImageWriteWithoutFormat ? supportedFeatures.shaderStorageImageWriteWithoutFormat == VK_TRUE : true) &&
+               (features.shaderUniformBufferArrayDynamicIndexing ? supportedFeatures.shaderUniformBufferArrayDynamicIndexing == VK_TRUE : true) &&
+               (features.shaderSampledImageArrayDynamicIndexing ? supportedFeatures.shaderSampledImageArrayDynamicIndexing == VK_TRUE : true) &&
+               (features.shaderStorageBufferArrayDynamicIndexing ? supportedFeatures.shaderStorageBufferArrayDynamicIndexing == VK_TRUE : true) &&
+               (features.shaderStorageImageArrayDynamicIndexing ? supportedFeatures.shaderStorageImageArrayDynamicIndexing == VK_TRUE : true) &&
+               (features.shaderClipDistance ? supportedFeatures.shaderClipDistance == VK_TRUE : true) &&
+               (features.shaderCullDistance ? supportedFeatures.shaderCullDistance == VK_TRUE : true) &&
+               (features.shaderFloat64 ? supportedFeatures.shaderFloat64 == VK_TRUE : true) &&
+               (features.shaderInt64 ? supportedFeatures.shaderInt64 == VK_TRUE : true) &&
+               (features.shaderInt16 ? supportedFeatures.shaderInt16 == VK_TRUE : true) &&
+               (features.shaderResourceResidency ? supportedFeatures.shaderResourceResidency == VK_TRUE : true) &&
+               (features.shaderResourceMinLod ? supportedFeatures.shaderResourceMinLod == VK_TRUE : true) &&
+               (features.sparseBinding ? supportedFeatures.sparseBinding == VK_TRUE : true) &&
+               (features.sparseResidencyBuffer ? supportedFeatures.sparseResidencyBuffer == VK_TRUE : true) &&
+               (features.sparseResidencyImage2D ? supportedFeatures.sparseResidencyImage2D == VK_TRUE : true) &&
+               (features.sparseResidencyImage3D ? supportedFeatures.sparseResidencyImage3D == VK_TRUE : true) &&
+               (features.sparseResidency2Samples ? supportedFeatures.sparseResidency2Samples == VK_TRUE : true) &&
+               (features.sparseResidency4Samples ? supportedFeatures.sparseResidency4Samples == VK_TRUE : true) &&
+               (features.sparseResidency8Samples ? supportedFeatures.sparseResidency8Samples == VK_TRUE : true) &&
+               (features.sparseResidency16Samples ? supportedFeatures.sparseResidency16Samples == VK_TRUE : true) &&
+               (features.sparseResidencyAliased ? supportedFeatures.sparseResidencyAliased == VK_TRUE : true) &&
+               (features.variableMultisampleRate ? supportedFeatures.variableMultisampleRate == VK_TRUE : true) &&
+               (features.inheritedQueries ? supportedFeatures.inheritedQueries == VK_TRUE : true);
     }
 
     void PhysicalDevice::findGraphicsAndPresentQueueFamilyIndex(std::vector<VkQueueFamilyProperties> queueFamilyProperties) {

@@ -5,12 +5,13 @@
 #include <fillcan/shader/pipeline.hpp>
 
 // std
-#include <optional>
+#include <memory>
+
 namespace fillcan {
     class ComputePipeline;
     class ComputePipelineBuilder : public PipelineBuilder {
       private:
-        std::optional<PipelineShaderStage> pipelineShaderStage;
+        PipelineShaderStage pipelineShaderStage = {};
 
       public:
         ComputePipelineBuilder();

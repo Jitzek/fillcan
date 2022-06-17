@@ -54,6 +54,8 @@ namespace app_graphics_pipeline_test {
         void** ppVertexData = nullptr;
         void** ppIndexData = nullptr;
 
+        std::string APP_DIR = "./apps/graphics_pipeline_test";
+
       public:
         App();
         ~App();

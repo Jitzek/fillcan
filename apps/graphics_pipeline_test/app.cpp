@@ -56,8 +56,9 @@ namespace app_graphics_pipeline_test {
         /*
             Instance Fillcan
         */
-        VkPhysicalDeviceFeatures requiredDeviceFeatures = {.samplerAnisotropy = true};
-        upFillcan = std::make_unique<fillcan::FillcanGraphics>(name.c_str(), 1.0, 800, 600, requiredDeviceFeatures);
+        VkPhysicalDeviceFeatures requiredDeviceFeatures = {};
+        requiredDeviceFeatures.samplerAnisotropy = true;
+        this->upFillcan = std::make_unique<fillcan::FillcanGraphics>(name.c_str(), 1.0, 800, 600, requiredDeviceFeatures);
 
         // Select any device
         upFillcan->selectDevice(0);
@@ -68,7 +69,7 @@ namespace app_graphics_pipeline_test {
         /*
             Create a swapchain
         */
-        this->upFillcan->createSwapchain(2, VK_PRESENT_MODE_FIFO_KHR);
+        this->upFillcan->createSwapchain(2, VK_PRESENT_MODE_IMMEDIATE_KHR);
         /* */
 
         /*
@@ -81,9 +82,9 @@ namespace app_graphics_pipeline_test {
             Create shader modules
         */
         std::unique_ptr<fillcan::ShaderModule> upVertexShaderModule = this->upFillcan->createShaderModule(
-            "./apps/graphics_pipeline_test/shaders", "simple.vert", shaderc_vertex_shader, {}, nullptr, true, false);
+            this->APP_DIR + "/shaders", "simple.vert", shaderc_vertex_shader, {}, nullptr, true, false);
         std::unique_ptr<fillcan::ShaderModule> upFragmentShaderModule = this->upFillcan->createShaderModule(
-            "./apps/graphics_pipeline_test/shaders", "simple.frag", shaderc_fragment_shader, {}, nullptr, true, false);
+            this->APP_DIR + "/shaders", "simple.frag", shaderc_fragment_shader, {}, nullptr, true, false);
         /* */
 
         /*

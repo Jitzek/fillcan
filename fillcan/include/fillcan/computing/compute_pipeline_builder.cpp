@@ -16,12 +16,12 @@ namespace fillcan {
 
     void ComputePipelineBuilder::reset() {
         PipelineBuilder::reset();
-        this->pipelineShaderStage.reset();
+        this->pipelineShaderStage = {};
     }
 
     std::unique_ptr<ComputePipeline> ComputePipelineBuilder::getResult() {
         return std::move(std::make_unique<ComputePipeline>(this->pLogicalDevice, this->pCommandBuffer, this->flags,
-                                                           std::vector<PipelineShaderStage>(1, pipelineShaderStage.value()), this->pipelineCache,
+                                                           std::vector<PipelineShaderStage>(1, pipelineShaderStage), this->pipelineCache,
                                                            this->pBasePipeline));
     }
 } // namespace fillcan
