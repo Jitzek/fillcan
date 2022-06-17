@@ -11,9 +11,6 @@
 #include <string>
 
 // glm
-#include <glm/detail/type_mat.hpp>
-#include <glm/detail/type_vec.hpp>
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace fillcan {
@@ -22,16 +19,7 @@ namespace fillcan {
         glm::vec3 scale{1.f, 1.f, 1.f};
         glm::vec3 rotation{};
 
-        glm::mat4 mat4() {
-            auto transform = glm::translate(glm::mat4{1.f}, translation);
-            transform = glm::scale(transform, scale);
-
-            transform = glm::rotate(transform, rotation.y, {0.f, 1.f, 0.f});
-            transform = glm::rotate(transform, rotation.x, {1.f, 0.f, 0.f});
-            transform = glm::rotate(transform, rotation.z, {0.f, 0.f, 1.f});
-
-            return transform;
-        };
+        glm::mat4 mat4();
     };
 
     class GameObject {

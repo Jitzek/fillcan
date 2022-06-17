@@ -32,7 +32,6 @@ namespace simple_cube {
     class DescriptorSetLayout;
 
     struct SimplePushConstantData : public fillcan::PushConstantData {
-        int test = 1;
         glm::mat4 transform{1.f};
         alignas(16) glm::vec3 color;
     };
@@ -59,6 +58,7 @@ namespace simple_cube {
 
         void loadGameObjects();
         void renderGameObjects(fillcan::CommandBuffer* pCommandBuffer);
+        std::unique_ptr<fillcan::Model> createCubeModel(glm::vec3 offset);
 
       public:
         App();

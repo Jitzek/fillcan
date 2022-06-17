@@ -39,8 +39,8 @@ namespace fillcan {
 
         std::vector<PushConstant>& getPushConstants();
 
-        PushConstant& getPushConstant(std::string name);
+        // PushConstant& getPushConstant(std::string name);
 
-        void pushConstant(CommandBuffer* pCommandBuffer, PushConstant& pushConstant);
+        void pushConstantData(CommandBuffer* pCommandBuffer, std::string name, std::unique_ptr<PushConstantData> upPushConstantData);
     };
 } // namespace fillcan

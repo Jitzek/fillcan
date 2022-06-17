@@ -59,24 +59,6 @@ namespace fillcan {
         this->upInstance.reset();
     }
 
-    void Fillcan::MainLoop(std::function<void(double)> callback) {
-        std::chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
-        std::chrono::high_resolution_clock::time_point previousTime = currentTime;
-        std::chrono::duration<double> deltaTime = previousTime - currentTime;
-
-        while (!this->upWindow->shouldClose()) {
-            this->upWindow->pollEvents();
-
-            previousTime = currentTime;
-            currentTime = std::chrono::high_resolution_clock::now();
-            deltaTime = currentTime - previousTime;
-
-            callback(deltaTime.count());
-            // std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
-        this->getCurrentDevice()->waitIdle();
-    }
-
     const std::vector<PhysicalDevice> Fillcan::getSupportedPhysicalDevices() const { return this->upDevicePool->getSupportedPhysicalDevices(); }
 
     LogicalDevice* Fillcan::selectDevice(unsigned int deviceIndex) { return this->upDevicePool->selectDevice(deviceIndex); }

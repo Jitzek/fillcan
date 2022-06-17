@@ -8,6 +8,7 @@
 #include <fillcan/memory/fence.hpp>
 #include <fillcan/memory/image.hpp>
 #include <fillcan/memory/semaphore.hpp>
+#include <fillcan/memory/memory.hpp>
 
 // std
 #include <memory>
@@ -24,7 +25,8 @@ namespace fillcan {
     struct SwapchainImage {
         bool outOfDate;
         unsigned int index;
-        Image* pImage;
+        Image* pSwapchainImage;
+        ImageView* pDepthBufferImageView;
         Semaphore* pSemaphoreImageReady = nullptr;
         Semaphore* pSemaphorePresentReady = nullptr;
     };
@@ -47,6 +49,8 @@ namespace fillcan {
         std::vector<std::unique_ptr<Semaphore>> upPresentReadySemaphores = {};
         std::vector<VkImage> hSwapchainImages = {};
         uint32_t currentImageIndex = 0;
+        std::vector<std::unique_ptr<Image>> upDepthImages = {};
+        std::vector<std::unique_ptr<Memory>> upDepthImageMemories = {};
 
       public:
         Swapchain(LogicalDevice* pLogicalDevice, Window* pWindow, Queue* pPresentQueue, uint32_t imageCount = 3,

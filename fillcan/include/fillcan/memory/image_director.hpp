@@ -14,5 +14,6 @@ namespace fillcan {
         ~ImageDirector();
 
         std::unique_ptr<Image> make2DTexture(LogicalDevice* pLogicalDevice, unsigned int width, unsigned int height, VkSampleCountFlagBits samples);
+        std::unique_ptr<Image> makeDepthImage(LogicalDevice* pLogicalDevice, unsigned int width, unsigned int height, VkSampleCountFlagBits samples);
     };
 } // namespace fillcan

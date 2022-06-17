@@ -45,6 +45,8 @@
 #include <vector>
 
 // glm
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/detail/type_vec.hpp>
 #include <glm/glm.hpp>
 
@@ -116,16 +118,16 @@ namespace simple_cube {
         pCurrentGraphicsCommandRecording->pWaitSemaphores.emplace_back(swapchainImage.pSemaphoreImageReady);
         // Define the stage(s) at where the semaphore should be waited for
         pCurrentGraphicsCommandRecording->waitDstStageMask = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
-
         // Define semphore for when image is ready to present
         pCurrentGraphicsCommandRecording->pSignalSemaphores.push_back(swapchainImage.pSemaphorePresentReady);
 
         // Create imageviews which will be used as attachments
         std::vector<fillcan::ImageView*> pAttachments = {};
-        pAttachments.reserve(1);
-        pAttachments.emplace_back(swapchainImage.pImage->createImageView(
+        pAttachments.reserve(2);
+        pAttachments.push_back(swapchainImage.pSwapchainImage->createImageView(
             VK_IMAGE_VIEW_TYPE_2D, this->upFillcan->getSwapchain()->getSurfaceFormat().format,
             {.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT, .baseMipLevel = 0, .levelCount = 1, .baseArrayLayer = 0, .layerCount = 1}));
+        pAttachments.push_back(swapchainImage.pDepthBufferImageView);
         /* */
 
         /*
@@ -137,8 +139,8 @@ namespace simple_cube {
             this->upFillcan->getSwapchain()->getImageArrayLayers()));
         /* */
 
-        std::vector<VkClearValue> clearValues = {{.color = {.float32 = {0.0f, 0.0f, 0.0f, 1.0f}}}};
-        this->upFillcan->getRenderPass()->begin(pCurrentGraphicsCommandBuffer, this->upFramebuffers[this->currentFrameIndex].get(), &clearValues);
+        std::vector<VkClearValue> clearValues = {{.color = {{0.0f, 0.0f, 0.0f, 1.0f}}}, {.depthStencil = {1.0f, 0}}};
+        this->upFillcan->getRenderPass()->begin(pCurrentGraphicsCommandBuffer, this->upFramebuffers.at(this->currentFrameIndex).get(), &clearValues);
 
         VkViewport viewport = {.x = 0.0f,
                                .y = 0.0f,
@@ -164,10 +166,9 @@ namespace simple_cube {
         this->currentFrameIndex = (currentFrameIndex + 1) % this->upFillcan->getSwapchain()->getImageCount();
     }
 
-    void App::loadGameObjects() {
-        // const std::vector<fillcan::Model::Vertex> vertices = {
-        // {{0.0f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}}, {{0.5f, 0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}}, {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}}};
-        const std::vector<fillcan::Model::Vertex> vertices = {
+    std::unique_ptr<fillcan::Model> App::createCubeModel(glm::vec3 offset) {
+        std::vector<fillcan::Model::Vertex> vertices{
+
             // left face (white)
             {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
             {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
@@ -215,32 +216,40 @@ namespace simple_cube {
             {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
             {{.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
             {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+
         };
+        for (auto& v : vertices) {
+            v.position += offset;
+        }
+        return std::move(std::make_unique<fillcan::Model>(this->upFillcan->getCurrentDevice(), vertices, std::vector<uint16_t>()));
+    }
 
-        const std::vector<uint16_t> indices = {0, 1, 2};
-
-        std::shared_ptr<fillcan::Model> spModel = std::make_shared<fillcan::Model>(this->upFillcan->getCurrentDevice(), vertices, indices);
+    void App::loadGameObjects() {
+        std::shared_ptr<fillcan::Model> spModel = this->createCubeModel({0.f, 0.f, 0.f});
 
         fillcan::GameObject triangleGameObject = fillcan::GameObject::createGameObject();
+        triangleGameObject.transform.translation = {0.f, 0.f, 0.5f};
+        triangleGameObject.transform.scale = {0.5f, 0.5f, 0.5f};
         triangleGameObject.model = spModel;
         triangleGameObject.color = {1.0f, 0.0f, 0.0f};
-        // triangleGameObject.transform.translation.x = .2f;
 
         gameObjects.push_back(std::move(triangleGameObject));
-        spModels.emplace_back(std::move(spModel));
     }
 
     void App::renderGameObjects(fillcan::CommandBuffer* pCommandBuffer) {
         this->upGraphicsPipeline->bindToCommandBuffer(pCommandBuffer);
         for (fillcan::GameObject& gameObject : this->gameObjects) {
-            // gameObject.transform.rotation.y = glm::mod(gameObject.transform.rotation.y + 0.01f, glm::two_pi<float>());
+            gameObject.transform.rotation.y =
+                glm::mod(gameObject.transform.rotation.y + (0.5f * this->upFillcan->deltaTimef()), glm::two_pi<float>());
+            gameObject.transform.rotation.x =
+                glm::mod(gameObject.transform.rotation.x + (0.25f * this->upFillcan->deltaTimef()), glm::two_pi<float>());
 
-            fillcan::PushConstant& simplePushConstant = this->upGraphicsPipeline->getPushConstant("SimplePushConstant");
-            SimplePushConstantData simplePushConstantData{.test = 1, .transform = gameObject.transform.mat4(), .color = gameObject.color};
-
-            // Point the data to the SimplePushConstantData struct
-            simplePushConstant.upData = std::move(std::make_unique<SimplePushConstantData>(simplePushConstantData));
-            this->upGraphicsPipeline->pushConstant(std::move(simplePushConstant));
+            SimplePushConstantData data = {.transform = gameObject.transform.mat4(), .color = gameObject.color};
+            std::unique_ptr<SimplePushConstantData> simplePushConstantData = std::make_unique<SimplePushConstantData>(data);
+            this->upGraphicsPipeline->pushConstantData("SimplePushConstant", std::move(simplePushConstantData));
+            // vkCmdPushConstants(pCommandBuffer->getCommandBufferHandle(), this->upGraphicsPipeline->getPipelineLayout()->getPipelineLayoutHandle(),
+            //                    VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData),
+            //                    &simplePushConstantData);
 
             gameObject.model->bind(pCommandBuffer);
             gameObject.model->draw();
@@ -264,13 +273,27 @@ namespace simple_cube {
                                                                                  .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
                                                                                  .finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR});
         renderPassBuilder.addColorAttachment(swapChainAttachmentIndex, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, false);
+        unsigned int depthImageAttachmentIndex =
+            renderPassBuilder.addAttachment({.flags = 0,
+                                             .format = this->upFillcan->getCurrentDevice()->getPhysicalDevice()->findSupportedFormat(
+                                                 {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
+                                                 VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT),
+                                             .samples = VK_SAMPLE_COUNT_1_BIT,
+                                             .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+                                             .storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+                                             .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+                                             .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+                                             .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+                                             .finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL});
+        renderPassBuilder.setDepthStencilAttachment(depthImageAttachmentIndex, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, false);
+
         unsigned int subpassIndex = renderPassBuilder.constructSubpass();
         renderPassBuilder.addDependency({.srcSubpass = VK_SUBPASS_EXTERNAL,
                                          .dstSubpass = subpassIndex,
-                                         .srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-                                         .dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+                                         .srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
+                                         .dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
                                          .srcAccessMask = 0,
-                                         .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT});
+                                         .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT});
         this->upFillcan->createRenderPass(renderPassBuilder);
     }
 
@@ -288,7 +311,7 @@ namespace simple_cube {
             "SimplePushConstant",
             {.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, .offset = 0, .size = sizeof(SimplePushConstantData)});
 
-        graphicsPipelineBuilder.setInputAssemblyState({VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, VK_FALSE});
+        graphicsPipelineBuilder.setInputAssemblyState({.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, .primitiveRestartEnable = VK_FALSE});
 
         // std::vector<VkVertexInputBindingDescription> vertexInputBindingDescriptions = {};
         // vertexInputBindingDescriptions.reserve(1);
@@ -316,7 +339,16 @@ namespace simple_cube {
         // scissors.push_back((VkRect2D){.offset = {0, 0}, .extent = this->upFillcan->getSwapchain()->getImageExtent()});
         graphicsPipelineBuilder.addViewportState({viewports, scissors});
 
-        graphicsPipelineBuilder.setRasterizationState({});
+        graphicsPipelineBuilder.setRasterizationState({.depthClampEnable = VK_FALSE,
+                                                       .rasterizerDiscardEnable = VK_FALSE,
+                                                       .polygonMode = VK_POLYGON_MODE_FILL,
+                                                       .cullmode = VK_CULL_MODE_NONE,
+                                                       .frontFace = VK_FRONT_FACE_CLOCKWISE,
+                                                       .depthBiasEnable = VK_FALSE,
+                                                       .depthBiasConstantFactor = 0.0f,
+                                                       .depthBiasClamp = 0.0f,
+                                                       .depthBiasSlopeFactor = 0.0f,
+                                                       .lineWidth = 1.0f});
 
         graphicsPipelineBuilder.setMultisampleState({.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT,
                                                      .sampleShadingEnable = VK_FALSE,
@@ -325,10 +357,22 @@ namespace simple_cube {
                                                      .alphaToCoverageEnable = VK_FALSE,
                                                      .alphaToOneEnable = VK_FALSE});
 
+        graphicsPipelineBuilder.setDepthStencilState({
+            .depthTestEnable = VK_TRUE,
+            .depthWriteEnable = VK_TRUE,
+            .depthCompareOp = VK_COMPARE_OP_LESS,
+            .depthBoundsTestEnable = VK_FALSE,
+            .stencilTestEnable = VK_FALSE,
+            .front = {},
+            .back = {},
+            .minDepthBounds = 0.0f,
+            .maxDepthBounds = 1.0f,
+        });
+
         std::vector<VkPipelineColorBlendAttachmentState> colorBlendAttachments = {};
         VkPipelineColorBlendAttachmentState colorBlendAttachment = {};
         colorBlendAttachment.blendEnable = VK_FALSE;
-        colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+        colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
         colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
         colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
         colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
@@ -338,7 +382,10 @@ namespace simple_cube {
             VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
 
         colorBlendAttachments.push_back(colorBlendAttachment);
-        graphicsPipelineBuilder.setColorBlendState({VK_FALSE, VK_LOGIC_OP_COPY, colorBlendAttachments, std::array<float, 4>{0.0f, 0.0f, 0.0f, 0.0f}});
+        graphicsPipelineBuilder.setColorBlendState({.logicOpEnable = VK_FALSE,
+                                                    .logicOp = VK_LOGIC_OP_COPY,
+                                                    .attachments = colorBlendAttachments,
+                                                    .blendConstants = std::array<float, 4>{0.0f, 0.0f, 0.0f, 0.0f}});
 
         std::vector<VkDynamicState> dynamicStates = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
         graphicsPipelineBuilder.setDynamicState({.dynamicStates = dynamicStates});

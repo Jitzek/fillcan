@@ -43,7 +43,7 @@ namespace fillcan {
         [[deprecated("Use models instead")]] void drawIndexed(unsigned int indexCount, unsigned int instanceCount = 1, unsigned int firstIndex = 0,
                                                               unsigned int vertexOffset = 0, unsigned int firstInstance = 0);
 
-        void pushConstant(PushConstant pushConstant);
-        PushConstant&  getPushConstant(std::string name);
+        void pushConstantData(std::string name, std::unique_ptr<PushConstantData> upPushConstantData);
+        // PushConstant& getPushConstant(std::string name);
     };
 } // namespace fillcan

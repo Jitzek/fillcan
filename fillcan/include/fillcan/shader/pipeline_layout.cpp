@@ -9,6 +9,7 @@
 
 // std
 #include <algorithm>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -49,15 +50,25 @@ namespace fillcan {
 
     std::vector<PushConstant>& PipelineLayout::getPushConstants() { return this->pushConstants; }
 
-    PushConstant& PipelineLayout::getPushConstant(std::string name) {
-        return this->pushConstants[0];
-        return *std::find_if(this->pushConstants.begin(), this->pushConstants.end(),
-                             [name](PushConstant& pushConstant) -> bool { return pushConstant.name == name; });
-    }
+    // PushConstant& PipelineLayout::getPushConstant(std::string name) {
+    //     // return this->pushConstants[0];
+    //     // for (size_t i = 0; i < this->pushConstants.size(); i++) {
+    //     //     if (this->pushConstants.at(i).name == name)
+    //     //         return this->pushConstants.at(i);
+    //     // }
+    //     return *std::find_if(this->pushConstants.begin(), this->pushConstants.end(),
+    //                          [name](PushConstant& pushConstant) -> bool { return pushConstant.name == name; });
+    // }
 
-    void PipelineLayout::pushConstant(CommandBuffer* pCommandBuffer, PushConstant& pushConstant) {
-        vkCmdPushConstants(pCommandBuffer->getCommandBufferHandle(), this->hPipelineLayout, pushConstant.range.stageFlags, pushConstant.range.offset,
-                           pushConstant.range.size, pushConstant.upData.get());
+    void PipelineLayout::pushConstantData(CommandBuffer* pCommandBuffer, std::string name, std::unique_ptr<PushConstantData> upPushConstantData) {
+        auto pushConstant = std::find_if(this->pushConstants.begin(), this->pushConstants.end(),
+                                         [name](PushConstant& pushConstant) -> bool { return pushConstant.name == name; });
+        pushConstant->upData = std::move(upPushConstantData);
+        if (pushConstant == this->pushConstants.end()) {
+            throw std::runtime_error("Failed to push constant data: Push constant with name: \"" + name + "\" Does not exist");
+        }
+        vkCmdPushConstants(pCommandBuffer->getCommandBufferHandle(), this->hPipelineLayout, pushConstant->range.stageFlags,
+                           pushConstant->range.offset, pushConstant->range.size, pushConstant->upData.get());
     }
 
 } // namespace fillcan

@@ -38,7 +38,7 @@ namespace fillcan {
         VkBool32 depthClampEnable = VK_FALSE;
         VkBool32 rasterizerDiscardEnable = VK_FALSE;
         VkPolygonMode polygonMode = VK_POLYGON_MODE_FILL;
-        VkCullModeFlags cullmode = VK_CULL_MODE_BACK_BIT;
+        VkCullModeFlags cullmode = VK_CULL_MODE_NONE;
         VkFrontFace frontFace = VK_FRONT_FACE_CLOCKWISE;
         VkBool32 depthBiasEnable = VK_FALSE;
         float depthBiasConstantFactor = 0.0f;
@@ -48,31 +48,31 @@ namespace fillcan {
     };
 
     struct PipelineMultisampleState {
-        VkSampleCountFlagBits rasterizationSamples;
-        VkBool32 sampleShadingEnable;
-        float minSampleShading;
-        std::vector<VkSampleMask> sampleMask;
-        VkBool32 alphaToCoverageEnable;
-        VkBool32 alphaToOneEnable;
+        VkSampleCountFlagBits rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+        VkBool32 sampleShadingEnable = VK_FALSE;
+        float minSampleShading = 1.0f;
+        std::vector<VkSampleMask> sampleMask = {};
+        VkBool32 alphaToCoverageEnable = VK_FALSE;
+        VkBool32 alphaToOneEnable = VK_FALSE;
     };
 
     struct PipelineDepthStencilState {
-        VkBool32 depthTestEnable;
-        VkBool32 depthWriteEnable;
-        VkCompareOp depthCompareOp;
-        VkBool32 depthBoundsTestEnable;
-        VkBool32 stencilTestEnable;
-        VkStencilOpState front;
-        VkStencilOpState back;
-        float minDepthBounds;
-        float maxDepthBounds;
+        VkBool32 depthTestEnable = VK_TRUE;
+        VkBool32 depthWriteEnable = VK_TRUE;
+        VkCompareOp depthCompareOp = VK_COMPARE_OP_LESS;
+        VkBool32 depthBoundsTestEnable = VK_FALSE;
+        VkBool32 stencilTestEnable = VK_FALSE;
+        VkStencilOpState front = {};
+        VkStencilOpState back = {};
+        float minDepthBounds = 0.0f;
+        float maxDepthBounds = 1.0f;
     };
 
     struct PipelineColorBlendState {
-        VkBool32 logicOpEnable;
-        VkLogicOp logicOp;
-        std::vector<VkPipelineColorBlendAttachmentState> attachments;
-        std::array<float, 4> blendConstants;
+        VkBool32 logicOpEnable = VK_FALSE;
+        VkLogicOp logicOp = VK_LOGIC_OP_COPY;
+        std::vector<VkPipelineColorBlendAttachmentState> attachments = {};
+        std::array<float, 4> blendConstants = {};
     };
 
     struct PipelineDynamicState {

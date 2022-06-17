@@ -14,15 +14,15 @@
 #include <fillcan/window.hpp>
 
 // std
+#include <chrono>
 #include <functional>
 #include <memory>
 #include <shaderc/status.h>
 #include <vector>
-#include <chrono>
 
 // shaderc
-#include <shaderc/shaderc.hpp>
 #include <shaderc/shaderc.h>
+#include <shaderc/shaderc.hpp>
 
 namespace fillcan {
     class Fillcan {
@@ -42,9 +42,6 @@ namespace fillcan {
         Fillcan(const Fillcan&) = delete;
         Fillcan& operator=(const Fillcan&) = delete;
 
-        void MainLoop(std::function<void(double)> callback);
-        void test(std::function<void(double)> callback);
-
         const std::vector<PhysicalDevice> getSupportedPhysicalDevices() const;
         LogicalDevice* selectDevice(unsigned int deviceIndex = 0);
 
@@ -57,5 +54,6 @@ namespace fillcan {
                                                          std::vector<std::unique_ptr<DescriptorSetLayout>> upDescriptorSetLayouts,
                                                          std::unique_ptr<DescriptorPool> upDescriptorPool /*, TODO: pushConstants*/,
                                                          bool preprocess = true, bool optimize = false);
+        
     };
 } // namespace fillcan

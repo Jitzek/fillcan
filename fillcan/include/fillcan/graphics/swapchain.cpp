@@ -1,4 +1,5 @@
 // vulkan
+#include "fillcan/memory/memory.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
@@ -22,11 +23,11 @@
 namespace fillcan {
     Swapchain::Swapchain(LogicalDevice* pLogicalDevice, Window* pWindow, Queue* pPresentQueue, uint32_t imageCount, VkPresentModeKHR presentMode,
                          Swapchain* pOldSwapchain)
-        : pLogicalDevice(pLogicalDevice), pWindow(pWindow), pQueue(pPresentQueue) {
+        : pLogicalDevice(pLogicalDevice), pWindow(pWindow), pQueue(pPresentQueue), presentMode(presentMode) {
 
         const std::vector<VkSurfaceFormatKHR> surfaceFormats = this->pLogicalDevice->getPhysicalDevice()->getSurfaceFormatsKHR();
         for (VkSurfaceFormatKHR surfaceFormat : surfaceFormats) {
-            if (surfaceFormat.format == VK_FORMAT_R8G8B8A8_SRGB) {
+            if (surfaceFormat.format == VK_FORMAT_R8G8B8A8_SRGB || surfaceFormat.format == VK_FORMAT_B8G8R8A8_SRGB) {
                 this->surfaceFormat = surfaceFormat;
                 break;
             }
@@ -39,7 +40,7 @@ namespace fillcan {
         const std::vector<VkPresentModeKHR> surfacePresentModes = this->pLogicalDevice->getPhysicalDevice()->getSurfacePresentModesKHR();
         if (!std::count(surfacePresentModes.begin(), surfacePresentModes.end(), presentMode)) {
             // Requested present mode is not supported, using fallback present mode
-            presentMode = VK_PRESENT_MODE_FIFO_KHR;
+            this->presentMode = VK_PRESENT_MODE_FIFO_KHR;
         }
 
         VkSwapchainCreateInfoKHR swapchainCreateInfo = {};
@@ -58,7 +59,7 @@ namespace fillcan {
         swapchainCreateInfo.pQueueFamilyIndices = nullptr;
         swapchainCreateInfo.preTransform = surfaceCapabilities.currentTransform;
         swapchainCreateInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-        swapchainCreateInfo.presentMode = presentMode;
+        swapchainCreateInfo.presentMode = this->presentMode;
         swapchainCreateInfo.clipped = VK_TRUE;
         swapchainCreateInfo.oldSwapchain = pOldSwapchain != nullptr ? pOldSwapchain->getSwapchainHandle() : VK_NULL_HANDLE;
 
@@ -81,9 +82,21 @@ namespace fillcan {
         this->upSwapchainImages.resize(swapchainImageCount);
         this->upImageReadySemaphores.resize(swapchainImageCount);
         this->upPresentReadySemaphores.resize(swapchainImageCount);
+        this->upDepthImages.resize(swapchainImageCount);
+        this->upDepthImageMemories.resize(swapchainImageCount);
+
+        ImageDirector imageDirector{};
         for (size_t i = 0; i < this->getImageCount(); i++) {
             this->upImageReadySemaphores.at(i) = std::move(std::make_unique<Semaphore>(this->pLogicalDevice));
             this->upPresentReadySemaphores.at(i) = std::move(std::make_unique<Semaphore>(this->pLogicalDevice));
+            this->upDepthImages.at(i) = std::move(imageDirector.makeDepthImage(this->pLogicalDevice, this->getImageExtent().width,
+                                                                               this->getImageExtent().height, VK_SAMPLE_COUNT_1_BIT));
+            this->upDepthImageMemories.at(i) =
+                std::move(std::make_unique<Memory>(this->pLogicalDevice, this->upDepthImages.at(i).get(), VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+            this->upDepthImages.at(i)->bindMemory(this->upDepthImageMemories.at(i).get());
+            this->upDepthImages.at(i)->createImageView(
+                VK_IMAGE_VIEW_TYPE_2D, this->upDepthImages.at(i)->getFormat(),
+                {.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT, .baseMipLevel = 0, .levelCount = 1, .baseArrayLayer = 0, .layerCount = 1});
         }
     }
 
@@ -139,17 +152,18 @@ namespace fillcan {
                                                                 pFence != nullptr ? pFence->getFenceHandle() : VK_NULL_HANDLE, &swapchainImageIndex);
         // this->upPresentReadySemaphores[this->currentImageIndex] = std::move(std::make_unique<Semaphore>(this->pLogicalDevice));
         if (acquireNextImageResult == VK_ERROR_OUT_OF_DATE_KHR) {
-            return {.outOfDate = true, .index = 0, .pImage = nullptr, .pSemaphoreImageReady = nullptr};
+            return {.outOfDate = true, .index = 0, .pSwapchainImage = nullptr, .pSemaphoreImageReady = nullptr};
         }
         if (acquireNextImageResult != VK_SUCCESS && acquireNextImageResult != VK_SUBOPTIMAL_KHR) {
             throw std::runtime_error("Failed to acquire next swapchain image");
         }
 
-        this->upSwapchainImages[this->currentImageIndex] =
+        this->upSwapchainImages.at(this->currentImageIndex) =
             std::move(std::make_unique<Image>(this->pLogicalDevice, this, this->hSwapchainImages.at(swapchainImageIndex)));
         SwapchainImage returnImage = {.outOfDate = false,
                                       .index = swapchainImageIndex,
-                                      .pImage = this->upSwapchainImages.at(this->currentImageIndex).get(),
+                                      .pSwapchainImage = this->upSwapchainImages.at(this->currentImageIndex).get(),
+                                      .pDepthBufferImageView = this->upDepthImages.at(this->currentImageIndex)->getImageViews().at(0),
                                       .pSemaphoreImageReady = this->upImageReadySemaphores[this->currentImageIndex].get(),
                                       .pSemaphorePresentReady = this->upPresentReadySemaphores.at(this->currentImageIndex).get()};
         this->currentImageIndex = (this->currentImageIndex + 1) % (this->getImageCount());

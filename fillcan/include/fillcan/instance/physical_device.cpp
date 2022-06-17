@@ -7,6 +7,8 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <memory>
+#include <stdexcept>
 
 namespace fillcan {
     PhysicalDevice::PhysicalDevice(VkPhysicalDevice hPhysicalDevice, Window* pWindow, std::vector<const char*> requiredExtensions,
@@ -189,6 +191,24 @@ namespace fillcan {
         std::vector<VkQueueFamilyProperties> queueFamilyProperties(queueFamilyPropertyCount);
         vkGetPhysicalDeviceQueueFamilyProperties(this->hPhysicalDevice, &queueFamilyPropertyCount, queueFamilyProperties.data());
         return queueFamilyProperties;
+    }
+
+    const VkFormatProperties PhysicalDevice::getFormatProperties(VkFormat format) const {
+        VkFormatProperties formatProperties;
+        vkGetPhysicalDeviceFormatProperties(this->hPhysicalDevice, format, &formatProperties);
+        return formatProperties;
+    }
+
+    VkFormat PhysicalDevice::findSupportedFormat(std::vector<VkFormat> formats, VkImageTiling tiling,
+                                                                  VkFormatFeatureFlags features) {
+        for (VkFormat format : formats) {
+            VkFormatProperties formatProperties = this->getFormatProperties(format);
+            if ((tiling == VK_IMAGE_TILING_LINEAR && (formatProperties.linearTilingFeatures & features)) ||
+                (tiling == VK_IMAGE_TILING_OPTIMAL && (formatProperties.optimalTilingFeatures & features))) {
+                return format;
+            }
+        }
+        throw std::runtime_error("Failed to find supported format");
     }
 
     int PhysicalDevice::getGraphicsQueueFamilyIndex() { return this->graphicsQueueFamilyIndex; }

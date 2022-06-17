@@ -65,7 +65,7 @@ namespace fillcan {
 
     const VkDevice LogicalDevice::getLogicalDeviceHandle() const { return this->hLogicalDevice; }
 
-    const PhysicalDevice* LogicalDevice::getPhysicalDevice() const { return this->pPhysicalDevice; }
+    PhysicalDevice* LogicalDevice::getPhysicalDevice() { return this->pPhysicalDevice; }
 
     void LogicalDevice::waitIdle() { vkDeviceWaitIdle(this->hLogicalDevice); }
 

@@ -8,6 +8,7 @@
 #include <fillcan/window.hpp>
 
 // std
+#include <memory>
 #include <vector>
 #include <string>
 
@@ -41,6 +42,8 @@ namespace fillcan {
         const std::vector<VkSurfaceFormatKHR> getSurfaceFormatsKHR() const;
         const std::vector<VkPresentModeKHR> getSurfacePresentModesKHR() const;
         const std::vector<VkQueueFamilyProperties> getQueueFamilyProperties() const;
+        const VkFormatProperties getFormatProperties(VkFormat format) const;
+        VkFormat findSupportedFormat(std::vector<VkFormat> formats, VkImageTiling tiling, VkFormatFeatureFlags features);
 
         int getGraphicsQueueFamilyIndex();
         int getPresentQueueFamilyIndex();

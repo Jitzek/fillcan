@@ -5,7 +5,6 @@ layout(location = 0) in vec3 inColor;
 layout(location = 0) out vec4 outColor;
 
 layout(push_constant) uniform PushConstant {
-    int test;
     mat4 transform;
     vec3 color;
 }

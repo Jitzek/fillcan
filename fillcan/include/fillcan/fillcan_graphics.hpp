@@ -18,11 +18,15 @@ namespace fillcan {
       private:
         std::vector<std::unique_ptr<Swapchain>> upSwapchains = {};
         std::vector<std::unique_ptr<RenderPass>> upRenderPasses = {};
+        double _deltaTime = 0;
+
 
       public:
         FillcanGraphics(const char* pApplicationName, uint32_t applicationVersion, unsigned int windowWidth, unsigned int windowHeight,
                         VkPhysicalDeviceFeatures requiredDeviceFeatures = {});
         ~FillcanGraphics();
+
+        void MainLoop(std::function<void(double)> callback);
 
         unsigned int createSwapchain(uint32_t imageCount = 2, VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR);
         unsigned int recreateSwapchain(unsigned int index = 0);
@@ -35,5 +39,9 @@ namespace fillcan {
         RenderPass* getRenderPass(unsigned int index = 0);
         std::vector<RenderPass*> getRenderPasses();
         void destroyRenderPass(unsigned int index = 0);
+
+        double deltaTime() const { return this->_deltaTime; };
+        float deltaTimef() const { return static_cast<float>(this->_deltaTime); };
+
     };
 } // namespace fillcan

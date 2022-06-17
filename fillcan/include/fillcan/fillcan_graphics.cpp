@@ -8,6 +8,7 @@
 #include <fillcan/fillcan_graphics.hpp>
 #include <iterator>
 #include <vector>
+#include <thread>
 
 namespace fillcan {
     FillcanGraphics::FillcanGraphics(const char* pApplicationName, uint32_t applicationVersion, unsigned int windowWidth, unsigned int windowHeight,
@@ -17,6 +18,25 @@ namespace fillcan {
     FillcanGraphics::~FillcanGraphics() {
         this->upRenderPasses.clear();
         this->upSwapchains.clear();
+    }
+
+    void FillcanGraphics::MainLoop(std::function<void(double)> callback) {
+        std::chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
+        std::chrono::high_resolution_clock::time_point previousTime = currentTime;
+        std::chrono::duration<double> deltaTime = previousTime - currentTime;
+
+        while (!this->upWindow->shouldClose()) {
+            this->upWindow->pollEvents();
+
+            previousTime = currentTime;
+            currentTime = std::chrono::high_resolution_clock::now();
+            deltaTime = currentTime - previousTime;
+            this->_deltaTime = deltaTime.count();
+
+            callback(this->deltaTime());
+            // std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+        this->getCurrentDevice()->waitIdle();
     }
 
     unsigned int FillcanGraphics::createSwapchain(uint32_t imageCount, VkPresentModeKHR presentMode) {

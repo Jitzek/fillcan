@@ -229,8 +229,6 @@ namespace app_compute_pipeline_test {
             }
         }
         /* */
-
-        upFillcan->MainLoop(std::bind(&App::update, this));
     }
 
     void App::update() {}

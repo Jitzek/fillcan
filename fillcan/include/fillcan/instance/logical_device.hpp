@@ -24,7 +24,7 @@ namespace fillcan {
 
         const VkDevice getLogicalDeviceHandle() const;
 
-        const PhysicalDevice* getPhysicalDevice() const;
+        PhysicalDevice* getPhysicalDevice();
 
         void waitIdle();
         

@@ -21,18 +21,20 @@ namespace fillcan {
         BufferDirector bufferDirector{};
         this->upVertexBuffer = bufferDirector.makeVertexBuffer(this->pLogicalDevice, sizeof(vertices[0]) * vertices.size());
 
-        this->upIndexBuffer = bufferDirector.makeIndexBuffer(this->pLogicalDevice, sizeof(indices[0]) * indices.size());
-
         this->upVertexMemory = std::make_unique<Memory>(this->pLogicalDevice, upVertexBuffer.get(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
-        this->upIndexMemory = std::make_unique<Memory>(this->pLogicalDevice, upIndexBuffer.get(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
         this->upVertexBuffer->bindMemory(this->upVertexMemory.get());
-        this->upIndexBuffer->bindMemory(this->upIndexMemory.get());
         void** ppVertexData = this->upVertexBuffer->getMemory()->map();
-        void** ppIndexData = this->upIndexBuffer->getMemory()->map();
         memcpy(*ppVertexData, vertices.data(), upVertexBuffer->getSize());
-        memcpy(*ppIndexData, indices.data(), upIndexBuffer->getSize());
         this->upVertexBuffer->getMemory()->unmap();
-        this->upIndexBuffer->getMemory()->unmap();
+
+        if (indices.size() > 0) {
+            this->upIndexBuffer = bufferDirector.makeIndexBuffer(this->pLogicalDevice, sizeof(indices[0]) * indices.size());
+            this->upIndexMemory = std::make_unique<Memory>(this->pLogicalDevice, upIndexBuffer.get(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+            this->upIndexBuffer->bindMemory(this->upIndexMemory.get());
+            void** ppIndexData = this->upIndexBuffer->getMemory()->map();
+            memcpy(*ppIndexData, indices.data(), upIndexBuffer->getSize());
+            this->upIndexBuffer->getMemory()->unmap();
+        }
     }
 
     Model::~Model() {}
@@ -41,7 +43,9 @@ namespace fillcan {
         VkBuffer hVertexBuffers[] = {upVertexBuffer->getBufferHandle()};
         VkDeviceSize offsets[] = {0};
         vkCmdBindVertexBuffers(pCommandBuffer->getCommandBufferHandle(), 0, 1, hVertexBuffers, offsets);
-        vkCmdBindIndexBuffer(pCommandBuffer->getCommandBufferHandle(), upIndexBuffer->getBufferHandle(), 0, VK_INDEX_TYPE_UINT16);
+        if (this->upIndexBuffer != nullptr) {
+            vkCmdBindIndexBuffer(pCommandBuffer->getCommandBufferHandle(), upIndexBuffer->getBufferHandle(), 0, VK_INDEX_TYPE_UINT16);
+        }
         this->pCommandBuffer = pCommandBuffer;
     }
 

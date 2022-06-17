@@ -187,7 +187,7 @@ namespace simple_triangle {
         // Create imageviews which will be used as attachments
         std::vector<fillcan::ImageView*> pAttachments = {};
         pAttachments.reserve(1);
-        pAttachments.emplace_back(swapchainImage.pImage->createImageView(
+        pAttachments.emplace_back(swapchainImage.pSwapchainImage->createImageView(
             VK_IMAGE_VIEW_TYPE_2D, this->upFillcan->getSwapchain()->getSurfaceFormat().format,
             {.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT, .baseMipLevel = 0, .levelCount = 1, .baseArrayLayer = 0, .layerCount = 1}));
         /* */
