@@ -14,8 +14,9 @@
 
 namespace fillcan {
     ComputePipeline::ComputePipeline(LogicalDevice* pLogicalDevice, CommandBuffer* pCommandBuffer, VkPipelineCreateFlags flags,
-                                     std::vector<PipelineShaderStage> shaderStages, VkPipelineCache pipelineCache, Pipeline* pBasePipeline)
-        : Pipeline(pLogicalDevice, pCommandBuffer, flags, shaderStages) {
+                                     std::vector<PipelineShaderStage> shaderStages, std::vector<PushConstant> pushConstants,
+                                     VkPipelineCache pipelineCache, Pipeline* pBasePipeline)
+        : Pipeline(pLogicalDevice, pCommandBuffer, flags, shaderStages, pushConstants, pipelineCache, pBasePipeline) {
         this->setBindPoint(VK_PIPELINE_BIND_POINT_COMPUTE);
 
         VkComputePipelineCreateInfo computePipelineCreateInfo = {};

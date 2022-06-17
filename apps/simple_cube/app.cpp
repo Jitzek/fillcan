@@ -2,6 +2,7 @@
 #include "app.hpp"
 
 // vulkan
+#include "fillcan/graphics/game_object.hpp"
 #include "fillcan/graphics/model.hpp"
 #include "shaderc/shaderc.h"
 #include "vulkan/vulkan_core.h"
@@ -27,6 +28,7 @@
 #include <exception>
 #include <fillcan/graphics/graphics_pipeline_builder.hpp>
 #include <fillcan/shader/pipeline.hpp>
+#include <fillcan/shader/pipeline_layout.hpp>
 
 // std
 #include <array>
@@ -74,24 +76,6 @@ namespace simple_cube {
             this->upGraphicsPipeline->bindDescriptorSets();
         }
 
-        // fillcan::BufferDirector bufferDirector{};
-        // this->upVertexBuffer = bufferDirector.makeVertexBuffer(this->upFillcan->getCurrentDevice(), sizeof(vertices[0]) * vertices.size());
-
-        // this->upIndexBuffer = bufferDirector.makeIndexBuffer(this->upFillcan->getCurrentDevice(), sizeof(indices[0]) * indices.size());
-
-        // fillcan::Memory vertexBufferMemory =
-        //     fillcan::Memory(this->upFillcan->getCurrentDevice(), upVertexBuffer.get(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
-        // fillcan::Memory indexBufferMemory =
-        //     fillcan::Memory(this->upFillcan->getCurrentDevice(), upIndexBuffer.get(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
-        // upVertexBuffer->bindMemory(&vertexBufferMemory);
-        // upIndexBuffer->bindMemory(&indexBufferMemory);
-        // this->ppVertexData = this->upVertexBuffer->getMemory()->map();
-        // this->ppIndexData = this->upIndexBuffer->getMemory()->map();
-        // memcpy(*ppVertexData, vertices.data(), upVertexBuffer->getSize());
-        // memcpy(*ppIndexData, indices.data(), upIndexBuffer->getSize());
-        // this->upVertexBuffer->getMemory()->unmap();
-        // this->upIndexBuffer->getMemory()->unmap();
-
         for (size_t i = 0; i < this->upFillcan->getSwapchain()->getImageCount(); i++) {
             this->pCommandRecordings.push_back(this->upFillcan->getCurrentDevice()->getGraphicsQueue()->createRecording(1, 0));
             this->pCommandRecordings[i]->createFence(this->upFillcan->getCurrentDevice(), VK_FENCE_CREATE_SIGNALED_BIT);
@@ -99,7 +83,7 @@ namespace simple_cube {
 
         this->upFramebuffers.resize(this->upFillcan->getSwapchain()->getImageCount());
 
-        this->loadModels();
+        this->loadGameObjects();
 
         upFillcan->MainLoop(std::bind(&App::update, this, std::placeholders::_1));
     }
@@ -156,8 +140,6 @@ namespace simple_cube {
         std::vector<VkClearValue> clearValues = {{.color = {.float32 = {0.0f, 0.0f, 0.0f, 1.0f}}}};
         this->upFillcan->getRenderPass()->begin(pCurrentGraphicsCommandBuffer, this->upFramebuffers[this->currentFrameIndex].get(), &clearValues);
 
-        // The following commands should go through the Graphics Pipeline (to unbind: bind another pipeline)
-        upGraphicsPipeline->bindToCommandBuffer(pCurrentGraphicsCommandBuffer);
         VkViewport viewport = {.x = 0.0f,
                                .y = 0.0f,
                                .width = static_cast<float>(this->upFillcan->getSwapchain()->getImageExtent().width),
@@ -168,12 +150,7 @@ namespace simple_cube {
         vkCmdSetViewport(pCurrentGraphicsCommandBuffer->getCommandBufferHandle(), 0, 1, &viewport);
         vkCmdSetScissor(pCurrentGraphicsCommandBuffer->getCommandBufferHandle(), 0, 1, &scissor);
 
-        for (std::unique_ptr<fillcan::Model>& model : this->models) {
-            // Bind model's buffers to the graphics pipeline
-            model->bind(pCurrentGraphicsCommandBuffer);
-            // Draw the model
-            model->drawIndexed();
-        }
+        this->renderGameObjects(pCurrentGraphicsCommandBuffer);
 
         this->upFillcan->getRenderPass()->end();
 
@@ -187,15 +164,89 @@ namespace simple_cube {
         this->currentFrameIndex = (currentFrameIndex + 1) % this->upFillcan->getSwapchain()->getImageCount();
     }
 
-    void App::loadModels() {
+    void App::loadGameObjects() {
+        // const std::vector<fillcan::Model::Vertex> vertices = {
+            // {{0.0f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}}, {{0.5f, 0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}}, {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}}};
         const std::vector<fillcan::Model::Vertex> vertices = {
-            {{0.0f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}}, {{0.5f, 0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}}, {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}}};
+            // left face (white)
+            {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
+            {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
+            {{-.5f, -.5f, .5f}, {.9f, .9f, .9f}},
+            {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
+            {{-.5f, .5f, -.5f}, {.9f, .9f, .9f}},
+            {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
+
+            // right face (yellow)
+            {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
+            {{.5f, .5f, .5f}, {.8f, .8f, .1f}},
+            {{.5f, -.5f, .5f}, {.8f, .8f, .1f}},
+            {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
+            {{.5f, .5f, -.5f}, {.8f, .8f, .1f}},
+            {{.5f, .5f, .5f}, {.8f, .8f, .1f}},
+
+            // top face (orange, remember y axis points down)
+            {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+            {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+            {{-.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+            {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+            {{.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+            {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+
+            // bottom face (red)
+            {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+            {{.5f, .5f, .5f}, {.8f, .1f, .1f}},
+            {{-.5f, .5f, .5f}, {.8f, .1f, .1f}},
+            {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+            {{.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+            {{.5f, .5f, .5f}, {.8f, .1f, .1f}},
+
+            // nose face (blue)
+            {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+            {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+            {{-.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+            {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+            {{.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+            {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+
+            // tail face (green)
+            {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+            {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+            {{-.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+            {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+            {{.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+            {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+        };
 
         const std::vector<uint16_t> indices = {0, 1, 2};
 
-        this->models.emplace_back(std::move(std::make_unique<fillcan::Model>(this->upFillcan->getCurrentDevice(), vertices, indices)));
+        std::shared_ptr<fillcan::Model> spModel = std::make_shared<fillcan::Model>(this->upFillcan->getCurrentDevice(), vertices, indices);
 
-        std::cout << models.size() << "\n";
+        fillcan::GameObject triangleGameObject = fillcan::GameObject::createGameObject();
+        triangleGameObject.model = spModel;
+        triangleGameObject.color = {1.0f, 0.0f, 0.0f};
+        // triangleGameObject.transform.translation.x = .2f;
+
+        gameObjects.push_back(std::move(triangleGameObject));
+        spModels.emplace_back(std::move(spModel));
+    }
+
+    void App::renderGameObjects(fillcan::CommandBuffer* pCommandBuffer) {
+        this->upGraphicsPipeline->bindToCommandBuffer(pCommandBuffer);
+        for (fillcan::GameObject& gameObject : this->gameObjects) {
+            gameObject.transform.rotation.y = glm::mod(gameObject.transform.rotation.y + 0.01f, glm::two_pi<float>());
+
+            fillcan::PushConstant& simplePushConstant = this->upGraphicsPipeline->getPushConstant("SimplePushConstant");
+            SimplePushConstantData simplePushConstantData{.transform = gameObject.transform.mat4(), .color = gameObject.color};
+            simplePushConstant.data = simplePushConstantData;
+            this->upGraphicsPipeline->pushConstant(simplePushConstant);
+
+            gameObject.model->bind(pCommandBuffer);
+            gameObject.model->draw();
+        }
+        // for (std::shared_ptr<fillcan::Model>& spModel : this->spModels) {
+        //     spModel->bind(pCommandBuffer);
+        //     spModel->drawIndexed();
+        // }
     }
 
     void App::createRenderPass() {
@@ -230,6 +281,11 @@ namespace simple_cube {
         graphicsPipelineBuilder.setLogicalDevice(this->upFillcan->getCurrentDevice());
         graphicsPipelineBuilder.addShaderStage({.stage = VK_SHADER_STAGE_VERTEX_BIT, .pShaderModule = pVertexShaderModule, .name = "main"});
         graphicsPipelineBuilder.addShaderStage({.stage = VK_SHADER_STAGE_FRAGMENT_BIT, .pShaderModule = pFragmentShaderModule, .name = "main"});
+
+        graphicsPipelineBuilder.addPushConstant(
+            "SimplePushConstant",
+            {.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, .offset = 0, .size = sizeof(SimplePushConstantData)});
+
         graphicsPipelineBuilder.setInputAssemblyState({VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, VK_FALSE});
 
         // std::vector<VkVertexInputBindingDescription> vertexInputBindingDescriptions = {};

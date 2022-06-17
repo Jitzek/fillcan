@@ -16,7 +16,8 @@
 
 namespace fillcan {
     Pipeline::Pipeline(LogicalDevice* pLogicalDevice, CommandBuffer* pCommandBuffer, VkPipelineCreateFlags flags,
-                       std::vector<PipelineShaderStage> shaderStages, VkPipelineCache pipelineCache, Pipeline* pBasePipeline)
+                       std::vector<PipelineShaderStage> shaderStages, std::vector<PushConstant> pushConstants, VkPipelineCache pipelineCache,
+                       Pipeline* pBasePipeline)
         : pLogicalDevice(pLogicalDevice), pCommandBuffer(pCommandBuffer), flags(flags), shaderStages(shaderStages) {
         for (PipelineShaderStage shaderStage : this->shaderStages) {
             std::vector<DescriptorSetLayout*> shaderStageDescriptorSetLayouts = shaderStage.pShaderModule->getDescriptorSetLayouts();
@@ -28,7 +29,7 @@ namespace fillcan {
                 this->pDescriptorSets.insert(this->pDescriptorSets.begin(), shaderStageDescriptorSets.begin(), shaderStageDescriptorSets.end());
             }
         }
-        this->layout = std::make_unique<PipelineLayout>(this->pLogicalDevice, this->pDescriptorSetLayouts);
+        this->layout = std::make_unique<PipelineLayout>(this->pLogicalDevice, this->pDescriptorSetLayouts, pushConstants);
     }
     Pipeline::~Pipeline() {
         if (this->pLogicalDevice == nullptr) {

@@ -22,13 +22,14 @@
 namespace fillcan {
     GraphicsPipeline::GraphicsPipeline(
         LogicalDevice* pLogicalDevice, CommandBuffer* pCommandBuffer, VkPipelineCreateFlags flags, std::vector<PipelineShaderStage> shaderStages,
-        VkPipelineCache pipelineCache, Pipeline* pBasePipeline, VkPipelineInputAssemblyStateCreateInfo* pInputAssemblyState,
-        VkPipelineVertexInputStateCreateInfo* pVertexInputState, VkPipelineTessellationStateCreateInfo* pTessellationState,
-        std::vector<VkPipelineViewportStateCreateInfo>& viewportState, VkPipelineRasterizationStateCreateInfo* pRasterizationState,
-        VkPipelineMultisampleStateCreateInfo* pMultisampleState, VkPipelineDepthStencilStateCreateInfo* pDepthStencilState,
-        VkPipelineColorBlendStateCreateInfo* pColorBlendState, VkPipelineDynamicStateCreateInfo* pDynamicState, RenderPass* pRenderPass,
-        unsigned int subpass)
-        : Pipeline(pLogicalDevice, pCommandBuffer, flags, shaderStages), pRenderPass(pRenderPass), subpass(subpass) {
+        std::vector<PushConstant> pushConstants, VkPipelineCache pipelineCache, Pipeline* pBasePipeline,
+        VkPipelineInputAssemblyStateCreateInfo* pInputAssemblyState, VkPipelineVertexInputStateCreateInfo* pVertexInputState,
+        VkPipelineTessellationStateCreateInfo* pTessellationState, std::vector<VkPipelineViewportStateCreateInfo>& viewportState,
+        VkPipelineRasterizationStateCreateInfo* pRasterizationState, VkPipelineMultisampleStateCreateInfo* pMultisampleState,
+        VkPipelineDepthStencilStateCreateInfo* pDepthStencilState, VkPipelineColorBlendStateCreateInfo* pColorBlendState,
+        VkPipelineDynamicStateCreateInfo* pDynamicState, RenderPass* pRenderPass, unsigned int subpass)
+        : Pipeline(pLogicalDevice, pCommandBuffer, flags, shaderStages, pushConstants, pipelineCache, pBasePipeline), pRenderPass(pRenderPass),
+          subpass(subpass) {
         this->setBindPoint(VK_PIPELINE_BIND_POINT_GRAPHICS);
         VkGraphicsPipelineCreateInfo graphicsPipelineCreateInfo = {};
         graphicsPipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -128,5 +129,9 @@ namespace fillcan {
         }
         vkCmdDrawIndexed(this->pCommandBuffer->getCommandBufferHandle(), indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
     }
+
+    void GraphicsPipeline::pushConstant(PushConstant pushConstant) { this->layout->pushConstant(this->pCommandBuffer, pushConstant); }
+
+    PushConstant& GraphicsPipeline::getPushConstant(std::string name) { return this->layout->getPushConstant(name); }
 
 } // namespace fillcan

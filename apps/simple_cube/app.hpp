@@ -3,8 +3,11 @@
 // fillcan
 #include "fillcan/commands/command_recording.hpp"
 #include "fillcan/graphics/framebuffer.hpp"
+#include "fillcan/graphics/game_object.hpp"
 #include "fillcan/graphics/render_pass.hpp"
+#include "fillcan/shader/pipeline_layout.hpp"
 #include "fillcan/shader/shader_module.hpp"
+#include "glm/detail/type_mat.hpp"
 #include <fillcan/commands/command_buffer.hpp>
 #include <fillcan/fillcan_graphics.hpp>
 
@@ -15,7 +18,6 @@
 #include <fillcan/graphics/model.hpp>
 
 #include <fillcan/memory/fence.hpp>
-
 
 // std
 #include <chrono>
@@ -29,10 +31,11 @@
 namespace simple_cube {
     class DescriptorSetLayout;
 
-    struct Vertex {
-        glm::vec3 position;
-        glm::vec3 color;
+    struct SimplePushConstantData : fillcan::PushConstantData {
+        glm::mat4 transform{1.f};
+        alignas(16) glm::vec3 color;
     };
+
     class App {
       private:
         std::unique_ptr<fillcan::FillcanGraphics> upFillcan;
@@ -48,24 +51,19 @@ namespace simple_cube {
 
         uint32_t currentFrameIndex = 0;
 
-        std::vector<Vertex> vertices = {
-            {{0.0f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}}, {{0.5f, 0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}}, {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}}};
-
-        const std::vector<uint16_t> indices = {0, 1, 2};
-
-        void** ppVertexData = nullptr;
-        void** ppIndexData = nullptr;
-
         std::string APP_DIR = "./apps/simple_cube";
 
-        std::vector<std::unique_ptr<fillcan::Model>> models = {};
+        std::vector<fillcan::GameObject> gameObjects = {};
+        std::vector<std::shared_ptr<fillcan::Model>> spModels = {};
+
+        void loadGameObjects();
+        void renderGameObjects(fillcan::CommandBuffer* pCommandBuffer);
 
       public:
         App();
         ~App();
         void run();
         void update(double deltaTime);
-        void loadModels();
 
         void createRenderPass();
         std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> createDescriptorSetLayouts();
@@ -75,4 +73,4 @@ namespace simple_cube {
 
         void createGraphicsPipeline(fillcan::ShaderModule* pVertexShaderModule, fillcan::ShaderModule* pFragmentShaderModule);
     };
-} // namespace app_graphics_pipeline_test
+} // namespace simple_cube

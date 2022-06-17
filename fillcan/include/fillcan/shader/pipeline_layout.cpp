@@ -1,4 +1,5 @@
 // vulkan
+#include "fillcan/commands/command_buffer.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
@@ -9,11 +10,13 @@
 // std
 #include <algorithm>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 namespace fillcan {
-    PipelineLayout::PipelineLayout(LogicalDevice* pLogicalDevice, std::vector<DescriptorSetLayout*>& pDescriptorSetLayouts)
-        : pLogicalDevice(pLogicalDevice), pDescriptorSetLayouts(pDescriptorSetLayouts) {
+    PipelineLayout::PipelineLayout(LogicalDevice* pLogicalDevice, std::vector<DescriptorSetLayout*>& pDescriptorSetLayouts,
+                                   std::vector<PushConstant> pushConstants)
+        : pLogicalDevice(pLogicalDevice), pDescriptorSetLayouts(pDescriptorSetLayouts), pushConstants(pushConstants) {
         VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo = {};
         pipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
         pipelineLayoutCreateInfo.pNext = nullptr;
@@ -25,9 +28,13 @@ namespace fillcan {
                        [](DescriptorSetLayout* pDescriptorSetLayout) { return pDescriptorSetLayout->getDescriptorSetLayoutHandle(); });
         pipelineLayoutCreateInfo.setLayoutCount = static_cast<uint32_t>(hDescriptorSetLayouts.size());
         pipelineLayoutCreateInfo.pSetLayouts = hDescriptorSetLayouts.data();
-        // TODO: Push Constants
-        pipelineLayoutCreateInfo.pushConstantRangeCount = 0;
-        pipelineLayoutCreateInfo.pPushConstantRanges = nullptr;
+
+        std::vector<VkPushConstantRange> pushConstantRanges = {};
+        pushConstantRanges.reserve(this->pushConstants.size());
+        std::transform(this->pushConstants.begin(), this->pushConstants.end(), std::back_inserter(pushConstantRanges),
+                       [](const PushConstant& pushConstant) { return pushConstant.range; });
+        pipelineLayoutCreateInfo.pushConstantRangeCount = static_cast<uint32_t>(pushConstantRanges.size());
+        pipelineLayoutCreateInfo.pPushConstantRanges = pushConstantRanges.data();
 
         if (vkCreatePipelineLayout(this->pLogicalDevice->getLogicalDeviceHandle(), &pipelineLayoutCreateInfo, nullptr, &this->hPipelineLayout) !=
             VK_SUCCESS) {
@@ -39,4 +46,17 @@ namespace fillcan {
     VkPipelineLayout PipelineLayout::getPipelineLayoutHandle() { return this->hPipelineLayout; }
 
     std::vector<DescriptorSetLayout*> PipelineLayout::getDescriptorSetLayouts() { return this->pDescriptorSetLayouts; }
+
+    std::vector<PushConstant>& PipelineLayout::getPushConstants() { return this->pushConstants; }
+
+    PushConstant& PipelineLayout::getPushConstant(std::string name) {
+        return *std::find_if(this->pushConstants.begin(), this->pushConstants.end(),
+                             [name](PushConstant& pushConstant) -> bool { return pushConstant.name == name; });
+    }
+
+    void PipelineLayout::pushConstant(CommandBuffer* pCommandBuffer, PushConstant& pushConstant) {
+        vkCmdPushConstants(pCommandBuffer->getCommandBufferHandle(), this->hPipelineLayout, pushConstant.range.stageFlags, pushConstant.range.offset,
+                           pushConstant.range.size, &pushConstant.data);
+    }
+
 } // namespace fillcan

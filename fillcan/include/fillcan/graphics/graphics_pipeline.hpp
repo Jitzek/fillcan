@@ -2,6 +2,7 @@
 
 // fillcan
 #include "fillcan/instance/logical_device.hpp"
+#include "fillcan/shader/pipeline_layout.hpp"
 #include "vulkan/vulkan_core.h"
 #include <fillcan/memory/buffer.hpp>
 #include <fillcan/shader/pipeline.hpp>
@@ -21,12 +22,13 @@ namespace fillcan {
 
       public:
         GraphicsPipeline(LogicalDevice* pLogicalDevice, CommandBuffer* pCommandBuffer, VkPipelineCreateFlags flags,
-                         std::vector<PipelineShaderStage> shaderStages, VkPipelineCache pipelineCache, Pipeline* pBasePipeline,
-                         VkPipelineInputAssemblyStateCreateInfo* pInputAssemblyState, VkPipelineVertexInputStateCreateInfo* pVertexInputState,
-                         VkPipelineTessellationStateCreateInfo* pTessellationState, std::vector<VkPipelineViewportStateCreateInfo>& viewportState,
-                         VkPipelineRasterizationStateCreateInfo* pRasterizationState, VkPipelineMultisampleStateCreateInfo* pMultisampleState,
-                         VkPipelineDepthStencilStateCreateInfo* pDepthStencilState, VkPipelineColorBlendStateCreateInfo* pColorBlendState,
-                         VkPipelineDynamicStateCreateInfo* pDynamicState, RenderPass* pRenderPass, unsigned int subpass);
+                         std::vector<PipelineShaderStage> shaderStages, std::vector<PushConstant> pushConstants, VkPipelineCache pipelineCache,
+                         Pipeline* pBasePipeline, VkPipelineInputAssemblyStateCreateInfo* pInputAssemblyState,
+                         VkPipelineVertexInputStateCreateInfo* pVertexInputState, VkPipelineTessellationStateCreateInfo* pTessellationState,
+                         std::vector<VkPipelineViewportStateCreateInfo>& viewportState, VkPipelineRasterizationStateCreateInfo* pRasterizationState,
+                         VkPipelineMultisampleStateCreateInfo* pMultisampleState, VkPipelineDepthStencilStateCreateInfo* pDepthStencilState,
+                         VkPipelineColorBlendStateCreateInfo* pColorBlendState, VkPipelineDynamicStateCreateInfo* pDynamicState,
+                         RenderPass* pRenderPass, unsigned int subpass);
         ~GraphicsPipeline();
 
         RenderPass* getRenderPass();
@@ -40,5 +42,8 @@ namespace fillcan {
 
         [[deprecated("Use models instead")]] void drawIndexed(unsigned int indexCount, unsigned int instanceCount = 1, unsigned int firstIndex = 0,
                                                               unsigned int vertexOffset = 0, unsigned int firstInstance = 0);
+
+        void pushConstant(PushConstant pushConstant);
+        PushConstant&  getPushConstant(std::string name);
     };
 } // namespace fillcan
