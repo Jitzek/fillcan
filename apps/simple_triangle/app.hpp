@@ -24,7 +24,7 @@
 #include <glm/detail/type_vec.hpp>
 #include <glm/glm.hpp>
 
-namespace app_graphics_pipeline_test {
+namespace simple_triangle {
     class DescriptorSetLayout;
 
     struct Vertex {
@@ -54,7 +54,7 @@ namespace app_graphics_pipeline_test {
         void** ppVertexData = nullptr;
         void** ppIndexData = nullptr;
 
-        std::string APP_DIR = "./apps/graphics_pipeline_test";
+        std::string APP_DIR = "./apps/simple_triangle";
 
       public:
         App();

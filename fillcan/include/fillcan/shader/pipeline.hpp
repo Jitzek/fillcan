@@ -39,8 +39,8 @@ namespace fillcan {
         void setBindPoint(VkPipelineBindPoint pipelineBindPoint);
 
       public:
-        Pipeline(LogicalDevice* pLogicalDevice, CommandBuffer* pCommandBuffer, VkPipelineCreateFlags flags, std::vector<PipelineShaderStage> shaderStages,
-                 VkPipelineCache pipelineCache = VK_NULL_HANDLE, Pipeline* pBasePipeline = nullptr);
+        Pipeline(LogicalDevice* pLogicalDevice, CommandBuffer* pCommandBuffer, VkPipelineCreateFlags flags,
+                 std::vector<PipelineShaderStage> shaderStages, VkPipelineCache pipelineCache = VK_NULL_HANDLE, Pipeline* pBasePipeline = nullptr);
         virtual ~Pipeline();
 
         VkPipeline getPipelineHandle();

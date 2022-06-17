@@ -76,6 +76,10 @@ namespace fillcan {
     void** Memory::getData() { return &this->pData; }
 
     void Memory::unmap() {
+        if (this->pLogicalDevice == nullptr) {
+            std::cerr << "Failed to unmap Memory: Logical Device was NULL"
+                      << "\n";
+        }
         vkUnmapMemory(this->pLogicalDevice->getLogicalDeviceHandle(), this->hMemory);
         this->pData = nullptr;
     }

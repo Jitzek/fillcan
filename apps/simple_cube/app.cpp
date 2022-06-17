@@ -2,6 +2,7 @@
 #include "app.hpp"
 
 // vulkan
+#include "fillcan/graphics/model.hpp"
 #include "shaderc/shaderc.h"
 #include "vulkan/vulkan_core.h"
 
@@ -45,102 +46,51 @@
 #include <glm/detail/type_vec.hpp>
 #include <glm/glm.hpp>
 
-namespace app_graphics_pipeline_test {
+namespace simple_cube {
     App::App() {}
     App::~App() {}
 
     void App::run() {
-        std::string name = "Graphics Pipeline Test Application";
+        std::string name = "Cube Application";
         std::cout << "Running App \"" << name << "\"\n";
 
-        /*
-            Instance Fillcan
-        */
         VkPhysicalDeviceFeatures requiredDeviceFeatures = {};
         requiredDeviceFeatures.samplerAnisotropy = true;
         this->upFillcan = std::make_unique<fillcan::FillcanGraphics>(name.c_str(), 1.0, 800, 600, requiredDeviceFeatures);
-
-        // Select any device
         upFillcan->selectDevice(0);
-
         std::cout << "Using Device: " << upFillcan->getCurrentDevice()->getPhysicalDevice()->getProperties().deviceName << "\n";
-        /* */
 
-        /*
-            Create a swapchain
-        */
         this->upFillcan->createSwapchain(2, VK_PRESENT_MODE_IMMEDIATE_KHR);
-        /* */
 
-        /*
-            Create Render Pass
-        */
         this->createRenderPass();
-        /* */
 
-        /*
-            Create shader modules
-        */
-        std::unique_ptr<fillcan::ShaderModule> upVertexShaderModule = this->upFillcan->createShaderModule(
-            this->APP_DIR + "/shaders", "simple.vert", shaderc_vertex_shader, {}, nullptr, true, false);
-        std::unique_ptr<fillcan::ShaderModule> upFragmentShaderModule = this->upFillcan->createShaderModule(
-            this->APP_DIR + "/shaders", "simple.frag", shaderc_fragment_shader, {}, nullptr, true, false);
-        /* */
+        std::unique_ptr<fillcan::ShaderModule> upVertexShaderModule =
+            this->upFillcan->createShaderModule(this->APP_DIR + "/shaders", "simple.vert", shaderc_vertex_shader, {}, nullptr, true, false);
+        std::unique_ptr<fillcan::ShaderModule> upFragmentShaderModule =
+            this->upFillcan->createShaderModule(this->APP_DIR + "/shaders", "simple.frag", shaderc_fragment_shader, {}, nullptr, true, false);
 
-        /*
-            Create Graphics Pipeline
-        */
         this->createGraphicsPipeline(upVertexShaderModule.get(), upFragmentShaderModule.get());
         if (this->upGraphicsPipeline->getDescriptorSets().size() > 0) {
             this->upGraphicsPipeline->bindDescriptorSets();
         }
-        /* */
 
-        /*
-            Create vertexbuffer
-        */
-        fillcan::BufferDirector bufferDirector{};
-        this->upVertexBuffer = bufferDirector.makeVertexBuffer(this->upFillcan->getCurrentDevice(), sizeof(vertices[0]) * vertices.size());
-        /* */
+        // fillcan::BufferDirector bufferDirector{};
+        // this->upVertexBuffer = bufferDirector.makeVertexBuffer(this->upFillcan->getCurrentDevice(), sizeof(vertices[0]) * vertices.size());
 
-        /*
-            Create indexbuffer
-        */
-        this->upIndexBuffer = bufferDirector.makeIndexBuffer(this->upFillcan->getCurrentDevice(), sizeof(indices[0]) * indices.size());
-        /* */
+        // this->upIndexBuffer = bufferDirector.makeIndexBuffer(this->upFillcan->getCurrentDevice(), sizeof(indices[0]) * indices.size());
 
-        /*
-            Bind memory to resources
-        */
-        fillcan::Memory vertexBufferMemory =
-            fillcan::Memory(this->upFillcan->getCurrentDevice(), upVertexBuffer.get(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
-        fillcan::Memory indexBufferMemory =
-            fillcan::Memory(this->upFillcan->getCurrentDevice(), upIndexBuffer.get(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
-
-        upVertexBuffer->bindMemory(&vertexBufferMemory);
-        upIndexBuffer->bindMemory(&indexBufferMemory);
-        /* */
-
-        /*
-            Map memory
-        */
-        this->ppVertexData = this->upVertexBuffer->getMemory()->map();
-        this->ppIndexData = this->upIndexBuffer->getMemory()->map();
-        /* */
-
-        /*
-            Fill buffers with data
-        */
-        memcpy(*ppVertexData, vertices.data(), upVertexBuffer->getSize());
-        memcpy(*ppIndexData, indices.data(), upIndexBuffer->getSize());
-        /* */
-
-        /*
-            Unmap memory
-        */
-        this->upVertexBuffer->getMemory()->unmap();
-        this->upIndexBuffer->getMemory()->unmap();
-        /* */
+        // fillcan::Memory vertexBufferMemory =
+        //     fillcan::Memory(this->upFillcan->getCurrentDevice(), upVertexBuffer.get(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+        // fillcan::Memory indexBufferMemory =
+        //     fillcan::Memory(this->upFillcan->getCurrentDevice(), upIndexBuffer.get(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+        // upVertexBuffer->bindMemory(&vertexBufferMemory);
+        // upIndexBuffer->bindMemory(&indexBufferMemory);
+        // this->ppVertexData = this->upVertexBuffer->getMemory()->map();
+        // this->ppIndexData = this->upIndexBuffer->getMemory()->map();
+        // memcpy(*ppVertexData, vertices.data(), upVertexBuffer->getSize());
+        // memcpy(*ppIndexData, indices.data(), upIndexBuffer->getSize());
+        // this->upVertexBuffer->getMemory()->unmap();
+        // this->upIndexBuffer->getMemory()->unmap();
 
         for (size_t i = 0; i < this->upFillcan->getSwapchain()->getImageCount(); i++) {
             this->pCommandRecordings.push_back(this->upFillcan->getCurrentDevice()->getGraphicsQueue()->createRecording(1, 0));
@@ -148,6 +98,8 @@ namespace app_graphics_pipeline_test {
         }
 
         this->upFramebuffers.resize(this->upFillcan->getSwapchain()->getImageCount());
+
+        this->loadModels();
 
         upFillcan->MainLoop(std::bind(&App::update, this, std::placeholders::_1));
     }
@@ -204,6 +156,7 @@ namespace app_graphics_pipeline_test {
         std::vector<VkClearValue> clearValues = {{.color = {.float32 = {0.0f, 0.0f, 0.0f, 1.0f}}}};
         this->upFillcan->getRenderPass()->begin(pCurrentGraphicsCommandBuffer, this->upFramebuffers[this->currentFrameIndex].get(), &clearValues);
 
+        // The following commands should go through the Graphics Pipeline (to unbind: bind another pipeline)
         upGraphicsPipeline->bindToCommandBuffer(pCurrentGraphicsCommandBuffer);
         VkViewport viewport = {.x = 0.0f,
                                .y = 0.0f,
@@ -215,20 +168,12 @@ namespace app_graphics_pipeline_test {
         vkCmdSetViewport(pCurrentGraphicsCommandBuffer->getCommandBufferHandle(), 0, 1, &viewport);
         vkCmdSetScissor(pCurrentGraphicsCommandBuffer->getCommandBufferHandle(), 0, 1, &scissor);
 
-        /*
-            Bind the vertex buffer
-        */
-        std::vector<fillcan::Buffer*> pVertexBuffers = {upVertexBuffer.get()};
-        this->upGraphicsPipeline->bindVertexBuffers(pVertexBuffers);
-        /* */
-        /*
-            Bind the index buffer
-        */
-        this->upGraphicsPipeline->bindIndexBuffer(upIndexBuffer.get(), VK_INDEX_TYPE_UINT16);
-        /* */
-
-        // upGraphicsPipeline->draw(this->vertices.size());
-        upGraphicsPipeline->drawIndexed(this->indices.size());
+        for (std::unique_ptr<fillcan::Model>& model : this->models) {
+            // Bind model's buffers to the graphics pipeline
+            model->bind(pCurrentGraphicsCommandBuffer);
+            // Draw the model
+            model->drawIndexed();
+        }
 
         this->upFillcan->getRenderPass()->end();
 
@@ -240,6 +185,17 @@ namespace app_graphics_pipeline_test {
         }
 
         this->currentFrameIndex = (currentFrameIndex + 1) % this->upFillcan->getSwapchain()->getImageCount();
+    }
+
+    void App::loadModels() {
+        const std::vector<fillcan::Model::Vertex> vertices = {
+            {{0.0f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}}, {{0.5f, 0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}}, {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}}};
+
+        const std::vector<uint16_t> indices = {0, 1, 2};
+
+        this->models.emplace_back(std::move(std::make_unique<fillcan::Model>(this->upFillcan->getCurrentDevice(), vertices, indices)));
+
+        std::cout << models.size() << "\n";
     }
 
     void App::createRenderPass() {
@@ -276,17 +232,18 @@ namespace app_graphics_pipeline_test {
         graphicsPipelineBuilder.addShaderStage({.stage = VK_SHADER_STAGE_FRAGMENT_BIT, .pShaderModule = pFragmentShaderModule, .name = "main"});
         graphicsPipelineBuilder.setInputAssemblyState({VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, VK_FALSE});
 
-        std::vector<VkVertexInputBindingDescription> vertexInputBindingDescriptions = {};
-        vertexInputBindingDescriptions.reserve(1);
-        vertexInputBindingDescriptions.push_back({.binding = 0, .stride = sizeof(Vertex), .inputRate = VK_VERTEX_INPUT_RATE_VERTEX});
+        // std::vector<VkVertexInputBindingDescription> vertexInputBindingDescriptions = {};
+        // vertexInputBindingDescriptions.reserve(1);
+        // vertexInputBindingDescriptions.push_back({.binding = 0, .stride = sizeof(Vertex), .inputRate = VK_VERTEX_INPUT_RATE_VERTEX});
 
-        std::vector<VkVertexInputAttributeDescription> vertexInputAttributeDescriptions = {};
-        vertexInputAttributeDescriptions.reserve(2);
-        vertexInputAttributeDescriptions.push_back(
-            {.location = 0, .binding = 0, .format = VK_FORMAT_R32G32B32_SFLOAT, .offset = offsetof(Vertex, position)});
-        vertexInputAttributeDescriptions.push_back(
-            {.location = 1, .binding = 0, .format = VK_FORMAT_R32G32B32_SFLOAT, .offset = offsetof(Vertex, color)});
-        graphicsPipelineBuilder.setVertexInputState({vertexInputBindingDescriptions, vertexInputAttributeDescriptions});
+        // std::vector<VkVertexInputAttributeDescription> vertexInputAttributeDescriptions = {};
+        // vertexInputAttributeDescriptions.reserve(2);
+        // vertexInputAttributeDescriptions.push_back(
+        //     {.location = 0, .binding = 0, .format = VK_FORMAT_R32G32B32_SFLOAT, .offset = offsetof(Vertex, position)});
+        // vertexInputAttributeDescriptions.push_back(
+        //     {.location = 1, .binding = 0, .format = VK_FORMAT_R32G32B32_SFLOAT, .offset = offsetof(Vertex, color)});
+        graphicsPipelineBuilder.setVertexInputState(
+            {fillcan::Model::Vertex::getBindingDescriptions(), fillcan::Model::Vertex::getAttributeDescriptions()});
 
         std::vector<VkViewport> viewports = {};
         viewports.resize(1);
@@ -332,4 +289,4 @@ namespace app_graphics_pipeline_test {
 
         this->upGraphicsPipeline = graphicsPipelineBuilder.getResult();
     }
-} // namespace app_graphics_pipeline_test
+} // namespace simple_cube
