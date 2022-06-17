@@ -4,6 +4,7 @@
 #include "vulkan/vulkan_core.h"
 
 // std
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -17,9 +18,9 @@ namespace fillcan {
     struct PushConstant {
         std::string name = "undefined";
         VkPushConstantRange range;
-        PushConstantData data;
+        std::unique_ptr<PushConstantData> upData = nullptr;
     };
-    
+
     class PipelineLayout {
       private:
         VkPipelineLayout hPipelineLayout;
@@ -36,10 +37,10 @@ namespace fillcan {
 
         std::vector<DescriptorSetLayout*> getDescriptorSetLayouts();
 
-      std::vector<PushConstant>& getPushConstants();
+        std::vector<PushConstant>& getPushConstants();
 
-      PushConstant& getPushConstant(std::string name);
+        PushConstant& getPushConstant(std::string name);
 
-      void pushConstant(CommandBuffer* pCommandBuffer, PushConstant& pushConstant);
+        void pushConstant(CommandBuffer* pCommandBuffer, PushConstant& pushConstant);
     };
 } // namespace fillcan

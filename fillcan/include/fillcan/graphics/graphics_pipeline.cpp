@@ -28,7 +28,7 @@ namespace fillcan {
         VkPipelineRasterizationStateCreateInfo* pRasterizationState, VkPipelineMultisampleStateCreateInfo* pMultisampleState,
         VkPipelineDepthStencilStateCreateInfo* pDepthStencilState, VkPipelineColorBlendStateCreateInfo* pColorBlendState,
         VkPipelineDynamicStateCreateInfo* pDynamicState, RenderPass* pRenderPass, unsigned int subpass)
-        : Pipeline(pLogicalDevice, pCommandBuffer, flags, shaderStages, pushConstants, pipelineCache, pBasePipeline), pRenderPass(pRenderPass),
+        : Pipeline(pLogicalDevice, pCommandBuffer, flags, shaderStages, std::move(pushConstants), pipelineCache, pBasePipeline), pRenderPass(pRenderPass),
           subpass(subpass) {
         this->setBindPoint(VK_PIPELINE_BIND_POINT_GRAPHICS);
         VkGraphicsPipelineCreateInfo graphicsPipelineCreateInfo = {};

@@ -29,7 +29,7 @@ namespace fillcan {
                 this->pDescriptorSets.insert(this->pDescriptorSets.begin(), shaderStageDescriptorSets.begin(), shaderStageDescriptorSets.end());
             }
         }
-        this->layout = std::make_unique<PipelineLayout>(this->pLogicalDevice, this->pDescriptorSetLayouts, pushConstants);
+        this->layout = std::make_unique<PipelineLayout>(this->pLogicalDevice, this->pDescriptorSetLayouts, std::move(pushConstants));
     }
     Pipeline::~Pipeline() {
         if (this->pLogicalDevice == nullptr) {

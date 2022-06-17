@@ -311,7 +311,7 @@ namespace fillcan {
         }
 
         return std::move(std::make_unique<GraphicsPipeline>(
-            this->pLogicalDevice, this->pCommandBuffer, this->flags, this->shaderStages, this->pushConstants, this->pipelineCache,
+            this->pLogicalDevice, this->pCommandBuffer, this->flags, this->shaderStages, std::move(this->pushConstants), this->pipelineCache,
             this->pBasePipeline, &inputAssemblyStateCreateInfo, &vertexInputStateCreateInfo, &tessellationStateCreateInfo, viewPortStateCreateInfos,
             &rasterizationStateCreateInfo, &multisampleStateCreateInfo, &depthStencilStateCreateInfo, &colorBlendStateCreateInfo,
             &dynamicStateCreateInfo, this->pRenderPass, this->subpass));

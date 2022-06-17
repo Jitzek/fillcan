@@ -166,7 +166,7 @@ namespace simple_cube {
 
     void App::loadGameObjects() {
         // const std::vector<fillcan::Model::Vertex> vertices = {
-            // {{0.0f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}}, {{0.5f, 0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}}, {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}}};
+        // {{0.0f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}}, {{0.5f, 0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}}, {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}}};
         const std::vector<fillcan::Model::Vertex> vertices = {
             // left face (white)
             {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
@@ -233,12 +233,14 @@ namespace simple_cube {
     void App::renderGameObjects(fillcan::CommandBuffer* pCommandBuffer) {
         this->upGraphicsPipeline->bindToCommandBuffer(pCommandBuffer);
         for (fillcan::GameObject& gameObject : this->gameObjects) {
-            gameObject.transform.rotation.y = glm::mod(gameObject.transform.rotation.y + 0.01f, glm::two_pi<float>());
+            // gameObject.transform.rotation.y = glm::mod(gameObject.transform.rotation.y + 0.01f, glm::two_pi<float>());
 
             fillcan::PushConstant& simplePushConstant = this->upGraphicsPipeline->getPushConstant("SimplePushConstant");
-            SimplePushConstantData simplePushConstantData{.transform = gameObject.transform.mat4(), .color = gameObject.color};
-            simplePushConstant.data = simplePushConstantData;
-            this->upGraphicsPipeline->pushConstant(simplePushConstant);
+            SimplePushConstantData simplePushConstantData{.test = 1, .transform = gameObject.transform.mat4(), .color = gameObject.color};
+
+            // Point the data to the SimplePushConstantData struct
+            simplePushConstant.upData = std::move(std::make_unique<SimplePushConstantData>(simplePushConstantData));
+            this->upGraphicsPipeline->pushConstant(std::move(simplePushConstant));
 
             gameObject.model->bind(pCommandBuffer);
             gameObject.model->draw();

@@ -31,7 +31,8 @@
 namespace simple_cube {
     class DescriptorSetLayout;
 
-    struct SimplePushConstantData : fillcan::PushConstantData {
+    struct SimplePushConstantData : public fillcan::PushConstantData {
+        int test = 1;
         glm::mat4 transform{1.f};
         alignas(16) glm::vec3 color;
     };

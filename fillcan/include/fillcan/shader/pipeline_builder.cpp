@@ -1,8 +1,10 @@
 
 // fillcan
 #include "fillcan/commands/command_buffer.hpp"
+#include "fillcan/shader/pipeline_layout.hpp"
 #include "vulkan/vulkan_core.h"
 #include <fillcan/shader/pipeline_builder.hpp>
+#include <memory>
 
 namespace fillcan {
     PipelineBuilder::PipelineBuilder() {}
@@ -13,7 +15,8 @@ namespace fillcan {
     void PipelineBuilder::setFlags(VkPipelineCreateFlags flags) { this->flags = flags; }
 
     void PipelineBuilder::addPushConstant(std::string name, VkPushConstantRange pushConstantRange) {
-        this->pushConstants.push_back({.name = name, .range = pushConstantRange, .data = {}});
+        PushConstant pushConstant = {.name = name, .range = pushConstantRange, .upData = std::make_unique<PushConstantData>()};
+        this->pushConstants.push_back(std::move(pushConstant));
     }
 
     void PipelineBuilder::setPipelineCache(VkPipelineCache pipelineCache) { this->pipelineCache = pipelineCache; }
