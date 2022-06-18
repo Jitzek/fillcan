@@ -7,8 +7,8 @@
 #include <cstdint>
 #include <fillcan/memory/fence.hpp>
 #include <fillcan/memory/image.hpp>
-#include <fillcan/memory/semaphore.hpp>
 #include <fillcan/memory/memory.hpp>
+#include <fillcan/memory/semaphore.hpp>
 
 // std
 #include <memory>
@@ -25,7 +25,7 @@ namespace fillcan {
     struct SwapchainImage {
         bool outOfDate;
         unsigned int index;
-        Image* pSwapchainImage;
+        ImageView* pSwapchainImageView;
         ImageView* pDepthBufferImageView;
         Semaphore* pSemaphoreImageReady = nullptr;
         Semaphore* pSemaphorePresentReady = nullptr;
@@ -37,20 +37,20 @@ namespace fillcan {
         LogicalDevice* pLogicalDevice;
         Window* pWindow;
         Queue* pQueue;
-        VkSurfaceFormatKHR surfaceFormat = {VK_FORMAT_UNDEFINED, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR};
+        VkSurfaceFormatKHR surfaceFormat = {VK_FORMAT_MAX_ENUM, VK_COLOR_SPACE_MAX_ENUM_KHR};
         uint32_t imageCount = 3;
         unsigned int imageArrayLayers = 1;
         VkImageUsageFlags imageUsage = 0;
         VkSharingMode imageSharingMode = VK_SHARING_MODE_MAX_ENUM;
         VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR;
         std::vector<uint32_t> queueFamilyIndices = {};
-        std::vector<std::unique_ptr<Image>> upSwapchainImages = {};
         std::vector<std::unique_ptr<Semaphore>> upImageReadySemaphores = {};
         std::vector<std::unique_ptr<Semaphore>> upPresentReadySemaphores = {};
-        std::vector<VkImage> hSwapchainImages = {};
-        uint32_t currentImageIndex = 0;
+        std::vector<std::unique_ptr<Image>> upSwapchainImages = {};
         std::vector<std::unique_ptr<Image>> upDepthImages = {};
         std::vector<std::unique_ptr<Memory>> upDepthImageMemories = {};
+
+        uint32_t currentImageIndex = 0;
 
       public:
         Swapchain(LogicalDevice* pLogicalDevice, Window* pWindow, Queue* pPresentQueue, uint32_t imageCount = 3,

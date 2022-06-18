@@ -81,10 +81,10 @@ namespace simple_triangle {
         /*
             Create shader modules
         */
-        std::unique_ptr<fillcan::ShaderModule> upVertexShaderModule = this->upFillcan->createShaderModule(
-            this->APP_DIR + "/shaders", "simple.vert", shaderc_vertex_shader, {}, nullptr, true, false);
-        std::unique_ptr<fillcan::ShaderModule> upFragmentShaderModule = this->upFillcan->createShaderModule(
-            this->APP_DIR + "/shaders", "simple.frag", shaderc_fragment_shader, {}, nullptr, true, false);
+        std::unique_ptr<fillcan::ShaderModule> upVertexShaderModule =
+            this->upFillcan->createShaderModule(this->APP_DIR + "/shaders", "simple.vert", shaderc_vertex_shader, {}, nullptr, true, false);
+        std::unique_ptr<fillcan::ShaderModule> upFragmentShaderModule =
+            this->upFillcan->createShaderModule(this->APP_DIR + "/shaders", "simple.frag", shaderc_fragment_shader, {}, nullptr, true, false);
         /* */
 
         /*
@@ -185,11 +185,7 @@ namespace simple_triangle {
         pCurrentGraphicsCommandRecording->pSignalSemaphores.push_back(swapchainImage.pSemaphorePresentReady);
 
         // Create imageviews which will be used as attachments
-        std::vector<fillcan::ImageView*> pAttachments = {};
-        pAttachments.reserve(1);
-        pAttachments.emplace_back(swapchainImage.pSwapchainImage->createImageView(
-            VK_IMAGE_VIEW_TYPE_2D, this->upFillcan->getSwapchain()->getSurfaceFormat().format,
-            {.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT, .baseMipLevel = 0, .levelCount = 1, .baseArrayLayer = 0, .layerCount = 1}));
+        std::vector<fillcan::ImageView*> pAttachments = {swapchainImage.pSwapchainImageView};
         /* */
 
         /*
@@ -332,4 +328,4 @@ namespace simple_triangle {
 
         this->upGraphicsPipeline = graphicsPipelineBuilder.getResult();
     }
-} // namespace app_graphics_pipeline_test
+} // namespace simple_triangle

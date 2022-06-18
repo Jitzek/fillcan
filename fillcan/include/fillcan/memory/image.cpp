@@ -106,7 +106,8 @@ namespace fillcan {
 
     ImageView* Image::createImageView(VkImageViewType viewType, VkFormat format, VkImageSubresourceRange subresourceRange,
                                       VkComponentMapping components) {
-        this->upImageViews.emplace_back(std::make_unique<ImageView>(this->pLogicalDevice, this, viewType, format, subresourceRange, components));
+        this->upImageViews.emplace_back(
+            std::move(std::make_unique<ImageView>(this->pLogicalDevice, this, viewType, format, subresourceRange, components)));
         return this->upImageViews.back().get();
     }
 

@@ -121,18 +121,11 @@ namespace simple_cube {
         // Define semphore for when image is ready to present
         pCurrentGraphicsCommandRecording->pSignalSemaphores.push_back(swapchainImage.pSemaphorePresentReady);
 
-        // Create imageviews which will be used as attachments
-        std::vector<fillcan::ImageView*> pAttachments = {};
-        pAttachments.reserve(2);
-        pAttachments.push_back(swapchainImage.pSwapchainImage->createImageView(
-            VK_IMAGE_VIEW_TYPE_2D, this->upFillcan->getSwapchain()->getSurfaceFormat().format,
-            {.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT, .baseMipLevel = 0, .levelCount = 1, .baseArrayLayer = 0, .layerCount = 1}));
-        pAttachments.push_back(swapchainImage.pDepthBufferImageView);
-        /* */
-
         /*
             Create framebuffer
         */
+        // Create imageviews which will be used as attachments for the framebuffer
+        std::vector<fillcan::ImageView*> pAttachments = {swapchainImage.pSwapchainImageView, swapchainImage.pDepthBufferImageView};
         this->upFramebuffers.at(this->currentFrameIndex) = std::move(std::make_unique<fillcan::Framebuffer>(
             this->upFillcan->getCurrentDevice(), this->upFillcan->getRenderPass(), pAttachments,
             this->upFillcan->getSwapchain()->getImageExtent().width, this->upFillcan->getSwapchain()->getImageExtent().height,
@@ -263,6 +256,8 @@ namespace simple_cube {
     void App::createRenderPass() {
         fillcan::RenderPassBuilder renderPassBuilder = {};
         renderPassBuilder.setLogicalDevice(this->upFillcan->getCurrentDevice());
+
+        // Add attachment for subpass 1 describing the swapchain image
         unsigned int swapChainAttachmentIndex = renderPassBuilder.addAttachment({.flags = 0,
                                                                                  .format = this->upFillcan->getSwapchain()->getSurfaceFormat().format,
                                                                                  .samples = VK_SAMPLE_COUNT_1_BIT,
@@ -272,7 +267,10 @@ namespace simple_cube {
                                                                                  .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
                                                                                  .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
                                                                                  .finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR});
+        // Define attachment as a color attachment
         renderPassBuilder.addColorAttachment(swapChainAttachmentIndex, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, false);
+
+        // Add attachment for subpass 1 describing the depth image
         unsigned int depthImageAttachmentIndex =
             renderPassBuilder.addAttachment({.flags = 0,
                                              .format = this->upFillcan->getCurrentDevice()->getPhysicalDevice()->findSupportedFormat(
@@ -285,15 +283,20 @@ namespace simple_cube {
                                              .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
                                              .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
                                              .finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL});
+        // Define attachment as a depthstencil attachment
         renderPassBuilder.setDepthStencilAttachment(depthImageAttachmentIndex, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, false);
 
+        // Construct subpass 1, this will combine the attachment described before into a new subpass
         unsigned int subpassIndex = renderPassBuilder.constructSubpass();
+
+        // Add a dependency for subpass 1 to make sure the subpass waits for the previous stages before executing
         renderPassBuilder.addDependency({.srcSubpass = VK_SUBPASS_EXTERNAL,
                                          .dstSubpass = subpassIndex,
                                          .srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
                                          .dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
                                          .srcAccessMask = 0,
                                          .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT});
+        
         this->upFillcan->createRenderPass(renderPassBuilder);
     }
 
@@ -313,30 +316,15 @@ namespace simple_cube {
 
         graphicsPipelineBuilder.setInputAssemblyState({.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, .primitiveRestartEnable = VK_FALSE});
 
-        // std::vector<VkVertexInputBindingDescription> vertexInputBindingDescriptions = {};
-        // vertexInputBindingDescriptions.reserve(1);
-        // vertexInputBindingDescriptions.push_back({.binding = 0, .stride = sizeof(Vertex), .inputRate = VK_VERTEX_INPUT_RATE_VERTEX});
-
-        // std::vector<VkVertexInputAttributeDescription> vertexInputAttributeDescriptions = {};
-        // vertexInputAttributeDescriptions.reserve(2);
-        // vertexInputAttributeDescriptions.push_back(
-        //     {.location = 0, .binding = 0, .format = VK_FORMAT_R32G32B32_SFLOAT, .offset = offsetof(Vertex, position)});
-        // vertexInputAttributeDescriptions.push_back(
-        //     {.location = 1, .binding = 0, .format = VK_FORMAT_R32G32B32_SFLOAT, .offset = offsetof(Vertex, color)});
+        // Describe the vertex shader
         graphicsPipelineBuilder.setVertexInputState(
             {fillcan::Model::Vertex::getBindingDescriptions(), fillcan::Model::Vertex::getAttributeDescriptions()});
 
+        // The viewports and scissors are dynamic, but the amount of viewports and scissors should still be defined
         std::vector<VkViewport> viewports = {};
         viewports.resize(1);
-        // viewports.push_back((VkViewport){.x = 0.0f,
-        //                                  .y = 0.0f,
-        //                                  .width = static_cast<float>(this->upFillcan->getSwapchain()->getImageExtent().width),
-        //                                  .height = static_cast<float>(this->upFillcan->getSwapchain()->getImageExtent().height),
-        //                                  .minDepth = 0.0f,
-        //                                  .maxDepth = 1.0f});
         std::vector<VkRect2D> scissors = {};
         scissors.resize(1);
-        // scissors.push_back((VkRect2D){.offset = {0, 0}, .extent = this->upFillcan->getSwapchain()->getImageExtent()});
         graphicsPipelineBuilder.addViewportState({viewports, scissors});
 
         graphicsPipelineBuilder.setRasterizationState({.depthClampEnable = VK_FALSE,
@@ -357,6 +345,7 @@ namespace simple_cube {
                                                      .alphaToCoverageEnable = VK_FALSE,
                                                      .alphaToOneEnable = VK_FALSE});
 
+        // Enable z-testing
         graphicsPipelineBuilder.setDepthStencilState({
             .depthTestEnable = VK_TRUE,
             .depthWriteEnable = VK_TRUE,
@@ -369,7 +358,6 @@ namespace simple_cube {
             .maxDepthBounds = 1.0f,
         });
 
-        std::vector<VkPipelineColorBlendAttachmentState> colorBlendAttachments = {};
         VkPipelineColorBlendAttachmentState colorBlendAttachment = {};
         colorBlendAttachment.blendEnable = VK_FALSE;
         colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
@@ -380,16 +368,15 @@ namespace simple_cube {
         colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
         colorBlendAttachment.colorWriteMask =
             VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-
-        colorBlendAttachments.push_back(colorBlendAttachment);
+        std::vector<VkPipelineColorBlendAttachmentState> colorBlendAttachments = {colorBlendAttachment};
         graphicsPipelineBuilder.setColorBlendState({.logicOpEnable = VK_FALSE,
                                                     .logicOp = VK_LOGIC_OP_COPY,
                                                     .attachments = colorBlendAttachments,
                                                     .blendConstants = std::array<float, 4>{0.0f, 0.0f, 0.0f, 0.0f}});
 
+        // Set the viewports and scissors to dynamic to allow for window resizing
         std::vector<VkDynamicState> dynamicStates = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
         graphicsPipelineBuilder.setDynamicState({.dynamicStates = dynamicStates});
-
         graphicsPipelineBuilder.setRenderPass(this->upFillcan->getRenderPass());
 
         this->upGraphicsPipeline = graphicsPipelineBuilder.getResult();
