@@ -28,7 +28,7 @@ namespace fillcan {
         this->init(vertices, indices);
     }
 
-    Model::Model(LogicalDevice* pLogicalDevice, std::string& filePath) : pLogicalDevice(pLogicalDevice) {
+    Model::Model(LogicalDevice* pLogicalDevice, std::string filePath) : pLogicalDevice(pLogicalDevice) {
         std::vector<Vertex> vertices;
         std::vector<uint16_t> indices;
 
@@ -45,14 +45,21 @@ namespace fillcan {
             for (const auto& index : shape.mesh.indices) {
                 Vertex vertex{};
 
-                vertices.push_back(vertex);
-                indices.push_back(indices.size());
-                vertex.position = {attrib.vertices[3 * index.vertex_index + 0], attrib.vertices[3 * index.vertex_index + 1],
-                                   attrib.vertices[3 * index.vertex_index + 2]};
+                if (index.vertex_index >= 0) {
+                    vertex.position = {attrib.vertices[3 * index.vertex_index + 0 /* x */], attrib.vertices[3 * index.vertex_index + 1 /* y */],
+                                       attrib.vertices[3 * index.vertex_index + 2 /* z */]};
+                }
 
-                // vertex.texCoord = {attrib.texcoords[2 * index.texcoord_index + 0], attrib.texcoords[2 * index.texcoord_index + 1]};
+                if (index.normal_index >= 0) {
+                    vertex.normal = {attrib.normals[3 * index.vertex_index + 0], attrib.normals[3 * index.vertex_index + 1],
+                                     attrib.normals[3 * index.vertex_index + 2]};
+                }
 
-                vertex.color = {1.0f, 1.0f, 1.0f};
+                if (index.texcoord_index >= 0) {
+                    vertex.textureCoordinate = {attrib.texcoords[2 * index.texcoord_index + 0], attrib.texcoords[2 * index.texcoord_index + 1]};
+                }
+
+                vertices.push_back(vertex); 
             }
         }
 
@@ -118,11 +125,9 @@ namespace fillcan {
         this->pLogicalDevice->endSingleTimeCommandRecording(pCommandRecording);
     }
 
-    void Model::setTexture(std::unique_ptr<Texture> upTexture) { this->upTexture = std::move(upTexture); }
+    void Model::setTexture(Texture* pTexture) { this->pTexture = pTexture; }
 
-    Texture* Model::getTexture() {
-        return this->upTexture.get();
-    }
+    Texture* Model::getTexture() { return this->pTexture; }
 
     void Model::bind(CommandBuffer* pCommandBuffer) {
         VkBuffer hVertexBuffers[] = {upVertexBuffer->getBufferHandle()};
@@ -132,9 +137,9 @@ namespace fillcan {
             vkCmdBindIndexBuffer(pCommandBuffer->getCommandBufferHandle(), upIndexBuffer->getBufferHandle(), 0, VK_INDEX_TYPE_UINT16);
         }
         this->pCommandBuffer = pCommandBuffer;
-        if (this->upTexture != nullptr) {
-            this->upTexture->write();
-        }
+        // if (this->upTexture != nullptr) {
+        //     this->upTexture->write();
+        // }
     }
 
     void Model::draw() {

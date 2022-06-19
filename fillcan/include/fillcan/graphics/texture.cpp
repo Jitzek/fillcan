@@ -25,9 +25,8 @@
 #include "stb/stb_image.h"
 
 namespace fillcan {
-    Texture::Texture(LogicalDevice* pLogicalDevice, std::string& filePath, DescriptorSet* pDescriptorSet,
-                     VkDescriptorSetLayoutBinding descriptorSetBinding)
-        : pLogicalDevice(pLogicalDevice), filePath(filePath), pDescriptorSet(pDescriptorSet), descriptorSetBinding(descriptorSetBinding) {
+    Texture::Texture(int index, LogicalDevice* pLogicalDevice, std::string& filePath)
+        : index(index), pLogicalDevice(pLogicalDevice), filePath(filePath) {
         stbi_uc* pixels = stbi_load(filePath.c_str(), &this->width, &this->height, &this->channels, STBI_rgb_alpha);
         if (pixels == nullptr) {
             throw std::runtime_error("Failed to load texture");
@@ -101,15 +100,21 @@ namespace fillcan {
         this->upSampler = samplerBuilder.getResult();
     }
 
+    int Texture::getIndex() { return this->index; }
+
     Image* Texture::getImage() { return this->upImage.get(); }
 
-    void Texture::write() {
-        CommandRecording* pCommandRecording = this->pLogicalDevice->beginSingleTimeCommandRecording(this->pLogicalDevice->getGraphicsQueue());
-        this->upImage->transitionImageLayout(pCommandRecording->pPrimaryCommandBuffers[0], VK_IMAGE_LAYOUT_UNDEFINED,
-                                             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, 0, VK_ACCESS_SHADER_READ_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
-                                             VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
-        this->pLogicalDevice->endSingleTimeCommandRecording(pCommandRecording);
-        this->pDescriptorSet->writeImage(this->descriptorSetBinding, this->upImage->getImageViews()[0], VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-                                   this->upSampler.get());
-    }
+    ImageView* Texture::getImageView() { return this->upImage->getImageViews().at(0); }
+
+    Sampler* Texture::getSampler() { return this->upSampler.get(); }
+
+    // void Texture::write() {
+    //     CommandRecording* pCommandRecording = this->pLogicalDevice->beginSingleTimeCommandRecording(this->pLogicalDevice->getGraphicsQueue());
+    //     this->upImage->transitionImageLayout(pCommandRecording->pPrimaryCommandBuffers[0], VK_IMAGE_LAYOUT_UNDEFINED,
+    //                                          VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, 0, VK_ACCESS_SHADER_READ_BIT,
+    //                                          VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
+    //     this->pLogicalDevice->endSingleTimeCommandRecording(pCommandRecording);
+    //     this->pDescriptorSet->writeImage(this->descriptorSetBinding, this->upImage->getImageViews()[0], VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+    //                                this->upSampler.get());
+    // }
 } // namespace fillcan

@@ -28,6 +28,7 @@
 #include "fillcan/shader/descriptor_set_layout.hpp"
 #include "fillcan/shader/shader_module.hpp"
 #include <exception>
+#include <fillcan/graphics/asset_manager.hpp>
 #include <fillcan/graphics/graphics_pipeline_builder.hpp>
 #include <fillcan/shader/pipeline.hpp>
 #include <fillcan/shader/pipeline_layout.hpp>
@@ -71,14 +72,17 @@ namespace simple_texture {
 
         this->createRenderPass();
 
-        std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> upDescriptorSetLayouts = createDescriptorSetLayouts();
-        std::unique_ptr<fillcan::DescriptorPool> upDescriptorPool = createDescriptorPool(upDescriptorSetLayouts);
+        this->preloadTextures();
+
+        std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> upFragmentDescriptorSetLayouts = createFragmentDescriptorSetLayouts();
+        std::unique_ptr<fillcan::DescriptorPool> upFragmentDescriptorPool = createDescriptorPool(upFragmentDescriptorSetLayouts);
 
         this->upVertexShaderModule =
             this->upFillcan->createShaderModule(this->APP_DIR + "/shaders", "simple.vert", shaderc_vertex_shader, {}, nullptr, true, false);
+
         this->upFragmentShaderModule =
-            this->upFillcan->createShaderModule(this->APP_DIR + "/shaders", "simple.frag", shaderc_fragment_shader, std::move(upDescriptorSetLayouts),
-                                                std::move(upDescriptorPool), true, false);
+            this->upFillcan->createShaderModule(this->APP_DIR + "/shaders", "simple.frag", shaderc_fragment_shader,
+                                                std::move(upFragmentDescriptorSetLayouts), std::move(upFragmentDescriptorPool), true, false);
 
         this->createGraphicsPipeline(upVertexShaderModule.get(), upFragmentShaderModule.get());
 
@@ -163,6 +167,11 @@ namespace simple_texture {
         this->currentFrameIndex = (currentFrameIndex + 1) % this->upFillcan->getSwapchain()->getImageCount();
     }
 
+    void App::preloadTextures() {
+        this->upFillcan->getAssetManager()->createTexture(this->upFillcan->getCurrentDevice(), this->APP_DIR + "/textures/gurbe.jpg");
+        this->upFillcan->getAssetManager()->createTexture(this->upFillcan->getCurrentDevice(), this->APP_DIR + "/textures/hey.png");
+    }
+
     std::unique_ptr<fillcan::Model> App::createCubeModel(glm::vec3 offset) {
         std::vector<fillcan::Model::Vertex> vertices{
 
@@ -222,7 +231,11 @@ namespace simple_texture {
     }
 
     void App::loadGameObjects() {
-        std::shared_ptr<fillcan::Model> spModel = this->createCubeModel({0.f, 0.f, 0.f});
+        std::shared_ptr<fillcan::Model> spModel1 = this->createCubeModel({0.f, 0.f, 0.f});
+        spModel1->setTexture(this->upFillcan->getAssetManager()->getTexture(0));
+
+        std::shared_ptr<fillcan::Model> spModel2 = this->createCubeModel({0.f, 0.f, 0.f});
+        spModel2->setTexture(this->upFillcan->getAssetManager()->getTexture(1));
         // const std::vector<fillcan::Model::Vertex> vertices = {{{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
         //                                                       {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
         //                                                       {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
@@ -231,17 +244,25 @@ namespace simple_texture {
         // std::shared_ptr<fillcan::Model> spModel = std::make_unique<fillcan::Model>(this->upFillcan->getCurrentDevice(), vertices, indices);
 
         // Create Texture
-        std::string textureFilePath = this->APP_DIR + "/textures/gurbe.jpg";
-        fillcan::DescriptorSet* pDescriptorSet = this->upFragmentShaderModule->getDescriptorPool()->getDescriptorSets()[0];
-        spModel->setTexture(std::move(std::make_unique<fillcan::Texture>(this->upFillcan->getCurrentDevice(), textureFilePath, pDescriptorSet,
-                                                                         pDescriptorSet->getLayout()->getBindings()[0])));
+        // std::string textureFilePath = this->APP_DIR + "/textures/gurbe.jpg";
+        // fillcan::DescriptorSet* pDescriptorSet = this->upFragmentShaderModule->getDescriptorPool()->getDescriptorSets()[0];
+        // spModel->setTexture(std::move(std::make_unique<fillcan::Texture>(this->upFillcan->getCurrentDevice(), textureFilePath, pDescriptorSet,
+        //                                                                  pDescriptorSet->getLayout()->getBindings()[0])));
 
-        fillcan::GameObject triangleGameObject = fillcan::GameObject::createGameObject();
-        triangleGameObject.transform.translation = {0.f, 0.f, 0.5f};
-        triangleGameObject.transform.scale = {0.5f, 0.5f, 0.5f};
-        triangleGameObject.model = spModel;
+        fillcan::GameObject cubeGameObject1 = fillcan::GameObject::createGameObject();
+        cubeGameObject1.transform.translation = {0.5f, 0.f, 0.5f};
+        cubeGameObject1.transform.scale = {0.5f, 0.5f, 0.5f};
+        cubeGameObject1.model = spModel1;
+        gameObjects.push_back(std::move(cubeGameObject1));
 
-        gameObjects.push_back(std::move(triangleGameObject));
+        fillcan::GameObject cubeGameObject2 = fillcan::GameObject::createGameObject();
+        cubeGameObject2.transform.translation = {-0.5f, 0.f, 0.5f};
+        cubeGameObject2.transform.scale = {0.5f, 0.5f, 0.5f};
+        cubeGameObject2.model = spModel2;
+        gameObjects.push_back(std::move(cubeGameObject2));
+
+        this->upFillcan->getAssetManager()->writeTexturesToDescriptorSet(this->upFillcan->getCurrentDevice(),
+                                                                         this->upFragmentShaderModule->getDescriptorPool()->getDescriptorSets()[0]);
     }
 
     void App::renderGameObjects(fillcan::CommandBuffer* pCommandBuffer) {
@@ -252,7 +273,10 @@ namespace simple_texture {
                 glm::mod(gameObject.transform.rotation.y + (0.5f * this->upFillcan->deltaTimef()), glm::two_pi<float>());
             gameObject.transform.rotation.x =
                 glm::mod(gameObject.transform.rotation.x + (0.25f * this->upFillcan->deltaTimef()), glm::two_pi<float>());
-            SimplePushConstantData data = {.transform = gameObject.transform.mat4(), .color = gameObject.color};
+            SimplePushConstantData data = {.transform = gameObject.transform.mat4(),
+                                           .color = gameObject.color,
+                                           .textureIndex =
+                                               gameObject.model->getTexture() != nullptr ? gameObject.model->getTexture()->getIndex() : -1};
             std::unique_ptr<SimplePushConstantData> simplePushConstantData = std::make_unique<SimplePushConstantData>(data);
             this->upGraphicsPipeline->pushConstantData("SimplePushConstant", std::move(simplePushConstantData));
 
@@ -309,17 +333,9 @@ namespace simple_texture {
         this->upFillcan->createRenderPass(renderPassBuilder);
     }
 
-    std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> App::createDescriptorSetLayouts() {
-        std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> upDescriptorSetLayouts;
-        upDescriptorSetLayouts.reserve(1);
-
-        fillcan::DescriptorSetLayoutBuilder descriptorSetLayoutBuilder{};
-        descriptorSetLayoutBuilder.setLogicalDevice(this->upFillcan->getCurrentDevice());
-
-        // Combined Image Sampler
-        descriptorSetLayoutBuilder.addBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1, VK_SHADER_STAGE_FRAGMENT_BIT);
-
-        upDescriptorSetLayouts.emplace_back(descriptorSetLayoutBuilder.getResult());
+    std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> App::createFragmentDescriptorSetLayouts() {
+        std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> upDescriptorSetLayouts =
+            this->upFillcan->getAssetManager()->getTextureDescriptorSetLayouts(this->upFillcan->getCurrentDevice(), 1);
 
         return std::move(upDescriptorSetLayouts);
     }

@@ -27,14 +27,14 @@ namespace fillcan {
     }
 
     void DescriptorSet::write(VkDescriptorSetLayoutBinding binding, VkDescriptorImageInfo* pImageInfo, VkDescriptorBufferInfo* pBufferInfo,
-                              VkBufferView* pTexelBufferView) {
+                              VkBufferView* pTexelBufferView, unsigned int dstArrayElement, unsigned int descriptorCount) {
         VkWriteDescriptorSet writeDescriptorSet = {};
         writeDescriptorSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
         writeDescriptorSet.pNext = nullptr;
         writeDescriptorSet.dstSet = this->hDescriptorSet;
         writeDescriptorSet.dstBinding = binding.binding;
-        writeDescriptorSet.dstArrayElement = 0;
-        writeDescriptorSet.descriptorCount = 1;
+        writeDescriptorSet.dstArrayElement = dstArrayElement;
+        writeDescriptorSet.descriptorCount = descriptorCount;
         writeDescriptorSet.descriptorType = binding.descriptorType;
         writeDescriptorSet.pImageInfo = pImageInfo;
         writeDescriptorSet.pBufferInfo = pBufferInfo;

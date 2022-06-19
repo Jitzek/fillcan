@@ -1,10 +1,10 @@
 #pragma once
 
 #include "vulkan/vulkan_core.h"
-#include <fillcan/memory/memory.hpp>
-#include <fillcan/memory/image.hpp>
-#include <fillcan/memory/buffer.hpp>
 #include <fillcan/graphics/sampler.hpp>
+#include <fillcan/memory/buffer.hpp>
+#include <fillcan/memory/image.hpp>
+#include <fillcan/memory/memory.hpp>
 
 // std
 #include <memory>
@@ -19,6 +19,8 @@ namespace fillcan {
     class DescriptorSet;
     class Texture {
       private:
+        Texture(int index, LogicalDevice* pLogicalDevice, std::string& filePath);
+        int index = -1;
         LogicalDevice* pLogicalDevice;
         std::string filePath;
         int width;
@@ -28,18 +30,30 @@ namespace fillcan {
         std::unique_ptr<Image> upImage;
         std::unique_ptr<Memory> upImageMemory;
         std::unique_ptr<Sampler> upSampler;
-        DescriptorSet* pDescriptorSet;
-        VkDescriptorSetLayoutBinding descriptorSetBinding;
+        // DescriptorSet* pDescriptorSet;
+        // VkDescriptorSetLayoutBinding descriptorSetBinding;
 
         void createImage(Buffer* pStagingBuffer);
         void createImageView();
         void createSampler();
 
       public:
-        Texture(LogicalDevice* pLogicalDevice, std::string& filePath, DescriptorSet* pDescriptorSet, VkDescriptorSetLayoutBinding descriptorSetBinding);
+        static Texture createTexture(LogicalDevice* pLogicalDevice, std::string& filePath) {
+            static int currentIndex;
+            return Texture(currentIndex++, pLogicalDevice, filePath);
+        }
         ~Texture();
-        
-        Image* getImage(); 
+
+        Texture(const Texture&) = delete;
+        Texture& operator=(const Texture&) = delete;
+        Texture(Texture&&) = default;
+        Texture& operator=(Texture&&) = default;
+
+        int getIndex();
+
+        Image* getImage();
+        ImageView* getImageView();
+        Sampler* getSampler();
 
         void write();
     };

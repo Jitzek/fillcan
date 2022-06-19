@@ -21,6 +21,7 @@ namespace fillcan {
         if (maxAnisotropy > this->pLogicalDevice->getPhysicalDevice()->getProperties().limits.maxSamplerAnisotropy) {
             throw std::runtime_error("Failed to create sampler: Requested max anisotropy is unsupported.");
         }
+
         VkSamplerCreateInfo samplerCreateInfo = {.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
                                                  .pNext = nullptr,
                                                  .flags = 0,

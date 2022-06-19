@@ -34,6 +34,7 @@ namespace simple_texture {
     struct SimplePushConstantData : public fillcan::PushConstantData {
         glm::mat4 transform{1.f};
         alignas(16) glm::vec3 color;
+        int textureIndex;
     };
 
     class App {
@@ -58,6 +59,12 @@ namespace simple_texture {
         std::vector<fillcan::GameObject> gameObjects = {};
         std::vector<std::shared_ptr<fillcan::Model>> spModels = {};
 
+        std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> createFragmentDescriptorSetLayouts();
+        std::unique_ptr<fillcan::DescriptorPool>
+        createDescriptorPool(std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>>& upDescriptorSetLayouts);
+        void createRenderPass();
+        void createGraphicsPipeline(fillcan::ShaderModule* pVertexShaderModule, fillcan::ShaderModule* pFragmentShaderModule);
+        void preloadTextures();
         void loadGameObjects();
         void renderGameObjects(fillcan::CommandBuffer* pCommandBuffer);
         std::unique_ptr<fillcan::Model> createCubeModel(glm::vec3 offset);
@@ -67,13 +74,5 @@ namespace simple_texture {
         ~App();
         void run();
         void update(double deltaTime);
-
-        void createRenderPass();
-        std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> createDescriptorSetLayouts();
-
-        std::unique_ptr<fillcan::DescriptorPool>
-        createDescriptorPool(std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>>& upDescriptorSetLayouts);
-
-        void createGraphicsPipeline(fillcan::ShaderModule* pVertexShaderModule, fillcan::ShaderModule* pFragmentShaderModule);
     };
-} // namespace simple_cube
+} // namespace simple_texture

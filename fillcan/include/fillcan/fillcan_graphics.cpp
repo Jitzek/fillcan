@@ -7,8 +7,8 @@
 #include <algorithm>
 #include <fillcan/fillcan_graphics.hpp>
 #include <iterator>
-#include <vector>
 #include <thread>
+#include <vector>
 
 namespace fillcan {
     FillcanGraphics::FillcanGraphics(const char* pApplicationName, uint32_t applicationVersion, unsigned int windowWidth, unsigned int windowHeight,
@@ -88,4 +88,6 @@ namespace fillcan {
     }
 
     void FillcanGraphics::destroyRenderPass(unsigned int index) { this->upRenderPasses.erase(this->upRenderPasses.begin() + index); }
+
+    AssetManager* FillcanGraphics::getAssetManager() { return &this->assetManager; }
 } // namespace fillcan

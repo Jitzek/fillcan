@@ -5,8 +5,8 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include <fillcan/memory/buffer.hpp>
 #include <fillcan/graphics/texture.hpp>
+#include <fillcan/memory/buffer.hpp>
 
 // std
 #include <memory>
@@ -27,6 +27,7 @@ namespace fillcan {
             glm::vec3 position{};
             glm::vec3 color{};
             glm::vec2 textureCoordinate;
+            glm::vec3 normal{};
 
             static std::vector<VkVertexInputBindingDescription> getBindingDescriptions();
             static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
@@ -42,7 +43,7 @@ namespace fillcan {
         uint32_t indexCount;
         std::unique_ptr<Memory> upIndexMemory;
 
-        std::unique_ptr<Texture> upTexture = nullptr;
+        Texture* pTexture = nullptr;
 
         CommandBuffer* pCommandBuffer = nullptr;
 
@@ -52,15 +53,14 @@ namespace fillcan {
         void createIndexBuffer(const std::vector<uint16_t>& indices);
 
       public:
-        Model(LogicalDevice* pLogicalDevice, const std::vector<Vertex>& vertices,
-              const std::vector<uint16_t>& indices);
-        Model(LogicalDevice* pLogicalDevice, std::string& filePath);
+        Model(LogicalDevice* pLogicalDevice, const std::vector<Vertex>& vertices, const std::vector<uint16_t>& indices);
+        Model(LogicalDevice* pLogicalDevice, std::string filePath);
         ~Model();
 
         Model(const Model&) = delete;
         Model& operator=(const Model&) = delete;
 
-        void setTexture(std::unique_ptr<Texture> upTexture);
+        void setTexture(Texture* pTexture);
         Texture* getTexture();
 
         void bind(CommandBuffer* pCommandBuffer);

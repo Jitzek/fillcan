@@ -1,6 +1,7 @@
 #pragma once
 
 // vulkan
+#include "fillcan/graphics/asset_manager.hpp"
 #include "fillcan/graphics/render_pass_builder.hpp"
 #include "vulkan/vulkan_core.h"
 
@@ -19,7 +20,7 @@ namespace fillcan {
         std::vector<std::unique_ptr<Swapchain>> upSwapchains = {};
         std::vector<std::unique_ptr<RenderPass>> upRenderPasses = {};
         double _deltaTime = 0;
-
+        AssetManager assetManager{};
 
       public:
         FillcanGraphics(const char* pApplicationName, uint32_t applicationVersion, unsigned int windowWidth, unsigned int windowHeight,
@@ -43,5 +44,6 @@ namespace fillcan {
         double deltaTime() const { return this->_deltaTime; };
         float deltaTimef() const { return static_cast<float>(this->_deltaTime); };
 
+        AssetManager* getAssetManager();
     };
 } // namespace fillcan

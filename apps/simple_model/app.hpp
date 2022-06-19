@@ -34,12 +34,15 @@ namespace simple_model {
     struct SimplePushConstantData : public fillcan::PushConstantData {
         glm::mat4 transform{1.f};
         alignas(16) glm::vec3 color;
+        int textureIndex;
     };
 
     class App {
       private:
         std::unique_ptr<fillcan::FillcanGraphics> upFillcan;
         std::unique_ptr<fillcan::GraphicsPipeline> upGraphicsPipeline;
+        std::unique_ptr<fillcan::ShaderModule> upVertexShaderModule;
+        std::unique_ptr<fillcan::ShaderModule> upFragmentShaderModule;
         std::unique_ptr<fillcan::Buffer> upVertexBuffer = nullptr;
         std::unique_ptr<fillcan::Buffer> upIndexBuffer = nullptr;
 
@@ -56,22 +59,19 @@ namespace simple_model {
         std::vector<fillcan::GameObject> gameObjects = {};
         std::vector<std::shared_ptr<fillcan::Model>> spModels = {};
 
+        std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> createFragmentDescriptorSetLayouts();
+        std::unique_ptr<fillcan::DescriptorPool>
+        createDescriptorPool(std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>>& upDescriptorSetLayouts);
+        void createRenderPass();
+        void createGraphicsPipeline(fillcan::ShaderModule* pVertexShaderModule, fillcan::ShaderModule* pFragmentShaderModule);
+        void preloadTextures();
         void loadGameObjects();
         void renderGameObjects(fillcan::CommandBuffer* pCommandBuffer);
-        std::unique_ptr<fillcan::Model> createCubeModel(glm::vec3 offset);
 
       public:
         App();
         ~App();
         void run();
         void update(double deltaTime);
-
-        void createRenderPass();
-        std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> createDescriptorSetLayouts();
-
-        std::unique_ptr<fillcan::DescriptorPool>
-        createDescriptorPool(std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>>& upDescriptorSetLayouts);
-
-        void createGraphicsPipeline(fillcan::ShaderModule* pVertexShaderModule, fillcan::ShaderModule* pFragmentShaderModule);
     };
-} // namespace simple_cube
+} // namespace simple_texture

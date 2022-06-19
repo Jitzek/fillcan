@@ -2,8 +2,10 @@
 
 layout(location = 0) in vec3 inPosition;
 layout(location = 1) in vec3 inColor;
+layout(location = 2) in vec2 inTextureCoordinate;
 
 layout(location = 0) out vec3 outColor;
+layout(location = 1) out vec2 outTextureCoordinate;
 
 layout(push_constant) uniform PushConstant {
     mat4 transform;
@@ -21,4 +23,5 @@ void main() {
     // ) * vec4(inPosition, 1.0);
     gl_Position = push_constant.transform * vec4(inPosition, 1.0);
     outColor = inColor;
+    outTextureCoordinate = inTextureCoordinate;
 }
