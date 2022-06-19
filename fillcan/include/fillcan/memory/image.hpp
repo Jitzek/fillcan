@@ -72,5 +72,8 @@ namespace fillcan {
         void copyTo(CommandBuffer* pCommandBuffer, Image* pImage, VkImageLayout srcLayout, VkImageLayout dstLayout,
                     std::vector<VkImageCopy>& regions);
         void copyTo(CommandBuffer* pCommandBuffer, Buffer* pBuffer, VkImageLayout srcLayout, std::vector<VkBufferImageCopy>& regions);
+
+        void transitionImageLayout(CommandBuffer* pCommandBuffer, VkImageLayout oldLayout, VkImageLayout newLayout, VkAccessFlags srcAccessMask,
+                                   VkAccessFlags dstAccessMask, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkDependencyFlags dependencyFlags = 0);
     };
 } // namespace fillcan

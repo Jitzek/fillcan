@@ -1,4 +1,5 @@
 // vulkan
+#include "fillcan/graphics/sampler.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
@@ -41,9 +42,9 @@ namespace fillcan {
         this->update(&writeDescriptorSet, nullptr);
     }
 
-    void DescriptorSet::writeImage(VkDescriptorSetLayoutBinding binding, ImageView* pImageView, VkImageLayout imageLayout) {
+    void DescriptorSet::writeImage(VkDescriptorSetLayoutBinding binding, ImageView* pImageView, VkImageLayout imageLayout, Sampler* pSampler) {
         VkDescriptorImageInfo descriptorImageInfo = {};
-        descriptorImageInfo.sampler = VK_NULL_HANDLE;
+        descriptorImageInfo.sampler = pSampler->getSamplerHandle();
         descriptorImageInfo.imageView = pImageView->getImageViewHandle();
         descriptorImageInfo.imageLayout = imageLayout;
         this->write(binding, &descriptorImageInfo, nullptr, nullptr);

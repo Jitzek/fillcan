@@ -1,96 +1,115 @@
 
 // vulkan
 #include "fillcan/commands/command_buffer.hpp"
+#include "fillcan/commands/command_recording.hpp"
+#include "fillcan/graphics/sampler_builder.hpp"
 #include "fillcan/memory/image_director.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include <cstring>
 #include <fillcan/graphics/texture.hpp>
 #include <fillcan/instance/logical_device.hpp>
 #include <fillcan/memory/buffer.hpp>
 #include <fillcan/memory/buffer_director.hpp>
 #include <fillcan/memory/memory.hpp>
+#include <fillcan/shader/descriptor_set.hpp>
 
 // std
+#include <cstring>
 #include <memory>
 #include <stdexcept>
+#include <vector>
 
 // stb
+#define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
 namespace fillcan {
-    Texture::Texture(LogicalDevice* pLogicalDevice, std::string& filePath) : pLogicalDevice(pLogicalDevice), filePath(filePath) {
+    Texture::Texture(LogicalDevice* pLogicalDevice, std::string& filePath, DescriptorSet* pDescriptorSet,
+                     VkDescriptorSetLayoutBinding descriptorSetBinding)
+        : pLogicalDevice(pLogicalDevice), filePath(filePath), pDescriptorSet(pDescriptorSet), descriptorSetBinding(descriptorSetBinding) {
         stbi_uc* pixels = stbi_load(filePath.c_str(), &this->width, &this->height, &this->channels, STBI_rgb_alpha);
         if (pixels == nullptr) {
             throw std::runtime_error("Failed to load texture");
         }
         VkDeviceSize imageSize = (width * height * 4) /* 4 for RGBA */;
-        this->upStagingBuffer = BufferDirector().makeStagingBuffer(this->pLogicalDevice, imageSize);
+        std::unique_ptr<Buffer> upStagingBuffer = BufferDirector().makeStagingBuffer(this->pLogicalDevice, imageSize);
 
-        this->upStagingBufferMemory = std::make_unique<Memory>(this->pLogicalDevice, this->upStagingBuffer.get(),
-                                                               VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+        std::unique_ptr<Memory> upStagingBufferMemory = std::make_unique<Memory>(
+            this->pLogicalDevice, upStagingBuffer.get(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
-        this->upStagingBuffer->bindMemory(upStagingBufferMemory.get());
-        void** ppStagingBufferData = this->upStagingBuffer->getMemory()->map();
+        upStagingBuffer->bindMemory(upStagingBufferMemory.get());
+        void** ppStagingBufferData = upStagingBuffer->getMemory()->map();
         memcpy(*ppStagingBufferData, pixels, static_cast<size_t>(imageSize));
-        this->upStagingBuffer->getMemory()->unmap();
+        upStagingBuffer->getMemory()->unmap();
 
         stbi_image_free(pixels);
 
-        this->upImage = ImageDirector().make2DTexture(this->pLogicalDevice, this->width, this->height, VK_SAMPLE_COUNT_1_BIT);
+        this->createImage(upStagingBuffer.get());
+        this->createImageView();
+        this->createSampler();
     }
 
     Texture::~Texture() {}
 
-    void Texture::bind(CommandBuffer* pCommandBuffer) {
-        // Transition Image Layout for buffer transfer // TODO: write function in {Image}
-        VkImageMemoryBarrier stagingBarrier{};
-        stagingBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        stagingBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-        stagingBarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-        stagingBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        stagingBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        stagingBarrier.image = this->upImage->getImageHandle();
-        stagingBarrier.subresourceRange = {
-            .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT, .baseMipLevel = 0, .levelCount = 1, .baseArrayLayer = 0, .layerCount = 1};
-        stagingBarrier.srcAccessMask = 0;
-        stagingBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    void Texture::createImage(Buffer* pStagingBuffer) {
+        this->upImage = ImageDirector().make2DTexture(this->pLogicalDevice, this->width, this->height, VK_SAMPLE_COUNT_1_BIT);
+        this->upImageMemory = std::make_unique<Memory>(this->pLogicalDevice, this->upImage.get(), VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+        this->upImage->bindMemory(this->upImageMemory.get());
 
-        vkCmdPipelineBarrier(pCommandBuffer->getCommandBufferHandle(), VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0,
-                             nullptr, 0, nullptr, 1, &stagingBarrier);
+        CommandRecording* pCommandRecording = this->pLogicalDevice->beginSingleTimeCommandRecording(this->pLogicalDevice->getGraphicsQueue());
+        // Transition Image Layout for buffer transfer
+        this->upImage->transitionImageLayout(pCommandRecording->pPrimaryCommandBuffers[0], VK_IMAGE_LAYOUT_UNDEFINED,
+                                             VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 0, VK_ACCESS_TRANSFER_WRITE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                             VK_PIPELINE_STAGE_TRANSFER_BIT);
 
-        // Copy Staging Buffer to Image // TODO: Write function in Buffer
-        VkBufferImageCopy region{};
-        region.bufferOffset = 0;
-        region.bufferRowLength = 0;
-        region.bufferImageHeight = 0;
-        region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        region.imageSubresource.mipLevel = 0;
-        region.imageSubresource.baseArrayLayer = 0;
-        region.imageSubresource.layerCount = 1;
-        region.imageOffset = {0, 0, 0};
-        region.imageExtent = {static_cast<uint32_t>(this->width), static_cast<uint32_t>(this->height), 1};
+        // Copy staging buffer to image
+        std::vector<VkBufferImageCopy> regions = {{.bufferOffset = 0,
+                                                   .bufferRowLength = 0,
+                                                   .bufferImageHeight = 0,
+                                                   .imageSubresource =
+                                                       {
+                                                           .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+                                                           .mipLevel = 0,
+                                                           .baseArrayLayer = 0,
+                                                           .layerCount = 1,
+                                                       },
+                                                   .imageOffset = {0, 0, 0},
+                                                   .imageExtent = {static_cast<uint32_t>(this->width), static_cast<uint32_t>(this->height), 1}}};
+        pStagingBuffer->copyTo(pCommandRecording->pPrimaryCommandBuffers[0], this->upImage.get(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, regions);
 
-        vkCmdCopyBufferToImage(pCommandBuffer->getCommandBufferHandle(), this->upStagingBuffer->getBufferHandle(), this->upImage->getImageHandle(),
-                               VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
+        // Transition Image Layout for shader access
+        this->upImage->transitionImageLayout(pCommandRecording->pPrimaryCommandBuffers[0], VK_IMAGE_LAYOUT_UNDEFINED,
+                                             VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_ACCESS_TRANSFER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT,
+                                             VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
+        this->pLogicalDevice->endSingleTimeCommandRecording(pCommandRecording);
+    }
 
-        // Transition Image Layout for shader access // TODO: write function in {Image}
-        VkImageMemoryBarrier shaderBarrier{};
-        shaderBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        shaderBarrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-        shaderBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        shaderBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        shaderBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        shaderBarrier.image = this->upImage->getImageHandle();
-        shaderBarrier.subresourceRange = {
-            .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT, .baseMipLevel = 0, .levelCount = 1, .baseArrayLayer = 0, .layerCount = 1};
-        shaderBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-        shaderBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+    void Texture::createImageView() { this->upImage->createImageView(VK_IMAGE_VIEW_TYPE_2D, VK_FORMAT_R8G8B8A8_SRGB); }
 
-        vkCmdPipelineBarrier(pCommandBuffer->getCommandBufferHandle(), VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0,
-                             nullptr, 0, nullptr, 1, &shaderBarrier);
+    void Texture::createSampler() {
+        SamplerBuilder samplerBuilder{};
+        samplerBuilder.setLogicalDevice(this->pLogicalDevice);
+        samplerBuilder.setFilters(VK_FILTER_LINEAR, VK_FILTER_LINEAR);
+        samplerBuilder.setMipmapMode(VK_SAMPLER_MIPMAP_MODE_LINEAR);
+        samplerBuilder.setAddressModes(VK_SAMPLER_ADDRESS_MODE_REPEAT, VK_SAMPLER_ADDRESS_MODE_REPEAT, VK_SAMPLER_ADDRESS_MODE_REPEAT);
+        samplerBuilder.setMipLodBias(0.0f);
+        samplerBuilder.setMaxAnisotropy(1.0f);
+        samplerBuilder.setCompareOp(VK_COMPARE_OP_ALWAYS);
+        samplerBuilder.setLod(0.0f, 0.0f);
+        samplerBuilder.setBorderColor(VK_BORDER_COLOR_INT_OPAQUE_BLACK);
+        this->upSampler = samplerBuilder.getResult();
     }
 
     Image* Texture::getImage() { return this->upImage.get(); }
+
+    void Texture::write() {
+        CommandRecording* pCommandRecording = this->pLogicalDevice->beginSingleTimeCommandRecording(this->pLogicalDevice->getGraphicsQueue());
+        this->upImage->transitionImageLayout(pCommandRecording->pPrimaryCommandBuffers[0], VK_IMAGE_LAYOUT_UNDEFINED,
+                                             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, 0, VK_ACCESS_SHADER_READ_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
+                                             VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
+        this->pLogicalDevice->endSingleTimeCommandRecording(pCommandRecording);
+        this->pDescriptorSet->writeImage(this->descriptorSetBinding, this->upImage->getImageViews()[0], VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+                                   this->upSampler.get());
+    }
 } // namespace fillcan

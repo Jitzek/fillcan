@@ -1,6 +1,7 @@
 // fillcan
 #include "fillcan/commands/command_recording.hpp"
 #include "vulkan/vulkan_core.h"
+#include <cstddef>
 #include <fillcan/commands/command_buffer.hpp>
 #include <fillcan/commands/queue.hpp>
 #include <fillcan/graphics/model.hpp>
@@ -14,6 +15,7 @@
 #include <iostream>
 #include <memory>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 // tinyobjloader
@@ -116,6 +118,12 @@ namespace fillcan {
         this->pLogicalDevice->endSingleTimeCommandRecording(pCommandRecording);
     }
 
+    void Model::setTexture(std::unique_ptr<Texture> upTexture) { this->upTexture = std::move(upTexture); }
+
+    Texture* Model::getTexture() {
+        return this->upTexture.get();
+    }
+
     void Model::bind(CommandBuffer* pCommandBuffer) {
         VkBuffer hVertexBuffers[] = {upVertexBuffer->getBufferHandle()};
         VkDeviceSize offsets[] = {0};
@@ -124,6 +132,9 @@ namespace fillcan {
             vkCmdBindIndexBuffer(pCommandBuffer->getCommandBufferHandle(), upIndexBuffer->getBufferHandle(), 0, VK_INDEX_TYPE_UINT16);
         }
         this->pCommandBuffer = pCommandBuffer;
+        if (this->upTexture != nullptr) {
+            this->upTexture->write();
+        }
     }
 
     void Model::draw() {
@@ -146,6 +157,7 @@ namespace fillcan {
 
     std::vector<VkVertexInputAttributeDescription> Model::Vertex::getAttributeDescriptions() {
         return {{.location = 0, .binding = 0, .format = VK_FORMAT_R32G32B32_SFLOAT, .offset = offsetof(Vertex, position)},
-                {.location = 1, .binding = 0, .format = VK_FORMAT_R32G32B32_SFLOAT, .offset = offsetof(Vertex, color)}};
+                {.location = 1, .binding = 0, .format = VK_FORMAT_R32G32B32_SFLOAT, .offset = offsetof(Vertex, color)},
+                {.location = 2, .binding = 0, .format = VK_FORMAT_R32G32_SFLOAT, .offset = offsetof(Vertex, textureCoordinate)}};
     }
 } // namespace fillcan

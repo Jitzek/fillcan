@@ -4,14 +4,19 @@
 #include "vulkan/vulkan_core.h"
 
 namespace fillcan {
-    class Sampler
-    {
-        private:
-            VkSampler hSampler;
-        public:
-            Sampler();
-            ~Sampler();
+    class LogicalDevice;
+    class Sampler {
+      private:
+        VkSampler hSampler;
+        LogicalDevice* pLogicalDevice;
 
-            VkSampler getSamplerHandle();
+      public:
+        Sampler(LogicalDevice* pLogicalDevice, VkFilter magFilter, VkFilter minFilter, VkSamplerMipmapMode mipmapMode,
+                VkSamplerAddressMode addressModeU, VkSamplerAddressMode addressModeV, VkSamplerAddressMode addressModeW, float mipLodBias,
+                VkBool32 anisotropyEnable, float maxAnisotropy, VkBool32 compareEnable, VkCompareOp compareOp, float minLod, float maxLod,
+                VkBorderColor borderColor, VkBool32 unnormalizedCoordinates);
+        ~Sampler();
+
+        VkSampler getSamplerHandle();
     };
-}
+} // namespace fillcan

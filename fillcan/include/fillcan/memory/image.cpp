@@ -133,4 +133,25 @@ namespace fillcan {
                                static_cast<uint32_t>(regions.size()), regions.data());
     }
 
+    void Image::transitionImageLayout(CommandBuffer* pCommandBuffer, VkImageLayout oldLayout, VkImageLayout newLayout, VkAccessFlags srcAccessMask,
+                                      VkAccessFlags dstAccessMask, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask,
+                                      VkDependencyFlags dependencyFlags) {
+        VkImageMemoryBarrier barrier{.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+                                     .pNext = nullptr,
+                                     .srcAccessMask = srcAccessMask,
+                                     .dstAccessMask = dstAccessMask,
+                                     .oldLayout = oldLayout,
+                                     .newLayout = newLayout,
+                                     .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+                                     .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+                                     .image = this->hImage,
+                                     .subresourceRange = {.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+                                                          .baseMipLevel = 0,
+                                                          .levelCount = this->mipLevels,
+                                                          .baseArrayLayer = 0,
+                                                          .layerCount = this->arrayLayers}};
+        vkCmdPipelineBarrier(pCommandBuffer->getCommandBufferHandle(), srcStageMask, dstStageMask, dependencyFlags, 0, nullptr, 0, nullptr, 1,
+                             &barrier);
+    }
+
 } // namespace fillcan

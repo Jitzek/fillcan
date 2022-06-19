@@ -13,6 +13,7 @@ namespace fillcan {
     class ImageView;
     class Buffer;
     class BufferView;
+    class Sampler;
     class DescriptorSet {
       private:
         VkDescriptorSet hDescriptorSet;
@@ -30,7 +31,7 @@ namespace fillcan {
 
         VkDescriptorSet getDescriptorSetHandle();
         DescriptorSetLayout* getLayout();
-        void writeImage(VkDescriptorSetLayoutBinding binding, ImageView* pImageView, VkImageLayout imageLayout /* TODO: Sampler */);
+        void writeImage(VkDescriptorSetLayoutBinding binding, ImageView* pImageView, VkImageLayout imageLayout, Sampler* pSampler);
         void writeBuffer(VkDescriptorSetLayoutBinding binding, Buffer* pBuffer, VkDeviceSize offset = 0, VkDeviceSize range = VK_WHOLE_SIZE);
         void writeTexelBufferView(VkDescriptorSetLayoutBinding binding, BufferView* pTexelBufferView);
         void copy(VkDescriptorSetLayoutBinding srcDescriptorSetBinding, DescriptorSet* pDstDescriptorSet,

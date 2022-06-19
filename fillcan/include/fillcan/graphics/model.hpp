@@ -6,6 +6,7 @@
 
 // fillcan
 #include <fillcan/memory/buffer.hpp>
+#include <fillcan/graphics/texture.hpp>
 
 // std
 #include <memory>
@@ -25,6 +26,7 @@ namespace fillcan {
         struct Vertex {
             glm::vec3 position{};
             glm::vec3 color{};
+            glm::vec2 textureCoordinate;
 
             static std::vector<VkVertexInputBindingDescription> getBindingDescriptions();
             static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
@@ -39,6 +41,8 @@ namespace fillcan {
         std::unique_ptr<Buffer> upIndexBuffer;
         uint32_t indexCount;
         std::unique_ptr<Memory> upIndexMemory;
+
+        std::unique_ptr<Texture> upTexture = nullptr;
 
         CommandBuffer* pCommandBuffer = nullptr;
 
@@ -55,6 +59,9 @@ namespace fillcan {
 
         Model(const Model&) = delete;
         Model& operator=(const Model&) = delete;
+
+        void setTexture(std::unique_ptr<Texture> upTexture);
+        Texture* getTexture();
 
         void bind(CommandBuffer* pCommandBuffer);
         void draw();
