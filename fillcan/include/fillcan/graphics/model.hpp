@@ -1,6 +1,7 @@
 #pragma once
 
 // vulkan
+#include "fillcan/commands/command_recording.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
@@ -8,6 +9,7 @@
 
 // std
 #include <memory>
+#include <string>
 #include <vector>
 
 // glm
@@ -19,18 +21,6 @@ namespace fillcan {
     class LogicalDevice;
     class CommandBuffer;
     class Model {
-      private:
-        LogicalDevice* pLogicalDevice;
-        std::unique_ptr<Buffer> upVertexBuffer;
-        uint32_t vertexCount;
-        std::unique_ptr<Memory> upVertexMemory;
-
-        std::unique_ptr<Buffer> upIndexBuffer;
-        uint32_t indexCount;
-        std::unique_ptr<Memory> upIndexMemory;
-        
-        CommandBuffer* pCommandBuffer = nullptr;
-
       public:
         struct Vertex {
             glm::vec3 position{};
@@ -40,7 +30,27 @@ namespace fillcan {
             static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
         };
 
-        Model(LogicalDevice* pLogicalDevice, const std::vector<Vertex>& vertices, const std::vector<uint16_t>& indices);
+      private:
+        LogicalDevice* pLogicalDevice;
+        std::unique_ptr<Buffer> upVertexBuffer;
+        uint32_t vertexCount;
+        std::unique_ptr<Memory> upVertexMemory;
+
+        std::unique_ptr<Buffer> upIndexBuffer;
+        uint32_t indexCount;
+        std::unique_ptr<Memory> upIndexMemory;
+
+        CommandBuffer* pCommandBuffer = nullptr;
+
+        void init(CommandRecording* pCommandRecording, const std::vector<Vertex>& vertices, const std::vector<uint16_t>& indices);
+
+        void createVertexBuffer(CommandRecording* pCommandRecording, const std::vector<Vertex>& vertices);
+        void createIndexBuffer(CommandRecording* pCommandRecording, const std::vector<uint16_t>& indices);
+
+      public:
+        Model(LogicalDevice* pLogicalDevice, CommandRecording* pCommandRecording, const std::vector<Vertex>& vertices,
+              const std::vector<uint16_t>& indices);
+        Model(LogicalDevice* pLogicalDevice, CommandRecording* pCommandRecording, std::string& filePath);
         ~Model();
 
         Model(const Model&) = delete;

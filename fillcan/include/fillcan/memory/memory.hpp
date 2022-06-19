@@ -15,13 +15,13 @@ namespace fillcan {
       private:
         LogicalDevice* pLogicalDevice;
         VkDeviceMemory hMemory;
-        VkMemoryPropertyFlagBits flag;
+        VkMemoryPropertyFlags flags;
         void* pData = nullptr;
 
         void init(VkMemoryRequirements& memoryRequirements);
       public:
-        Memory(LogicalDevice* pLogicalDevice, Buffer* pBuffer, VkMemoryPropertyFlagBits flag);
-        Memory(LogicalDevice* pLogicalDevice, Image* pImage, VkMemoryPropertyFlagBits flag);
+        Memory(LogicalDevice* pLogicalDevice, Buffer* pBuffer, VkMemoryPropertyFlags flags);
+        Memory(LogicalDevice* pLogicalDevice, Image* pImage, VkMemoryPropertyFlags flags);
         ~Memory();
 
         VkDeviceMemory getMemoryHandle();

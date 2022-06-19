@@ -35,7 +35,9 @@ namespace fillcan {
         this->pWaitSemaphores.clear();
         this->waitDstStageMask = 0;
         this->pSignalSemaphores.clear();
-        this->upFenceWorkCompleted->reset();
+        if (upFenceWorkCompleted != nullptr) {
+            this->upFenceWorkCompleted->reset();
+        }
         return result;
     }
 

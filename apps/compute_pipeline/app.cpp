@@ -1,6 +1,7 @@
 #include "app.hpp"
 #include "fillcan/memory/fence.hpp"
 #include "glm/detail/precision.hpp"
+#include "shaderc/shaderc.h"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
@@ -41,7 +42,7 @@
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-namespace app_compute_pipeline_test {
+namespace compute_pipeline {
     App::App() {}
     App::~App() {}
 
@@ -121,7 +122,7 @@ namespace app_compute_pipeline_test {
             Bind resources to descriptor sets
         */
         std::vector<fillcan::DescriptorSet*> pDescriptorSets = upDescriptorPool->getDescriptorSets();
-        // // We created one descriptor set layout for all bindings
+        // We created one descriptor set layout for all bindings
         fillcan::DescriptorSetLayout* pDescriptorSetLayout = upDescriptorSetLayouts[0].get();
         pDescriptorSets[0]->writeBuffer(pDescriptorSetLayout->getBindings()[0], upUniformBufferConfig.get());
         pDescriptorSets[0]->writeBuffer(pDescriptorSetLayout->getBindings()[1], upStorageBufferInputBuffer.get());
@@ -131,30 +132,17 @@ namespace app_compute_pipeline_test {
         /*
             Create Shader Module
         */
-        // Read from file in binary
-        std::ifstream computeShaderFile("./apps/compute_pipeline_test/shaders/compute-shader.comp.spv", std::ios::ate | std::ios::binary);
-        if (!computeShaderFile.is_open()) {
-            throw std::runtime_error("Failed to open shader file");
-        }
-        // std::ios::ate brought us to the end so we can use tellg to get the position (size) of the file
-        size_t computeShaderFileSize = static_cast<size_t>(computeShaderFile.tellg());
-        std::vector<char> computeShaderFileBuffer(computeShaderFileSize);
-
-        // Go to the start of the file and put all data in buffer
-        computeShaderFile.seekg(0);
-        computeShaderFile.read(computeShaderFileBuffer.data(), computeShaderFileSize);
-        computeShaderFile.close();
-
-        fillcan::ShaderModule computeShaderModule = fillcan::ShaderModule(this->upFillcan->getCurrentDevice(), computeShaderFileBuffer,
-                                                                          std::move(upDescriptorSetLayouts), std::move(upDescriptorPool));
+        std::unique_ptr<fillcan::ShaderModule> upComputeShaderModule =
+            this->upFillcan->createShaderModule(this->APP_DIR + "/shaders", "compute-shader.comp", shaderc_compute_shader,
+                                                std::move(upDescriptorSetLayouts), std::move(upDescriptorPool));
         /* */
 
         /*
             Create Compute Pipeline
         */
-        std::unique_ptr<fillcan::ComputePipeline> upComputePipeline = this->createComputePipeline({
+        this->createComputePipeline({
             .stage = VK_SHADER_STAGE_COMPUTE_BIT,
-            .pShaderModule = &computeShaderModule,
+            .pShaderModule = upComputeShaderModule.get(),
             .name = "main",
         });
         /* */
@@ -207,15 +195,18 @@ namespace app_compute_pipeline_test {
 
         // Begin compute recording commands
         pComputePrimaryCommandBuffer->begin();
-        upComputePipeline->bindToCommandBuffer(pComputePrimaryCommandBuffer);
-        upComputePipeline->start();
+        this->upComputePipeline->bindToCommandBuffer(pComputePrimaryCommandBuffer);
+        this->upComputePipeline->bindDescriptorSets();
+        // this->upComputePipeline->start();
         int groupCount = ((integerCount) / 256) + 1;
         vkCmdDispatch(pComputePrimaryCommandBuffer->getCommandBufferHandle(), groupCount, 1, 1);
         pComputePrimaryCommandBuffer->end();
 
-        // Create and wait for Fence
+        // Create Fence
         fillcan::Fence computeFence = fillcan::Fence(this->upFillcan->getCurrentDevice());
+        // Submit command buffers
         this->upFillcan->getCurrentDevice()->getComputeQueue()->submitRecordings({pComputeCommandRecording}, &computeFence);
+        // Wait for command buffers to finish
         computeFence.waitFor();
 
         // Invalidate buffer memory because the device has changed it
@@ -228,6 +219,7 @@ namespace app_compute_pipeline_test {
                 std::cout << "\n";
             }
         }
+        std::cout << "\n";
         /* */
     }
 
@@ -265,12 +257,12 @@ namespace app_compute_pipeline_test {
         return std::move(descriptorPoolBuilder.getResult());
     }
 
-    std::unique_ptr<fillcan::ComputePipeline> App::createComputePipeline(fillcan::PipelineShaderStage pipelineShaderStage) {
+    void App::createComputePipeline(fillcan::PipelineShaderStage pipelineShaderStage) {
         fillcan::ComputePipelineBuilder computePipelineBuilder{};
         computePipelineBuilder.setLogicalDevice(this->upFillcan->getCurrentDevice());
         computePipelineBuilder.setFlags(0);
         computePipelineBuilder.setBasePipeline(nullptr);
         computePipelineBuilder.setShaderStage(pipelineShaderStage);
-        return std::move(computePipelineBuilder.getResult());
+        this->upComputePipeline = computePipelineBuilder.getResult();
     }
-} // namespace app_compute_pipeline_test
+} // namespace compute_pipeline

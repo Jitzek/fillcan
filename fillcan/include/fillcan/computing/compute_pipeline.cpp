@@ -50,5 +50,5 @@ namespace fillcan {
         }
     }
 
-    ComputePipeline::~ComputePipeline() { Pipeline::~Pipeline(); }
+    ComputePipeline::~ComputePipeline() {}
 } // namespace fillcan

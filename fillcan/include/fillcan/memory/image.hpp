@@ -14,6 +14,8 @@ namespace fillcan {
     class LogicalDevice;
     class Memory;
     class Swapchain;
+    class CommandBuffer;
+    class Buffer;
 
     class Image {
       private:
@@ -66,5 +68,9 @@ namespace fillcan {
                                                                     VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY});
         std::vector<ImageView*> getImageViews();
         void destroyImageViews();
+
+        void copyTo(CommandBuffer* pCommandBuffer, Image* pImage, VkImageLayout srcLayout, VkImageLayout dstLayout,
+                    std::vector<VkImageCopy>& regions);
+        void copyTo(CommandBuffer* pCommandBuffer, Buffer* pBuffer, VkImageLayout srcLayout, std::vector<VkBufferImageCopy>& regions);
     };
 } // namespace fillcan

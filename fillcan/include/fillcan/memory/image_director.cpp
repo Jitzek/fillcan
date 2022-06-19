@@ -6,6 +6,7 @@
 #include <fillcan/memory/image.hpp>
 #include <fillcan/memory/image_director.hpp>
 #include <memory>
+#include <vector>
 
 namespace fillcan {
     ImageDirector::ImageDirector() : builder(ImageBuilder()) {}
@@ -17,7 +18,9 @@ namespace fillcan {
         this->builder.setLogicalDevice(pLogicalDevice);
         this->builder.setFlags(0);
         this->builder.setImageType(VK_IMAGE_TYPE_2D);
-        this->builder.setFormat(VK_FORMAT_R8G8B8A8_SRGB);
+        this->builder.setFormat(
+            pLogicalDevice->getPhysicalDevice()->findSupportedFormat({VK_FORMAT_R8G8B8A8_SRGB, VK_FORMAT_B8G8R8A8_SRGB}, VK_IMAGE_TILING_OPTIMAL,
+                                                                     VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT));
         this->builder.setExtent({width, height, 1});
         this->builder.setMipLevels(1);
         this->builder.setArrayLayers(1);

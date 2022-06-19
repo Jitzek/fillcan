@@ -4,6 +4,7 @@
 // fillcan
 #include <fillcan/graphics/swapchain.hpp>
 #include <fillcan/instance/logical_device.hpp>
+#include <fillcan/memory/buffer.hpp>
 #include <fillcan/memory/image.hpp>
 #include <fillcan/memory/image_view.hpp>
 #include <fillcan/memory/memory.hpp>
@@ -120,4 +121,16 @@ namespace fillcan {
     }
 
     void Image::destroyImageViews() { this->upImageViews.clear(); }
+
+    void Image::copyTo(CommandBuffer* pCommandBuffer, Image* pImage, VkImageLayout srcLayout, VkImageLayout dstLayout,
+                       std::vector<VkImageCopy>& regions) {
+        vkCmdCopyImage(pCommandBuffer->getCommandBufferHandle(), this->hImage, srcLayout, pImage->getImageHandle(), dstLayout,
+                       static_cast<uint32_t>(regions.size()), regions.data());
+    }
+
+    void Image::copyTo(CommandBuffer* pCommandBuffer, Buffer* pBuffer, VkImageLayout srcLayout, std::vector<VkBufferImageCopy>& regions) {
+        vkCmdCopyImageToBuffer(pCommandBuffer->getCommandBufferHandle(), this->hImage, srcLayout, pBuffer->getBufferHandle(),
+                               static_cast<uint32_t>(regions.size()), regions.data());
+    }
+
 } // namespace fillcan

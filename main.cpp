@@ -1,6 +1,7 @@
-#include "apps/compute_pipeline_test/app.hpp"
+#include "apps/compute_pipeline/app.hpp"
 #include "apps/simple_triangle/app.hpp"
 #include "apps/simple_cube/app.hpp"
+#include "apps/simple_model/app.hpp"
 
 // std
 #include <cstdlib>
@@ -10,9 +11,10 @@
 
 int main(int argc, char* argv[]) {
     // app::App app{};
-    // app_compute_pipeline_test::App app{};
+    // compute_pipeline::App app{};
     // simple_triangle::App app{};
     simple_cube::App app{};
+    // simple_model::App app{};
 
     try {
         app.run();

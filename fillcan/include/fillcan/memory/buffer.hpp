@@ -16,6 +16,8 @@ namespace fillcan {
     class LogicalDevice;
     class Memory;
     class BufferView;
+    class Image;
+    class CommandBuffer;
     class Buffer {
       private:
         LogicalDevice* pLogicalDevice;
@@ -46,5 +48,8 @@ namespace fillcan {
 
         BufferView* createBufferView(VkFormat format, VkDeviceSize offset = 0, VkDeviceSize range = VK_WHOLE_SIZE);
         std::vector<BufferView*> getBufferViews();
+
+        void copyTo(CommandBuffer* pCommandBuffer, Buffer* pBuffer, std::vector<VkBufferCopy>& regions);
+        void copyTo(CommandBuffer* pCommandBuffer, Image* pImage, VkImageLayout dstLayout, std::vector<VkBufferImageCopy>& regions);
     };
 } // namespace fillcan

@@ -1,6 +1,7 @@
 #pragma once
 
 // vulkan
+#include "fillcan/commands/command_recording.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
@@ -54,6 +55,9 @@ namespace fillcan {
                                                          std::vector<std::unique_ptr<DescriptorSetLayout>> upDescriptorSetLayouts,
                                                          std::unique_ptr<DescriptorPool> upDescriptorPool /*, TODO: pushConstants*/,
                                                          bool preprocess = true, bool optimize = false);
+        
+        CommandRecording* beginSingleTimeCommands(Queue* pQueue);
+        void endSingleTimeCommands(CommandRecording* pCommandRecording);
         
     };
 } // namespace fillcan

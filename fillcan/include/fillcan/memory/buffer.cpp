@@ -1,10 +1,12 @@
 // vulkan
+#include "fillcan/commands/command_buffer.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
 #include <fillcan/instance/logical_device.hpp>
 #include <fillcan/memory/buffer.hpp>
 #include <fillcan/memory/buffer_view.hpp>
+#include <fillcan/memory/image.hpp>
 #include <fillcan/memory/memory.hpp>
 
 // std
@@ -79,4 +81,15 @@ namespace fillcan {
                        [](const std::unique_ptr<BufferView>& upBufferView) { return upBufferView.get(); });
         return pBufferViews;
     }
+
+    void Buffer::copyTo(CommandBuffer* pCommandBuffer, Buffer* pBuffer, std::vector<VkBufferCopy>& regions) {
+        vkCmdCopyBuffer(pCommandBuffer->getCommandBufferHandle(), this->hBuffer, pBuffer->getBufferHandle(), static_cast<uint32_t>(regions.size()),
+                        regions.data());
+    }
+
+    void Buffer::copyTo(CommandBuffer* pCommandBuffer, Image* pImage, VkImageLayout dstLayout, std::vector<VkBufferImageCopy>& regions) {
+        vkCmdCopyBufferToImage(pCommandBuffer->getCommandBufferHandle(), this->hBuffer, pImage->getImageHandle(), dstLayout,
+                               static_cast<uint32_t>(regions.size()), regions.data());
+    }
+
 } // namespace fillcan

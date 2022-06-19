@@ -12,13 +12,13 @@
 #include <stdexcept>
 
 namespace fillcan {
-    Memory::Memory(LogicalDevice* pLogicalDevice, Buffer* pBuffer, VkMemoryPropertyFlagBits flag) : pLogicalDevice(pLogicalDevice), flag(flag) {
+    Memory::Memory(LogicalDevice* pLogicalDevice, Buffer* pBuffer, VkMemoryPropertyFlags flags) : pLogicalDevice(pLogicalDevice), flags(flags) {
         VkMemoryRequirements memoryRequirements;
         vkGetBufferMemoryRequirements(this->pLogicalDevice->getLogicalDeviceHandle(), pBuffer->getBufferHandle(), &memoryRequirements);
         this->init(memoryRequirements);
     }
 
-    Memory::Memory(LogicalDevice* pLogicalDevice, Image* pImage, VkMemoryPropertyFlagBits flag) : pLogicalDevice(pLogicalDevice), flag(flag) {
+    Memory::Memory(LogicalDevice* pLogicalDevice, Image* pImage, VkMemoryPropertyFlags flags) : pLogicalDevice(pLogicalDevice), flags(flags) {
         VkMemoryRequirements memoryRequirements;
         vkGetImageMemoryRequirements(this->pLogicalDevice->getLogicalDeviceHandle(), pImage->getImageHandle(), &memoryRequirements);
         this->init(memoryRequirements);
@@ -40,14 +40,14 @@ namespace fillcan {
     }
 
     void Memory::init(VkMemoryRequirements& memoryRequirements) {
-        if (!(memoryRequirements.memoryTypeBits & this->flag)) {
-            throw std::runtime_error("Memory property flag is not supported");
+        if (!(memoryRequirements.memoryTypeBits & this->flags)) {
+            throw std::runtime_error("Memory property flags are not supported");
         }
         VkPhysicalDeviceMemoryProperties physicalDeviceMemoryProperties;
         vkGetPhysicalDeviceMemoryProperties(this->pLogicalDevice->getPhysicalDevice()->getPhysicalDeviceHandle(), &physicalDeviceMemoryProperties);
         unsigned int i = 0;
         for (i = 0; i < physicalDeviceMemoryProperties.memoryTypeCount; i++) {
-            if (physicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & this->flag) {
+            if (physicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & this->flags) {
                 break;
             }
             if (i >= physicalDeviceMemoryProperties.memoryTypeCount) {

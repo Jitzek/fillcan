@@ -13,13 +13,17 @@
 
 // std
 #include <memory>
+#include <string>
 #include <vector>
 
-namespace app_compute_pipeline_test {
+namespace compute_pipeline {
     class DescriptorSetLayout;
     class App {
       private:
         std::unique_ptr<fillcan::Fillcan> upFillcan;
+        std::unique_ptr<fillcan::ComputePipeline> upComputePipeline;
+
+        std::string APP_DIR = "./apps/compute_pipeline";
 
       public:
         App();
@@ -30,6 +34,6 @@ namespace app_compute_pipeline_test {
         std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> createDescriptorSetLayouts();
         std::unique_ptr<fillcan::DescriptorPool>
         createDescriptorPool(std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>>& upDescriptorSetLayouts);
-        std::unique_ptr<fillcan::ComputePipeline> createComputePipeline(fillcan::PipelineShaderStage pipelineShaderStage);
+        void createComputePipeline(fillcan::PipelineShaderStage pipelineShaderStage);
     };
 } // namespace app_compute_pipeline_test

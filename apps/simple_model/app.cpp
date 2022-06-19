@@ -26,7 +26,6 @@
 #include "fillcan/shader/descriptor_pool_builder.hpp"
 #include "fillcan/shader/descriptor_set_layout.hpp"
 #include "fillcan/shader/shader_module.hpp"
-#include <exception>
 #include <fillcan/graphics/graphics_pipeline_builder.hpp>
 #include <fillcan/shader/pipeline.hpp>
 #include <fillcan/shader/pipeline_layout.hpp>
@@ -36,6 +35,7 @@
 #include <chrono>
 #include <cstddef>
 #include <cstring>
+#include <exception>
 #include <fstream>
 #include <functional>
 #include <iostream>
@@ -51,12 +51,12 @@
 #include <glm/detail/type_vec.hpp>
 #include <glm/glm.hpp>
 
-namespace simple_cube {
+namespace simple_model {
     App::App() {}
     App::~App() {}
 
     void App::run() {
-        std::string name = "Cube Application";
+        std::string name = "Model Application";
         std::cout << "Running App \"" << name << "\"\n";
 
         VkPhysicalDeviceFeatures requiredDeviceFeatures = {};
@@ -160,174 +160,10 @@ namespace simple_cube {
         this->currentFrameIndex = (currentFrameIndex + 1) % this->upFillcan->getSwapchain()->getImageCount();
     }
 
-    std::unique_ptr<fillcan::Model> App::createCubeModel(glm::vec3 offset) {
-        // std::vector<fillcan::Model::Vertex> vertices{
-
-        //     // left face (white)
-        //     {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
-        //     {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
-        //     {{-.5f, -.5f, .5f}, {.9f, .9f, .9f}},
-        //     {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
-        //     {{-.5f, .5f, -.5f}, {.9f, .9f, .9f}},
-        //     {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
-
-        //     // right face (yellow)
-        //     {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
-        //     {{.5f, .5f, .5f}, {.8f, .8f, .1f}},
-        //     {{.5f, -.5f, .5f}, {.8f, .8f, .1f}},
-        //     {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
-        //     {{.5f, .5f, -.5f}, {.8f, .8f, .1f}},
-        //     {{.5f, .5f, .5f}, {.8f, .8f, .1f}},
-
-        //     // top face (orange, remember y axis points down)
-        //     {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
-        //     {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
-        //     {{-.5f, -.5f, .5f}, {.9f, .6f, .1f}},
-        //     {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
-        //     {{.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
-        //     {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
-
-        //     // bottom face (red)
-        //     {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
-        //     {{.5f, .5f, .5f}, {.8f, .1f, .1f}},
-        //     {{-.5f, .5f, .5f}, {.8f, .1f, .1f}},
-        //     {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
-        //     {{.5f, .5f, -.5f}, {.8f, .1f, .1f}},
-        //     {{.5f, .5f, .5f}, {.8f, .1f, .1f}},
-
-        //     // nose face (blue)
-        //     {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
-        //     {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
-        //     {{-.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
-        //     {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
-        //     {{.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
-        //     {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
-
-        //     // tail face (green)
-        //     {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
-        //     {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
-        //     {{-.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
-        //     {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
-        //     {{.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
-        //     {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
-
-        // };
-        // std::vector<fillcan::Model::Vertex> vertices{
-
-        //     // left face (white)
-        //     {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}}, // 0
-        //     {{-.5f, .5f, .5f}, {.9f, .9f, .9f}}, // 1
-        //     {{-.5f, -.5f, .5f}, {.9f, .9f, .9f}}, // 2
-
-        //     {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}}, // 0
-        //     {{-.5f, .5f, -.5f}, {.9f, .9f, .9f}}, // 3
-        //     {{-.5f, .5f, .5f}, {.9f, .9f, .9f}}, // 1
-
-        //     // right face (yellow)
-        //     {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}}, // 4
-        //     {{.5f, .5f, .5f}, {.8f, .8f, .1f}}, // 5
-        //     {{.5f, -.5f, .5f}, {.8f, .8f, .1f}}, // 6
-
-        //     {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}}, // 4
-        //     {{.5f, .5f, -.5f}, {.8f, .8f, .1f}}, // 7
-        //     {{.5f, .5f, .5f}, {.8f, .8f, .1f}}, // 5
-
-        //     // top face (orange)
-        //     {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}}, // 8
-        //     {{.5f, -.5f, .5f}, {.9f, .6f, .1f}}, // 9
-        //     {{-.5f, -.5f, .5f}, {.9f, .6f, .1f}}, // 10
-
-        //     {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}}, // 8
-        //     {{.5f, -.5f, -.5f}, {.9f, .6f, .1f}}, // 11
-        //     {{.5f, -.5f, .5f}, {.9f, .6f, .1f}}, // 9
-
-        //     // bottom face (red)
-        //     {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}}, // 12
-        //     {{.5f, .5f, .5f}, {.8f, .1f, .1f}}, // 13
-        //     {{-.5f, .5f, .5f}, {.8f, .1f, .1f}}, // 14
-
-        //     {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}}, // 12
-        //     {{.5f, .5f, -.5f}, {.8f, .1f, .1f}}, // 15
-        //     {{.5f, .5f, .5f}, {.8f, .1f, .1f}}, // 13
-
-        //     // nose face (blue)
-        //     {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}}, // 16
-        //     {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}}, // 17
-        //     {{-.5f, .5f, 0.5f}, {.1f, .1f, .8f}}, // 18
-
-        //     {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}}, // 16
-        //     {{.5f, -.5f, 0.5f}, {.1f, .1f, .8f}}, // 19
-        //     {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}}, // 17
-
-        //     // tail face (green)
-        //     {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}}, // 20
-        //     {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}}, // 21
-        //     {{-.5f, .5f, -0.5f}, {.1f, .8f, .1f}}, // 22
-
-        //     {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}}, // 20
-        //     {{.5f, -.5f, -0.5f}, {.1f, .8f, .1f}}, // 23
-        //     {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}}, //21
-
-        // };
-        std::vector<fillcan::Model::Vertex> vertices{
-
-            // left face (white)
-            {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}}, // 0
-            {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},   // 1
-            {{-.5f, -.5f, .5f}, {.9f, .9f, .9f}},  // 2
-
-            {{-.5f, .5f, -.5f}, {.9f, .9f, .9f}}, // 3
-
-            // right face (yellow)
-            {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}}, // 4
-            {{.5f, .5f, .5f}, {.8f, .8f, .1f}},   // 5
-            {{.5f, -.5f, .5f}, {.8f, .8f, .1f}},  // 6
-
-            {{.5f, .5f, -.5f}, {.8f, .8f, .1f}}, // 7
-
-            // top face (orange)
-            {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}}, // 8
-            {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},   // 9
-            {{-.5f, -.5f, .5f}, {.9f, .6f, .1f}},  // 10
-
-            {{.5f, -.5f, -.5f}, {.9f, .6f, .1f}}, // 11
-
-            // bottom face (red)
-            {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}}, // 12
-            {{.5f, .5f, .5f}, {.8f, .1f, .1f}},   // 13
-            {{-.5f, .5f, .5f}, {.8f, .1f, .1f}},  // 14
-
-            {{.5f, .5f, -.5f}, {.8f, .1f, .1f}}, // 15
-
-            // nose face (blue)
-            {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}}, // 16
-            {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},   // 17
-            {{-.5f, .5f, 0.5f}, {.1f, .1f, .8f}},  // 18
-
-            {{.5f, -.5f, 0.5f}, {.1f, .1f, .8f}}, // 19
-
-            // tail face (green)
-            {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}}, // 20
-            {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},   // 21
-            {{-.5f, .5f, -0.5f}, {.1f, .8f, .1f}},  // 22
-
-            {{.5f, -.5f, -0.5f}, {.1f, .8f, .1f}}, // 23
-
-        };
-
-        const std::vector<uint16_t> indices = {0,  1,  2,  0,  3,  1,  4,  5,  6,  4,  7,  5,  8,  9,  10, 8,  11, 9,
-                                               12, 13, 14, 12, 15, 13, 16, 17, 18, 16, 19, 17, 20, 21, 22, 20, 23, 21};
-
-        for (auto& v : vertices) {
-            v.position += offset;
-        }
-        std::unique_ptr<fillcan::Model> cubeModel = std::move(std::make_unique<fillcan::Model>(
-            this->upFillcan->getCurrentDevice(), this->upFillcan->getCurrentDevice()->getGraphicsQueue()->createRecording(1, 0), vertices, indices));
-        return std::move(cubeModel);
-    }
-
     void App::loadGameObjects() {
-        std::shared_ptr<fillcan::Model> spModel = this->createCubeModel({0.f, 0.f, 0.f});
+        std::string modelFilePath = this->APP_DIR + "/models/viking_room.obj";
+        std::shared_ptr<fillcan::Model> spModel = std::make_unique<fillcan::Model>(
+            this->upFillcan->getCurrentDevice(), this->upFillcan->getCurrentDevice()->getGraphicsQueue()->createRecording(1, 0), modelFilePath);
 
         fillcan::GameObject triangleGameObject = fillcan::GameObject::createGameObject();
         triangleGameObject.transform.translation = {0.f, 0.f, 0.5f};
@@ -481,4 +317,4 @@ namespace simple_cube {
 
         this->upGraphicsPipeline = graphicsPipelineBuilder.getResult();
     }
-} // namespace simple_cube
+} // namespace simple_model

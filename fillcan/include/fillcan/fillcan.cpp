@@ -1,5 +1,6 @@
 
 // fillcan
+#include "fillcan/commands/command_buffer.hpp"
 #include "fillcan/shader/shader_module.hpp"
 #include "vulkan/vulkan_core.h"
 #include <cstddef>
@@ -118,5 +119,20 @@ namespace fillcan {
 
         return std::move(
             std::make_unique<ShaderModule>(this->getCurrentDevice(), spirvCode, std::move(upDescriptorSetLayouts), std::move(upDescriptorPool)));
+    }
+
+    CommandRecording* Fillcan::beginSingleTimeCommands(Queue* pQueue) {
+        fillcan::CommandRecording* singleTimeRecording = pQueue->createRecording(1, 0);
+        for (CommandBuffer* pCommandBuffer : singleTimeRecording->pPrimaryCommandBuffers) {
+            pCommandBuffer->begin();
+        }
+        return singleTimeRecording;
+    }
+
+    void Fillcan::endSingleTimeCommands(CommandRecording* pCommandRecording) {
+        pCommandRecording->endAll();
+        pCommandRecording->submit();
+        pCommandRecording->pQueue->waitIdle();
+        pCommandRecording->free();
     }
 } // namespace fillcan
