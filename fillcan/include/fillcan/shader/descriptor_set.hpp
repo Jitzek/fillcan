@@ -29,7 +29,7 @@ namespace fillcan {
         VkDescriptorSet getDescriptorSetHandle();
         DescriptorSetLayout* getLayout();
         void write(VkDescriptorSetLayoutBinding binding, VkDescriptorImageInfo* pImageInfo, VkDescriptorBufferInfo* pBufferInfo,
-                   VkBufferView* pTexelBufferView, unsigned int dstArrayElement = 0, unsigned int descriptorCount = 0);
+                   VkBufferView* pTexelBufferView, unsigned int dstArrayElement = 0, unsigned int descriptorCount = 1);
         void writeImage(VkDescriptorSetLayoutBinding binding, ImageView* pImageView, VkImageLayout imageLayout, Sampler* pSampler);
         void writeBuffer(VkDescriptorSetLayoutBinding binding, Buffer* pBuffer, VkDeviceSize offset = 0, VkDeviceSize range = VK_WHOLE_SIZE);
         void writeTexelBufferView(VkDescriptorSetLayoutBinding binding, BufferView* pTexelBufferView);
