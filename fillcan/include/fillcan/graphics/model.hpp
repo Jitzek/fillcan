@@ -42,15 +42,15 @@ namespace fillcan {
 
         CommandBuffer* pCommandBuffer = nullptr;
 
-        void init(CommandRecording* pCommandRecording, const std::vector<Vertex>& vertices, const std::vector<uint16_t>& indices);
+        void init(const std::vector<Vertex>& vertices, const std::vector<uint16_t>& indices);
 
-        void createVertexBuffer(CommandRecording* pCommandRecording, const std::vector<Vertex>& vertices);
-        void createIndexBuffer(CommandRecording* pCommandRecording, const std::vector<uint16_t>& indices);
+        void createVertexBuffer(const std::vector<Vertex>& vertices);
+        void createIndexBuffer(const std::vector<uint16_t>& indices);
 
       public:
-        Model(LogicalDevice* pLogicalDevice, CommandRecording* pCommandRecording, const std::vector<Vertex>& vertices,
+        Model(LogicalDevice* pLogicalDevice, const std::vector<Vertex>& vertices,
               const std::vector<uint16_t>& indices);
-        Model(LogicalDevice* pLogicalDevice, CommandRecording* pCommandRecording, std::string& filePath);
+        Model(LogicalDevice* pLogicalDevice, std::string& filePath);
         ~Model();
 
         Model(const Model&) = delete;

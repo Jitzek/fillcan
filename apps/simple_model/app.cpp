@@ -162,8 +162,7 @@ namespace simple_model {
 
     void App::loadGameObjects() {
         std::string modelFilePath = this->APP_DIR + "/models/viking_room.obj";
-        std::shared_ptr<fillcan::Model> spModel = std::make_unique<fillcan::Model>(
-            this->upFillcan->getCurrentDevice(), this->upFillcan->getCurrentDevice()->getGraphicsQueue()->createRecording(1, 0), modelFilePath);
+        std::shared_ptr<fillcan::Model> spModel = std::make_unique<fillcan::Model>(this->upFillcan->getCurrentDevice(), modelFilePath);
 
         fillcan::GameObject triangleGameObject = fillcan::GameObject::createGameObject();
         triangleGameObject.transform.translation = {0.f, 0.f, 0.5f};

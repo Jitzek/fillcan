@@ -322,7 +322,7 @@ namespace simple_cube {
             v.position += offset;
         }
         std::unique_ptr<fillcan::Model> cubeModel = std::move(std::make_unique<fillcan::Model>(
-            this->upFillcan->getCurrentDevice(), this->upFillcan->getCurrentDevice()->getGraphicsQueue()->createRecording(1, 0), vertices, indices));
+            this->upFillcan->getCurrentDevice(), vertices, indices));
         return std::move(cubeModel);
     }
 

@@ -1,6 +1,7 @@
 #pragma once
 
 // vulkan
+#include "fillcan/commands/command_recording.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
@@ -31,5 +32,8 @@ namespace fillcan {
         Queue* getGraphicsQueue() const;
         Queue* getPresentQueue() const;
         Queue* getComputeQueue() const;
+
+        CommandRecording* beginSingleTimeCommandRecording(Queue* pQueue);
+        void endSingleTimeCommandRecording(CommandRecording* pCommandRecording);
     };
 } // namespace fillcan

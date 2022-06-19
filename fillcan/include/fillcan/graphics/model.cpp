@@ -4,6 +4,7 @@
 #include <fillcan/commands/command_buffer.hpp>
 #include <fillcan/commands/queue.hpp>
 #include <fillcan/graphics/model.hpp>
+#include <fillcan/instance/logical_device.hpp>
 #include <fillcan/memory/buffer.hpp>
 #include <fillcan/memory/buffer_director.hpp>
 #include <fillcan/memory/memory.hpp>
@@ -20,13 +21,12 @@
 #include <tinyobjloader/tiny_obj_loader.h>
 
 namespace fillcan {
-    Model::Model(LogicalDevice* pLogicalDevice, CommandRecording* pCommandRecording, const std::vector<Vertex>& vertices,
-                 const std::vector<uint16_t>& indices)
+    Model::Model(LogicalDevice* pLogicalDevice, const std::vector<Vertex>& vertices, const std::vector<uint16_t>& indices)
         : pLogicalDevice(pLogicalDevice) {
-        this->init(pCommandRecording, vertices, indices);
+        this->init(vertices, indices);
     }
 
-    Model::Model(LogicalDevice* pLogicalDevice, CommandRecording* pCommandRecording, std::string& filePath) : pLogicalDevice(pLogicalDevice) {
+    Model::Model(LogicalDevice* pLogicalDevice, std::string& filePath) : pLogicalDevice(pLogicalDevice) {
         std::vector<Vertex> vertices;
         std::vector<uint16_t> indices;
 
@@ -54,42 +54,23 @@ namespace fillcan {
             }
         }
 
-        this->init(pCommandRecording, vertices, indices);
+        this->init(vertices, indices);
     }
 
     Model::~Model() {}
 
-    void Model::init(CommandRecording* pCommandRecording, const std::vector<Vertex>& vertices, const std::vector<uint16_t>& indices) {
-        if (pCommandRecording->pPrimaryCommandBuffers.size() < 1) {
-            throw std::runtime_error("A minimum of 1 primary command buffer is required to create a model");
-        }
-
+    void Model::init(const std::vector<Vertex>& vertices, const std::vector<uint16_t>& indices) {
         this->vertexCount = static_cast<uint32_t>(vertices.size());
         this->indexCount = static_cast<uint32_t>(indices.size());
 
-        pCommandRecording->pPrimaryCommandBuffers[0]->begin();
-
-        // upStagingBuffer->copyTo(pCommandBuffer, )
-
-        // this->upVertexBuffer = bufferDirector.makeVertexBuffer(this->pLogicalDevice, sizeof(vertices[0]) * vertices.size());
-        // this->upVertexMemory = std::make_unique<Memory>(this->pLogicalDevice, upVertexBuffer.get(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
-        // this->upVertexBuffer->bindMemory(this->upVertexMemory.get());
-        // void** ppVertexData = this->upVertexBuffer->getMemory()->map();
-        // memcpy(*ppVertexData, vertices.data(), upVertexBuffer->getSize());
-        // this->upVertexBuffer->getMemory()->unmap();
-
-        this->createVertexBuffer(pCommandRecording, vertices);
+        this->createVertexBuffer(vertices);
 
         if (indices.size() > 0) {
-            this->createIndexBuffer(pCommandRecording, indices);
+            this->createIndexBuffer(indices);
         }
-        pCommandRecording->free();
     }
 
-    void Model::createVertexBuffer(CommandRecording* pCommandRecording, const std::vector<Vertex>& vertices) {
-        pCommandRecording->reset();
-        pCommandRecording->pPrimaryCommandBuffers[0]->begin();
-
+    void Model::createVertexBuffer(const std::vector<Vertex>& vertices) {
         BufferDirector bufferDirector{};
 
         VkDeviceSize vertexBufferSize = sizeof(vertices[0]) * vertices.size();
@@ -107,17 +88,12 @@ namespace fillcan {
 
         std::vector<VkBufferCopy> regions = {{.srcOffset = 0, .dstOffset = 0, .size = vertexBufferSize}};
 
+        CommandRecording* pCommandRecording = this->pLogicalDevice->beginSingleTimeCommandRecording(this->pLogicalDevice->getGraphicsQueue());
         upStagingBuffer->copyTo(pCommandRecording->pPrimaryCommandBuffers[0], this->upVertexBuffer.get(), regions);
-
-        pCommandRecording->endAll();
-        pCommandRecording->submit();
-        pCommandRecording->pQueue->waitIdle();
+        this->pLogicalDevice->endSingleTimeCommandRecording(pCommandRecording);
     }
 
-    void Model::createIndexBuffer(CommandRecording* pCommandRecording, const std::vector<uint16_t>& indices) {
-        pCommandRecording->reset();
-        pCommandRecording->pPrimaryCommandBuffers[0]->begin();
-
+    void Model::createIndexBuffer(const std::vector<uint16_t>& indices) {
         BufferDirector bufferDirector{};
 
         VkDeviceSize indexBufferSize = sizeof(indices[0]) * indices.size();
@@ -135,11 +111,9 @@ namespace fillcan {
 
         std::vector<VkBufferCopy> regions = {{.srcOffset = 0, .dstOffset = 0, .size = indexBufferSize}};
 
+        CommandRecording* pCommandRecording = this->pLogicalDevice->beginSingleTimeCommandRecording(this->pLogicalDevice->getGraphicsQueue());
         upStagingBuffer->copyTo(pCommandRecording->pPrimaryCommandBuffers[0], this->upIndexBuffer.get(), regions);
-
-        pCommandRecording->endAll();
-        pCommandRecording->submit();
-        pCommandRecording->pQueue->waitIdle();
+        this->pLogicalDevice->endSingleTimeCommandRecording(pCommandRecording);
     }
 
     void Model::bind(CommandBuffer* pCommandBuffer) {

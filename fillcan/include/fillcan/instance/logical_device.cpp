@@ -1,4 +1,5 @@
 // fillcan
+#include "fillcan/commands/command_recording.hpp"
 #include <fillcan/commands/queue.hpp>
 #include <fillcan/instance/logical_device.hpp>
 
@@ -72,5 +73,18 @@ namespace fillcan {
     Queue* LogicalDevice::getGraphicsQueue() const { return this->upGraphicsQueue.get(); }
     Queue* LogicalDevice::getPresentQueue() const { return this->upPresentQueue.get(); }
     Queue* LogicalDevice::getComputeQueue() const { return this->upComputeQueue.get(); }
+
+    CommandRecording* LogicalDevice::beginSingleTimeCommandRecording(Queue* pQueue) {
+        CommandRecording* pCommandRecording = pQueue->createRecording(1, 0);
+        pCommandRecording->pPrimaryCommandBuffers[0]->begin();
+        return pCommandRecording;
+    }
+
+    void LogicalDevice::endSingleTimeCommandRecording(CommandRecording* pCommandRecording) {
+        pCommandRecording->endAll();
+        pCommandRecording->submit();
+        pCommandRecording->pQueue->waitIdle();
+        pCommandRecording->free();
+    }
 
 } // namespace fillcan
