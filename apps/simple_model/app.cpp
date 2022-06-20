@@ -186,8 +186,8 @@ namespace simple_model {
         cubeGameObject.model = spModel;
         gameObjects.push_back(std::move(cubeGameObject));
 
-        this->upFillcan->getAssetManager()->writeTexturesToDescriptorSet(this->upFillcan->getCurrentDevice(),
-                                                                         this->upFragmentShaderModule->getDescriptorPool()->getDescriptorSets()[0]);
+        this->upFillcan->getAssetManager()->writeTexturesToDescriptorSet(
+            this->upFillcan->getCurrentDevice(), this->upFragmentShaderModule->getDescriptorPool()->getDescriptorSet("TexturesDescriptorSet"));
     }
 
     void App::renderGameObjects(fillcan::CommandBuffer* pCommandBuffer) {
@@ -270,9 +270,7 @@ namespace simple_model {
         fillcan::DescriptorPoolBuilder descriptorPoolBuilder{};
         descriptorPoolBuilder.setLogicalDevice(this->upFillcan->getCurrentDevice());
         descriptorPoolBuilder.setFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT);
-        for (std::unique_ptr<fillcan::DescriptorSetLayout>& upDescriptorSetLayout : upDescriptorSetLayouts) {
-            descriptorPoolBuilder.addSet(upDescriptorSetLayout.get(), 1);
-        }
+        descriptorPoolBuilder.addSet(upDescriptorSetLayouts.at(0).get(), "TexturesDescriptorSet");
         return std::move(descriptorPoolBuilder.getResult());
     }
 

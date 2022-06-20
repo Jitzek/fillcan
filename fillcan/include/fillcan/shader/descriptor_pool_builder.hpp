@@ -17,9 +17,9 @@ namespace fillcan {
     class DescriptorPoolBuilder {
       private:
         struct DescriptorSetInfo {
-            VkDescriptorPoolSize poolSize;
+            std::string name = "Undefined";
             DescriptorSetLayout* pLayout = nullptr;
-            std::vector<std::string> names = {};
+            std::vector<VkDescriptorPoolSize> poolSizes;
         };
         LogicalDevice* pLogicalDevice = nullptr;
         VkDescriptorPoolCreateFlags flags = 0;
@@ -34,7 +34,6 @@ namespace fillcan {
 
         void setLogicalDevice(LogicalDevice* pLogicalDevice);
         void setFlags(VkDescriptorPoolCreateFlags flags);
-        void addSet(DescriptorSetLayout* pDescriptorSetLayout, unsigned int amount);
         void addSet(DescriptorSetLayout* pDescriptorSetLayout, std::string name);
 
         void reset();

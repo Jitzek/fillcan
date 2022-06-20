@@ -149,6 +149,15 @@ namespace fillcan {
                    : false;
     }
 
+    DescriptorSet* DescriptorPool::getDescriptorSet(std::string name) {
+        for (std::unique_ptr<DescriptorSet>& upDescriptorSet : this->upDescriptorSets) {
+            if (upDescriptorSet->getName() == name) {
+                return upDescriptorSet.get();
+            }
+        }
+        throw std::runtime_error("Failed to find descriptor set with name: \"" + name + "\"");
+    }
+
     bool DescriptorPool::reset() {
         return vkResetDescriptorPool(this->pLogicalDevice->getLogicalDeviceHandle(), this->hDescriptorPool, 0) == VK_SUCCESS ? true : false;
     }

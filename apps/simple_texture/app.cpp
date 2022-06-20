@@ -345,9 +345,7 @@ namespace simple_texture {
         fillcan::DescriptorPoolBuilder descriptorPoolBuilder{};
         descriptorPoolBuilder.setLogicalDevice(this->upFillcan->getCurrentDevice());
         descriptorPoolBuilder.setFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT);
-        for (std::unique_ptr<fillcan::DescriptorSetLayout>& upDescriptorSetLayout : upDescriptorSetLayouts) {
-            descriptorPoolBuilder.addSet(upDescriptorSetLayout.get(), 1);
-        }
+        descriptorPoolBuilder.addSet(upDescriptorSetLayouts.at(0).get(), "TexturesDescriptorSet");
         return std::move(descriptorPoolBuilder.getResult());
     }
 

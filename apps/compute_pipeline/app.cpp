@@ -121,14 +121,14 @@ namespace compute_pipeline {
         /*
             Bind resources to descriptor sets
         */
-        std::vector<fillcan::DescriptorSet*> pDescriptorSets = upDescriptorPool->getDescriptorSets();
+        // std::vector<fillcan::DescriptorSet*> pDescriptorSets = upDescriptorPool->getDescriptorSets();
+        fillcan::DescriptorSet* pDescriptorSet = upDescriptorPool->getDescriptorSet("ComputeDescriptorSet");
         // We created one descriptor set layout for all bindings
         fillcan::DescriptorSetLayout* pDescriptorSetLayout = upDescriptorSetLayouts[0].get();
-        pDescriptorSets[0]->writeBuffer(pDescriptorSetLayout->getBindings()[0], upUniformBufferConfig.get());
-        pDescriptorSets[0]->writeBuffer(pDescriptorSetLayout->getBindings()[1], upStorageBufferInputBuffer.get());
-        pDescriptorSets[0]->writeBuffer(pDescriptorSetLayout->getBindings()[2], upStorageBufferOutputBuffer.get());
+        pDescriptorSet->writeBuffer(pDescriptorSetLayout->getBindings()[0], upUniformBufferConfig.get());
+        pDescriptorSet->writeBuffer(pDescriptorSetLayout->getBindings()[1], upStorageBufferInputBuffer.get());
+        pDescriptorSet->writeBuffer(pDescriptorSetLayout->getBindings()[2], upStorageBufferOutputBuffer.get());
         /* */
-
 
         /*
             Create Shader Module
@@ -252,9 +252,7 @@ namespace compute_pipeline {
         fillcan::DescriptorPoolBuilder descriptorPoolBuilder{};
         descriptorPoolBuilder.setLogicalDevice(this->upFillcan->getCurrentDevice());
         descriptorPoolBuilder.setFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT);
-        for (std::unique_ptr<fillcan::DescriptorSetLayout>& upDescriptorSetLayout : upDescriptorSetLayouts) {
-            descriptorPoolBuilder.addSet(upDescriptorSetLayout.get(), 1);
-        }
+        descriptorPoolBuilder.addSet(upDescriptorSetLayouts.at(0).get(), "ComputeDescriptorSet");
         return std::move(descriptorPoolBuilder.getResult());
     }
 

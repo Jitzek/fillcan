@@ -23,10 +23,9 @@ namespace fillcan {
         // TODO: pushconstants
       public:
         ShaderModule(LogicalDevice* pLogicalDevice, std::vector<char>& code, std::vector<std::unique_ptr<DescriptorSetLayout>> upDescriptorSetLayouts,
-                     std::unique_ptr<DescriptorPool> upDescriptorPool /*, TODO: pushConstants*/);
+                     std::unique_ptr<DescriptorPool> upDescriptorPool);
         ShaderModule(LogicalDevice* pLogicalDevice, std::vector<uint32_t>& code,
-                     std::vector<std::unique_ptr<DescriptorSetLayout>> upDescriptorSetLayouts,
-                     std::unique_ptr<DescriptorPool> upDescriptorPool /*, TODO: pushConstants*/);
+                     std::vector<std::unique_ptr<DescriptorSetLayout>> upDescriptorSetLayouts, std::unique_ptr<DescriptorPool> upDescriptorPool);
         ~ShaderModule();
 
         VkShaderModule getShaderModuleHandle();

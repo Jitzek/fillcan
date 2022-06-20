@@ -37,6 +37,8 @@ namespace fillcan {
         bool freeDescriptorSets();
         bool freeDescriptorSets(std::vector<DescriptorSet*> pDescriptorSets);
 
+        DescriptorSet* getDescriptorSet(std::string name);
+
         bool reset();
     };
 } // namespace fillcan

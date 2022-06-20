@@ -32,11 +32,10 @@ namespace fillcan {
             throw std::runtime_error("Failed to load texture");
         }
         VkDeviceSize imageSize = (width * height * 4) /* 4 for RGBA */;
-        std::unique_ptr<Buffer> upStagingBuffer = BufferDirector().makeStagingBuffer(this->pLogicalDevice, imageSize);
 
+        std::unique_ptr<Buffer> upStagingBuffer = BufferDirector().makeStagingBuffer(this->pLogicalDevice, imageSize);
         std::unique_ptr<Memory> upStagingBufferMemory = std::make_unique<Memory>(
             this->pLogicalDevice, upStagingBuffer.get(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-
         upStagingBuffer->bindMemory(upStagingBufferMemory.get());
         void** ppStagingBufferData = upStagingBuffer->getMemory()->map();
         memcpy(*ppStagingBufferData, pixels, static_cast<size_t>(imageSize));
@@ -87,7 +86,7 @@ namespace fillcan {
     void Texture::createImageView() { this->upImage->createImageView(VK_IMAGE_VIEW_TYPE_2D, VK_FORMAT_R8G8B8A8_SRGB); }
 
     void Texture::createSampler() {
-        SamplerBuilder samplerBuilder{};
+        SamplerBuilder samplerBuilder = SamplerBuilder();
         samplerBuilder.setLogicalDevice(this->pLogicalDevice);
         samplerBuilder.setFilters(VK_FILTER_LINEAR, VK_FILTER_LINEAR);
         samplerBuilder.setMipmapMode(VK_SAMPLER_MIPMAP_MODE_LINEAR);

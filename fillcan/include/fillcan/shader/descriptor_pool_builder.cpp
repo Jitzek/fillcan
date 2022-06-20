@@ -20,13 +20,14 @@ namespace fillcan {
 
     void DescriptorPoolBuilder::setFlags(VkDescriptorPoolCreateFlags flags) { this->flags = flags; }
 
-    void DescriptorPoolBuilder::addSet(DescriptorSetLayout* pDescriptorSetLayout, unsigned int amount) {
+    void DescriptorPoolBuilder::addSet(DescriptorSetLayout* pDescriptorSetLayout, std::string name) {
         this->pDescriptorSetLayouts.push_back(pDescriptorSetLayout);
-        maxSets += amount;
+        maxSets++;
+        DescriptorSetInfo descriptorSetInfo = {.name = name, .pLayout = pDescriptorSetLayout, .poolSizes = {}};
         for (VkDescriptorSetLayoutBinding binding : pDescriptorSetLayout->getBindings()) {
-            VkDescriptorPoolSize newdescriptorPoolSize = {.type = binding.descriptorType, .descriptorCount = binding.descriptorCount * amount};
+            VkDescriptorPoolSize newdescriptorPoolSize = {.type = binding.descriptorType, .descriptorCount = binding.descriptorCount};
             bool exists = false;
-            for (VkDescriptorPoolSize& descriptorPoolSize : this->descriptorPoolSizes) {
+            for (VkDescriptorPoolSize& descriptorPoolSize : descriptorSetInfo.poolSizes) {
                 if (descriptorPoolSize.type == newdescriptorPoolSize.type) {
                     descriptorPoolSize.descriptorCount += newdescriptorPoolSize.descriptorCount;
                     exists = true;
@@ -34,29 +35,10 @@ namespace fillcan {
                 }
             }
             if (!exists) {
-                this->descriptorPoolSizes.push_back(newdescriptorPoolSize);
+                descriptorSetInfo.poolSizes.push_back(newdescriptorPoolSize);
             }
         }
-    }
-
-    void DescriptorPoolBuilder::addSet(DescriptorSetLayout* pDescriptorSetLayout, std::string name) {
-        this->pDescriptorSetLayouts.push_back(pDescriptorSetLayout);
-        maxSets++;
-        for (VkDescriptorSetLayoutBinding binding : pDescriptorSetLayout->getBindings()) {
-            VkDescriptorPoolSize newdescriptorPoolSize = {.type = binding.descriptorType, .descriptorCount = binding.descriptorCount};
-            bool exists = false;
-            for (DescriptorSetInfo& descriptorSetInfo : this->descriptorSetInfos) {
-                if (descriptorSetInfo.poolSize.type == newdescriptorPoolSize.type) {
-                    descriptorSetInfo.poolSize.descriptorCount += newdescriptorPoolSize.descriptorCount;
-                    descriptorSetInfo.names.push_back(name);
-                    exists = true;
-                    break;
-                }
-            }
-            if (!exists) {
-                this->descriptorSetInfos.push_back({newdescriptorPoolSize, pDescriptorSetLayout, {name}});
-            }
-        }
+        this->descriptorSetInfos.push_back(descriptorSetInfo);
     }
 
     void DescriptorPoolBuilder::reset() {
@@ -73,18 +55,18 @@ namespace fillcan {
         // upDescriptorPool->allocateDescriptorSets(this->pDescriptorSetLayouts);
         // return std::move(upDescriptorPool);
 
-        std::vector<VkDescriptorPoolSize> poolSizes = {};
         unsigned int maxSets = 0;
-        for (DescriptorSetInfo descriptorSetInfo : this->descriptorSetInfos) {
-            poolSizes.push_back(descriptorSetInfo.poolSize);
-            maxSets += descriptorSetInfo.poolSize.descriptorCount;
+        std::vector<VkDescriptorPoolSize> poolSizes = {};
+        for (DescriptorSetInfo& descriptorSetInfo : this->descriptorSetInfos) {
+            for (VkDescriptorPoolSize& poolSize : descriptorSetInfo.poolSizes) {
+                poolSizes.push_back(poolSize);
+                maxSets += poolSize.descriptorCount;
+            }
         }
         std::unique_ptr<DescriptorPool> upDescriptorPool = std::make_unique<DescriptorPool>(this->pLogicalDevice, this->flags, maxSets, poolSizes);
 
         for (DescriptorSetInfo descriptorSetInfo : this->descriptorSetInfos) {
-            for (std::string name : descriptorSetInfo.names) {
-                upDescriptorPool->allocateDescriptorSet(descriptorSetInfo.pLayout, name);
-            }
+            upDescriptorPool->allocateDescriptorSet(descriptorSetInfo.pLayout, descriptorSetInfo.name);
         }
         return std::move(upDescriptorPool);
     }
