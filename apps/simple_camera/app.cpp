@@ -202,9 +202,9 @@ namespace simple_camera {
         this->upFillcan->getAssetManager()->writeTexturesToDescriptorSet(this->upFillcan->getCurrentDevice(),
                                                                          this->upFragmentShaderModule->getDescriptorPool()->getDescriptorSets()[0]);
 
-        this->upCamera->bindDescriptorSets({this->upGraphicsPipeline->getDescriptorSet("VertexCameraUniformBuffer1"),
-                                            this->upGraphicsPipeline->getDescriptorSet("VertexCameraUniformBuffer2"),
-                                            this->upGraphicsPipeline->getDescriptorSet("VertexCameraUniformBuffer3")});
+        this->upCamera->bindDescriptorSets({this->upGraphicsPipeline->getDescriptorSet("VertexCameraUniformBufferDescriptorSet1"),
+                                            this->upGraphicsPipeline->getDescriptorSet("VertexCameraUniformBufferDescriptorSet2"),
+                                            this->upGraphicsPipeline->getDescriptorSet("VertexCameraUniformBufferDescriptorSet3")});
         this->upCamera->SetModel(glm::mat4(1.0f));
         this->upCamera->SetView(glm::vec3(30.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.75f), glm::vec3(0.0f, 0.0f, 1.0f));
         this->upCamera->SetProjection(glm::radians(90.0f),
@@ -217,7 +217,7 @@ namespace simple_camera {
         this->upGraphicsPipeline->bindToCommandBuffer(pCommandBuffer);
 
         // Bind the descriptor set describing the loaded textures to the pipeline
-        this->upGraphicsPipeline->bindDescriptorSets(std::vector<std::string>{"FragmentSamplerBuffer"}, 0);
+        this->upGraphicsPipeline->bindDescriptorSets(std::vector<std::string>{"TexturesDescriptorSet"}, 0);
 
         static auto startTime = std::chrono::high_resolution_clock::now();
         auto currentTime = std::chrono::high_resolution_clock::now();
@@ -312,9 +312,9 @@ namespace simple_camera {
         descriptorPoolBuilder.setFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT);
 
         // Prepare descriptor sets for 3 Uniform buffers for the camera (for a maximum of triple buffering)
-        descriptorPoolBuilder.addSet(upDescriptorSetLayouts.at(0).get(), "VertexCameraUniformBuffer1");
-        descriptorPoolBuilder.addSet(upDescriptorSetLayouts.at(0).get(), "VertexCameraUniformBuffer2");
-        descriptorPoolBuilder.addSet(upDescriptorSetLayouts.at(0).get(), "VertexCameraUniformBuffer3");
+        descriptorPoolBuilder.addSet(upDescriptorSetLayouts.at(0).get(), "VertexCameraUniformBufferDescriptorSet1");
+        descriptorPoolBuilder.addSet(upDescriptorSetLayouts.at(0).get(), "VertexCameraUniformBufferDescriptorSet2");
+        descriptorPoolBuilder.addSet(upDescriptorSetLayouts.at(0).get(), "VertexCameraUniformBufferDescriptorSet3");
         return std::move(descriptorPoolBuilder.getResult());
     }
 
@@ -325,7 +325,7 @@ namespace simple_camera {
         descriptorPoolBuilder.setFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT);
 
         // Prepare a descriptor set for 1 Combined Image Sampler array containing all preloaded textures
-        descriptorPoolBuilder.addSet(upDescriptorSetLayouts.at(0).get(), "FragmentSamplerBuffer");
+        descriptorPoolBuilder.addSet(upDescriptorSetLayouts.at(0).get(), "TexturesDescriptorSet");
         return std::move(descriptorPoolBuilder.getResult());
     }
 

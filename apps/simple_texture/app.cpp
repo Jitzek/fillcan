@@ -261,13 +261,13 @@ namespace simple_texture {
         cubeGameObject2.model = spModel2;
         gameObjects.push_back(std::move(cubeGameObject2));
 
-        this->upFillcan->getAssetManager()->writeTexturesToDescriptorSet(this->upFillcan->getCurrentDevice(),
-                                                                         this->upFragmentShaderModule->getDescriptorPool()->getDescriptorSets()[0]);
+        this->upFillcan->getAssetManager()->writeTexturesToDescriptorSet(
+            this->upFillcan->getCurrentDevice(), this->upFragmentShaderModule->getDescriptorPool()->getDescriptorSet("TexturesDescriptorSet"));
     }
 
     void App::renderGameObjects(fillcan::CommandBuffer* pCommandBuffer) {
         this->upGraphicsPipeline->bindToCommandBuffer(pCommandBuffer);
-        this->upGraphicsPipeline->bindDescriptorSets();
+        this->upGraphicsPipeline->bindDescriptorSets(std::vector<std::string>{"TexturesDescriptorSet"}, 0);
         for (fillcan::GameObject& gameObject : this->gameObjects) {
             gameObject.transform.rotation.y =
                 glm::mod(gameObject.transform.rotation.y + (0.5f * this->upFillcan->deltaTimef()), glm::two_pi<float>());
