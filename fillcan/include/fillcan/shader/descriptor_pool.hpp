@@ -9,6 +9,7 @@
 
 // std
 #include <memory>
+#include <string>
 #include <vector>
 
 namespace fillcan {
@@ -28,6 +29,7 @@ namespace fillcan {
         ~DescriptorPool();
 
         bool allocateDescriptorSets(std::vector<DescriptorSetLayout*> pDescriptorSetLayouts);
+        DescriptorSet* allocateDescriptorSet(DescriptorSetLayout* pDescriptorSetLayout, std::string name);
 
         VkDescriptorPool getDescriptorPoolHandle();
         std::vector<DescriptorSet*> getDescriptorSets();

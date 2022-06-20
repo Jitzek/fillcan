@@ -6,9 +6,9 @@
 // fillcan
 
 // std
+#include <memory>
 #include <utility>
 #include <vector>
-#include <memory>
 
 namespace fillcan {
     class LogicalDevice;
@@ -16,11 +16,17 @@ namespace fillcan {
     class DescriptorSetLayout;
     class DescriptorPoolBuilder {
       private:
+        struct DescriptorSetInfo {
+            VkDescriptorPoolSize poolSize;
+            DescriptorSetLayout* pLayout = nullptr;
+            std::vector<std::string> names = {};
+        };
         LogicalDevice* pLogicalDevice = nullptr;
         VkDescriptorPoolCreateFlags flags = 0;
         unsigned int maxSets = 0;
         std::vector<DescriptorSetLayout*> pDescriptorSetLayouts = {};
-        std::vector<std::pair<VkDescriptorType, unsigned int>> descriptorsAndCounts = {};
+        std::vector<VkDescriptorPoolSize> descriptorPoolSizes = {};
+        std::vector<DescriptorSetInfo> descriptorSetInfos = {};
 
       public:
         DescriptorPoolBuilder();
@@ -29,6 +35,7 @@ namespace fillcan {
         void setLogicalDevice(LogicalDevice* pLogicalDevice);
         void setFlags(VkDescriptorPoolCreateFlags flags);
         void addSet(DescriptorSetLayout* pDescriptorSetLayout, unsigned int amount);
+        void addSet(DescriptorSetLayout* pDescriptorSetLayout, std::string name);
 
         void reset();
         std::unique_ptr<DescriptorPool> getResult();

@@ -45,6 +45,13 @@ namespace fillcan {
 
     bool DescriptorPool::allocateDescriptorSets(std::vector<DescriptorSetLayout*> pDescriptorSetLayouts) {
         std::vector<VkDescriptorSetLayout> descriptorSetLayoutsHandles = {};
+        std::vector<DescriptorSetLayout*> _pDescriptorSetLayouts = {};
+        for (size_t i = 0; i < pDescriptorSetLayouts.size(); i++) {
+            for (size_t j = 0; j < this->poolSizes.at(i).descriptorCount; j++) {
+                _pDescriptorSetLayouts.push_back(pDescriptorSetLayouts.at(i));
+            }
+        }
+        pDescriptorSetLayouts = _pDescriptorSetLayouts;
         for (DescriptorSetLayout* pDescriptorSetLayout : pDescriptorSetLayouts) {
             descriptorSetLayoutsHandles.push_back(pDescriptorSetLayout->getDescriptorSetLayoutHandle());
         }
@@ -62,11 +69,38 @@ namespace fillcan {
             return false;
         }
         this->upDescriptorSets.reserve(descriptorSetsHandles.size());
+        // for (DescriptorSetLayout* pDescriptorSetLayout : pDescriptorSetLayouts) {
+        //     for (size_t i = 0; i < pDescriptorSetLayout->getBindings().size(); i++) {
+        //         if (this->poolSizes.at(i).type == pDescriptorSetLayout->getBindings().at(i).descriptorType) {
+        //             for (size_t j = 0; j < this->poolSizes.at(i).descriptorCount; j++) {
+        //                 this->upDescriptorSets.push_back(
+        //                     std::make_unique<DescriptorSet>(this->pLogicalDevice, descriptorSetsHandles[i], pDescriptorSetLayouts[i]));
+        //             }
+        //         }
+        //     }
+        // }
         for (int i = 0; i < descriptorSetsHandles.size(); i++) {
             this->upDescriptorSets.push_back(
                 std::make_unique<DescriptorSet>(this->pLogicalDevice, descriptorSetsHandles[i], pDescriptorSetLayouts[i]));
         }
         return true;
+    }
+
+    DescriptorSet* DescriptorPool::allocateDescriptorSet(DescriptorSetLayout* pDescriptorSetLayout, std::string name) {
+        VkDescriptorSetAllocateInfo descriptorSetAllocateInfo = {};
+        descriptorSetAllocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+        descriptorSetAllocateInfo.pNext = nullptr;
+        descriptorSetAllocateInfo.descriptorPool = this->hDescriptorPool;
+        descriptorSetAllocateInfo.descriptorSetCount = 1;
+        std::vector<VkDescriptorSetLayout> hDescriptorSetLayouts = {pDescriptorSetLayout->getDescriptorSetLayoutHandle()};
+        descriptorSetAllocateInfo.pSetLayouts = hDescriptorSetLayouts.data();
+
+        VkDescriptorSet hDescriptorSet;
+        if (vkAllocateDescriptorSets(this->pLogicalDevice->getLogicalDeviceHandle(), &descriptorSetAllocateInfo, &hDescriptorSet) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to allocated descriptor set");
+        }
+        this->upDescriptorSets.push_back(std::make_unique<DescriptorSet>(this->pLogicalDevice, hDescriptorSet, pDescriptorSetLayout, name));
+        return this->upDescriptorSets.back().get();
     }
 
     VkDescriptorPool DescriptorPool::getDescriptorPoolHandle() { return this->hDescriptorPool; }

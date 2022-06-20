@@ -1,4 +1,5 @@
 // vulkan
+#include "fillcan/shader/descriptor_set.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
@@ -75,9 +76,56 @@ namespace fillcan {
                                 static_cast<uint32_t>(hDescriptorSets.size()), hDescriptorSets.data(), 0, nullptr);
     }
 
+    void Pipeline::bindDescriptorSets(std::vector<DescriptorSet*> pDescriptorSets, unsigned int firstSet) {
+        if (this->bindPoint == VK_PIPELINE_BIND_POINT_MAX_ENUM) {
+            throw std::runtime_error("Pipeline bind point not set before binding descriptor sets, please use Pipeline::setPipelineBindPoint before "
+                                     "calling this function");
+        }
+        if (this->pCommandBuffer == nullptr) {
+            throw std::runtime_error("Not bound to a command buffer before binding descriptor sets, please use Pipeline::bindToCommandBuffer before "
+                                     "calling this function");
+        }
+        std::vector<VkDescriptorSet> hDescriptorSets = {};
+        hDescriptorSets.reserve(pDescriptorSets.size());
+        std::transform(pDescriptorSets.begin(), pDescriptorSets.end(), std::back_inserter(hDescriptorSets),
+                       [](DescriptorSet* pDescriptorSet) { return pDescriptorSet->getDescriptorSetHandle(); });
+        vkCmdBindDescriptorSets(this->pCommandBuffer->getCommandBufferHandle(), this->bindPoint, this->layout->getPipelineLayoutHandle(), firstSet,
+                                static_cast<uint32_t>(hDescriptorSets.size()), hDescriptorSets.data(), 0, nullptr);
+    }
+
+    void Pipeline::bindDescriptorSets(std::vector<std::string> names, unsigned int firstSet) {
+        if (this->bindPoint == VK_PIPELINE_BIND_POINT_MAX_ENUM) {
+            throw std::runtime_error("Pipeline bind point not set before binding descriptor sets, please use Pipeline::setPipelineBindPoint before "
+                                     "calling this function");
+        }
+        if (this->pCommandBuffer == nullptr) {
+            throw std::runtime_error("Not bound to a command buffer before binding descriptor sets, please use Pipeline::bindToCommandBuffer before "
+                                     "calling this function");
+        }
+        std::vector<VkDescriptorSet> hDescriptorSets = {};
+        for (std::string& name : names) {
+            for (DescriptorSet*& pDescriptorSet : this->pDescriptorSets) {
+                if (pDescriptorSet->getName() == name) {
+                    hDescriptorSets.push_back(pDescriptorSet->getDescriptorSetHandle());
+                }
+            }
+        }
+        vkCmdBindDescriptorSets(this->pCommandBuffer->getCommandBufferHandle(), this->bindPoint, this->layout->getPipelineLayoutHandle(), firstSet,
+                                static_cast<uint32_t>(hDescriptorSets.size()), hDescriptorSets.data(), 0, nullptr);
+    }
+
     std::vector<DescriptorSet*>& Pipeline::getDescriptorSets() { return this->pDescriptorSets; }
 
     CommandBuffer* Pipeline::getCommandBuffer() { return this->pCommandBuffer; }
+
+    DescriptorSet* Pipeline::getDescriptorSet(std::string name) {
+        for (DescriptorSet* pDescriptorSet : this->pDescriptorSets) {
+            if (pDescriptorSet->getName() == name) {
+                return pDescriptorSet;
+            }
+        }
+        throw std::runtime_error("Failed to find descriptor set with name: \"" + name + "\"");
+    }
 
     void Pipeline::start() {
         if (this->pCommandBuffer == nullptr) {

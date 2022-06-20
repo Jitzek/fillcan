@@ -64,7 +64,9 @@ namespace simple_camera {
         std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> createVertexDescriptorSetLayouts();
         std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> createFragmentDescriptorSetLayouts();
         std::unique_ptr<fillcan::DescriptorPool>
-        createDescriptorPool(std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>>& upDescriptorSetLayouts);
+        createVertexDescriptorPool(std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>>& upDescriptorSetLayouts);
+        std::unique_ptr<fillcan::DescriptorPool>
+        createFragmentDescriptorPool(std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>>& upDescriptorSetLayouts);
         void createRenderPass();
         void createGraphicsPipeline(fillcan::ShaderModule* pVertexShaderModule, fillcan::ShaderModule* pFragmentShaderModule);
         void preloadTextures();

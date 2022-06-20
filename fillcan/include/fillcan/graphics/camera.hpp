@@ -20,6 +20,7 @@ namespace fillcan {
     class LogicalDevice;
     class DescriptorSetLayout;
     class DescriptorSet;
+    class GraphicsPipeline;
 
     struct ModelViewProjection {
         glm::mat4 model;
@@ -33,13 +34,19 @@ namespace fillcan {
         std::vector<std::unique_ptr<Buffer>> upUniformBuffers = {};
         std::vector<std::unique_ptr<Memory>> upUniformBufferMemories = {};
         ModelViewProjection mvp = {.model = glm::mat4(0.0f), .view = glm::mat4(0.0f), .projection = glm::mat4(0.0f)};
+        std::vector<DescriptorSet*> pDescriptorSets = {};
+
+        unsigned int currentIndex = 0;
+        unsigned int bufferCount = 1;
 
       public:
-        Camera(LogicalDevice* pLogicalDevice, unsigned int bufferCount);
+        Camera(LogicalDevice* pLogicalDevice, unsigned int bufferCount, unsigned int maxBufferCount = 3);
         ~Camera();
 
-        void writeBufferToDescriptorSet(DescriptorSet* pDescriptorSet);
-        void updateBuffer(int index);
+        void resizeBufferCount(unsigned int bufferCount);
+
+        void bindDescriptorSets(std::vector<DescriptorSet*> pDescriptorSets);
+        void updateBuffer(GraphicsPipeline* pPipeline, unsigned int firstSet, int index);
 
         std::vector<std::unique_ptr<DescriptorSetLayout>> getDescriptorSetLayouts(unsigned int binding);
 

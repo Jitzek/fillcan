@@ -24,17 +24,37 @@ namespace fillcan {
         this->pDescriptorSetLayouts.push_back(pDescriptorSetLayout);
         maxSets += amount;
         for (VkDescriptorSetLayoutBinding binding : pDescriptorSetLayout->getBindings()) {
-            std::pair<VkDescriptorType, unsigned int> newDescriptorAndCount = {binding.descriptorType, binding.descriptorCount * amount};
+            VkDescriptorPoolSize newdescriptorPoolSize = {.type = binding.descriptorType, .descriptorCount = binding.descriptorCount * amount};
             bool exists = false;
-            for (std::pair<VkDescriptorType, unsigned int>& descriptorAndCount : this->descriptorsAndCounts) {
-                if (descriptorAndCount.first == newDescriptorAndCount.first) {
-                    descriptorAndCount.second += newDescriptorAndCount.second;
+            for (VkDescriptorPoolSize& descriptorPoolSize : this->descriptorPoolSizes) {
+                if (descriptorPoolSize.type == newdescriptorPoolSize.type) {
+                    descriptorPoolSize.descriptorCount += newdescriptorPoolSize.descriptorCount;
                     exists = true;
                     break;
                 }
             }
             if (!exists) {
-                this->descriptorsAndCounts.push_back(newDescriptorAndCount);
+                this->descriptorPoolSizes.push_back(newdescriptorPoolSize);
+            }
+        }
+    }
+
+    void DescriptorPoolBuilder::addSet(DescriptorSetLayout* pDescriptorSetLayout, std::string name) {
+        this->pDescriptorSetLayouts.push_back(pDescriptorSetLayout);
+        maxSets++;
+        for (VkDescriptorSetLayoutBinding binding : pDescriptorSetLayout->getBindings()) {
+            VkDescriptorPoolSize newdescriptorPoolSize = {.type = binding.descriptorType, .descriptorCount = binding.descriptorCount};
+            bool exists = false;
+            for (DescriptorSetInfo& descriptorSetInfo : this->descriptorSetInfos) {
+                if (descriptorSetInfo.poolSize.type == newdescriptorPoolSize.type) {
+                    descriptorSetInfo.poolSize.descriptorCount += newdescriptorPoolSize.descriptorCount;
+                    descriptorSetInfo.names.push_back(name);
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                this->descriptorSetInfos.push_back({newdescriptorPoolSize, pDescriptorSetLayout, {name}});
             }
         }
     }
@@ -44,18 +64,28 @@ namespace fillcan {
         this->flags = 0;
         this->maxSets = 0;
         this->pDescriptorSetLayouts.clear();
-        this->descriptorsAndCounts.clear();
+        this->descriptorPoolSizes.clear();
     }
 
     std::unique_ptr<DescriptorPool> DescriptorPoolBuilder::getResult() {
+        // std::unique_ptr<DescriptorPool> upDescriptorPool =
+        //     std::make_unique<DescriptorPool>(this->pLogicalDevice, this->flags, this->maxSets, this->descriptorPoolSizes);
+        // upDescriptorPool->allocateDescriptorSets(this->pDescriptorSetLayouts);
+        // return std::move(upDescriptorPool);
+
         std::vector<VkDescriptorPoolSize> poolSizes = {};
-        poolSizes.reserve(this->descriptorsAndCounts.size());
-        for (std::pair<VkDescriptorType, unsigned int>& descriptorAndCount : this->descriptorsAndCounts) {
-            poolSizes.push_back({.type = descriptorAndCount.first, .descriptorCount = descriptorAndCount.second});
+        unsigned int maxSets = 0;
+        for (DescriptorSetInfo descriptorSetInfo : this->descriptorSetInfos) {
+            poolSizes.push_back(descriptorSetInfo.poolSize);
+            maxSets += descriptorSetInfo.poolSize.descriptorCount;
         }
-        std::unique_ptr<DescriptorPool> upDescriptorPool =
-            std::make_unique<DescriptorPool>(this->pLogicalDevice, this->flags, this->maxSets, poolSizes);
-        upDescriptorPool->allocateDescriptorSets(this->pDescriptorSetLayouts);
+        std::unique_ptr<DescriptorPool> upDescriptorPool = std::make_unique<DescriptorPool>(this->pLogicalDevice, this->flags, maxSets, poolSizes);
+
+        for (DescriptorSetInfo descriptorSetInfo : this->descriptorSetInfos) {
+            for (std::string name : descriptorSetInfo.names) {
+                upDescriptorPool->allocateDescriptorSet(descriptorSetInfo.pLayout, name);
+            }
+        }
         return std::move(upDescriptorPool);
     }
 } // namespace fillcan

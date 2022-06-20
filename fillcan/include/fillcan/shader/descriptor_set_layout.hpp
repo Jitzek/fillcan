@@ -15,10 +15,9 @@ namespace fillcan {
         VkDescriptorSetLayout hDescriptorSetLayout;
         LogicalDevice* pLogicalDevice;
         std::vector<VkDescriptorSetLayoutBinding> bindings;
-        unsigned int amount = 1;
 
       public:
-        DescriptorSetLayout(LogicalDevice* pLogicalDevice, std::vector<VkDescriptorSetLayoutBinding> bindings, unsigned int amount = 1);
+        DescriptorSetLayout(LogicalDevice* pLogicalDevice, std::vector<VkDescriptorSetLayoutBinding> bindings);
         ~DescriptorSetLayout();
 
         VkDescriptorSetLayout getDescriptorSetLayoutHandle();

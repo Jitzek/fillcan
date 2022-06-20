@@ -50,10 +50,12 @@ namespace fillcan {
         PipelineLayout* getPipelineLayout();
         void bindToCommandBuffer(CommandBuffer* pCommandBuffer);
         void bindDescriptorSets();
+        void bindDescriptorSets(std::vector<DescriptorSet*> pDescriptorSets, unsigned int firstSet);
+        void bindDescriptorSets(std::vector<std::string> names, unsigned int firstSet);
         std::vector<DescriptorSet*>& getDescriptorSets();
         CommandBuffer* getCommandBuffer();
 
-        void pushConstantData();
+        DescriptorSet* getDescriptorSet(std::string name);
 
         void start();
     };

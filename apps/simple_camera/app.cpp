@@ -6,6 +6,7 @@
 #include "fillcan/graphics/game_object.hpp"
 #include "fillcan/graphics/model.hpp"
 #include "fillcan/graphics/texture.hpp"
+#include "fillcan/shader/descriptor_set.hpp"
 #include "glm/detail/func_common.hpp"
 #include "glm/gtc/constants.hpp"
 #include "shaderc/shaderc.h"
@@ -61,7 +62,7 @@ namespace simple_camera {
     App::~App() {}
 
     void App::run() {
-        std::string name = "Model Application";
+        std::string name = "Camera Application";
         std::cout << "Running App \"" << name << "\"\n";
 
         VkPhysicalDeviceFeatures requiredDeviceFeatures = {};
@@ -70,20 +71,21 @@ namespace simple_camera {
         upFillcan->selectDevice(0);
         std::cout << "Using Device: " << upFillcan->getCurrentDevice()->getPhysicalDevice()->getProperties().deviceName << "\n";
 
-        this->upFillcan->createSwapchain(2, VK_PRESENT_MODE_IMMEDIATE_KHR);
+        this->upFillcan->createSwapchain(3, VK_PRESENT_MODE_IMMEDIATE_KHR);
 
         this->createRenderPass();
 
+        // Prepare a camera with a max buffercount of 3 (triple buffering)
         this->upCamera =
-            std::move(std::make_unique<fillcan::Camera>(this->upFillcan->getCurrentDevice(), this->upFillcan->getSwapchain()->getImageCount()));
+            std::move(std::make_unique<fillcan::Camera>(this->upFillcan->getCurrentDevice(), this->upFillcan->getSwapchain()->getImageCount(), 3));
 
         this->preloadTextures();
 
         std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> upVertexDescriptorSetLayouts = createVertexDescriptorSetLayouts();
-        std::unique_ptr<fillcan::DescriptorPool> upVertexDescriptorPool = createDescriptorPool(upVertexDescriptorSetLayouts);
+        std::unique_ptr<fillcan::DescriptorPool> upVertexDescriptorPool = createVertexDescriptorPool(upVertexDescriptorSetLayouts);
 
         std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> upFragmentDescriptorSetLayouts = createFragmentDescriptorSetLayouts();
-        std::unique_ptr<fillcan::DescriptorPool> upFragmentDescriptorPool = createDescriptorPool(upFragmentDescriptorSetLayouts);
+        std::unique_ptr<fillcan::DescriptorPool> upFragmentDescriptorPool = createFragmentDescriptorPool(upFragmentDescriptorSetLayouts);
 
         this->upVertexShaderModule =
             this->upFillcan->createShaderModule(this->APP_DIR + "/shaders", "simple.vert", shaderc_vertex_shader,
@@ -95,14 +97,16 @@ namespace simple_camera {
 
         this->createGraphicsPipeline(upVertexShaderModule.get(), upFragmentShaderModule.get());
 
-        for (size_t i = 0; i < this->upFillcan->getSwapchain()->getImageCount(); i++) {
+        // Prepare commandrecordings for each image in flight, with a max of 3 (triple buffering)
+        for (size_t i = 0; i < 3; i++) {
             this->pCommandRecordings.push_back(this->upFillcan->getCurrentDevice()->getGraphicsQueue()->createRecording(1, 0));
             this->pCommandRecordings[i]->createFence(this->upFillcan->getCurrentDevice(), VK_FENCE_CREATE_SIGNALED_BIT);
         }
 
         this->loadGameObjects();
 
-        this->upFramebuffers.resize(this->upFillcan->getSwapchain()->getImageCount());
+        // Prepare framebuffers for each image in flight, with a max of 3 (triple buffering)
+        this->upFramebuffers.resize(3);
 
         upFillcan->MainLoop(std::bind(&App::update, this, std::placeholders::_1));
     }
@@ -111,6 +115,7 @@ namespace simple_camera {
         // Recreate swapchain if window was resized
         if (this->upFillcan->getWindow()->wasResized()) {
             this->upFillcan->recreateSwapchain();
+            this->upCamera->resizeBufferCount(this->upFillcan->getSwapchain()->getImageCount());
             return;
         }
 
@@ -197,7 +202,9 @@ namespace simple_camera {
         this->upFillcan->getAssetManager()->writeTexturesToDescriptorSet(this->upFillcan->getCurrentDevice(),
                                                                          this->upFragmentShaderModule->getDescriptorPool()->getDescriptorSets()[0]);
 
-        this->upCamera->writeBufferToDescriptorSet(this->upVertexShaderModule->getDescriptorPool()->getDescriptorSets()[0]);
+        this->upCamera->bindDescriptorSets({this->upGraphicsPipeline->getDescriptorSet("VertexCameraUniformBuffer1"),
+                                            this->upGraphicsPipeline->getDescriptorSet("VertexCameraUniformBuffer2"),
+                                            this->upGraphicsPipeline->getDescriptorSet("VertexCameraUniformBuffer3")});
         this->upCamera->SetModel(glm::mat4(1.0f));
         this->upCamera->SetView(glm::vec3(30.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.75f), glm::vec3(0.0f, 0.0f, 1.0f));
         this->upCamera->SetProjection(glm::radians(90.0f),
@@ -208,12 +215,18 @@ namespace simple_camera {
 
     void App::renderGameObjects(fillcan::CommandBuffer* pCommandBuffer) {
         this->upGraphicsPipeline->bindToCommandBuffer(pCommandBuffer);
-        this->upGraphicsPipeline->bindDescriptorSets();
+
+        // Bind the descriptor set describing the loaded textures to the pipeline
+        this->upGraphicsPipeline->bindDescriptorSets(std::vector<std::string>{"FragmentSamplerBuffer"}, 0);
+
         static auto startTime = std::chrono::high_resolution_clock::now();
         auto currentTime = std::chrono::high_resolution_clock::now();
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
         this->upCamera->getMVP()->model = glm::rotate(glm::mat4(1.0f), time * glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        this->upCamera->updateBuffer(this->currentFrameIndex);
+
+        // Bind the current Camera descriptor set describing the projection to the pipeline and update it's value
+        this->upCamera->updateBuffer(this->upGraphicsPipeline.get(), 1, this->currentFrameIndex);
+
         for (fillcan::GameObject& gameObject : this->gameObjects) {
             // gameObject.transform.rotation.y =
             //     glm::mod(gameObject.transform.rotation.y + (0.5f * this->upFillcan->deltaTimef()), glm::two_pi<float>());
@@ -293,13 +306,26 @@ namespace simple_camera {
     }
 
     std::unique_ptr<fillcan::DescriptorPool>
-    App::createDescriptorPool(std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>>& upDescriptorSetLayouts) {
+    App::createVertexDescriptorPool(std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>>& upDescriptorSetLayouts) {
         fillcan::DescriptorPoolBuilder descriptorPoolBuilder{};
         descriptorPoolBuilder.setLogicalDevice(this->upFillcan->getCurrentDevice());
         descriptorPoolBuilder.setFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT);
-        for (std::unique_ptr<fillcan::DescriptorSetLayout>& upDescriptorSetLayout : upDescriptorSetLayouts) {
-            descriptorPoolBuilder.addSet(upDescriptorSetLayout.get(), 1);
-        }
+
+        // Prepare descriptor sets for 3 Uniform buffers for the camera (for a maximum of triple buffering)
+        descriptorPoolBuilder.addSet(upDescriptorSetLayouts.at(0).get(), "VertexCameraUniformBuffer1");
+        descriptorPoolBuilder.addSet(upDescriptorSetLayouts.at(0).get(), "VertexCameraUniformBuffer2");
+        descriptorPoolBuilder.addSet(upDescriptorSetLayouts.at(0).get(), "VertexCameraUniformBuffer3");
+        return std::move(descriptorPoolBuilder.getResult());
+    }
+
+    std::unique_ptr<fillcan::DescriptorPool>
+    App::createFragmentDescriptorPool(std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>>& upDescriptorSetLayouts) {
+        fillcan::DescriptorPoolBuilder descriptorPoolBuilder{};
+        descriptorPoolBuilder.setLogicalDevice(this->upFillcan->getCurrentDevice());
+        descriptorPoolBuilder.setFlags(VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT);
+
+        // Prepare a descriptor set for 1 Combined Image Sampler array containing all preloaded textures
+        descriptorPoolBuilder.addSet(upDescriptorSetLayouts.at(0).get(), "FragmentSamplerBuffer");
         return std::move(descriptorPoolBuilder.getResult());
     }
 

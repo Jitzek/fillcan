@@ -11,16 +11,24 @@
 #include <fillcan/shader/descriptor_set_layout.hpp>
 
 // std
+#include <string>
 #include <vector>
 
 namespace fillcan {
     DescriptorSet::DescriptorSet(LogicalDevice* pLogicalDevice, VkDescriptorSet hDescriptorSet, DescriptorSetLayout* pDescriptorSetLayout)
         : pLogicalDevice(pLogicalDevice), hDescriptorSet(hDescriptorSet), pDescriptorSetLayout(pDescriptorSetLayout) {}
 
+    DescriptorSet::DescriptorSet(LogicalDevice* pLogicalDevice, VkDescriptorSet hDescriptorSet, DescriptorSetLayout* pDescriptorSetLayout,
+                                 std::string name)
+        : pLogicalDevice(pLogicalDevice), hDescriptorSet(hDescriptorSet), pDescriptorSetLayout(pDescriptorSetLayout), name(name) {}
+
     DescriptorSet::~DescriptorSet() {}
 
     VkDescriptorSet DescriptorSet::getDescriptorSetHandle() { return this->hDescriptorSet; }
+
     DescriptorSetLayout* DescriptorSet::getLayout() { return this->pDescriptorSetLayout; }
+
+    std::string DescriptorSet::getName() { return this->name; }
 
     void DescriptorSet::update(VkWriteDescriptorSet* pWrite, VkCopyDescriptorSet* pCopy) {
         vkUpdateDescriptorSets(this->pLogicalDevice->getLogicalDeviceHandle(), pWrite != nullptr ? 1 : 0, pWrite, pCopy != nullptr ? 1 : 0, pCopy);
