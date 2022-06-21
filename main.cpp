@@ -12,7 +12,6 @@
 #include <stdexcept>
 
 int main(int argc, char* argv[]) {
-    // app::App app{};
     // compute_pipeline::App app{};
     // simple_triangle::App app{};
     // simple_cube::App app{};

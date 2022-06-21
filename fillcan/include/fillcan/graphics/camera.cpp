@@ -21,7 +21,7 @@ namespace fillcan {
 
         this->resizeBufferCount(bufferCount);
 
-        VkDeviceSize bufferSize = sizeof(ModelViewProjection);
+        VkDeviceSize bufferSize = sizeof(ViewProjectionBufferData);
         BufferDirector bufferDirector{};
         for (size_t i = 0; i < this->upUniformBuffers.size(); i++) {
             std::unique_ptr<Buffer> upUniformBuffer = bufferDirector.makeUniformBuffer(pLogicalDevice, bufferSize);
@@ -47,14 +47,15 @@ namespace fillcan {
             this->pDescriptorSets.at(i)->writeBuffer(this->pDescriptorSets.at(i)->getLayout()->getBindings()[0], this->upUniformBuffers.at(i).get());
         }
     }
-    
+
     void Camera::updateBuffer(GraphicsPipeline* pPipeline, unsigned int firstSet, int index) {
         pPipeline->bindDescriptorSets({this->pDescriptorSets.at(this->currentIndex)}, firstSet);
         this->currentIndex = (this->currentIndex + 1) % this->bufferCount;
 
         Buffer* pCurrentBuffer = this->upUniformBuffers.at(index).get();
         void** ppData = pCurrentBuffer->getMemory()->map();
-        memcpy(*ppData, &this->mvp, sizeof(this->mvp));
+        ViewProjectionBufferData mvpBufferData = {.view = this->vp.view.mat4(), .projection = this->vp.projection.mat4()};
+        memcpy(*ppData, &mvpBufferData, sizeof(mvpBufferData));
         pCurrentBuffer->getMemory()->flush();
         pCurrentBuffer->getMemory()->unmap();
     }
@@ -74,15 +75,25 @@ namespace fillcan {
         return std::move(upDescriptorSetLayouts);
     }
 
-    ModelViewProjection* Camera::getMVP() { return &this->mvp; }
+    ViewProjection* Camera::getVP() { return &this->vp; }
 
-    void Camera::SetModel(glm::mat4 identityMatrix) { this->mvp.model = identityMatrix; }
+    void Camera::setView(glm::vec3 position, glm::vec3 direction) { this->vp.view = {.position = position, .direction = direction}; }
 
-    void Camera::SetView(glm::vec3 position, glm::vec3 lookAt, glm::vec3 direction) { this->mvp.view = glm::lookAt(position, lookAt, direction); }
-
-    void Camera::SetProjection(float fov, float ratio, float near, float far) {
-        this->mvp.projection = glm::perspective(glm::radians(fov), ratio, near, far);
-        this->mvp.projection[1][1] *= -1;
+    void Camera::setProjection(float fov, float aspect, float near, float far) {
+        this->vp.projection = {.fov = fov, .aspect = aspect, .near = near, .far = far};
     }
+
+    // Projection
+    void Camera::setFov(float fov) { this->vp.projection.fov = fov; }
+    void Camera::setNear(float near) { this->vp.projection.near = near; }
+    void Camera::setFar(float far) { this->vp.projection.far = far; }
+    void Camera::setAspect(float aspect) { this->vp.projection.aspect = aspect; }
+
+    // View
+    void Camera::setPositionXYZ(glm::vec3 position) { this->vp.view.position = position; }
+    void Camera::setDirectionXYZ(glm::vec3 direction) { this->vp.view.direction = direction; }
+    void Camera::translateXYZ(glm::vec3 translation) { this->vp.view.position += translation; }
+    void Camera::rotateXYZ(glm::vec3 rotation) { this->vp.view.direction += rotation; }
+    void Camera::lookAt(glm::vec3 lookAt) { this->vp.view.direction = lookAt - this->vp.view.position; }
 
 } // namespace fillcan

@@ -13,12 +13,11 @@ layout(push_constant) uniform PushConstant {
 }
 push_constant;
 
-layout(set = 1, binding = 0) uniform ModelViewProjection {
-    mat4 model;
+layout(set = 1, binding = 0) uniform ViewProjection {
     mat4 view;
     mat4 projection;
 }
-mvp;
+vp;
 
 void main() {
     // gl_Position = vec4(inPosition, 1.0);
@@ -29,7 +28,7 @@ void main() {
     //     0, 0, 0, 1
     // ) * vec4(inPosition, 1.0);
     // gl_Position = push_constant.transform * vec4(inPosition, 1.0);
-    gl_Position = mvp.projection * mvp.view * mvp.model * push_constant.transform * vec4(inPosition, 1.0);
+    gl_Position = vp.projection * vp.view * push_constant.transform * vec4(inPosition, 1.0);
 
     outColor = inColor;
     outTextureCoordinate = inTextureCoordinate;

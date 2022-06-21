@@ -8,6 +8,7 @@
 #include "fillcan/graphics/texture.hpp"
 #include "fillcan/shader/descriptor_set.hpp"
 #include "glm/detail/func_common.hpp"
+#include "glm/detail/func_trigonometric.hpp"
 #include "glm/gtc/constants.hpp"
 #include "shaderc/shaderc.h"
 #include "vulkan/vulkan_core.h"
@@ -62,7 +63,7 @@ namespace simple_camera {
     App::~App() {}
 
     void App::run() {
-        std::string name = "Camera Application";
+        std::string name = "Keyboard Control Application";
         std::cout << "Running App \"" << name << "\"\n";
 
         VkPhysicalDeviceFeatures requiredDeviceFeatures = {};
@@ -192,10 +193,10 @@ namespace simple_camera {
 
         fillcan::GameObject cubeGameObject = fillcan::GameObject::createGameObject();
         cubeGameObject.transform.translation = {0.0f, 0.f, 0.5};
-        cubeGameObject.transform.scale = {0.5f, 0.5f, 0.5f};
-        // cubeGameObject.transform.rotation.x = 1.2f;
-        // cubeGameObject.transform.rotation.y = 2.25f;
-        // cubeGameObject.transform.rotation.z = 0.65f;
+        cubeGameObject.transform.scale = {10.f, 10.f, 10.f};
+        cubeGameObject.transform.rotation.x = glm::radians(270.f);
+        cubeGameObject.transform.rotation.y = glm::radians(90.f);
+        cubeGameObject.transform.rotation.z = glm::radians(0.f);
         cubeGameObject.model = spModel;
         gameObjects.push_back(std::move(cubeGameObject));
 
@@ -205,9 +206,8 @@ namespace simple_camera {
         this->upCamera->bindDescriptorSets({this->upGraphicsPipeline->getDescriptorSet("VertexCameraUniformBufferDescriptorSet1"),
                                             this->upGraphicsPipeline->getDescriptorSet("VertexCameraUniformBufferDescriptorSet2"),
                                             this->upGraphicsPipeline->getDescriptorSet("VertexCameraUniformBufferDescriptorSet3")});
-        this->upCamera->SetModel(glm::mat4(1.0f));
-        this->upCamera->SetView(glm::vec3(30.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.75f), glm::vec3(0.0f, 0.0f, 1.0f));
-        this->upCamera->SetProjection(glm::radians(90.0f),
+        this->upCamera->setView(glm::vec3(0.0f, 5.f, -15.f), glm::vec3(0.0f, 0.0f, 1.f));
+        this->upCamera->setProjection(70.0f,
                                       static_cast<float>(this->upFillcan->getSwapchain()->getImageExtent().width) /
                                           static_cast<float>(this->upFillcan->getSwapchain()->getImageExtent().height),
                                       0.1f, 100.0f);
@@ -222,7 +222,8 @@ namespace simple_camera {
         static auto startTime = std::chrono::high_resolution_clock::now();
         auto currentTime = std::chrono::high_resolution_clock::now();
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-        this->upCamera->getMVP()->model = glm::rotate(glm::mat4(1.0f), time * glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        this->upCamera->translateXYZ(glm::vec3(1.f, 0.f, 0.f) * this->upFillcan->deltaTimef());
+        this->upCamera->lookAt(glm::vec3(0.0f, 0.f, 0.5));
 
         // Bind the current Camera descriptor set describing the projection to the pipeline and update it's value
         this->upCamera->updateBuffer(this->upGraphicsPipeline.get(), 1, this->currentFrameIndex);
@@ -404,4 +405,4 @@ namespace simple_camera {
 
         this->upGraphicsPipeline = graphicsPipelineBuilder.getResult();
     }
-} // namespace simple_camera
+} // namespace keyboard_control
