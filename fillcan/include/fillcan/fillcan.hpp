@@ -1,5 +1,4 @@
 #pragma once
-
 // vulkan
 #include "fillcan/commands/command_recording.hpp"
 #include "vulkan/vulkan_core.h"

@@ -41,6 +41,7 @@ namespace simple_model {
       private:
         std::unique_ptr<fillcan::FillcanGraphics> upFillcan;
         std::unique_ptr<fillcan::GraphicsPipeline> upGraphicsPipeline;
+        std::unique_ptr<fillcan::RenderPass> upRenderPass;
         std::unique_ptr<fillcan::ShaderModule> upVertexShaderModule;
         std::unique_ptr<fillcan::ShaderModule> upFragmentShaderModule;
         std::unique_ptr<fillcan::Buffer> upVertexBuffer = nullptr;

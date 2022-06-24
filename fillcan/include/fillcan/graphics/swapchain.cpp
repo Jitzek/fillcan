@@ -38,7 +38,7 @@ namespace fillcan {
         VkSurfaceCapabilitiesKHR surfaceCapabilities = this->pLogicalDevice->getPhysicalDevice()->getSurfaceCapabilitiesKHR();
 
         const std::vector<VkPresentModeKHR> surfacePresentModes = this->pLogicalDevice->getPhysicalDevice()->getSurfacePresentModesKHR();
-        if (!std::count(surfacePresentModes.begin(), surfacePresentModes.end(), presentMode)) {
+        if (std::count(surfacePresentModes.begin(), surfacePresentModes.end(), presentMode) == 0) {
             // Requested present mode is not supported, using fallback present mode
             this->presentMode = VK_PRESENT_MODE_FIFO_KHR;
         }

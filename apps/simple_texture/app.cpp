@@ -135,13 +135,12 @@ namespace simple_texture {
         // Create imageviews which will be used as attachments for the framebuffer
         std::vector<fillcan::ImageView*> pAttachments = {swapchainImage.pSwapchainImageView, swapchainImage.pDepthBufferImageView};
         this->upFramebuffers.at(this->currentFrameIndex) = std::move(std::make_unique<fillcan::Framebuffer>(
-            this->upFillcan->getCurrentDevice(), this->upFillcan->getRenderPass(), pAttachments,
-            this->upFillcan->getSwapchain()->getImageExtent().width, this->upFillcan->getSwapchain()->getImageExtent().height,
-            this->upFillcan->getSwapchain()->getImageArrayLayers()));
+            this->upFillcan->getCurrentDevice(), this->upRenderPass.get(), pAttachments, this->upFillcan->getSwapchain()->getImageExtent().width,
+            this->upFillcan->getSwapchain()->getImageExtent().height, this->upFillcan->getSwapchain()->getImageArrayLayers()));
         /* */
 
         std::vector<VkClearValue> clearValues = {{.color = {{0.0f, 0.0f, 0.0f, 1.0f}}}, {.depthStencil = {1.0f, 0}}};
-        this->upFillcan->getRenderPass()->begin(pCurrentGraphicsCommandBuffer, this->upFramebuffers.at(this->currentFrameIndex).get(), &clearValues);
+        this->upRenderPass->begin(pCurrentGraphicsCommandBuffer, this->upFramebuffers.at(this->currentFrameIndex).get(), &clearValues);
 
         VkViewport viewport = {.x = 0.0f,
                                .y = 0.0f,
@@ -155,7 +154,7 @@ namespace simple_texture {
 
         this->renderGameObjects(pCurrentGraphicsCommandBuffer);
 
-        this->upFillcan->getRenderPass()->end();
+        this->upRenderPass->end();
 
         pCurrentGraphicsCommandRecording->endAll();
         pCurrentGraphicsCommandRecording->submit();
@@ -330,7 +329,7 @@ namespace simple_texture {
                                          .srcAccessMask = 0,
                                          .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT});
 
-        this->upFillcan->createRenderPass(renderPassBuilder);
+        this->upRenderPass = renderPassBuilder.getResult();
     }
 
     std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> App::createFragmentDescriptorSetLayouts() {
@@ -363,7 +362,9 @@ namespace simple_texture {
 
         // Describe the vertex shader
         graphicsPipelineBuilder.setVertexInputState(
-            {fillcan::Model::Vertex::getBindingDescriptions(), fillcan::Model::Vertex::getAttributeDescriptions()});
+            {fillcan::Model::Vertex::getBindingDescriptions(),
+             {fillcan::Model::Vertex::getPositionAttributeDescription(0), fillcan::Model::Vertex::getColorAttributeDescription(1),
+              fillcan::Model::Vertex::getTextureCoordinateAttributeDescription(2)}});
 
         // The viewports and scissors are dynamic, but the amount of viewports and scissors should still be defined
         std::vector<VkViewport> viewports = {};
@@ -420,7 +421,7 @@ namespace simple_texture {
         // Set the viewports and scissors to dynamic to allow for window resizing
         std::vector<VkDynamicState> dynamicStates = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
         graphicsPipelineBuilder.setDynamicState({.dynamicStates = dynamicStates});
-        graphicsPipelineBuilder.setRenderPass(this->upFillcan->getRenderPass());
+        graphicsPipelineBuilder.setRenderPass(this->upRenderPass.get());
 
         this->upGraphicsPipeline = graphicsPipelineBuilder.getResult();
     }

@@ -1,6 +1,7 @@
 // fillcan
 #include "fillcan/commands/command_recording.hpp"
 #include "vulkan/vulkan_core.h"
+#include <algorithm>
 #include <cstddef>
 #include <fillcan/commands/command_buffer.hpp>
 #include <fillcan/commands/queue.hpp>
@@ -13,8 +14,10 @@
 // std
 #include <cstring>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <stdexcept>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -41,6 +44,8 @@ namespace fillcan {
             throw std::runtime_error(warn + err);
         }
 
+        std::vector<std::pair<Vertex, uint32_t>> uniqueVertices{};
+
         for (const auto& shape : shapes) {
             for (const auto& index : shape.mesh.indices) {
                 Vertex vertex{};
@@ -59,7 +64,18 @@ namespace fillcan {
                     vertex.textureCoordinate = {attrib.texcoords[2 * index.texcoord_index + 0], attrib.texcoords[2 * index.texcoord_index + 1]};
                 }
 
-                vertices.push_back(vertex); 
+                // Check if vertex has already occured
+                auto it = std::find_if(uniqueVertices.begin(), uniqueVertices.end(),
+                                       [vertex](const std::pair<Vertex, uint32_t> pair) { return pair.first == vertex; });
+                if (it == uniqueVertices.end()) {
+                    // If vertex hasn't occured yet, add it to the list of vertices and it's it's index to the list of indices
+                    uniqueVertices.push_back({vertex, static_cast<uint32_t>(vertices.size())});
+                    indices.push_back(vertices.size());
+                    vertices.push_back(vertex);
+                } else {
+                    // If vertex has occured, add it's index to the list of indices
+                    indices.push_back(it->second);
+                }
             }
         }
 
@@ -137,9 +153,6 @@ namespace fillcan {
             vkCmdBindIndexBuffer(pCommandBuffer->getCommandBufferHandle(), upIndexBuffer->getBufferHandle(), 0, VK_INDEX_TYPE_UINT16);
         }
         this->pCommandBuffer = pCommandBuffer;
-        // if (this->upTexture != nullptr) {
-        //     this->upTexture->write();
-        // }
     }
 
     void Model::draw() {
@@ -161,8 +174,24 @@ namespace fillcan {
     }
 
     std::vector<VkVertexInputAttributeDescription> Model::Vertex::getAttributeDescriptions() {
-        return {{.location = 0, .binding = 0, .format = VK_FORMAT_R32G32B32_SFLOAT, .offset = offsetof(Vertex, position)},
-                {.location = 1, .binding = 0, .format = VK_FORMAT_R32G32B32_SFLOAT, .offset = offsetof(Vertex, color)},
-                {.location = 2, .binding = 0, .format = VK_FORMAT_R32G32_SFLOAT, .offset = offsetof(Vertex, textureCoordinate)}};
+        return {getPositionAttributeDescription(0, 0), getColorAttributeDescription(1, 0), getTextureCoordinateAttributeDescription(2, 0),
+                getNormalAttributeDescription(3, 0)};
     }
+
+    VkVertexInputAttributeDescription Model::Vertex::getPositionAttributeDescription(unsigned int location, unsigned int binding) {
+        return {.location = location, .binding = 0, .format = VK_FORMAT_R32G32B32_SFLOAT, .offset = offsetof(Vertex, position)};
+    }
+
+    VkVertexInputAttributeDescription Model::Vertex::getColorAttributeDescription(unsigned int location, unsigned int binding) {
+        return {.location = location, .binding = 0, .format = VK_FORMAT_R32G32B32_SFLOAT, .offset = offsetof(Vertex, color)};
+    }
+
+    VkVertexInputAttributeDescription Model::Vertex::getTextureCoordinateAttributeDescription(unsigned int location, unsigned int binding) {
+        return {.location = location, .binding = 0, .format = VK_FORMAT_R32G32_SFLOAT, .offset = offsetof(Vertex, textureCoordinate)};
+    }
+
+    VkVertexInputAttributeDescription Model::Vertex::getNormalAttributeDescription(unsigned int location, unsigned int binding) {
+        return {.location = location, .binding = 0, .format = VK_FORMAT_R32G32B32_SFLOAT, .offset = offsetof(Vertex, normal)};
+    }
+
 } // namespace fillcan

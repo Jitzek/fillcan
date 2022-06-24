@@ -26,11 +26,19 @@ namespace fillcan {
         struct Vertex {
             glm::vec3 position{};
             glm::vec3 color{};
-            glm::vec2 textureCoordinate;
+            glm::vec2 textureCoordinate{};
             glm::vec3 normal{};
+
+            bool operator==(const Vertex& other) const {
+                return position == other.position && color == other.color && textureCoordinate == other.textureCoordinate && normal == other.normal;
+            }
 
             static std::vector<VkVertexInputBindingDescription> getBindingDescriptions();
             static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
+            static VkVertexInputAttributeDescription getPositionAttributeDescription(unsigned int location, unsigned int binding = 0);
+            static VkVertexInputAttributeDescription getColorAttributeDescription(unsigned int location, unsigned int binding = 0);
+            static VkVertexInputAttributeDescription getTextureCoordinateAttributeDescription(unsigned int location, unsigned int binding = 0);
+            static VkVertexInputAttributeDescription getNormalAttributeDescription(unsigned int location, unsigned int binding = 0);
         };
 
       private:

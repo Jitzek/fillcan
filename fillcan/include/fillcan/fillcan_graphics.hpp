@@ -1,14 +1,14 @@
 #pragma once
 
 // vulkan
-#include "fillcan/graphics/asset_manager.hpp"
-#include "fillcan/graphics/render_pass_builder.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
 #include <fillcan/fillcan.hpp>
 #include <fillcan/graphics/framebuffer.hpp>
 #include <fillcan/graphics/render_pass.hpp>
+#include <fillcan/graphics/asset_manager.hpp>
+#include <fillcan/graphics/render_pass_builder.hpp>
 
 // std
 #include <memory>
@@ -36,10 +36,10 @@ namespace fillcan {
         std::vector<Swapchain*> getSwapchains();
         void destroySwapchain(unsigned int index = 0);
 
-        unsigned int createRenderPass(RenderPassBuilder& builder);
-        RenderPass* getRenderPass(unsigned int index = 0);
-        std::vector<RenderPass*> getRenderPasses();
-        void destroyRenderPass(unsigned int index = 0);
+        // unsigned int createRenderPass(RenderPassBuilder& builder);
+        // RenderPass* getRenderPass(unsigned int index = 0);
+        // std::vector<RenderPass*> getRenderPasses();
+        // void destroyRenderPass(unsigned int index = 0);
 
         double deltaTime() const { return this->_deltaTime; };
         float deltaTimef() const { return static_cast<float>(this->_deltaTime); };

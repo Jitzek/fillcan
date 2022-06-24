@@ -1,11 +1,11 @@
 
 // fillcan
-#include "fillcan/fillcan.hpp"
-#include "fillcan/graphics/render_pass.hpp"
-#include "fillcan/graphics/render_pass_builder.hpp"
-#include "fillcan/graphics/swapchain.hpp"
-#include <algorithm>
 #include <fillcan/fillcan_graphics.hpp>
+#include <fillcan/graphics/render_pass_builder.hpp>
+#include <fillcan/graphics/swapchain.hpp>
+
+// std
+#include <algorithm>
 #include <iterator>
 #include <thread>
 #include <vector>
@@ -15,10 +15,7 @@ namespace fillcan {
                                      VkPhysicalDeviceFeatures requiredDeviceFeatures)
         : Fillcan(pApplicationName, applicationVersion, windowWidth, windowHeight, requiredDeviceFeatures) {}
 
-    FillcanGraphics::~FillcanGraphics() {
-        this->upRenderPasses.clear();
-        this->upSwapchains.clear();
-    }
+    FillcanGraphics::~FillcanGraphics() {}
 
     void FillcanGraphics::MainLoop(std::function<void(double)> callback) {
         std::chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
@@ -34,7 +31,6 @@ namespace fillcan {
             this->_deltaTime = deltaTime.count();
 
             callback(this->deltaTime());
-            // std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
         this->getCurrentDevice()->waitIdle();
     }
@@ -72,22 +68,22 @@ namespace fillcan {
 
     void FillcanGraphics::destroySwapchain(unsigned int index) { this->upSwapchains.erase(this->upSwapchains.begin() + index); }
 
-    unsigned int FillcanGraphics::createRenderPass(RenderPassBuilder& builder) {
-        this->upRenderPasses.push_back(std::move(builder.getResult()));
-        return this->upRenderPasses.size() - 1;
-    }
+    // unsigned int FillcanGraphics::createRenderPass(RenderPassBuilder& builder) {
+    //     this->upRenderPasses.push_back(std::move(builder.getResult()));
+    //     return this->upRenderPasses.size() - 1;
+    // }
 
-    RenderPass* FillcanGraphics::getRenderPass(unsigned int index) { return this->upRenderPasses[index].get(); }
+    // RenderPass* FillcanGraphics::getRenderPass(unsigned int index) { return this->upRenderPasses[index].get(); }
 
-    std::vector<RenderPass*> FillcanGraphics::getRenderPasses() {
-        std::vector<RenderPass*> pRenderPasses = {};
-        pRenderPasses.reserve(this->upRenderPasses.size());
-        std::transform(this->upRenderPasses.begin(), this->upRenderPasses.end(), std::back_inserter(pRenderPasses),
-                       [](const std::unique_ptr<RenderPass>& upRenderPass) { return upRenderPass.get(); });
-        return pRenderPasses;
-    }
+    // std::vector<RenderPass*> FillcanGraphics::getRenderPasses() {
+    //     std::vector<RenderPass*> pRenderPasses = {};
+    //     pRenderPasses.reserve(this->upRenderPasses.size());
+    //     std::transform(this->upRenderPasses.begin(), this->upRenderPasses.end(), std::back_inserter(pRenderPasses),
+    //                    [](const std::unique_ptr<RenderPass>& upRenderPass) { return upRenderPass.get(); });
+    //     return pRenderPasses;
+    // }
 
-    void FillcanGraphics::destroyRenderPass(unsigned int index) { this->upRenderPasses.erase(this->upRenderPasses.begin() + index); }
+    // void FillcanGraphics::destroyRenderPass(unsigned int index) { this->upRenderPasses.erase(this->upRenderPasses.begin() + index); }
 
     AssetManager* FillcanGraphics::getAssetManager() { return &this->assetManager; }
 } // namespace fillcan
