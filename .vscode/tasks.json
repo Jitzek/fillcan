@@ -1,0 +1,98 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		/**
+			CONFIGURATION
+		*/
+		{
+			"label": "CMake: Configure (Release)",
+			"type": "shell",
+			"options": {
+				"cwd": "${workspaceRoot}"
+			},
+			"command": "cmake -DCMAKE_BUILD_TYPE=Release ${workspaceRoot} -B ${workspaceRoot}/build",
+			"windows": {
+				// Use Powershell (still works with CMD)
+				"command": "powershell ${workspaceRoot}/scripts/configure_release.ps1 ${workspaceRoot}"
+
+
+				// Use CMD (still works with Powershell)
+				// "command": "cmd /c \"${workspaceRoot}/scripts/configure_release.bat ${workspaceRoot}\""
+			},
+			"problemMatcher": [],
+		},
+		{
+			"label": "CMake: Configure (Debug)",
+			"type": "shell",
+			"options": {
+				"cwd": "${workspaceRoot}"
+			},
+			"command": "cmake -DCMAKE_BUILD_TYPE=Debug ${workspaceRoot} -B ${workspaceRoot}/build",
+			"windows": {
+				// Use Powershell (still works with CMD)
+				"command": "powershell ${workspaceRoot}/scripts/configure_debug.ps1 ${workspaceRoot}"
+
+				// Use CMD (still works with Powershell)
+				// "command": "cmd /c \"${workspaceRoot}/scripts/configure_debug.bat ${workspaceRoot}\""
+			},
+			"problemMatcher": [],
+		},
+
+		/**
+			BUILDING
+		*/
+		{
+			"label": "CMake: Build (Release)",
+			"type": "shell",
+			"options": {
+				"cwd": "${workspaceRoot}/build"
+			},
+			"command": "cmake",
+			"args": [
+				"--build",
+				"."
+			],
+			"problemMatcher": [],
+			"dependsOn": [
+				"CMake: Configure (Release)"
+			],
+		},
+		{
+			"label": "CMake: Build (Debug)",
+			"type": "shell",
+			"options": {
+				"cwd": "${workspaceRoot}/build"
+			},
+			"command": "cmake",
+			"args": [
+				"--build",
+				"."
+			],
+			"problemMatcher": [],
+			"dependsOn": [
+				"CMake: Configure (Debug)"
+			],
+		},
+
+		/**
+			RUNNING
+		*/
+		{
+			"label": "Run (Release)",
+			"type": "shell",
+			"command": "build/Release/Fillcan-Application",
+			"windows": {
+				"command": "${workspaceRoot}/build/Release/Fillcan-Application.exe"
+			},
+			"args": [],
+			"presentation": {
+                "reveal": "always",
+                "focus": true
+            },
+			"problemMatcher": [],
+			"dependsOn": [
+				"CMake: Build (Release)"
+			]
+		}
+	]
+}
