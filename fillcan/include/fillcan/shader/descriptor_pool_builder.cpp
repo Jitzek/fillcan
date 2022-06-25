@@ -3,8 +3,8 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include "fillcan/shader/descriptor_pool.hpp"
 #include <fillcan/instance/logical_device.hpp>
+#include <fillcan/shader/descriptor_pool.hpp>
 #include <fillcan/shader/descriptor_pool_builder.hpp>
 #include <fillcan/shader/descriptor_set_layout.hpp>
 
@@ -50,11 +50,6 @@ namespace fillcan {
     }
 
     std::unique_ptr<DescriptorPool> DescriptorPoolBuilder::getResult() {
-        // std::unique_ptr<DescriptorPool> upDescriptorPool =
-        //     std::make_unique<DescriptorPool>(this->pLogicalDevice, this->flags, this->maxSets, this->descriptorPoolSizes);
-        // upDescriptorPool->allocateDescriptorSets(this->pDescriptorSetLayouts);
-        // return std::move(upDescriptorPool);
-
         unsigned int maxSets = 0;
         std::vector<VkDescriptorPoolSize> poolSizes = {};
         for (DescriptorSetInfo& descriptorSetInfo : this->descriptorSetInfos) {

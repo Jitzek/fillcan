@@ -5,9 +5,9 @@
 
 // std
 #include <cstddef>
+#include <iostream>
 #include <string>
 #include <vector>
-#include <iostream>
 
 namespace fillcan {
     class Instance {
@@ -26,6 +26,7 @@ namespace fillcan {
         Instance(std::string pApplicationName, unsigned int applicationVersion, std::vector<const char*> requiredLayers,
                  std::vector<const char*> requiredExtensions);
         ~Instance();
+        
         Instance(const Instance&) = delete;
         Instance& operator=(const Instance&) = delete;
 

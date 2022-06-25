@@ -17,7 +17,7 @@ namespace fillcan {
     class DescriptorPoolBuilder {
       private:
         struct DescriptorSetInfo {
-            std::string name = "Undefined";
+            std::string name = "undefined";
             DescriptorSetLayout* pLayout = nullptr;
             std::vector<VkDescriptorPoolSize> poolSizes;
         };

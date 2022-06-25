@@ -17,6 +17,9 @@ namespace fillcan {
                 VkBorderColor borderColor, VkBool32 unnormalizedCoordinates);
         ~Sampler();
 
+        Sampler(const Sampler&) = delete;
+        Sampler& operator=(const Sampler&) = delete;
+
         VkSampler getSamplerHandle();
     };
 } // namespace fillcan

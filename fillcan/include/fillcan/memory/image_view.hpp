@@ -20,6 +20,9 @@ namespace fillcan {
                   VkComponentMapping components);
         ~ImageView();
 
+        ImageView(const ImageView&) = delete;
+        ImageView& operator=(const ImageView&) = delete;
+
         VkImageView getImageViewHandle();
     };
 } // namespace fillcan

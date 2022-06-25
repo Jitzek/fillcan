@@ -43,11 +43,6 @@ namespace fillcan {
         LogicalDevice* pLogicalDevice;
         CommandBuffer* pCommandBuffer = nullptr;
         std::vector<VkAttachmentDescription> attachments;
-        // std::vector<VkAttachmentReference> inputAttachmentReferences;
-        // std::vector<VkAttachmentReference> colorAttachmentReferences;
-        // std::vector<VkAttachmentReference> resolveAttachmentReferences;
-        // std::vector<VkAttachmentReference> depthStencilAttachmentReferences;
-        // std::vector<uint32_t> preserveAttachmentReferences;
         std::vector<VkSubpassDescription> subpasses;
         std::vector<VkSubpassDependency> dependencies;
 
@@ -55,6 +50,9 @@ namespace fillcan {
         RenderPass(LogicalDevice* pLogicalDevice, std::vector<VkAttachmentDescription> attachments, std::vector<VkSubpassDescription> subpasses,
                    std::vector<VkSubpassDependency> dependencies);
         ~RenderPass();
+
+        RenderPass(const RenderPass&) = delete;
+        RenderPass& operator=(const RenderPass&) = delete;
 
         VkRenderPass getRenderPassHandle();
 

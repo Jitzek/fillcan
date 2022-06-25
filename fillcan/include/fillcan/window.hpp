@@ -34,13 +34,6 @@ namespace fillcan {
         Window(unsigned int width, unsigned int height, std::string name);
         ~Window();
 
-        /**
-         * Explicitly delete the copy constructor and assignment operator:
-         * [Window] is a pointer to the glfwWindow, copying [Window] would create a
-         * copy of a pointer to the glfwWindow. When calling the destructor of
-         * [Window] the glfwWindow will be terminated aswell leaving a dangling
-         * pointer behind.
-         */
         Window(const Window&) = delete;
         Window& operator=(const Window&) = delete;
 

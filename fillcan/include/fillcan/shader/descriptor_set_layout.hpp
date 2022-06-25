@@ -2,11 +2,11 @@
 
 // vulkan
 #include "vulkan/vulkan_core.h"
-#include <vector>
 
 // fillcan
 
 // std
+#include <vector>
 
 namespace fillcan {
     class LogicalDevice;
@@ -19,6 +19,9 @@ namespace fillcan {
       public:
         DescriptorSetLayout(LogicalDevice* pLogicalDevice, std::vector<VkDescriptorSetLayoutBinding> bindings);
         ~DescriptorSetLayout();
+
+        DescriptorSetLayout(const DescriptorSetLayout&) = delete;
+        DescriptorSetLayout& operator=(const DescriptorSetLayout&) = delete;
 
         VkDescriptorSetLayout getDescriptorSetLayoutHandle();
         const std::vector<VkDescriptorSetLayoutBinding>& getBindings() const;

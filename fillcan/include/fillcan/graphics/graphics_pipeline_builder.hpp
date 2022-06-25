@@ -4,13 +4,13 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include <array>
 #include <fillcan/graphics/graphics_pipeline.hpp>
 #include <fillcan/graphics/render_pass.hpp>
 #include <fillcan/shader/pipeline.hpp>
 #include <fillcan/shader/pipeline_builder.hpp>
 
 // std
+#include <array>
 #include <memory>
 #include <vector>
 

@@ -4,8 +4,8 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include "fillcan/shader/descriptor_pool.hpp"
-#include "fillcan/shader/descriptor_set_layout.hpp"
+#include <fillcan/shader/descriptor_pool.hpp>
+#include <fillcan/shader/descriptor_set_layout.hpp>
 #include <fillcan/shader/descriptor_set_layout_builder.hpp>
 
 // std
@@ -27,6 +27,9 @@ namespace fillcan {
         ShaderModule(LogicalDevice* pLogicalDevice, std::vector<uint32_t>& code,
                      std::vector<std::unique_ptr<DescriptorSetLayout>> upDescriptorSetLayouts, std::unique_ptr<DescriptorPool> upDescriptorPool);
         ~ShaderModule();
+
+        ShaderModule(const ShaderModule&) = delete;
+        ShaderModule& operator=(const ShaderModule&) = delete;
 
         VkShaderModule getShaderModuleHandle();
         std::vector<DescriptorSetLayout*> getDescriptorSetLayouts();

@@ -112,7 +112,9 @@ namespace fillcan {
 
         return true;
     }
-    bool Instance::checkExtensionSupport(std::vector<const char*> extensions) { /* TODO: */ return true; }
+    bool Instance::checkExtensionSupport(std::vector<const char*> extensions) { /* TODO: */
+        return true;
+    }
 
     VkInstance Instance::getInstanceHandle() const { return this->hInstance; }
 

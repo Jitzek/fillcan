@@ -4,8 +4,8 @@
 #include "vulkan/vulkan_core.h"
 
 // std
-#include <vector>
 #include <memory>
+#include <vector>
 
 namespace fillcan {
     class LogicalDevice;

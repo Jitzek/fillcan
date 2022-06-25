@@ -2,11 +2,11 @@
 
 // vulkan
 #include "vulkan/vulkan_core.h"
-#include <string>
 
 // fillcan
 
 // std
+#include <string>
 
 namespace fillcan {
     class LogicalDevice;
@@ -20,7 +20,7 @@ namespace fillcan {
         VkDescriptorSet hDescriptorSet;
         LogicalDevice* pLogicalDevice;
         DescriptorSetLayout* pDescriptorSetLayout;
-        std::string name = "Undefined";
+        std::string name = "undefined";
 
         void update(VkWriteDescriptorSet* pWrite, VkCopyDescriptorSet* pCopy);
 
@@ -28,6 +28,9 @@ namespace fillcan {
         DescriptorSet(LogicalDevice* pLogicalDevice, VkDescriptorSet hDescriptorSet, DescriptorSetLayout* pDescriptorSetLayout);
         DescriptorSet(LogicalDevice* pLogicalDevice, VkDescriptorSet hDescriptorSet, DescriptorSetLayout* pDescriptorSetLayout, std::string name);
         ~DescriptorSet();
+
+        DescriptorSet(const DescriptorSet&) = delete;
+        DescriptorSet& operator=(const DescriptorSet&) = delete;
 
         VkDescriptorSet getDescriptorSetHandle();
 

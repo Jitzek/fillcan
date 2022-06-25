@@ -1,11 +1,10 @@
 #pragma once
 // vulkan
-#include "fillcan/commands/command_recording.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include <cstddef>
 #include <fillcan/commands/command_pool.hpp>
+#include <fillcan/commands/command_recording.hpp>
 #include <fillcan/graphics/swapchain.hpp>
 #include <fillcan/instance/device_pool.hpp>
 #include <fillcan/instance/instance.hpp>
@@ -15,14 +14,15 @@
 
 // std
 #include <chrono>
+#include <cstddef>
 #include <functional>
 #include <memory>
-#include <shaderc/status.h>
 #include <vector>
 
 // shaderc
 #include <shaderc/shaderc.h>
 #include <shaderc/shaderc.hpp>
+#include <shaderc/status.h>
 
 namespace fillcan {
     class Fillcan {
@@ -37,7 +37,7 @@ namespace fillcan {
 
       public:
         Fillcan(const char* pApplicationName, uint32_t applicationVersion, unsigned int windowWidth, unsigned int windowHeight,
-                VkPhysicalDeviceFeatures requiredDeviceFeatures = {});
+                VkPhysicalDeviceFeatures requiredDeviceFeatures = {}, std::vector<const char*> requiredDeviceExtensions = {});
         ~Fillcan();
         Fillcan(const Fillcan&) = delete;
         Fillcan& operator=(const Fillcan&) = delete;
@@ -52,11 +52,10 @@ namespace fillcan {
         std::unique_ptr<ShaderModule> createShaderModule(const std::string shaderDirectory, const std::string shaderFileName,
                                                          shaderc_shader_kind shaderKind,
                                                          std::vector<std::unique_ptr<DescriptorSetLayout>> upDescriptorSetLayouts,
-                                                         std::unique_ptr<DescriptorPool> upDescriptorPool /*, TODO: pushConstants*/,
-                                                         bool preprocess = true, bool optimize = false);
-        
+                                                         std::unique_ptr<DescriptorPool> upDescriptorPool, bool preprocess = true,
+                                                         bool optimize = false);
+
         CommandRecording* beginSingleTimeCommands(Queue* pQueue);
         void endSingleTimeCommands(CommandRecording* pCommandRecording);
-        
     };
 } // namespace fillcan

@@ -22,6 +22,9 @@ namespace fillcan {
         Fence(LogicalDevice* pLogicalDevice, VkFenceCreateFlags flags = 0);
         ~Fence();
 
+        Fence(const Fence&) = delete;
+        Fence& operator=(const Fence&) = delete;
+
         VkFence getFenceHandle();
 
         bool waitFor(uint64_t timeout = UINT64_MAX);

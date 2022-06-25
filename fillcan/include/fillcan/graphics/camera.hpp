@@ -1,16 +1,17 @@
 #pragma once
 
 // fillcan
-#include "fillcan/memory/memory.hpp"
-#include "glm/detail/func_trigonometric.hpp"
-#include "glm/detail/type_vec.hpp"
-#include "glm/gtc/matrix_transform.hpp"
 #include <fillcan/memory/buffer.hpp>
+#include <fillcan/memory/memory.hpp>
 
+// glm
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #define GLM_FORCE_RADIANS
+#include <glm/detail/func_trigonometric.hpp>
 #include <glm/detail/type_mat.hpp>
+#include <glm/detail/type_vec.hpp>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 // std
 #include <memory>

@@ -68,7 +68,7 @@ namespace fillcan {
                 auto it = std::find_if(uniqueVertices.begin(), uniqueVertices.end(),
                                        [vertex](const std::pair<Vertex, uint32_t> pair) { return pair.first == vertex; });
                 if (it == uniqueVertices.end()) {
-                    // If vertex hasn't occured yet, add it to the list of vertices and it's it's index to the list of indices
+                    // If vertex hasn't occured yet, add it to the list of vertices and it's index to the list of indices
                     uniqueVertices.push_back({vertex, static_cast<uint32_t>(vertices.size())});
                     indices.push_back(vertices.size());
                     vertices.push_back(vertex);

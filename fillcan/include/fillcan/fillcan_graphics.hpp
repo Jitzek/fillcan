@@ -5,9 +5,9 @@
 
 // fillcan
 #include <fillcan/fillcan.hpp>
+#include <fillcan/graphics/asset_manager.hpp>
 #include <fillcan/graphics/framebuffer.hpp>
 #include <fillcan/graphics/render_pass.hpp>
-#include <fillcan/graphics/asset_manager.hpp>
 #include <fillcan/graphics/render_pass_builder.hpp>
 
 // std
@@ -24,7 +24,8 @@ namespace fillcan {
 
       public:
         FillcanGraphics(const char* pApplicationName, uint32_t applicationVersion, unsigned int windowWidth, unsigned int windowHeight,
-                        VkPhysicalDeviceFeatures requiredDeviceFeatures = {});
+                        VkPhysicalDeviceFeatures requiredDeviceFeatures = {},
+                        std::vector<const char*> requiredDeviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME});
         ~FillcanGraphics();
 
         void MainLoop(std::function<void(double)> callback);

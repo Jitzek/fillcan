@@ -1,14 +1,16 @@
 
-// fillcan
-#include "fillcan/commands/command_buffer.hpp"
-#include "fillcan/shader/shader_module.hpp"
+// vulkan
 #include "vulkan/vulkan_core.h"
-#include <cstddef>
+
+// fillcan
+#include <fillcan/commands/command_buffer.hpp>
 #include <fillcan/fillcan.hpp>
 #include <fillcan/instance/logical_device.hpp>
+#include <fillcan/shader/shader_module.hpp>
 
 // std
 #include <chrono>
+#include <cstddef>
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -34,10 +36,8 @@ namespace fillcan {
 #endif
     };
 
-    std::vector<const char*> requiredDeviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
-
     Fillcan::Fillcan(const char* pApplicationName, uint32_t applicationVersion, unsigned int windowWidth, unsigned int windowHeight,
-                     VkPhysicalDeviceFeatures requiredDeviceFeatures) {
+                     VkPhysicalDeviceFeatures requiredDeviceFeatures, std::vector<const char*> requiredDeviceExtensions) {
         // Initialize Window
         this->upWindow = std::make_unique<Window>(windowWidth, windowHeight, pApplicationName);
 
@@ -87,8 +87,7 @@ namespace fillcan {
     std::unique_ptr<ShaderModule> Fillcan::createShaderModule(const std::string shaderDirectory, const std::string shaderFileName,
                                                               shaderc_shader_kind shaderKind,
                                                               std::vector<std::unique_ptr<DescriptorSetLayout>> upDescriptorSetLayouts,
-                                                              std::unique_ptr<DescriptorPool> upDescriptorPool /*, TODO: pushConstants*/,
-                                                              bool preprocess, bool optimize) {
+                                                              std::unique_ptr<DescriptorPool> upDescriptorPool, bool preprocess, bool optimize) {
         shaderc::Compiler compiler;
         shaderc::CompileOptions options;
 

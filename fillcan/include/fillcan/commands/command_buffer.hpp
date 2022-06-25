@@ -17,6 +17,9 @@ namespace fillcan {
         CommandBuffer(VkCommandBuffer hCommandBuffer, VkCommandBufferLevel level);
         ~CommandBuffer();
 
+        CommandBuffer(const CommandBuffer&) = delete;
+        CommandBuffer& operator=(const CommandBuffer&) = delete;
+
         VkCommandBuffer getCommandBufferHandle() const;
         VkCommandBufferLevel getLevel() const;
 

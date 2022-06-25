@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <memory>
 #include <vector>
+
 namespace fillcan {
     class RenderPass;
     class LogicalDevice;

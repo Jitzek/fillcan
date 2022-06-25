@@ -2,6 +2,8 @@
 
 // vulkan
 #include "vulkan/vulkan_core.h"
+
+// std
 #include <vector>
 
 namespace fillcan {
@@ -20,6 +22,9 @@ namespace fillcan {
         Framebuffer(LogicalDevice* pLogicalDevice, RenderPass* pRenderPass, std::vector<ImageView*> pAttachments, unsigned int width,
                     unsigned int height, unsigned int layers);
         ~Framebuffer();
+
+        Framebuffer(const Framebuffer&) = delete;
+        Framebuffer& operator=(const Framebuffer&) = delete;
 
         VkFramebuffer getFramebufferHandle();
 

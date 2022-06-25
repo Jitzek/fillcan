@@ -1,8 +1,10 @@
 #pragma once
 
 // vulkan
-#include "fillcan/shader/pipeline_layout.hpp"
 #include "vulkan/vulkan_core.h"
+
+// fillcan
+#include <fillcan/shader/pipeline_layout.hpp>
 
 // std
 #include <memory>
@@ -44,6 +46,9 @@ namespace fillcan {
                  std::vector<PipelineShaderStage> shaderStages, std::vector<PushConstant> pushConstants,
                  VkPipelineCache pipelineCache = VK_NULL_HANDLE, Pipeline* pBasePipeline = nullptr);
         virtual ~Pipeline();
+
+        Pipeline(const Pipeline&) = delete;
+        Pipeline& operator=(const Pipeline&) = delete;
 
         VkPipeline getPipelineHandle();
 

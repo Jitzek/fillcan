@@ -33,6 +33,9 @@ namespace fillcan {
                        std::vector<PushConstant> pushConstants);
         ~PipelineLayout();
 
+        PipelineLayout(const PipelineLayout&) = delete;
+        PipelineLayout& operator=(const PipelineLayout&) = delete;
+
         VkPipelineLayout getPipelineLayoutHandle();
 
         std::vector<DescriptorSetLayout*> getDescriptorSetLayouts();

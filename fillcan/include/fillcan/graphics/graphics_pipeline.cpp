@@ -1,20 +1,16 @@
 // vulkan
-#include "fillcan/memory/buffer.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include <cstddef>
 #include <fillcan/graphics/graphics_pipeline.hpp>
 #include <fillcan/graphics/render_pass.hpp>
-
 #include <fillcan/shader/pipeline.hpp>
 #include <fillcan/shader/pipeline_layout.hpp>
 #include <fillcan/shader/shader_module.hpp>
 
-#include <fillcan/memory/buffer.hpp>
-
 // std
 #include <algorithm>
+#include <cstddef>
 #include <iterator>
 #include <memory>
 #include <stdexcept>

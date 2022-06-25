@@ -12,8 +12,8 @@
 
 namespace fillcan {
     FillcanGraphics::FillcanGraphics(const char* pApplicationName, uint32_t applicationVersion, unsigned int windowWidth, unsigned int windowHeight,
-                                     VkPhysicalDeviceFeatures requiredDeviceFeatures)
-        : Fillcan(pApplicationName, applicationVersion, windowWidth, windowHeight, requiredDeviceFeatures) {}
+                                     VkPhysicalDeviceFeatures requiredDeviceFeatures, std::vector<const char*> requiredDeviceExtensions)
+        : Fillcan(pApplicationName, applicationVersion, windowWidth, windowHeight, requiredDeviceFeatures, requiredDeviceExtensions) {}
 
     FillcanGraphics::~FillcanGraphics() {}
 

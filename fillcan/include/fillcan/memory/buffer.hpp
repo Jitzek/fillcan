@@ -35,6 +35,9 @@ namespace fillcan {
                std::vector<uint32_t> queueFamilyIndices = {});
         ~Buffer();
 
+        Buffer(const Buffer&) = delete;
+        Buffer& operator=(const Buffer&) = delete;
+
         VkBuffer getBufferHandle();
 
         VkBufferCreateFlags getFlags();

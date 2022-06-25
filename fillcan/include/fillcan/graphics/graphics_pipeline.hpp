@@ -1,11 +1,13 @@
 #pragma once
 
-// fillcan
-#include "fillcan/instance/logical_device.hpp"
-#include "fillcan/shader/pipeline_layout.hpp"
+// vulkan
 #include "vulkan/vulkan_core.h"
+
+// fillcan
+#include <fillcan/instance/logical_device.hpp>
 #include <fillcan/memory/buffer.hpp>
 #include <fillcan/shader/pipeline.hpp>
+#include <fillcan/shader/pipeline_layout.hpp>
 
 // std
 #include <vector>
@@ -30,6 +32,9 @@ namespace fillcan {
                          VkPipelineColorBlendStateCreateInfo* pColorBlendState, VkPipelineDynamicStateCreateInfo* pDynamicState,
                          RenderPass* pRenderPass, unsigned int subpass);
         ~GraphicsPipeline();
+
+        GraphicsPipeline(const GraphicsPipeline&) = delete;
+        GraphicsPipeline& operator=(const GraphicsPipeline&) = delete;
 
         RenderPass* getRenderPass();
 

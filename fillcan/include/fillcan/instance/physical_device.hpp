@@ -9,8 +9,8 @@
 
 // std
 #include <memory>
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace fillcan {
     class PhysicalDevice {
@@ -25,8 +25,10 @@ namespace fillcan {
 
         void findGraphicsAndPresentQueueFamilyIndex(std::vector<VkQueueFamilyProperties> queueFamilyProperties = {});
         void findComputeQueueFamilyIndex(std::vector<VkQueueFamilyProperties> queueFamilyProperties = {});
+
       public:
-        PhysicalDevice(VkPhysicalDevice hPhysicalDevice, Window* pWindow, std::vector<const char *> requiredExtensions, VkPhysicalDeviceFeatures requiredFeatures = {});
+        PhysicalDevice(VkPhysicalDevice hPhysicalDevice, Window* pWindow, std::vector<const char*> requiredExtensions,
+                       VkPhysicalDeviceFeatures requiredFeatures = {});
         ~PhysicalDevice();
 
         const VkPhysicalDevice getPhysicalDeviceHandle() const;

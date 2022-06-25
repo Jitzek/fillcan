@@ -2,12 +2,12 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include <cstdint>
 #include <fillcan/commands/command_recording.hpp>
 #include <fillcan/commands/queue.hpp>
 #include <fillcan/memory/fence.hpp>
 
 // std
+#include <cstdint>
 #include <memory>
 #include <utility>
 #include <vector>
@@ -46,9 +46,7 @@ namespace fillcan {
     void CommandRecording::createFence(LogicalDevice* pLogicalDevice, VkFenceCreateFlags flags) {
         this->upFenceWorkCompleted = std::make_unique<Fence>(pLogicalDevice, flags);
     }
-    
-    void CommandRecording::waitForFence(uint64_t timeout) {
-        this->upFenceWorkCompleted->waitFor(timeout);
-    }
+
+    void CommandRecording::waitForFence(uint64_t timeout) { this->upFenceWorkCompleted->waitFor(timeout); }
 
 } // namespace fillcan

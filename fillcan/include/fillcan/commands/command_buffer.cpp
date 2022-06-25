@@ -1,5 +1,7 @@
-// fillcan
+// vulkan
 #include "vulkan/vulkan_core.h"
+
+// fillcan
 #include <fillcan/commands/command_buffer.hpp>
 #include <fillcan/instance/logical_device.hpp>
 
@@ -7,8 +9,7 @@
 #include <stdexcept>
 
 namespace fillcan {
-    CommandBuffer::CommandBuffer(VkCommandBuffer hCommandBuffer, VkCommandBufferLevel level) : hCommandBuffer(hCommandBuffer), level(level) {
-    }
+    CommandBuffer::CommandBuffer(VkCommandBuffer hCommandBuffer, VkCommandBufferLevel level) : hCommandBuffer(hCommandBuffer), level(level) {}
     CommandBuffer::~CommandBuffer() {}
 
     VkCommandBuffer CommandBuffer::getCommandBufferHandle() const { return this->hCommandBuffer; }

@@ -4,7 +4,6 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include <cstdint>
 #include <fillcan/memory/fence.hpp>
 #include <fillcan/memory/image.hpp>
 #include <fillcan/memory/memory.hpp>
@@ -12,8 +11,6 @@
 
 // std
 #include <memory>
-#include <sys/types.h>
-#include <utility>
 #include <vector>
 
 namespace fillcan {
@@ -56,6 +53,9 @@ namespace fillcan {
         Swapchain(LogicalDevice* pLogicalDevice, Window* pWindow, Queue* pPresentQueue, uint32_t imageCount = 3,
                   VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR, Swapchain* pOldSwapchain = VK_NULL_HANDLE);
         ~Swapchain();
+
+        Swapchain(const Swapchain&) = delete;
+        Swapchain& operator=(const Swapchain&) = delete;
 
         VkSwapchainKHR getSwapchainHandle();
         SwapchainImage getNextImage(Fence* pFence = nullptr);

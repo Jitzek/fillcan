@@ -1,23 +1,19 @@
 // vulkan
-#include "fillcan/memory/memory.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include "fillcan/memory/image_director.hpp"
-#include "fillcan/memory/image_view.hpp"
-#include <algorithm>
 #include <fillcan/commands/queue.hpp>
 #include <fillcan/graphics/swapchain.hpp>
 #include <fillcan/instance/logical_device.hpp>
 #include <fillcan/memory/image.hpp>
+#include <fillcan/memory/image_director.hpp>
+#include <fillcan/memory/image_view.hpp>
+#include <fillcan/memory/memory.hpp>
 #include <fillcan/window.hpp>
 
 // std
-#include <cstdint>
-#include <iostream>
 #include <memory>
 #include <stdexcept>
-#include <utility>
 #include <vector>
 
 namespace fillcan {

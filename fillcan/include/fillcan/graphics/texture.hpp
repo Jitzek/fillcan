@@ -1,6 +1,9 @@
 #pragma once
 
+// vulkan
 #include "vulkan/vulkan_core.h"
+
+// fillcan
 #include <fillcan/graphics/sampler.hpp>
 #include <fillcan/memory/buffer.hpp>
 #include <fillcan/memory/image.hpp>
@@ -30,8 +33,6 @@ namespace fillcan {
         std::unique_ptr<Image> upImage;
         std::unique_ptr<Memory> upImageMemory;
         std::unique_ptr<Sampler> upSampler;
-        // DescriptorSet* pDescriptorSet;
-        // VkDescriptorSetLayoutBinding descriptorSetBinding;
 
         void createImage(Buffer* pStagingBuffer);
         void createImageView();
