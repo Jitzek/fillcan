@@ -104,8 +104,9 @@ namespace fillcan {
             }
         }
 
-        if (optimize)
+        if (optimize) {
             options.SetOptimizationLevel(shaderc_optimization_level_performance);
+        }
 
         shaderc::SpvCompilationResult spvResult =
             compiler.CompileGlslToSpv(shaderSourceText.data(), shaderFileSize, shaderKind, shaderFileName.c_str(), options);

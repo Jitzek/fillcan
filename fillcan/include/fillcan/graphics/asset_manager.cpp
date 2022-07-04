@@ -32,11 +32,8 @@ namespace fillcan {
 
         DescriptorSetLayoutBuilder descriptorSetLayoutBuilder{};
         descriptorSetLayoutBuilder.setLogicalDevice(pLogicalDevice);
-
-        // Combined Image Sampler
         descriptorSetLayoutBuilder.addBinding(binding, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, this->upTextures.size(),
                                               VK_SHADER_STAGE_FRAGMENT_BIT);
-
         upDescriptorSetLayouts.emplace_back(descriptorSetLayoutBuilder.getResult());
 
         return std::move(upDescriptorSetLayouts);

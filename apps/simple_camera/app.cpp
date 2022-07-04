@@ -63,7 +63,7 @@ namespace simple_camera {
     App::~App() {}
 
     void App::run() {
-        std::string name = "Keyboard Control Application";
+        std::string name = "Camera Application";
         std::cout << "Running App \"" << name << "\"\n";
 
         VkPhysicalDeviceFeatures requiredDeviceFeatures = {};
@@ -221,17 +221,13 @@ namespace simple_camera {
         static auto startTime = std::chrono::high_resolution_clock::now();
         auto currentTime = std::chrono::high_resolution_clock::now();
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-        this->upCamera->translateXYZ(glm::vec3(1.f, 0.f, 0.f) * this->upFillcan->deltaTimef());
-        this->upCamera->lookAt(glm::vec3(0.0f, 0.f, 0.5));
+        this->upCamera->translateXYZ(glm::vec3(0.f, 0.f, 1.f) * this->upFillcan->deltaTimef());
+        this->upCamera->lookAt(glm::vec3(0.0f, 1.f, 0.5f));
 
         // Bind the current Camera descriptor set describing the projection to the pipeline and update it's value
-        this->upCamera->updateBuffer(this->upGraphicsPipeline.get(), 1, this->currentFrameIndex);
+        this->upCamera->updateBuffer(this->upGraphicsPipeline.get());
 
         for (fillcan::GameObject& gameObject : this->gameObjects) {
-            // gameObject.transform.rotation.y =
-            //     glm::mod(gameObject.transform.rotation.y + (0.5f * this->upFillcan->deltaTimef()), glm::two_pi<float>());
-            // gameObject.transform.rotation.x =
-            //     glm::mod(gameObject.transform.rotation.x + (0.25f * this->upFillcan->deltaTimef()), glm::two_pi<float>());
             SimplePushConstantData data = {.transform = gameObject.transform.mat4(),
                                            .color = gameObject.color,
                                            .textureIndex =

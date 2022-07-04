@@ -13,6 +13,7 @@
 
 // std
 #include <cstddef>
+#include <iostream>
 #include <memory>
 #include <string.h>
 
@@ -50,16 +51,17 @@ namespace fillcan {
         }
     }
 
-    void Camera::updateBuffer(GraphicsPipeline* pPipeline, unsigned int firstSet, int index) {
-        pPipeline->bindDescriptorSets({this->pDescriptorSets.at(this->currentIndex)}, firstSet);
-        this->currentIndex = (this->currentIndex + 1) % this->bufferCount;
+    void Camera::updateBuffer(GraphicsPipeline* pPipeline) {
+        pPipeline->bindDescriptorSets({this->pDescriptorSets.at(this->currentIndex)}, 1);
 
-        Buffer* pCurrentBuffer = this->upUniformBuffers.at(index).get();
+        Buffer* pCurrentBuffer = this->upUniformBuffers.at(this->currentIndex).get();
         void** ppData = pCurrentBuffer->getMemory()->map();
         ViewProjectionBufferData mvpBufferData = {.view = this->vp.view.mat4(), .projection = this->vp.projection.mat4()};
         memcpy(*ppData, &mvpBufferData, sizeof(mvpBufferData));
         pCurrentBuffer->getMemory()->flush();
         pCurrentBuffer->getMemory()->unmap();
+
+        this->currentIndex = (this->currentIndex + 1) % this->bufferCount;
     }
 
     std::vector<std::unique_ptr<DescriptorSetLayout>> Camera::getDescriptorSetLayouts(unsigned int binding) {
@@ -68,8 +70,6 @@ namespace fillcan {
 
         DescriptorSetLayoutBuilder descriptorSetLayoutBuilder{};
         descriptorSetLayoutBuilder.setLogicalDevice(this->pLogicalDevice);
-
-        // Uniform Buffer
         descriptorSetLayoutBuilder.addBinding(binding, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_VERTEX_BIT);
 
         upDescriptorSetLayouts.push_back(descriptorSetLayoutBuilder.getResult());

@@ -80,7 +80,7 @@ namespace fillcan {
         void resizeBufferCount(unsigned int bufferCount);
 
         void bindDescriptorSets(std::vector<DescriptorSet*> pDescriptorSets);
-        void updateBuffer(GraphicsPipeline* pPipeline, unsigned int firstSet, int index);
+        void updateBuffer(GraphicsPipeline* pPipeline);
 
         std::vector<std::unique_ptr<DescriptorSetLayout>> getDescriptorSetLayouts(unsigned int binding);
 
