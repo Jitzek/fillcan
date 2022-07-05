@@ -1,0 +1,16 @@
+$--fg-color-primary: white;
+$--fg-color-secondary: #dddddd;
+
+$--bg-color-primary: #4b4c5c;
+$--bg-color-secondary: #575875;
+
+$--font-family-default: sans-serif;
+$--font-family-paragraph: $--font-family-default;
+$--font-family-input: "Freeroad";
+
+$--screen-width-small: 600px;
+
+@font-face {
+    font-family: "Freeroad";
+    src: url("/fonts/freeroad.regular.ttf");
+}
