@@ -74,6 +74,8 @@ namespace simple_camera {
         void loadGameObjects();
         void renderGameObjects(fillcan::CommandBuffer* pCommandBuffer);
 
+        float deltaTimef = 0.f;
+
       public:
         App();
         ~App();

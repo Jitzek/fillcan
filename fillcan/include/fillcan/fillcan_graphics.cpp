@@ -28,9 +28,8 @@ namespace fillcan {
             previousTime = currentTime;
             currentTime = std::chrono::high_resolution_clock::now();
             deltaTime = currentTime - previousTime;
-            this->_deltaTime = deltaTime.count();
 
-            callback(this->deltaTime());
+            callback(deltaTime.count());
         }
         this->getCurrentDevice()->waitIdle();
     }

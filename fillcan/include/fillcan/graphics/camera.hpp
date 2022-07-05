@@ -74,10 +74,8 @@ namespace fillcan {
         glm::vec3 rotation = glm::vec3(0.f);
 
       public:
-        Camera(LogicalDevice* pLogicalDevice, unsigned int bufferCount, unsigned int maxBufferCount = 3);
+        Camera(LogicalDevice* pLogicalDevice, unsigned int bufferCount);
         ~Camera();
-
-        void resizeBufferCount(unsigned int bufferCount);
 
         void bindDescriptorSets(std::vector<DescriptorSet*> pDescriptorSets);
         void updateBuffer(GraphicsPipeline* pPipeline);

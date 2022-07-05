@@ -70,6 +70,8 @@ namespace simple_texture {
         void renderGameObjects(fillcan::CommandBuffer* pCommandBuffer);
         std::unique_ptr<fillcan::Model> createCubeModel(glm::vec3 offset);
 
+        float deltaTimef = 0.f;
+
       public:
         App();
         ~App();

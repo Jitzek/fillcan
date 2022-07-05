@@ -92,6 +92,7 @@ namespace simple_cube {
     }
 
     void App::update(double deltaTime) {
+        this->deltaTimef = static_cast<float>(deltaTime);
         // Recreate swapchain if window was resized
         if (this->upFillcan->getWindow()->wasResized()) {
             this->upFillcan->recreateSwapchain();
@@ -339,10 +340,8 @@ namespace simple_cube {
     void App::renderGameObjects(fillcan::CommandBuffer* pCommandBuffer) {
         this->upGraphicsPipeline->bindToCommandBuffer(pCommandBuffer);
         for (fillcan::GameObject& gameObject : this->gameObjects) {
-            gameObject.transform.rotation.y =
-                glm::mod(gameObject.transform.rotation.y + (0.5f * this->upFillcan->deltaTimef()), glm::two_pi<float>());
-            gameObject.transform.rotation.x =
-                glm::mod(gameObject.transform.rotation.x + (0.25f * this->upFillcan->deltaTimef()), glm::two_pi<float>());
+            gameObject.transform.rotation.y = glm::mod(gameObject.transform.rotation.y + (0.5f * this->deltaTimef), glm::two_pi<float>());
+            gameObject.transform.rotation.x = glm::mod(gameObject.transform.rotation.x + (0.25f * this->deltaTimef), glm::two_pi<float>());
 
             SimplePushConstantData data = {.transform = gameObject.transform.mat4(), .color = gameObject.color};
             std::unique_ptr<SimplePushConstantData> simplePushConstantData = std::make_unique<SimplePushConstantData>(data);

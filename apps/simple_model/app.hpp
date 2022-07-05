@@ -68,11 +68,10 @@ namespace simple_model {
         void preloadTextures();
         void loadGameObjects();
         void renderGameObjects(fillcan::CommandBuffer* pCommandBuffer);
-
       public:
         App();
         ~App();
         void run();
         void update(double deltaTime);
     };
-} // namespace simple_texture
+} // namespace simple_model

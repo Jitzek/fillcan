@@ -31,7 +31,6 @@
 #include "fillcan/shader/descriptor_pool_builder.hpp"
 #include "fillcan/shader/descriptor_set_layout.hpp"
 #include "fillcan/shader/shader_module.hpp"
-#include <exception>
 #include <fillcan/graphics/asset_manager.hpp>
 #include <fillcan/graphics/graphics_pipeline_builder.hpp>
 #include <fillcan/shader/pipeline.hpp>
@@ -42,6 +41,7 @@
 #include <chrono>
 #include <cstddef>
 #include <cstring>
+#include <exception>
 #include <fstream>
 #include <functional>
 #include <iostream>
@@ -76,9 +76,8 @@ namespace simple_camera {
 
         this->createRenderPass();
 
-        // Prepare a camera with a max buffercount of 3 (triple buffering)
-        this->upCamera =
-            std::move(std::make_unique<fillcan::Camera>(this->upFillcan->getCurrentDevice(), this->upFillcan->getSwapchain()->getImageCount(), 3));
+        // Prepare a camera with a buffercount of 3 (triple buffering)
+        this->upCamera = std::move(std::make_unique<fillcan::Camera>(this->upFillcan->getCurrentDevice(), 3));
 
         this->preloadTextures();
 
@@ -113,10 +112,11 @@ namespace simple_camera {
     }
 
     void App::update(double deltaTime) {
+        this->deltaTimef = static_cast<float>(deltaTime);
+
         // Recreate swapchain if window was resized
         if (this->upFillcan->getWindow()->wasResized()) {
             this->upFillcan->recreateSwapchain();
-            this->upCamera->resizeBufferCount(this->upFillcan->getSwapchain()->getImageCount());
             return;
         }
 
@@ -221,7 +221,7 @@ namespace simple_camera {
         static auto startTime = std::chrono::high_resolution_clock::now();
         auto currentTime = std::chrono::high_resolution_clock::now();
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-        this->upCamera->translateXYZ(glm::vec3(0.f, 0.f, 1.f) * this->upFillcan->deltaTimef());
+        this->upCamera->translateXYZ(glm::vec3(0.f, 0.f, 1.f) * this->deltaTimef);
         this->upCamera->lookAt(glm::vec3(0.0f, 1.f, 0.5f));
 
         // Bind the current Camera descriptor set describing the projection to the pipeline and update it's value

@@ -205,8 +205,8 @@ namespace simple_model {
             this->upGraphicsPipeline->pushConstantData("SimplePushConstant", std::move(simplePushConstantData));
 
             gameObject.model->bind(pCommandBuffer);
-            gameObject.model->draw();
-            // gameObject.model->drawIndexed();
+            // gameObject.model->draw();
+            gameObject.model->drawIndexed();
         }
     }
 

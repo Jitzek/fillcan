@@ -99,6 +99,7 @@ namespace simple_texture {
     }
 
     void App::update(double deltaTime) {
+        this->deltaTimef = static_cast<float>(deltaTime);
         // Recreate swapchain if window was resized
         if (this->upFillcan->getWindow()->wasResized()) {
             this->upFillcan->recreateSwapchain();
@@ -268,10 +269,8 @@ namespace simple_texture {
         this->upGraphicsPipeline->bindToCommandBuffer(pCommandBuffer);
         this->upGraphicsPipeline->bindDescriptorSets(std::vector<std::string>{"TexturesDescriptorSet"}, 0);
         for (fillcan::GameObject& gameObject : this->gameObjects) {
-            gameObject.transform.rotation.y =
-                glm::mod(gameObject.transform.rotation.y + (0.5f * this->upFillcan->deltaTimef()), glm::two_pi<float>());
-            gameObject.transform.rotation.x =
-                glm::mod(gameObject.transform.rotation.x + (0.25f * this->upFillcan->deltaTimef()), glm::two_pi<float>());
+            gameObject.transform.rotation.y = glm::mod(gameObject.transform.rotation.y + (0.5f * this->deltaTimef), glm::two_pi<float>());
+            gameObject.transform.rotation.x = glm::mod(gameObject.transform.rotation.x + (0.25f * this->deltaTimef), glm::two_pi<float>());
             SimplePushConstantData data = {.transform = gameObject.transform.mat4(),
                                            .color = gameObject.color,
                                            .textureIndex =

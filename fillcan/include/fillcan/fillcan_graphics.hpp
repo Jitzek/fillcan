@@ -19,7 +19,6 @@ namespace fillcan {
       private:
         std::vector<std::unique_ptr<Swapchain>> upSwapchains = {};
         std::vector<std::unique_ptr<RenderPass>> upRenderPasses = {};
-        double _deltaTime = 0;
         AssetManager assetManager{};
 
       public:
@@ -41,9 +40,6 @@ namespace fillcan {
         // RenderPass* getRenderPass(unsigned int index = 0);
         // std::vector<RenderPass*> getRenderPasses();
         // void destroyRenderPass(unsigned int index = 0);
-
-        double deltaTime() const { return this->_deltaTime; };
-        float deltaTimef() const { return static_cast<float>(this->_deltaTime); };
 
         AssetManager* getAssetManager();
     };

@@ -18,11 +18,9 @@
 #include <string.h>
 
 namespace fillcan {
-    Camera::Camera(LogicalDevice* pLogicalDevice, unsigned int bufferCount, unsigned int maxBufferCount) : pLogicalDevice(pLogicalDevice) {
-        this->upUniformBuffers.resize(maxBufferCount);
-        this->upUniformBufferMemories.resize(maxBufferCount);
-
-        this->resizeBufferCount(bufferCount);
+    Camera::Camera(LogicalDevice* pLogicalDevice, unsigned int bufferCount) : pLogicalDevice(pLogicalDevice), bufferCount(bufferCount) {
+        this->upUniformBuffers.resize(bufferCount);
+        this->upUniformBufferMemories.resize(bufferCount);
 
         VkDeviceSize bufferSize = sizeof(ViewProjectionBufferData);
         BufferDirector bufferDirector{};
@@ -37,12 +35,6 @@ namespace fillcan {
     }
 
     Camera::~Camera() {}
-
-    void Camera::resizeBufferCount(unsigned int bufferCount) {
-        if (bufferCount > this->upUniformBuffers.size())
-            bufferCount = static_cast<unsigned int>(this->upUniformBuffers.size());
-        this->bufferCount = bufferCount;
-    }
 
     void Camera::bindDescriptorSets(std::vector<DescriptorSet*> pDescriptorSets) {
         this->pDescriptorSets = pDescriptorSets;
