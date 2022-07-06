@@ -3,26 +3,41 @@
     import { DisplayType } from "$objects/State";
     import { getState, stateStore } from "$stores/StateStore";
 
+    class Category {
+        id: string;
+        label: string;
+    }
+
     class Reference {
         public id: string;
+        public category: Category;
         public label: string;
         public visible: boolean;
     }
 
     let references: Array<Reference> = [
         {
-            id: "setup",
-            label: "Setup",
+            id: "vulkansdk",
+            category: {id: "Setup", label: "Setup"},
+            label: "Vulkan SDK",
+            visible: false,
+        },
+        {
+            id: "cmake",
+            category: {id: "Setup", label: "Setup"},
+            label: "CMake",
             visible: false,
         },
         {
             id: "hi",
+            category: {id: "Instance", label: "Instance"},
             label: "Hi",
             visible: false,
         },
     ];
 
     let currenReference: Reference = references[0];
+    let prevCategory: Category = {id: "undefined", label: ""};
 
     let topOffsetInPx = 100;
 
@@ -54,7 +69,33 @@
         : ''}"
     style="--sidebar-width: 20rem;"
 >
-    <div class="documentation-sidebar">Sidebar</div>
+    <div class="documentation-sidebar">
+        <ul class="references-list">
+            {#each references as reference, i}
+                {#if i == 0 || references.at(i - 1).category.id !== reference.category.id}
+                    {#if references.at(i - 1).id !== "undefined"}
+                        <br />
+                    {/if}
+                    <li class="reference-header">
+                        <a
+                            href="{getState().URL
+                                .root}/documentation#{reference.category.id}"
+                        >
+                            {reference.category.label}
+                        </a>
+                    </li>
+                {/if}
+                <li class="reference-item">
+                    <a
+                        href="{getState().URL
+                            .root}/documentation#{reference.id}"
+                    >
+                        {reference.label}
+                    </a>
+                </li>
+            {/each}
+        </ul>
+    </div>
     <div
         class="documentation-container  {$stateStore.Screen.displayType ===
         DisplayType.MOBILE
@@ -69,14 +110,25 @@
             Some concepts within C++ and Vulkan will be elaborated upon if I think
             they are interesting.
         </p>
-        <br />
+        <br /><br />
         <hr />
+        <h2 id="Setup">Setup</h2>
         <Section
             {topOffsetInPx}
-            bind:visible={references[getIndexOfReferenceById("setup")].visible}
+            bind:visible={references[getIndexOfReferenceById("vulkansdk")].visible}
         >
-            <h2 id="setup">{getReferenceById("setup").label}</h2>
+            <h3 id="vulkansdk">{getReferenceById("vulkansdk").label}</h3>
         </Section>
+        <Section
+            {topOffsetInPx}
+            bind:visible={references[getIndexOfReferenceById("cmake")].visible}
+        >
+            <h3 id="cmake">{getReferenceById("cmake").label}</h3>
+        </Section>
+        <br /><br />
+        <hr />
+        <h2 id="Instance">Instance</h2>
+
     </div>
 </div>
 
@@ -94,6 +146,7 @@
         }
 
         .documentation-sidebar {
+            top: 5rem; // 5rem is the height of the NavBar
             font-family: $--font-family-default;
             color: $--fg-color-primary;
             position: fixed;
@@ -101,6 +154,23 @@
 
             background-color: $--bg-color-secondary;
             width: var(--sidebar-width);
+        }
+
+        h1, h2, h3 {
+            padding-top: 0;
+        }
+
+        h1 {
+            font-size: 3rem;
+        }
+        h2, h3 {
+            margin-top: 0;
+        }
+        h2 {
+            font-size: 2.25rem;
+        }
+        h3 {
+            font-size: 1.5rem;
         }
     }
 
@@ -110,6 +180,40 @@
         }
         .documentation-sidebar {
             display: none;
+        }
+    }
+
+    .documentation-sidebar {
+        .references-list {
+            font-family: $--font-family-input;
+            list-style: none;
+            text-decoration: none;
+            padding: 1.5rem 1.5rem 1.5rem 2.5rem;
+            margin: 0;
+            a {
+                letter-spacing: 0.025rem;
+                text-decoration: none;
+            }
+            .reference-header {
+                a {
+                    color: $--input-fg-color-primary;
+                    text-transform: uppercase;
+                    font-size: 1.2rem;
+                }
+            }
+            .reference-item {
+                a {
+                    color: $--input-fg-color-secondary;
+                    padding-left: 1rem;
+                    font-size: 1.1rem;
+                }
+            }
+
+            a:hover,
+            a:focus,
+            a:active {
+                text-decoration: underline;
+            }
         }
     }
 </style>

@@ -24,7 +24,6 @@
 
         border: none;
         border-radius: 1rem;
-        width: 35%;
         width: 10rem;
         margin: 0.5rem;
         height: auto;
@@ -38,6 +37,20 @@
 
         .label {
             font-size: 1rem;
+        }
+
+        .icon,
+        .label {
+            transition: transform 0.25s ease-in-out;
+        }
+    }
+
+    button:hover,
+    button:focus,
+    button:active {
+        .label,
+        .icon {
+            transform: scale(1.1);
         }
     }
 

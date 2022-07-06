@@ -88,7 +88,7 @@
         .main-overlay {
             background-color: $--bg-color-primary;
             transform: translateY(20rem);
-            min-height: calc(100vh - 7rem); // 7rem == height of NavBar
+            min-height: calc(100vh - 5rem); // 5rem is the height of the NavBar
             width: 100%;
             overflow-y: scroll;
             z-index: 1;

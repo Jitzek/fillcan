@@ -95,10 +95,11 @@
 </div>
 
 <style lang="scss">
+    $--navbar-height: 5rem;
     .navbar {
         box-shadow: 0 5px 5px #333333ff;
         width: 100%;
-        height: 7rem;
+        height: $--navbar-height;
         background-color: $--bg-color-primary;
         position: sticky;
         top: 0;
@@ -117,10 +118,10 @@
 
             .fillcan-logo {
                 width: auto;
-                height: 4rem;
+                height: calc($--navbar-height / 1.5);
                 position: absolute;
-                top: 1.5rem;
-                left: 1.5rem;
+                top: calc($--navbar-height / 6);
+                left: calc($--navbar-height / 7);
                 z-index: 2;
             }
         }
@@ -131,7 +132,7 @@
                 height: 2rem;
                 position: absolute;
                 right: 1rem;
-                top: 2.5rem;
+                top: calc($--navbar-height - ($--navbar-height / 2) - 1rem);
                 padding: 0;
                 margin: 0;
                 border: none;
@@ -148,7 +149,7 @@
             .hamburger-menu-button.activated {
                 width: 2.25rem;
                 height: 2.25rem;
-                top: 2.375rem;
+                top: calc($--navbar-height - ($--navbar-height / 2) - 1.1rem);
                 right: 0.875rem;
                 fill: $--input-fg-color-primary;
             }
@@ -164,12 +165,12 @@
                     margin: 0;
 
                     button {
-                        color: $--fg-color-primary;
+                        color: $--input-fg-color-primary;
                         background-color: $--input-bg-color-primary;
                         border: none;
                         width: 100%;
                         cursor: pointer;
-                        height: 3rem;
+                        height: calc($--navbar-height / 2);
                         transition: background-color 0.25s;
                         font-size: 1rem;
                         font-family: $--font-family-input;
@@ -185,7 +186,7 @@
 
         .routes.desktop {
             margin: 0 auto;
-            margin-top: 2rem;
+            margin-top: calc($--navbar-height - ($--navbar-height / 2) - 1.5rem);
             .routes-list {
                 display: flex;
                 list-style: none;

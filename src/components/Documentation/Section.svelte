@@ -2,7 +2,7 @@
     export let visible = false;
     export let topOffsetInPx: number = 0;
 
-    let sectionElement: HTMLDivElement;
+    let sectionElement: HTMLElement;
 
     function window_handleScroll(e: Event) {
         const rect = sectionElement?.getBoundingClientRect();
@@ -19,9 +19,9 @@
 
 <svelte:window on:scroll={window_handleScroll} />
 
-<div bind:this={sectionElement}>
+<section bind:this={sectionElement}>
     <slot />
-</div>
+</section>
 
 <style lang="scss">
 </style>
