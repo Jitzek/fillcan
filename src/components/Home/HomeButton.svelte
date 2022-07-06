@@ -25,7 +25,7 @@
         border: none;
         border-radius: 1rem;
         width: 35%;
-        max-width: 10rem;
+        width: 10rem;
         margin: 0.5rem;
         height: auto;
         aspect-ratio: 1 / 1;

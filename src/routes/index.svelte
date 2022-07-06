@@ -17,18 +17,22 @@
     </div>
     <div class="main-overlay">
         <div class="home-buttons-container">
-            <HomeButton backgroundColor="red">
-                <div class="icon-container" slot="icon">
-                    <GitHubIcon />
-                </div>
-                <div slot="label">Visit Repository</div>
-            </HomeButton>
-            <HomeButton backgroundColor="blue">
-                <div class="icon-container" slot="icon">
-                    <DocumentationIcon />
-                </div>
-                <div slot="label">Documentation</div>
-            </HomeButton>
+            <a href="https://github.com/Jitzek/fillcan" target="_blank">
+                <HomeButton backgroundColor="red">
+                    <div class="icon-container" slot="icon">
+                        <GitHubIcon />
+                    </div>
+                    <div slot="label">Visit Repository</div>
+                </HomeButton>
+            </a>
+            <a href="{getState().URL.root}/documentation">
+                <HomeButton backgroundColor="blue">
+                    <div class="icon-container" slot="icon">
+                        <DocumentationIcon />
+                    </div>
+                    <div slot="label">Documentation</div>
+                </HomeButton>
+            </a>
         </div>
 
         <div class="short-introduction-container">
@@ -53,6 +57,7 @@
                 </li>
             </ul>
         </div>
+        <div style="padding-bottom: 5rem;" />
     </div>
 </div>
 
@@ -82,6 +87,7 @@
             width: 100%;
             overflow-y: scroll;
             z-index: 1;
+            box-shadow: 0 -5px 5px #333333ff;
 
             .home-buttons-container {
                 margin-top: 1rem;
@@ -103,7 +109,7 @@
 
                 .main-goals {
                     margin: 0;
-                    list-style: '- ';
+                    list-style: "- ";
                 }
             }
         }

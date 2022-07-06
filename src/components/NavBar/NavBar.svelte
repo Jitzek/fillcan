@@ -18,6 +18,10 @@
             url: `${getState().URL.root}/documentation`,
             label: "Documentation",
         },
+        {
+            url: `${getState().URL.root}/examples`,
+            label: "Examples",
+        },
     ];
 
     let showHamburgerMenu = false;
@@ -27,7 +31,11 @@
     }
 </script>
 
-<div class="navbar">
+<div
+    class="navbar {$stateStore.Screen.displayType === DisplayType.MOBILE
+        ? 'mobile'
+        : 'desktop'}"
+>
     <div class="logo-container">
         <img
             class="paint-trail-image"
@@ -62,7 +70,9 @@
                     <ul class="routes-list">
                         {#each routes as route}
                             <li class="routes-list-item">
-                                <a href={route.url}
+                                <a
+                                    href={route.url}
+                                    on:click={() => (showHamburgerMenu = false)}
                                     ><button>{route.label}</button></a
                                 >
                             </li>
@@ -72,7 +82,15 @@
             {/if}
         </div>
     {:else}
-        <div class="routes desktop" />
+        <div class="routes desktop">
+            <ul class="routes-list">
+                {#each routes as route}
+                    <li class="routes-list-item">
+                        <a href={route.url}><button>{route.label}</button></a>
+                    </li>
+                {/each}
+            </ul>
+        </div>
     {/if}
 </div>
 
@@ -164,5 +182,44 @@
                 }
             }
         }
+
+        .routes.desktop {
+            margin: 0 auto;
+            margin-top: 2rem;
+            .routes-list {
+                display: flex;
+                list-style: none;
+                text-decoration: none;
+                font-family: $--font-family-input;
+                padding: 0;
+                margin: 0;
+                overflow: hidden;
+
+                button {
+                    color: $--fg-color-primary;
+                    background-color: $--input-bg-color-primary;
+                    border: none;
+                    width: 100%;
+                    cursor: pointer;
+                    height: 3rem;
+                    transition: background-color 0.25s;
+                    font-size: 1rem;
+                    font-family: $--font-family-input;
+                    width: 22.5vw;
+                    max-width: 15rem;
+                }
+                button:hover,
+                button:focus,
+                button:active {
+                    background-color: $--input-bg-color-secondary;
+                }
+            }
+        }
+    }
+
+    .navbar.desktop {
+        display: flex;
+        vertical-align: middle;
+        align-content: center;
     }
 </style>
