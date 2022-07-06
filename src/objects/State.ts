@@ -12,9 +12,15 @@ class Screen {
     public height: number = -1;
     public displayType: DisplayType;
 }
+
+class Fillcan {
+    public version: string = "0.1";
+}
+
 export class State {
     constructor() {}
 
     public URL: URL = new URL();
     public Screen: Screen = new Screen();
+    public Fillcan: Fillcan = new Fillcan();
 }

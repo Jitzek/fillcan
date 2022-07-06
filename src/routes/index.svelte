@@ -7,7 +7,11 @@
     import { getState, stateStore } from "$stores/StateStore";
 </script>
 
-<div class="home-container">
+<div
+    class="home-container {$stateStore.Screen.displayType === DisplayType.MOBILE
+        ? 'mobile'
+        : 'desktop'}"
+>
     <div class="big-picture-container">
         <div
             class="big-picture"
@@ -36,7 +40,8 @@
         </div>
 
         <div class="short-introduction-container">
-            Fillcan is a C++20 library for rendering graphics using Vulkan. <br
+            <h1>About</h1>
+            Fillcan is a C++20 library for rendering graphics using Vulkan.<br
             /><br />
             Fillcan aims to be a object-oriënted solution for communication with
             the Vulkan API. It's main goals are as follows:
@@ -105,13 +110,19 @@
                 font-family: $--font-family-default;
                 color: $--fg-color-primary;
                 font-size: 1rem;
-                padding: 0.5rem;
+                padding: 0 20vw 0 20vw;
 
                 .main-goals {
                     margin: 0;
-                    list-style: "- ";
+                    // list-style: "- ";
                 }
             }
+        }
+    }
+
+    .home-container.mobile {
+        .short-introduction-container {
+            padding: 0 10vw 0 10vw;
         }
     }
 </style>

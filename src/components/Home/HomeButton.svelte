@@ -12,7 +12,7 @@
     }
 </script>
 
-<button style="background-color: {backgroundColorStyle};"
+<button class={backgroundColor}
     ><div class="icon"><slot name="icon" /></div>
     <div class="label"><slot name="label" /></div></button
 >
@@ -39,5 +39,25 @@
         .label {
             font-size: 1rem;
         }
+    }
+
+    button.red {
+        background-color: #b94f47;
+        transition: background-color 0.25s ease-in-out;
+    }
+    button.red:hover,
+    button.red:focus,
+    button.red:active {
+        background-color: #b94038;
+    }
+
+    button.blue {
+        background-color: #787cbb;
+        transition: background-color 0.25s ease-in-out;
+    }
+    button.blue:hover,
+    button.blue:focus,
+    button.blue:active {
+        background-color: #696ebb;
     }
 </style>
