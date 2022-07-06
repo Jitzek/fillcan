@@ -1,6 +1,4 @@
 <script lang="ts">
-    export let color = "#ffffff";
-    export let size = "1rem";
 </script>
 
 <svg
@@ -9,7 +7,6 @@
     id="SVGRoot"
     xmlns="http://www.w3.org/2000/svg"
     transform="translate(0.14244471,-7.2982078)"
-    style="--color: {color}; width: {size}; height: {size};"
 >
     <g
         id="g26913"
@@ -34,7 +31,7 @@
             ry="5.015974"
         />
         <rect
-            style=";fill-opacity:1;stroke:none;stroke-width:2.90052"
+            style="fill-opacity:1;stroke:none;stroke-width:2.90052"
             id="rect6728-8"
             width="63"
             height="10.031948"
@@ -47,7 +44,9 @@
 
 <style lang="scss">
     svg {
-        fill: var(--color);
         transform: translateY(-0.15rem);
+        fill: inherit;
+        width: inherit;
+        height: inherit;
     }
 </style>

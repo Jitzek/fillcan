@@ -21,6 +21,7 @@
 
 <div>
     <NavBar />
+    <slot />
 </div>
 
 <style lang="scss">
