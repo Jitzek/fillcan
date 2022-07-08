@@ -95,7 +95,6 @@
 </div>
 
 <style lang="scss">
-    $--navbar-height: 5rem;
     .navbar {
         box-shadow: 0 5px 5px #333333ff;
         width: 100%;

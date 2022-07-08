@@ -5,6 +5,7 @@ export enum DisplayType {
 
 class URL {
     public root: string = "";
+    public documentation: string = `${this.root}/documentation`;
 }
 
 class Screen {
