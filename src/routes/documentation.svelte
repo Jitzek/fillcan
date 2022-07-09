@@ -21,11 +21,14 @@
     import GetSupportedPhysicalDevices from "$components/Documentation/Sections/Fillcan/getSupportedPhysicalDevices.svelte";
     import SelectDevice from "$components/Documentation/Sections/Fillcan/selectDevice.svelte";
     import GetCurrentDevice from "$components/Documentation/Sections/Fillcan/getCurrentDevice.svelte";
-    import GetWindow from "$components/Documentation/Sections/Fillcan/getWindow.svelte";
+    import GetWindow from "$components/Documentation/Sections/Fillcan_Graphics/getWindow.svelte";
     import CreateShaderModule from "$components/Documentation/Sections/Fillcan/createShaderModule.svelte";
     import HamburgerMenuIcon from "$components/NavBar/HamburgerMenuIcon.svelte";
     import BeginSingleTimeRecording from "$components/Documentation/Sections/Fillcan/beginSingleTimeRecording.svelte";
     import EndSingleTimeRecording from "$components/Documentation/Sections/Fillcan/endSingleTimeRecording.svelte";
+    import FillcanGraphics from "$components/Documentation/Sections/Fillcan_Graphics/FillcanGraphics.svelte";
+    import FillcanGraphicsConstructor from "$components/Documentation/Sections/Fillcan_Graphics/FillcanGraphicsConstructor.svelte";
+    import MainLoop from "$components/Documentation/Sections/Fillcan_Graphics/mainLoop.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -85,14 +88,6 @@
             visible: false,
         },
         {
-            id: SectionID.FILLCAN_getWindow,
-            label: "getWindow",
-            heading: 3,
-            content: GetWindow,
-            props: {},
-            visible: false,
-        },
-        {
             id: SectionID.FILLCAN_createShaderModule,
             label: "createShaderModule",
             heading: 3,
@@ -113,6 +108,38 @@
             label: "endSingleTimeRecording",
             heading: 3,
             content: EndSingleTimeRecording,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FILLCAN_GRAPHICS,
+            label: "Fillcan Graphics",
+            heading: 2,
+            content: FillcanGraphics,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FILLCAN_GRAPHICS_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: FillcanGraphicsConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FILLCAN_getWindow,
+            label: "getWindow",
+            heading: 3,
+            content: GetWindow,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FILLCAN_mainLoop,
+            label: "mainLoop",
+            heading: 3,
+            content: MainLoop,
             props: {},
             visible: false,
         },

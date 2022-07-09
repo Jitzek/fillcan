@@ -10,19 +10,23 @@
 
 <Highlight
     language={cppHighlight}
-    code={`Fillcan(
+    code={`FillcanGraphics(
         const char* pApplicationName, 
         uint32_t applicationVersion, 
-        VkPhysicalDeviceFeatures requiredDeviceFeatures = {}, 
-        std::vector<const char*> requiredDeviceExtensions = {}\n);`}
+        unsigned int windowWidth, 
+        unsigned int windowHeight,
+        VkPhysicalDeviceFeatures requiredDeviceFeatures = {},
+        std::vector<const char*> requiredDeviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME}\n);`}
 />
 <MethodDescription>
     <span slot="details">
-        Intialize the Fillcan API.<br />
-        Initializes <Anchor
-            href="{getState().URL.documentation}#{SectionID.INSTANCE}"
+        Intialize the Fillcan Graphics API.<br />
+        Initializes the <Anchor
+            href="{getState().URL.documentation}#{SectionID.WINDOW}"
+            >Window</Anchor
+        >, <Anchor href="{getState().URL.documentation}#{SectionID.INSTANCE}"
             >Instance</Anchor
-        > and <Anchor
+        >, and <Anchor
             href="{getState().URL.documentation}#{SectionID.DEVICE_POOL}"
             >Device Pool</Anchor
         >.
@@ -35,6 +39,20 @@
         <li>
             <code>applicationVersion</code><br />
             The version of the application.
+        </li>
+        <li>
+            <code>windowWidth</code><br />
+            The initial width the <Anchor
+                href="{getState().URL.documentation}#{SectionID.WINDOW}"
+                >Window</Anchor
+            >.
+        </li>
+        <li>
+            <code>windowHeight</code><br />
+            The initial height the <Anchor
+                href="{getState().URL.documentation}#{SectionID.WINDOW}"
+                >Window</Anchor
+            >.
         </li>
         <li>
             <code>requiredDeviceFeatures</code><br />
@@ -63,18 +81,15 @@
                 href="{getState().URL.documentation}#{SectionID.SWAPCHAIN}"
                 >Swapchain</Anchor
             > this list should contain
-            <code>VK_KHR_SWAPCHAIN_EXTENSION_NAME</code> (<Anchor
-                href="{getState().URL
-                    .documentation}#{SectionID.FILLCAN_GRAPHICS}"
-                >Fillcan Graphics</Anchor
-            > contains this by default).<br />
+            <code>VK_KHR_SWAPCHAIN_EXTENSION_NAME</code>, this is included by
+            default.<br />
         </li>
     </div>
-</MethodDescription>
+</MethodDescription><br />
 Example:
 <Highlight
     language={cppHighlight}
-    code={`fillcan::Fillcan fillcan = fillcan::Fillcan("Example Application", 1.0);`}
+    code={`VkPhysicalDeviceFeatures requiredDeviceFeatures = {};\nrequiredDeviceFeatures.samplerAnisotropy = true;\nfillcan::FillcanGraphics fillcan = fillcan::FillcanGraphics(\"Example Application\", 800, 600, 1.0, requiredDeviceFeatures);`}
 />
 
 <style lang="scss">

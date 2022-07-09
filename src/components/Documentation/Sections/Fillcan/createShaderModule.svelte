@@ -113,9 +113,22 @@ Example:
 std::unique_ptr<fillcan::DescriptorPool> upFragmentDescriptorPool = ...;
 
 std::unique_ptr<fillcan::ShaderModule> upVertexShaderModule =
-    fillcan.createShaderModule(this->APP_DIR + "/shaders", "shader.vert", shaderc_vertex_shader, {}, nullptr, true, false);
+    fillcan.createShaderModule(
+        this->APP_DIR + "/shaders", 
+        "shader.vert", 
+        shaderc_vertex_shader, 
+        {}, 
+        nullptr, 
+        true, 
+        false\n);
 
 std::unique_ptr<fillcan::ShaderModule> upFragmentShaderModule =
-    fillcan.createShaderModule(this->APP_DIR + "/shaders", "shader.frag", shaderc_fragment_shader,
-                                            std::move(upFragmentDescriptorSetLayouts), std::move(upFragmentDescriptorPool), true, false);`}
+    fillcan.createShaderModule(
+        this->APP_DIR + "/shaders", 
+        "shader.frag", 
+        shaderc_fragment_shader,
+        std::move(upFragmentDescriptorSetLayouts), 
+        std::move(upFragmentDescriptorPool), 
+        true, 
+        false\n);`}
 />

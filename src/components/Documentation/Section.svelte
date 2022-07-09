@@ -6,14 +6,16 @@
 
     let sectionElement: HTMLElement;
 
+    let topOffsetInPx = 80;
+
     function window_handleScroll(_e: Event) {
         const rect = sectionElement?.getBoundingClientRect();
         visible =
-            rect.top + rect.height >= 0 &&
-            rect.left >= 0 &&
+            rect.top + rect.height >= topOffsetInPx &&
+            rect.left >= topOffsetInPx &&
             rect.bottom - rect.height <=
-                (window.innerHeight - 0 ||
-                    document.documentElement.clientHeight - 0) &&
+                (window.innerHeight - topOffsetInPx ||
+                    document.documentElement.clientHeight - topOffsetInPx) &&
             rect.right <=
                 (window.innerWidth || document.documentElement.clientWidth);
     }

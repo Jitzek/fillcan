@@ -17,12 +17,16 @@ export enum SectionID {
     FILLCAN_getSupportedPhysicalDevices = "Fillcan-getSupportedPhysicalDevices",
     FILLCAN_selectDevice = "Fillcan-selectDevice",
     FILLCAN_getCurrentDevice = "Fillcan-getCurrentDevice",
-    FILLCAN_getWindow = "Fillcan-getWindow",
     FILLCAN_createShaderModule = "Fillcan-createShaderModule",
     FILLCAN_beginSingleTimeRecording = "Fillcan-beginSingleTimeRecording",
     FILLCAN_endSingleTimeRecording = "Fillcan-endSingleTimeRecording",
 
+    // FILLCAN_GRAPHICS
     FILLCAN_GRAPHICS = "Fillcan-Graphics",
+    FILLCAN_GRAPHICS_Constructor = "Fillcan-Graphics-Constructor",
+    FILLCAN_getWindow = "Fillcan-Graphics-getWindow",
+    FILLCAN_mainLoop = "Fillcan-Graphics-mainLoop",
+
     WINDOW = "Window",
     INSTANCE = "Instance",
     DEVICE_POOL = "Device-Pool",
