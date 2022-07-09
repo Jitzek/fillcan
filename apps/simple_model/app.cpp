@@ -96,7 +96,7 @@ namespace simple_model {
 
         this->upFramebuffers.resize(this->upFillcan->getSwapchain()->getImageCount());
 
-        upFillcan->MainLoop(std::bind(&App::update, this, std::placeholders::_1));
+        upFillcan->mainLoop(std::bind(&App::update, this, std::placeholders::_1));
     }
 
     void App::update(double deltaTime) {

@@ -35,19 +35,27 @@ namespace fillcan {
          */
         Window* getWindow();
 
-        void MainLoop(std::function<void(double)> callback);
+        /**
+         * @brief The main loop of the Fillcan Graphics API.
+         *
+         * @details The main loop of the Fillcan Graphics API gives access to a callback function with the deltaTime. The main loop calls this
+         * callback every frame.
+         *
+         * @param callback The callback with the deltaTime which will be called every frame.
+         */
+        void mainLoop(std::function<void(double)> callback);
 
         unsigned int createSwapchain(uint32_t imageCount = 2, VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR);
-        unsigned int recreateSwapchain(unsigned int index = 0);
-        unsigned int recreateSwapchain(uint32_t imageCount, VkPresentModeKHR presentMode, unsigned int index = 0);
-        Swapchain* getSwapchain(unsigned int index = 0);
-        std::vector<Swapchain*> getSwapchains();
-        void destroySwapchain(unsigned int index = 0);
 
-        // unsigned int createRenderPass(RenderPassBuilder& builder);
-        // RenderPass* getRenderPass(unsigned int index = 0);
-        // std::vector<RenderPass*> getRenderPasses();
-        // void destroyRenderPass(unsigned int index = 0);
+        unsigned int recreateSwapchain(unsigned int index = 0);
+
+        unsigned int recreateSwapchain(uint32_t imageCount, VkPresentModeKHR presentMode, unsigned int index = 0);
+
+        Swapchain* getSwapchain(unsigned int index = 0);
+
+        std::vector<Swapchain*> getSwapchains();
+
+        void destroySwapchain(unsigned int index = 0);
 
         AssetManager* getAssetManager();
     };

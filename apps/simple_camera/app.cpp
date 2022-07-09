@@ -108,7 +108,7 @@ namespace simple_camera {
         // Prepare framebuffers for each image in flight, with a max of 3 (triple buffering)
         this->upFramebuffers.resize(3);
 
-        upFillcan->MainLoop(std::bind(&App::update, this, std::placeholders::_1));
+        upFillcan->mainLoop(std::bind(&App::update, this, std::placeholders::_1));
     }
 
     void App::update(double deltaTime) {

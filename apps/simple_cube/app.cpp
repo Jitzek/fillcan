@@ -88,7 +88,7 @@ namespace simple_cube {
 
         this->loadGameObjects();
 
-        upFillcan->MainLoop(std::bind(&App::update, this, std::placeholders::_1));
+        upFillcan->mainLoop(std::bind(&App::update, this, std::placeholders::_1));
     }
 
     void App::update(double deltaTime) {
