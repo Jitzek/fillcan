@@ -121,7 +121,7 @@ namespace fillcan {
             std::make_unique<ShaderModule>(this->getCurrentDevice(), spirvCode, std::move(upDescriptorSetLayouts), std::move(upDescriptorPool)));
     }
 
-    CommandRecording* Fillcan::beginSingleTimeCommands(Queue* pQueue) {
+    CommandRecording* Fillcan::beginSingleTimeRecording(Queue* pQueue) {
         fillcan::CommandRecording* singleTimeRecording = pQueue->createRecording(1, 0);
         for (CommandBuffer* pCommandBuffer : singleTimeRecording->pPrimaryCommandBuffers) {
             pCommandBuffer->begin();
@@ -129,7 +129,7 @@ namespace fillcan {
         return singleTimeRecording;
     }
 
-    void Fillcan::endSingleTimeCommands(CommandRecording* pCommandRecording) {
+    void Fillcan::endSingleTimeRecording(CommandRecording* pCommandRecording) {
         pCommandRecording->endAll();
         pCommandRecording->submit();
         pCommandRecording->pQueue->waitIdle();

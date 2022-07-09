@@ -14,8 +14,6 @@
 			"windows": {
 				// Use Powershell (still works with CMD)
 				"command": "powershell ${workspaceRoot}/scripts/configure_release.ps1 ${workspaceRoot}"
-
-
 				// Use CMD (still works with Powershell)
 				// "command": "cmd /c \"${workspaceRoot}/scripts/configure_release.bat ${workspaceRoot}\""
 			},
@@ -31,13 +29,11 @@
 			"windows": {
 				// Use Powershell (still works with CMD)
 				"command": "powershell ${workspaceRoot}/scripts/configure_debug.ps1 ${workspaceRoot}"
-
 				// Use CMD (still works with Powershell)
 				// "command": "cmd /c \"${workspaceRoot}/scripts/configure_debug.bat ${workspaceRoot}\""
 			},
 			"problemMatcher": [],
 		},
-
 		/**
 			BUILDING
 		*/
@@ -73,7 +69,6 @@
 				"CMake: Configure (Debug)"
 			],
 		},
-
 		/**
 			RUNNING
 		*/
@@ -86,9 +81,9 @@
 			},
 			"args": [],
 			"presentation": {
-                "reveal": "always",
-                "focus": true
-            },
+				"reveal": "always",
+				"focus": true
+			},
 			"problemMatcher": [],
 			"dependsOn": [
 				"CMake: Build (Release)"

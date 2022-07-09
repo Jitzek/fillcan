@@ -75,12 +75,6 @@ ENDIF()
 IF (NOT Vulkan_FOUND)
 	message(FATAL_ERROR "Could not find Vulkan library!")
 ELSE()
-	message(STATUS ${Vulkan_LIBRARY})
-ENDIF()
-
-IF (NOT Vulkan_FOUND)
-	message(FATAL_ERROR "Could not find Vulkan library!")
-ELSE()
   message(STATUS "Vulkan Found: ${Vulkan_LIBRARY})")
 ENDIF()
 

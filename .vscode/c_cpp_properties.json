@@ -2,9 +2,7 @@
     "configurations": [
         {
             "name": "Linux",
-            "includePath": [
-                "${workspaceFolder}/**"
-            ],
+            "includePath": ["${workspaceFolder}/**"],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "c11",
@@ -22,14 +20,8 @@
         },
         {
             "name": "Win32",
-            "includePath": [
-                "${workspaceFolder}/**"
-            ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE"
-            ],
+            "includePath": ["${workspaceFolder}/**"],
+            "defines": ["_DEBUG", "UNICODE", "_UNICODE"],
             "windowsSdkVersion": "10.0.18362.0",
             "cStandard": "c11",
             "cppStandard": "c++17",
