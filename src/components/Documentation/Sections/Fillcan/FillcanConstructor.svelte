@@ -14,7 +14,18 @@
                 VkPhysicalDeviceFeatures requiredDeviceFeatures = {}, std::vector<const char*> requiredDeviceExtensions = {});`}
 />
 <MethodDescription>
-    <span slot="details">Construct a new Fillcan object</span>
+    <span slot="details">
+        Intialize the Fillcan API.<br />
+        Initializes the <Anchor
+            href="{getState().URL.documentation}#{SectionID.WINDOW}"
+            >Window</Anchor
+        >, <Anchor href="{getState().URL.documentation}#{SectionID.INSTANCE}"
+            >Instance</Anchor
+        >, and <Anchor
+            href="{getState().URL.documentation}#{SectionID.DEVICE_POOL}"
+            >Device Pool</Anchor
+        >.
+    </span>
     <div slot="params">
         <li>
             <code>pApplicationName</code><br />

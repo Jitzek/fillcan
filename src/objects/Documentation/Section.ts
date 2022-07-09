@@ -19,10 +19,13 @@ export enum SectionID {
     FILLCAN_getCurrentDevice = "Fillcan-getCurrentDevice",
     FILLCAN_getWindow = "Fillcan-getWindow",
     FILLCAN_createShaderModule = "Fillcan-createShaderModule",
+    FILLCAN_beginSingleTimeRecording = "Fillcan-beginSingleTimeRecording",
+    FILLCAN_endSingleTimeRecording = "Fillcan-endSingleTimeRecording",
 
     FILLCAN_GRAPHICS = "Fillcan-Graphics",
     WINDOW = "Window",
     INSTANCE = "Instance",
+    DEVICE_POOL = "Device-Pool",
     PHYSICAL_DEVICE = "Physical-Device",
     LOGICAL_DEVICE = "Logical-Device",
     SWAPCHAIN = "Swapchain",
@@ -31,4 +34,7 @@ export enum SectionID {
     DESCRIPTOR_POOL_BUILDER = "Descriptor-Pool-Builder",
     DESCRIPTOR_POOL = "Descriptor-Pool",
     DESCRIPTOR_SET = "Descriptor-Set",
+    QUEUE = "Queue",
+    COMMAND_RECORDING = "Command-Recording",
+    COMMAND_BUFFER = "Command-Buffer",
 }

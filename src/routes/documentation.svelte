@@ -24,6 +24,8 @@
     import GetWindow from "$components/Documentation/Sections/Fillcan/getWindow.svelte";
     import CreateShaderModule from "$components/Documentation/Sections/Fillcan/createShaderModule.svelte";
     import HamburgerMenuIcon from "$components/NavBar/HamburgerMenuIcon.svelte";
+    import BeginSingleTimeRecording from "$components/Documentation/Sections/Fillcan/beginSingleTimeRecording.svelte";
+    import EndSingleTimeRecording from "$components/Documentation/Sections/Fillcan/endSingleTimeRecording.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -95,6 +97,22 @@
             label: "createShaderModule",
             heading: 3,
             content: CreateShaderModule,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FILLCAN_beginSingleTimeRecording,
+            label: "beginSingleTimeRecording",
+            heading: 3,
+            content: BeginSingleTimeRecording,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FILLCAN_endSingleTimeRecording,
+            label: "endSingleTimeRecording",
+            heading: 3,
+            content: EndSingleTimeRecording,
             props: {},
             visible: false,
         },

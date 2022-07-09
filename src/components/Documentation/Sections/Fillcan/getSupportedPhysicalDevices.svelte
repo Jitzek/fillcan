@@ -19,7 +19,7 @@
             >Physical Devices</Anchor
         >.
     </span>
-    <span slot="returns">
+    <span slot="return">
         A list of all the <Anchor
             href="{getState().URL.documentation}#{SectionID.PHYSICAL_DEVICE}"
             >Physical Devices</Anchor

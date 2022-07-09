@@ -15,7 +15,7 @@
             >Window</Anchor
         ></span
     >
-    <span slot="returns"
+    <span slot="return"
         >A pointer to the <Anchor
             href="{getState().URL.documentation}#{SectionID.WINDOW}"
             >Window</Anchor

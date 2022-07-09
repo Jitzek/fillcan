@@ -10,9 +10,9 @@
         </div>
     </ul>
 {/if}
-{#if $$slots.returns}
-    <div class="returns">
-        <code>@returns</code>: <slot name="returns" />
+{#if $$slots.return}
+    <div class="return">
+        <code>@return</code>: <slot name="return" />
     </div>
 {/if}
 
@@ -33,7 +33,7 @@
             }
         }
     }
-    .returns {
+    .return {
         font-size: 1rem;
         code {
             background-color: $--bg-color-secondary;

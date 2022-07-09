@@ -23,7 +23,7 @@
             >selectDevice</Anchor
         >)</span
     >
-    <span slot="returns"
+    <span slot="return"
         >A pointer to the currently selected <Anchor
             href="{getState().URL.documentation}#{SectionID.LOGICAL_DEVICE}"
             >Logical Device</Anchor
