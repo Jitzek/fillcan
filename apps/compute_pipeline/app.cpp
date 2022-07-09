@@ -67,7 +67,7 @@ namespace compute_pipeline {
             Instance Fillcan
         */
         VkPhysicalDeviceFeatures requiredDeviceFeatures = {};
-        upFillcan = std::make_unique<fillcan::Fillcan>(name.c_str(), 1.0, 800, 600, requiredDeviceFeatures);
+        upFillcan = std::make_unique<fillcan::Fillcan>(name.c_str(), 1.0, requiredDeviceFeatures);
 
         // Select any device
         upFillcan->selectDevice(0);

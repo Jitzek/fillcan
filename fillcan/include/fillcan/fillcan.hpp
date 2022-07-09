@@ -28,34 +28,42 @@ namespace fillcan {
     class Fillcan {
       protected:
         std::unique_ptr<Instance> upInstance{};
-        std::unique_ptr<Window> upWindow{};
         std::unique_ptr<DevicePool> upDevicePool{};
 
         std::vector<char> readFile(std::string fileLocation, size_t* fileSize);
         shaderc::PreprocessedSourceCompilationResult preprocessGLSL(const std::string shaderDirectory, const std::string shaderFileName,
                                                                     shaderc_shader_kind shaderKind);
 
+        std::vector<const char*> requiredInstanceLayers = {
+#ifndef NDEBUG
+            "VK_LAYER_KHRONOS_validation"
+#endif
+        };
+
+        std::vector<const char*> requiredInstanceExtensions = {
+#ifndef NDEBUG
+            VK_EXT_DEBUG_UTILS_EXTENSION_NAME
+#endif
+        };
+
       public:
         /**
          * @brief Intialize the Fillcan API.
          *
-         * @details Initializes the Window, Instance, and Device Pool.
+         * @details Initializes the Instance, and Device Pool.
          *
          * @param pApplicationName The name of the application.
          * @param applicationVersion The version of the application.
-         * @param windowWidth The initial width the window.
-         * @param windowHeight The initial height the window.
          * @param requiredDeviceFeatures The features a Physical Device should have for the purposes of the application. This should be a
          * VkPhysicalDeviceFeatures-structure where each required feature should be set to true.
          * @param requiredDeviceExtensions The extensions a Physical Device should enable for the purposes of the application. This should be a list
          * of strings containing the names of the extensions to enable. The available extensions can be retrieved using
          * vkEnumerateInstanceExtensionProperties(). To be able to use a Swapchain this list should contain VK_KHR_SWAPCHAIN_EXTENSION_NAME (Fillcan
          * Graphics contains this by default).
-         * In this version of Fillcan the window can not be detached from the application because the Instance might require certain extensions
-         * requested by the window and the Physical Device requires a window to validate support for certain features.
          */
-        Fillcan(const char* pApplicationName, uint32_t applicationVersion, unsigned int windowWidth, unsigned int windowHeight,
-                VkPhysicalDeviceFeatures requiredDeviceFeatures = {}, std::vector<const char*> requiredDeviceExtensions = {});
+        Fillcan(const char* pApplicationName, uint32_t applicationVersion, VkPhysicalDeviceFeatures requiredDeviceFeatures = {},
+                std::vector<const char*> requiredDeviceExtensions = {});
+        Fillcan();
         ~Fillcan();
         Fillcan(const Fillcan&) = delete;
         Fillcan& operator=(const Fillcan&) = delete;
@@ -86,13 +94,6 @@ namespace fillcan {
          * @return A pointer to the currently selected Logical Device.
          */
         LogicalDevice* getCurrentDevice();
-
-        /**
-         * @brief Get the Window.
-         *
-         * @return A pointer to the Window.
-         */
-        Window* getWindow();
 
         /**
          * @brief Create a Shader Module object.

@@ -32,7 +32,6 @@ namespace fillcan {
         ~PhysicalDevice();
 
         const VkPhysicalDevice getPhysicalDeviceHandle() const;
-        Window* getWindow();
 
         const std::vector<const char*>& getRequiredExtensions() const;
         bool areExtensionsSupported();

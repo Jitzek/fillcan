@@ -5,21 +5,34 @@
 
 // std
 #include <algorithm>
+#include <iostream>
 #include <set>
 #include <stdexcept>
-#include <vector>
 
 namespace fillcan {
     LogicalDevice::LogicalDevice(PhysicalDevice* pPhysicalDevice, VkPhysicalDeviceFeatures features) : pPhysicalDevice(pPhysicalDevice) {
-        std::set<int> queueFamilyIndices = {pPhysicalDevice->getGraphicsQueueFamilyIndex(), pPhysicalDevice->getPresentQueueFamilyIndex(),
-                                            pPhysicalDevice->getComputeQueueFamilyIndex()};
+        int graphicsQueueFamilyIndex = pPhysicalDevice->getGraphicsQueueFamilyIndex();
+        int presentQueueFamilyIndex = pPhysicalDevice->getPresentQueueFamilyIndex();
+        int computeQueueFamilyIndex = pPhysicalDevice->getComputeQueueFamilyIndex();
+
+        std::set<int> queueFamilyIndices = {};
+
+        if (graphicsQueueFamilyIndex != -1) {
+            queueFamilyIndices.insert(graphicsQueueFamilyIndex);
+        }
+        if (presentQueueFamilyIndex != -1) {
+            queueFamilyIndices.insert(presentQueueFamilyIndex);
+        }
+        if (computeQueueFamilyIndex != -1) {
+            queueFamilyIndices.insert(computeQueueFamilyIndex);
+        }
+        if (queueFamilyIndices.size() == 0) {
+            throw std::runtime_error("Queue doesn't support Graphics, Presentation or Computation.");
+        }
 
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos = {};
         float queuePriority = 1.0f;
         for (int queueFamilyIndex : queueFamilyIndices) {
-            if (queueFamilyIndex == -1) {
-                throw std::runtime_error("Queue not supported");
-            }
             VkDeviceQueueCreateInfo queueCreateInfo = {};
             queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
             queueCreateInfo.queueFamilyIndex = queueFamilyIndex;
@@ -47,9 +60,15 @@ namespace fillcan {
             throw std::runtime_error("Failed to create logical device");
         }
 
-        upGraphicsQueue = std::make_unique<Queue>(this, pPhysicalDevice->getGraphicsQueueFamilyIndex(), 0);
-        upPresentQueue = std::make_unique<Queue>(this, pPhysicalDevice->getPresentQueueFamilyIndex(), 0);
-        upComputeQueue = std::make_unique<Queue>(this, pPhysicalDevice->getComputeQueueFamilyIndex(), 0);
+        if (graphicsQueueFamilyIndex != -1) {
+            this->upGraphicsQueue = std::make_unique<Queue>(this, graphicsQueueFamilyIndex, 0);
+        }
+        if (presentQueueFamilyIndex != -1) {
+            this->upPresentQueue = std::make_unique<Queue>(this, presentQueueFamilyIndex, 0);
+        }
+        if (computeQueueFamilyIndex != -1) {
+            this->upComputeQueue = std::make_unique<Queue>(this, computeQueueFamilyIndex, 0);
+        }
     }
 
     LogicalDevice::~LogicalDevice() {

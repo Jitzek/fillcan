@@ -1,5 +1,6 @@
 
 // fillcan
+#include "fillcan/fillcan.hpp"
 #include <fillcan/fillcan_graphics.hpp>
 #include <fillcan/graphics/render_pass_builder.hpp>
 #include <fillcan/graphics/swapchain.hpp>
@@ -13,9 +14,29 @@
 namespace fillcan {
     FillcanGraphics::FillcanGraphics(const char* pApplicationName, uint32_t applicationVersion, unsigned int windowWidth, unsigned int windowHeight,
                                      VkPhysicalDeviceFeatures requiredDeviceFeatures, std::vector<const char*> requiredDeviceExtensions)
-        : Fillcan(pApplicationName, applicationVersion, windowWidth, windowHeight, requiredDeviceFeatures, requiredDeviceExtensions) {}
+        : Fillcan() {
+        // Initialize Window
+        this->upWindow = std::make_unique<Window>(windowWidth, windowHeight, pApplicationName);
 
-    FillcanGraphics::~FillcanGraphics() {}
+        std::vector<const char*> windowExtensions = upWindow->getRequiredExtensions();
+        this->requiredInstanceExtensions.insert(requiredInstanceExtensions.begin(), windowExtensions.begin(), windowExtensions.end());
+
+        // Initialize Instance
+        this->upInstance = std::make_unique<Instance>(pApplicationName, applicationVersion, requiredInstanceLayers, requiredInstanceExtensions);
+
+        // Create Window surface using Instance
+        this->upWindow->createSurface(this->upInstance.get());
+
+        // Initialize Device Pool
+        this->upDevicePool =
+            std::make_unique<DevicePool>(this->upInstance.get(), this->upWindow.get(), requiredDeviceExtensions, requiredDeviceFeatures);
+    }
+
+    FillcanGraphics::~FillcanGraphics() {
+        this->upSwapchains.clear();
+    }
+
+    Window* FillcanGraphics::getWindow() { return this->upWindow.get(); }
 
     void FillcanGraphics::MainLoop(std::function<void(double)> callback) {
         std::chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();

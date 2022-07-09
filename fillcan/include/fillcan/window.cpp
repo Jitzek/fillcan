@@ -12,6 +12,9 @@ namespace fillcan {
     Window::Window(unsigned int width, unsigned int height, std::string name) : width{width}, height{height}, name{name} { initWindow(); }
 
     Window::~Window() {
+        if (this->pInstance != nullptr) {
+            vkDestroySurfaceKHR(this->pInstance->getInstanceHandle(), this->hSurface, nullptr);
+        }
         glfwDestroyWindow(this->pWindow);
         glfwTerminate();
     }
@@ -48,6 +51,7 @@ namespace fillcan {
         if (glfwCreateWindowSurface(pInstance->getInstanceHandle(), this->pWindow, nullptr, &this->hSurface) != VK_SUCCESS) {
             throw std::runtime_error("Failed to create window surface");
         }
+        this->pInstance = pInstance;
     }
     VkSurfaceKHR Window::getSurface() { return this->hSurface; }
 

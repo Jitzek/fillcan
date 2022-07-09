@@ -21,6 +21,7 @@ namespace fillcan {
         uint32_t height;
         std::string name;
         GLFWwindow* pWindow;
+        Instance* pInstance;
 
         VkSurfaceKHR hSurface;
 

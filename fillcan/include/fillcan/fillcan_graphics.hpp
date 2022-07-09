@@ -17,6 +17,7 @@
 namespace fillcan {
     class FillcanGraphics : public Fillcan {
       private:
+        std::unique_ptr<Window> upWindow{};
         std::vector<std::unique_ptr<Swapchain>> upSwapchains = {};
         std::vector<std::unique_ptr<RenderPass>> upRenderPasses = {};
         AssetManager assetManager{};
@@ -26,6 +27,13 @@ namespace fillcan {
                         VkPhysicalDeviceFeatures requiredDeviceFeatures = {},
                         std::vector<const char*> requiredDeviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME});
         ~FillcanGraphics();
+
+        /**
+         * @brief Get the Window.
+         *
+         * @return A pointer to the Window.
+         */
+        Window* getWindow();
 
         void MainLoop(std::function<void(double)> callback);
 

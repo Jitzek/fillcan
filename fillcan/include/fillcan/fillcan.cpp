@@ -23,39 +23,18 @@
 #include <shaderc/status.h>
 
 namespace fillcan {
-
-    std::vector<const char*> requiredInstanceLayers = {
-#ifndef NDEBUG
-        "VK_LAYER_KHRONOS_validation"
-#endif
-    };
-
-    std::vector<const char*> requiredInstanceExtensions = {
-#ifndef NDEBUG
-        VK_EXT_DEBUG_UTILS_EXTENSION_NAME
-#endif
-    };
-
-    Fillcan::Fillcan(const char* pApplicationName, uint32_t applicationVersion, unsigned int windowWidth, unsigned int windowHeight,
-                     VkPhysicalDeviceFeatures requiredDeviceFeatures, std::vector<const char*> requiredDeviceExtensions) {
-        // Initialize Window
-        this->upWindow = std::make_unique<Window>(windowWidth, windowHeight, pApplicationName);
-
+    Fillcan::Fillcan(const char* pApplicationName, uint32_t applicationVersion, VkPhysicalDeviceFeatures requiredDeviceFeatures,
+                     std::vector<const char*> requiredDeviceExtensions) {
         // Initialize Instance
-        std::vector<const char*> windowExtensions = upWindow->getRequiredExtensions();
-        requiredInstanceExtensions.insert(requiredInstanceExtensions.begin(), windowExtensions.begin(), windowExtensions.end());
         this->upInstance = std::make_unique<Instance>(pApplicationName, applicationVersion, requiredInstanceLayers, requiredInstanceExtensions);
 
-        // Create surface of Window using Instance
-        this->upWindow->createSurface(this->upInstance.get());
-
         // Initialize Device Pool
-        this->upDevicePool =
-            std::make_unique<DevicePool>(this->upInstance.get(), this->upWindow.get(), requiredDeviceExtensions, requiredDeviceFeatures);
+        this->upDevicePool = std::make_unique<DevicePool>(this->upInstance.get(), nullptr, requiredDeviceExtensions, requiredDeviceFeatures);
     }
 
+    Fillcan::Fillcan() {}
+
     Fillcan::~Fillcan() {
-        vkDestroySurfaceKHR(this->upInstance->getInstanceHandle(), this->upWindow->getSurface(), nullptr);
         this->upDevicePool.reset();
         this->upInstance.reset();
     }
@@ -65,8 +44,6 @@ namespace fillcan {
     LogicalDevice* Fillcan::selectDevice(unsigned int deviceIndex) { return this->upDevicePool->selectDevice(deviceIndex); }
 
     LogicalDevice* Fillcan::getCurrentDevice() { return this->upDevicePool->getCurrentDevice(); }
-
-    Window* Fillcan::getWindow() { return this->upWindow.get(); }
 
     std::vector<char> Fillcan::readFile(std::string fileLocation, size_t* fileSize) {
         std::ifstream fileStream(fileLocation, std::ios::ate | std::ios::binary);
