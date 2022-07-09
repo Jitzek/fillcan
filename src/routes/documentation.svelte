@@ -35,6 +35,15 @@
     import GetSwapchains from "$components/Documentation/Sections/Fillcan_Graphics/getSwapchains.svelte";
     import DestroySwapchain from "$components/Documentation/Sections/Fillcan_Graphics/destroySwapchain.svelte";
     import GetAssetManager from "$components/Documentation/Sections/Fillcan_Graphics/getAssetManager.svelte";
+    import Window from "$components/Documentation/Sections/Window/Window.svelte";
+    import WindowConstructor from "$components/Documentation/Sections/Window/WindowConstructor.svelte";
+    import ShouldClose from "$components/Documentation/Sections/Window/shouldClose.svelte";
+    import WasResized from "$components/Documentation/Sections/Window/wasResized.svelte";
+    import PollEvents from "$components/Documentation/Sections/Window/pollEvents.svelte";
+    import GetRequiredExtensions from "$components/Documentation/Sections/Window/getRequiredExtensions.svelte";
+    import CreateSurface from "$components/Documentation/Sections/Window/createSurface.svelte";
+    import GetSurface from "$components/Documentation/Sections/Window/getSurface.svelte";
+    import GetExtent from "$components/Documentation/Sections/Window/getExtent.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -194,6 +203,78 @@
             label: "getAssetManager",
             heading: 3,
             content: GetAssetManager,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.WINDOW,
+            label: "Window",
+            heading: 2,
+            content: Window,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.WINDOW_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: WindowConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.WINDOW_shouldClose,
+            label: "shouldClose",
+            heading: 3,
+            content: ShouldClose,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.WINDOW_wasResized,
+            label: "wasResized",
+            heading: 3,
+            content: WasResized,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.WINDOW_pollEvents,
+            label: "pollEvents",
+            heading: 3,
+            content: PollEvents,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.WINDOW_getRequiredExtensions,
+            label: "getRequiredExtensions",
+            heading: 3,
+            content: GetRequiredExtensions,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.WINDOW_createSurface,
+            label: "createSurface",
+            heading: 3,
+            content: CreateSurface,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.WINDOW_getSurface,
+            label: "getSurface",
+            heading: 3,
+            content: GetSurface,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.WINDOW_getExtent,
+            label: "getExtent",
+            heading: 3,
+            content: GetExtent,
             props: {},
             visible: false,
         },

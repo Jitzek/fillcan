@@ -70,7 +70,7 @@
             > contains this by default).<br />
         </li>
     </div>
-</MethodDescription>
+</MethodDescription><br />
 Example:
 <Highlight
     language={cppHighlight}

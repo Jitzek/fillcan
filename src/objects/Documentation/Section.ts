@@ -33,7 +33,17 @@ export enum SectionID {
     FILLCAN_GRAPHICS_destroySwapchain = "Fillcan-Graphics-destroySwapchain",
     FILLCAN_GRAPHICS_getAssetManager = "Fillcan-Graphics-getAssetManager",
 
+    // WINDOW
     WINDOW = "Window",
+    WINDOW_Constructor = "Window-Constructor",
+    WINDOW_shouldClose = "Window-shouldClose",
+    WINDOW_wasResized = "Window-wasResized",
+    WINDOW_pollEvents = "Window-pollEvents",
+    WINDOW_getRequiredExtensions = "Window-getRequiredExtensions",
+    WINDOW_createSurface = "Window-createSurface",
+    WINDOW_getSurface = "Window-getSurface",
+    WINDOW_getExtent = "Window-getExtent",
+
     INSTANCE = "Instance",
     DEVICE_POOL = "Device-Pool",
     PHYSICAL_DEVICE = "Physical-Device",

@@ -6,7 +6,7 @@
 
     let sectionElement: HTMLElement;
 
-    let topOffsetInPx = 80;
+    let topOffsetInPx = 100;
 
     function window_handleScroll(_e: Event) {
         const rect = sectionElement?.getBoundingClientRect();
