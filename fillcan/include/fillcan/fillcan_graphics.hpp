@@ -19,14 +19,31 @@ namespace fillcan {
       private:
         std::unique_ptr<Window> upWindow{};
         std::vector<std::unique_ptr<Swapchain>> upSwapchains = {};
-        std::vector<std::unique_ptr<RenderPass>> upRenderPasses = {};
         AssetManager assetManager{};
 
       public:
+        /**
+         * @brief Intialize the Fillcan Graphics API.
+         *
+         * @details Initializes the Window, Instance, and Device Pool.
+         *
+         * @param pApplicationName The name of the application.
+         * @param applicationVersion he version of the application.
+         * @param windowWidth The initial width the Window.
+         * @param windowHeight The initial height the Window.
+         * @param requiredDeviceFeatures The features a Physical Device should have for the purposes of the application. This should be a
+         * VkPhysicalDeviceFeatures-structure where each required feature should be set to true.
+         * @param requiredDeviceExtensions The extensions a Physical Device should enable for the purposes of the application. This should be a list
+         * of strings containing the names of the extensions to enable. The available extensions can be retrieved using
+         * vkEnumerateInstanceExtensionProperties(). To be able to use a Swapchain this list should contain VK_KHR_SWAPCHAIN_EXTENSION_NAME (Fillcan
+         * Graphics contains this by default).
+         */
         FillcanGraphics(const char* pApplicationName, uint32_t applicationVersion, unsigned int windowWidth, unsigned int windowHeight,
                         VkPhysicalDeviceFeatures requiredDeviceFeatures = {},
                         std::vector<const char*> requiredDeviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME});
         ~FillcanGraphics();
+        FillcanGraphics(const FillcanGraphics&) = delete;
+        FillcanGraphics& operator=(const FillcanGraphics&) = delete;
 
         /**
          * @brief Get the Window.
@@ -45,18 +62,66 @@ namespace fillcan {
          */
         void mainLoop(std::function<void(double)> callback);
 
-        unsigned int createSwapchain(uint32_t imageCount = 2, VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR);
+        /**
+         * @brief Create a Swapchain.
+         *
+         * @param imageCount The amount of images the Swapchain should have.
+         * @param presentMode The present mode of the Swapchain. This should be member of the VkPresentModeKHR-struct (@see
+         * https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPresentModeKHR.html).
+         *
+         * @return The index of the created Swapchain.
+         */
+        unsigned int createSwapchain(uint32_t imageCount = 3, VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR);
 
-        unsigned int recreateSwapchain(unsigned int index = 0);
-
+        /**
+         * @brief Recreate a Swapchain.
+         *
+         * @param imageCount The amount of images the recreated Swapchain should have.
+         * @param presentMode The present mode of the recreated Swapchain. This should be member of the VkPresentModeKHR-struct (@see
+         * https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPresentModeKHR.html).
+         * @param index The index of the Swapchain to be recreated. @see FillcanGraphics#createSwapchain.
+         *
+         * @return The index of the recreated Swapchain.
+         */
         unsigned int recreateSwapchain(uint32_t imageCount, VkPresentModeKHR presentMode, unsigned int index = 0);
 
+        /**
+         * @brief Recreate a Swapchain using it's original values.
+         *
+         * @param index The index of the Swapchain. @see FillcanGraphics#createSwapchain.
+         *
+         * @return The index of the recreated Swapchain.
+         */
+        unsigned int recreateSwapchain(unsigned int index = 0);
+
+        /**
+         * @brief Get a Swapchain at a given index.
+         *
+         * @param index The index of the Swapchain. @see FillcanGraphics#createSwapchain.
+         *
+         * @return A pointer to the Swapchain at the given index.
+         */
         Swapchain* getSwapchain(unsigned int index = 0);
 
+        /**
+         * @brief Get all created Swapchains.
+         *
+         * @return A list of pointers to the created Swapchains.
+         */
         std::vector<Swapchain*> getSwapchains();
 
+        /**
+         * @brief Destroy a Swapchain at a given index.
+         *
+         * @param index The index of the Swapchain to destroy. @see FillcanGraphics#createSwapchain.
+         */
         void destroySwapchain(unsigned int index = 0);
 
+        /**
+         * @brief Get the Asset Manager.
+         *
+         * @return A pointer to the Asset Manager.
+         */
         AssetManager* getAssetManager();
     };
 } // namespace fillcan
