@@ -29,6 +29,12 @@
     import FillcanGraphics from "$components/Documentation/Sections/Fillcan_Graphics/FillcanGraphics.svelte";
     import FillcanGraphicsConstructor from "$components/Documentation/Sections/Fillcan_Graphics/FillcanGraphicsConstructor.svelte";
     import MainLoop from "$components/Documentation/Sections/Fillcan_Graphics/mainLoop.svelte";
+    import CreateSwapchain from "$components/Documentation/Sections/Fillcan_Graphics/createSwapchain.svelte";
+    import RecreateSwapchain from "$components/Documentation/Sections/Fillcan_Graphics/recreateSwapchain.svelte";
+    import GetSwapchain from "$components/Documentation/Sections/Fillcan_Graphics/getSwapchain.svelte";
+    import GetSwapchains from "$components/Documentation/Sections/Fillcan_Graphics/getSwapchains.svelte";
+    import DestroySwapchain from "$components/Documentation/Sections/Fillcan_Graphics/destroySwapchain.svelte";
+    import GetAssetManager from "$components/Documentation/Sections/Fillcan_Graphics/getAssetManager.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -128,7 +134,7 @@
             visible: false,
         },
         {
-            id: SectionID.FILLCAN_getWindow,
+            id: SectionID.FILLCAN_GRAPHICS_getWindow,
             label: "getWindow",
             heading: 3,
             content: GetWindow,
@@ -136,10 +142,58 @@
             visible: false,
         },
         {
-            id: SectionID.FILLCAN_mainLoop,
+            id: SectionID.FILLCAN_GRAPHICS_mainLoop,
             label: "mainLoop",
             heading: 3,
             content: MainLoop,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FILLCAN_GRAPHICS_createSwapchain,
+            label: "createSwapchain",
+            heading: 3,
+            content: CreateSwapchain,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FILLCAN_GRAPHICS_recreateSwapchain,
+            label: "recreateSwapchain",
+            heading: 3,
+            content: RecreateSwapchain,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FILLCAN_GRAPHICS_getSwapchain,
+            label: "getSwapchain",
+            heading: 3,
+            content: GetSwapchain,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FILLCAN_GRAPHICS_getSwapchains,
+            label: "getSwapchains",
+            heading: 3,
+            content: GetSwapchains,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FILLCAN_GRAPHICS_destroySwapchain,
+            label: "destroySwapchain",
+            heading: 3,
+            content: DestroySwapchain,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FILLCAN_GRAPHICS_getAssetManager,
+            label: "getAssetManager",
+            heading: 3,
+            content: GetAssetManager,
             props: {},
             visible: false,
         },

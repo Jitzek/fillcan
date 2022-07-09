@@ -24,8 +24,14 @@ export enum SectionID {
     // FILLCAN_GRAPHICS
     FILLCAN_GRAPHICS = "Fillcan-Graphics",
     FILLCAN_GRAPHICS_Constructor = "Fillcan-Graphics-Constructor",
-    FILLCAN_getWindow = "Fillcan-Graphics-getWindow",
-    FILLCAN_mainLoop = "Fillcan-Graphics-mainLoop",
+    FILLCAN_GRAPHICS_getWindow = "Fillcan-Graphics-getWindow",
+    FILLCAN_GRAPHICS_mainLoop = "Fillcan-Graphics-mainLoop",
+    FILLCAN_GRAPHICS_createSwapchain = "Fillcan-Graphics-createSwapchain",
+    FILLCAN_GRAPHICS_recreateSwapchain = "Fillcan-Graphics-recreateSwapchain",
+    FILLCAN_GRAPHICS_getSwapchain = "Fillcan-Graphics-getSwapchain",
+    FILLCAN_GRAPHICS_getSwapchains = "Fillcan-Graphics-getSwapchains",
+    FILLCAN_GRAPHICS_destroySwapchain = "Fillcan-Graphics-destroySwapchain",
+    FILLCAN_GRAPHICS_getAssetManager = "Fillcan-Graphics-getAssetManager",
 
     WINDOW = "Window",
     INSTANCE = "Instance",
@@ -41,4 +47,5 @@ export enum SectionID {
     QUEUE = "Queue",
     COMMAND_RECORDING = "Command-Recording",
     COMMAND_BUFFER = "Command-Buffer",
+    ASSET_MANAGER = "Asset-Manager",
 }
