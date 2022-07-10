@@ -44,7 +44,11 @@ export enum SectionID {
     WINDOW_getSurface = "Window-getSurface",
     WINDOW_getExtent = "Window-getExtent",
 
+    // INSTANCE
     INSTANCE = "Instance",
+    INSTANCE_Constructor = "Instance-Constructor",
+    INSTANCE_getInstanceHandle = "Instance-getInstanceHandle",
+
     DEVICE_POOL = "Device-Pool",
     PHYSICAL_DEVICE = "Physical-Device",
     LOGICAL_DEVICE = "Logical-Device",

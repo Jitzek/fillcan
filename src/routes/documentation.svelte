@@ -44,6 +44,9 @@
     import CreateSurface from "$components/Documentation/Sections/Window/createSurface.svelte";
     import GetSurface from "$components/Documentation/Sections/Window/getSurface.svelte";
     import GetExtent from "$components/Documentation/Sections/Window/getExtent.svelte";
+    import Instance from "$components/Documentation/Sections/Instance/Instance.svelte";
+    import InstanceConstructor from "$components/Documentation/Sections/Instance/InstanceConstructor.svelte";
+    import GetInstanceHandle from "$components/Documentation/Sections/Instance/getInstanceHandle.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -275,6 +278,30 @@
             label: "getExtent",
             heading: 3,
             content: GetExtent,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.INSTANCE,
+            label: "Instance",
+            heading: 2,
+            content: Instance,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.INSTANCE_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: InstanceConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.INSTANCE_getInstanceHandle,
+            label: "getInstanceHandle",
+            heading: 3,
+            content: GetInstanceHandle,
             props: {},
             visible: false,
         },
