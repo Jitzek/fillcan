@@ -47,6 +47,13 @@
     import Instance from "$components/Documentation/Sections/Instance/Instance.svelte";
     import InstanceConstructor from "$components/Documentation/Sections/Instance/InstanceConstructor.svelte";
     import GetInstanceHandle from "$components/Documentation/Sections/Instance/getInstanceHandle.svelte";
+    import DevicePool from "$components/Documentation/Sections/Device_Pool/DevicePool.svelte";
+    import DevicePoolConstructor from "$components/Documentation/Sections/Device_Pool/DevicePoolConstructor.svelte";
+    import DevicePoolgetSupportedPhysicalDevices from "$components/Documentation/Sections/Device_Pool/DevicePoolgetSupportedPhysicalDevices.svelte";
+    import DevicePoolselectDevice from "$components/Documentation/Sections/Device_Pool/DevicePoolselectDevice.svelte";
+    import DevicePoolgetCurrentDevice from "$components/Documentation/Sections/Device_Pool/DevicePoolgetCurrentDevice.svelte";
+    import PhysicalDevice from "$components/Documentation/Sections/Physical_Device/PhysicalDevice.svelte";
+    import PhysicalDeviceConstructor from "$components/Documentation/Sections/Physical_Device/PhysicalDeviceConstructor.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -305,6 +312,62 @@
             props: {},
             visible: false,
         },
+        {
+            id: SectionID.DEVICE_POOL,
+            label: "Device Pool",
+            heading: 2,
+            content: DevicePool,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DEVICE_POOL_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: DevicePoolConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DEVICE_POOL_getSupportedPhysicalDevices,
+            label: "getSupportedPhysicalDevices",
+            heading: 3,
+            content: DevicePoolgetSupportedPhysicalDevices,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DEVICE_POOL_selectDevice,
+            label: "selectDevice",
+            heading: 3,
+            content: DevicePoolselectDevice,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DEVICE_POOL_getCurrentDevice,
+            label: "getCurrentDevice",
+            heading: 3,
+            content: DevicePoolgetCurrentDevice,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PHYSICAL_DEVICE,
+            label: "Physical Device",
+            heading: 2,
+            content: PhysicalDevice,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PHYSICAL_DEVICE_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: PhysicalDeviceConstructor,
+            props: {},
+            visible: false,
+        },
     ];
 
     let currentVisibleSection: SectionObject | null = null;
@@ -490,6 +553,7 @@
                 text-decoration: none;
             }
             .reference-item.h2 {
+                margin-top: 1rem;
                 a {
                     color: $--input-fg-color-primary;
                     text-transform: uppercase;

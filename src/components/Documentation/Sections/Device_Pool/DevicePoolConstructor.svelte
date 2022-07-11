@@ -10,31 +10,47 @@
 
 <Highlight
     language={cppHighlight}
-    code={`Fillcan(
-        const char* pApplicationName, 
-        uint32_t applicationVersion, 
-        VkPhysicalDeviceFeatures requiredDeviceFeatures = {}, 
-        std::vector<const char*> requiredDeviceExtensions = {}\n);`}
+    code={`DevicePool(
+        Instance* pInstance, 
+        Window* pWindow, 
+        std::vector<const char*> requiredDeviceExtensions,
+        VkPhysicalDeviceFeatures requiredDeviceFeatures\n);`}
 />
 <MethodDescription>
     <span slot="details">
-        Intialize the Fillcan API.<br />
-        Initializes <Anchor
-            href="{getState().URL.documentation}#{SectionID.INSTANCE}"
-            >Instance</Anchor
-        > and <Anchor
-            href="{getState().URL.documentation}#{SectionID.DEVICE_POOL}"
-            >Device Pool</Anchor
-        >.
+        Create a new Device Pool.<br />
+        Initializes a list of <Anchor
+            href="{getState().URL.documentation}#{SectionID.PHYSICAL_DEVICE}"
+            >Physical Devices</Anchor
+        > that are supported for the purposes of the implementation.
     </span>
     <div slot="params">
         <li>
-            <code>pApplicationName</code><br />
-            The name of the application.
+            <code>pInstance</code><br />
+            A pointer to the <Anchor
+                href="{getState().URL.documentation}#{SectionID.INSTANCE}"
+                >Instance</Anchor
+            > with which the <Anchor
+                href="{getState().URL
+                    .documentation}#{SectionID.PHYSICAL_DEVICE}"
+                >Physical Devices</Anchor
+            > should be enumerated.
         </li>
         <li>
-            <code>applicationVersion</code><br />
-            The version of the application.
+            <code>pWindow</code><br />
+            If not <code>nullptr</code>, a pointer to the <Anchor
+                href="{getState().URL.documentation}#{SectionID.WINDOW}"
+                >Window</Anchor
+            > with which the support for presentation will be determined for the
+            <Anchor
+                href="{getState().URL
+                    .documentation}#{SectionID.PHYSICAL_DEVICE}"
+                >Physical Device</Anchor
+            >.<br />
+            Support for presentation- and graphics operations for the <Anchor
+                href="{getState().URL.documentation}#{SectionID.QUEUE}"
+                >Queues</Anchor
+            > will be ensured as well.
         </li>
         <li>
             <code>requiredDeviceFeatures</code><br />
@@ -59,23 +75,10 @@
             to support. The available extensions can be retrieved using <Anchor
                 href="https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkEnumerateInstanceExtensionProperties.html"
                 target="_blank">vkEnumerateInstanceExtensionProperties()</Anchor
-            >. To be able to use a <Anchor
-                href="{getState().URL.documentation}#{SectionID.SWAPCHAIN}"
-                >Swapchain</Anchor
-            > this list should contain
-            <code>VK_KHR_SWAPCHAIN_EXTENSION_NAME</code> (<Anchor
-                href="{getState().URL
-                    .documentation}#{SectionID.FILLCAN_GRAPHICS}"
-                >Fillcan Graphics</Anchor
-            > contains this by default).<br />
+            >.
         </li>
     </div>
-</MethodDescription><br />
-Example:
-<Highlight
-    language={cppHighlight}
-    code={`fillcan::Fillcan fillcan = fillcan::Fillcan("Example Application", 1.0);`}
-/>
+</MethodDescription>
 
 <style lang="scss">
 </style>

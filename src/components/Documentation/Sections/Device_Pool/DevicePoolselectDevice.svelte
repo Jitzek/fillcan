@@ -34,6 +34,7 @@ If a device is selected, a pointer to the <Anchor
     >Logical Device</Anchor
 > can also be retrieved using
 <Anchor
-    href="{getState().URL.documentation}#{SectionID.FILLCAN_getCurrentDevice}"
+    href="{getState().URL
+        .documentation}#{SectionID.DEVICE_POOL_getCurrentDevice}"
     >getCurrentDevice</Anchor
 >.

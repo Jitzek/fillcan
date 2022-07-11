@@ -21,7 +21,7 @@ export enum SectionID {
     FILLCAN_beginSingleTimeRecording = "Fillcan-beginSingleTimeRecording",
     FILLCAN_endSingleTimeRecording = "Fillcan-endSingleTimeRecording",
 
-    // FILLCAN_GRAPHICS
+    // FILLCAN GRAPHICS
     FILLCAN_GRAPHICS = "Fillcan-Graphics",
     FILLCAN_GRAPHICS_Constructor = "Fillcan-Graphics-Constructor",
     FILLCAN_GRAPHICS_getWindow = "Fillcan-Graphics-getWindow",
@@ -49,8 +49,33 @@ export enum SectionID {
     INSTANCE_Constructor = "Instance-Constructor",
     INSTANCE_getInstanceHandle = "Instance-getInstanceHandle",
 
+    // DEVICE POOL
     DEVICE_POOL = "Device-Pool",
+    DEVICE_POOL_Constructor = "Device-Pool-Constructor",
+    DEVICE_POOL_getSupportedPhysicalDevices = "Device-Pool-getSupportedPhysicalDevices",
+    DEVICE_POOL_selectDevice = "Device-Pool-selectDevice",
+    DEVICE_POOL_getCurrentDevice = "Device-Pool-getCurrentDevice",
+
+    // PHYSICAL DEVICE
     PHYSICAL_DEVICE = "Physical-Device",
+    PHYSICAL_DEVICE_Constructor = "Physical-Device-Constructor",
+    PHYSICAL_DEVICE_getPhysicalDeviceHandle = "Physical-Device-getPhysicalDeviceHandle",
+    PHYSICAL_DEVICE_getRequiredExtensions = "Physical-Device-getRequiredExtensions",
+    PHYSICAL_DEVICE_areExtensionsSupported = "Physical-Device-areExtensionsSupported",
+    PHYSICAL_DEVICE_getRequiredFeatures = "Physical-Device-getRequiredFeatures",
+    PHYSICAL_DEVICE_areFeaturesSupported = "Physical-Device-areFeaturesSupported",
+    PHYSICAL_DEVICE_getFeatures = "Physical-Device-getFeatures",
+    PHYSICAL_DEVICE_getProperties = "Physical-Device-getProperties",
+    PHYSICAL_DEVICE_getSurfaceCapabilitiesKHR = "Physical-Device-getSurfaceCapabilitiesKHR",
+    PHYSICAL_DEVICE_getSurfaceFormatsKHR = "Physical-Device-getSurfaceFormatsKHR",
+    PHYSICAL_DEVICE_getSurfacePresentModesKHR = "Physical-Device-getSurfacePresentModesKHR",
+    PHYSICAL_DEVICE_getQueueFamilyProperties = "Physical-Device-getQueueFamilyProperties",
+    PHYSICAL_DEVICE_getFormatProperties = "Physical-Device-getFormatProperties",
+    PHYSICAL_DEVICE_findSupportedFormat = "Physical-Device-findSupportedFormat",
+    PHYSICAL_DEVICE_getGraphicsQueueFamilyIndex = "Physical-Device-getGraphicsQueueFamilyIndex",
+    PHYSICAL_DEVICE_getPresentQueueFamilyIndex = "Physical-Device-getPresentQueueFamilyIndex",
+    PHYSICAL_DEVICE_getComputeQueueFamilyIndex = "Physical-Device-getComputeQueueFamilyIndex",
+
     LOGICAL_DEVICE = "Logical-Device",
     SWAPCHAIN = "Swapchain",
     DESCRIPTOR_SET_LAYOUT_BUILDER = "Descriptor-Set-Layout-Builder",

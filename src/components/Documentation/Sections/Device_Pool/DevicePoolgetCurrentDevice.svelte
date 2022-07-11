@@ -10,30 +10,23 @@
 
 <Highlight
     language={cppHighlight}
-    code={`LogicalDevice* selectDevice(unsigned int deviceIndex = 0);`}
+    code={`LogicalDevice* getCurrentDevice();`}
 />
 <MethodDescription>
     <span slot="details">
-        Select a <Anchor
-            href="{getState().URL.documentation}#{SectionID.PHYSICAL_DEVICE}"
-            >Physical Device</Anchor
-        > by index to create a <Anchor
+        Get the currently selected <Anchor
             href="{getState().URL.documentation}#{SectionID.LOGICAL_DEVICE}"
             >Logical Device</Anchor
-        > of.
-    </span>
-    <span slot="returns"
-        >A pointer to the created <Anchor
+        > (selected with <Anchor
+            href="{getState().URL
+                .documentation}#{SectionID.DEVICE_POOL_selectDevice}"
+            >selectDevice</Anchor
+        >)</span
+    >
+    <span slot="return"
+        >A pointer to the currently selected <Anchor
             href="{getState().URL.documentation}#{SectionID.LOGICAL_DEVICE}"
             >Logical Device</Anchor
-        >.
-    </span>
-</MethodDescription><br />
-If a device is selected, a pointer to the <Anchor
-    href="{getState().URL.documentation}#{SectionID.LOGICAL_DEVICE}"
-    >Logical Device</Anchor
-> can also be retrieved using
-<Anchor
-    href="{getState().URL.documentation}#{SectionID.FILLCAN_getCurrentDevice}"
-    >getCurrentDevice</Anchor
->.
+        >.</span
+    >
+</MethodDescription>
