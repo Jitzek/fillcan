@@ -45,7 +45,6 @@ namespace fillcan {
         Instance(std::string pApplicationName, unsigned int applicationVersion, std::vector<const char*> requiredLayers,
                  std::vector<const char*> requiredExtensions);
         ~Instance();
-
         Instance(const Instance&) = delete;
         Instance& operator=(const Instance&) = delete;
 
@@ -54,6 +53,6 @@ namespace fillcan {
          *
          * @return The handle to the Vulkan Instance.
          */
-        VkInstance getInstanceHandle() const;
+        const VkInstance getInstanceHandle() const;
     };
 } // namespace fillcan

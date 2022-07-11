@@ -221,7 +221,7 @@ namespace fillcan {
         return formatProperties;
     }
 
-    VkFormat PhysicalDevice::findSupportedFormat(std::vector<VkFormat> formats, VkImageTiling tiling, VkFormatFeatureFlags features) {
+    const VkFormat PhysicalDevice::findSupportedFormat(std::vector<VkFormat> formats, VkImageTiling tiling, VkFormatFeatureFlags features) const {
         for (VkFormat format : formats) {
             VkFormatProperties formatProperties = this->getFormatProperties(format);
             if ((tiling == VK_IMAGE_TILING_LINEAR && (formatProperties.linearTilingFeatures & features)) ||

@@ -116,6 +116,6 @@ namespace fillcan {
         return true;
     }
 
-    VkInstance Instance::getInstanceHandle() const { return this->hInstance; }
+    const VkInstance Instance::getInstanceHandle() const { return this->hInstance; }
 
 } // namespace fillcan
