@@ -27,6 +27,25 @@ namespace fillcan {
         void findComputeQueueFamilyIndex(std::vector<VkQueueFamilyProperties> queueFamilyProperties = {});
 
       public:
+        /**
+         * @brief Create a new Physical Device.
+         *
+         * @details The Physical Device class takes in a handle to a Vulkan Physical Device, a pointer to the Window (or nullptr) and the required
+         * device features and extensions. With this information the Physical Device class acts as a wrapper around the Vulkan Physical Device for
+         * requesting information about the Physical Device and it's capabilities.
+         *
+         * @param hPhysicalDevice A handle to a VkPhysicalDevice.
+         * @see https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPhysicalDevice.html
+         * @param pWindow A pointer to the Window, or nullptr.
+         * @see Window
+         * @param requiredDeviceExtensions The features a Physical Device should have for the purposes of the application.
+         * This should be a VkPhysicalDeviceFeatures-structure where each required feature should be set to true.
+         * @see https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceFeatures.html
+         * @param requiredDeviceFeatures The extensions a Physical Device should enable for the purposes of the application.
+         * This should be a list of strings containing the names of the extensions to enable. The available extensions can be retrieved using
+         * vkEnumerateInstanceExtensionProperties()
+         * @see  https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkEnumerateInstanceExtensionProperties.html ).
+         */
         PhysicalDevice(VkPhysicalDevice hPhysicalDevice, Window* pWindow, std::vector<const char*> requiredExtensions,
                        VkPhysicalDeviceFeatures requiredFeatures = {});
         ~PhysicalDevice();
