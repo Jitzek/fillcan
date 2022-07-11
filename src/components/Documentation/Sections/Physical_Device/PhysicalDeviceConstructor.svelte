@@ -27,6 +27,10 @@
     <div slot="params">
         <li>
             <code>hPhysicalDevice</code><br />
+            A handle to the <Anchor
+                href="https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPhysicalDevice.html"
+                target="_blank">Vulkan Physical Device</Anchor
+            > to wrap.
         </li>
         <li>
             <code>pWindow</code><br />

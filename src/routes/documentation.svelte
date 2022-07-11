@@ -40,7 +40,7 @@
     import ShouldClose from "$components/Documentation/Sections/Window/shouldClose.svelte";
     import WasResized from "$components/Documentation/Sections/Window/wasResized.svelte";
     import PollEvents from "$components/Documentation/Sections/Window/pollEvents.svelte";
-    import GetRequiredExtensions from "$components/Documentation/Sections/Window/getRequiredExtensions.svelte";
+    import WindowGetRequiredExtensions from "$components/Documentation/Sections/Window/WindowGetRequiredExtensions.svelte";
     import CreateSurface from "$components/Documentation/Sections/Window/createSurface.svelte";
     import GetSurface from "$components/Documentation/Sections/Window/getSurface.svelte";
     import GetExtent from "$components/Documentation/Sections/Window/getExtent.svelte";
@@ -54,6 +54,23 @@
     import DevicePoolgetCurrentDevice from "$components/Documentation/Sections/Device_Pool/DevicePoolgetCurrentDevice.svelte";
     import PhysicalDevice from "$components/Documentation/Sections/Physical_Device/PhysicalDevice.svelte";
     import PhysicalDeviceConstructor from "$components/Documentation/Sections/Physical_Device/PhysicalDeviceConstructor.svelte";
+    import GetPhysicalDeviceHandle from "$components/Documentation/Sections/Physical_Device/getPhysicalDeviceHandle.svelte";
+    import GetRequiredExtensions from "$components/Documentation/Sections/Physical_Device/getRequiredExtensions.svelte";
+    import AreExtensionsSupported from "$components/Documentation/Sections/Physical_Device/areExtensionsSupported.svelte";
+    import DocumentationSectionList from "$components/Documentation/DocumentationSectionList.svelte";
+    import GetRequiredFeatures from "$components/Documentation/Sections/Physical_Device/getRequiredFeatures.svelte";
+    import AreFeaturesSupported from "$components/Documentation/Sections/Physical_Device/areFeaturesSupported.svelte";
+    import GetFeatures from "$components/Documentation/Sections/Physical_Device/getFeatures.svelte";
+    import GetProperties from "$components/Documentation/Sections/Physical_Device/getProperties.svelte";
+    import GetSurfaceCapabilitiesKhr from "$components/Documentation/Sections/Physical_Device/getSurfaceCapabilitiesKHR.svelte";
+    import GetSurfaceFormatsKhr from "$components/Documentation/Sections/Physical_Device/getSurfaceFormatsKHR.svelte";
+    import GetSurfacePresentModesKhr from "$components/Documentation/Sections/Physical_Device/getSurfacePresentModesKHR.svelte";
+    import GetQueueFamilyProperties from "$components/Documentation/Sections/Physical_Device/getQueueFamilyProperties.svelte";
+    import GetFormatProperties from "$components/Documentation/Sections/Physical_Device/getFormatProperties.svelte";
+    import FindSupportedFormat from "$components/Documentation/Sections/Physical_Device/findSupportedFormat.svelte";
+    import GetGraphicsQueueFamilyIndex from "$components/Documentation/Sections/Physical_Device/getGraphicsQueueFamilyIndex.svelte";
+    import GetPresentQueueFamilyIndex from "$components/Documentation/Sections/Physical_Device/getPresentQueueFamilyIndex.svelte";
+    import GetComputeQueueFamilyIndex from "$components/Documentation/Sections/Physical_Device/getComputeQueueFamilyIndex.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -260,7 +277,7 @@
             id: SectionID.WINDOW_getRequiredExtensions,
             label: "getRequiredExtensions",
             heading: 3,
-            content: GetRequiredExtensions,
+            content: WindowGetRequiredExtensions,
             props: {},
             visible: false,
         },
@@ -368,6 +385,134 @@
             props: {},
             visible: false,
         },
+        {
+            id: SectionID.PHYSICAL_DEVICE_getPhysicalDeviceHandle,
+            label: "getPhysicalDeviceHandle",
+            heading: 3,
+            content: GetPhysicalDeviceHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PHYSICAL_DEVICE_getRequiredExtensions,
+            label: "getRequiredExtensions",
+            heading: 3,
+            content: GetRequiredExtensions,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PHYSICAL_DEVICE_areExtensionsSupported,
+            label: "areExtensionsSupported",
+            heading: 3,
+            content: AreExtensionsSupported,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PHYSICAL_DEVICE_getRequiredFeatures,
+            label: "getRequiredFeatures",
+            heading: 3,
+            content: GetRequiredFeatures,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PHYSICAL_DEVICE_areFeaturesSupported,
+            label: "areFeaturesSupported",
+            heading: 3,
+            content: AreFeaturesSupported,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PHYSICAL_DEVICE_getFeatures,
+            label: "getFeatures",
+            heading: 3,
+            content: GetFeatures,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PHYSICAL_DEVICE_getProperties,
+            label: "getProperties",
+            heading: 3,
+            content: GetProperties,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PHYSICAL_DEVICE_getSurfaceCapabilitiesKHR,
+            label: "getSurfaceCapabilitiesKHR",
+            heading: 3,
+            content: GetSurfaceCapabilitiesKhr,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PHYSICAL_DEVICE_getSurfaceFormatsKHR,
+            label: "getSurfaceFormatsKHR",
+            heading: 3,
+            content: GetSurfaceFormatsKhr,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PHYSICAL_DEVICE_getSurfacePresentModesKHR,
+            label: "getSurfacePresentModesKHR",
+            heading: 3,
+            content: GetSurfacePresentModesKhr,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PHYSICAL_DEVICE_getQueueFamilyProperties,
+            label: "getQueueFamilyProperties",
+            heading: 3,
+            content: GetQueueFamilyProperties,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PHYSICAL_DEVICE_getFormatProperties,
+            label: "getFormatProperties",
+            heading: 3,
+            content: GetFormatProperties,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PHYSICAL_DEVICE_findSupportedFormat,
+            label: "findSupportedFormat",
+            heading: 3,
+            content: FindSupportedFormat,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PHYSICAL_DEVICE_getGraphicsQueueFamilyIndex,
+            label: "getGraphicsQueueFamilyIndex",
+            heading: 3,
+            content: GetGraphicsQueueFamilyIndex,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PHYSICAL_DEVICE_getPresentQueueFamilyIndex,
+            label: "getPresentQueueFamilyIndex",
+            heading: 3,
+            content: GetPresentQueueFamilyIndex,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PHYSICAL_DEVICE_getComputeQueueFamilyIndex,
+            label: "getComputeQueueFamilyIndex",
+            heading: 3,
+            content: GetComputeQueueFamilyIndex,
+            props: {},
+            visible: false,
+        },
     ];
 
     let currentVisibleSection: SectionObject | null = null;
@@ -399,7 +544,7 @@
     style="--sidebar-width: 20rem;"
 >
     <div class="documentation-sidebar">
-        <ul class="references-list">
+        <!-- <ul class="references-list">
             {#each sections as section, i}
                 <li
                     class="reference-item h{section.heading} {currentVisibleSection !==
@@ -412,7 +557,8 @@
                     </a>
                 </li>
             {/each}
-        </ul>
+        </ul> -->
+        <DocumentationSectionList {sections} />
     </div>
     {#if $stateStore.Screen.displayType === DisplayType.MOBILE}
         <div class="documentation-pop-in">

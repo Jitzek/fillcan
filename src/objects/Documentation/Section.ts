@@ -87,4 +87,6 @@ export enum SectionID {
     COMMAND_RECORDING = "Command-Recording",
     COMMAND_BUFFER = "Command-Buffer",
     ASSET_MANAGER = "Asset-Manager",
+    BUFFER = "Buffer",
+    IMAGE = "Image",
 }

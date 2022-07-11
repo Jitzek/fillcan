@@ -15,6 +15,11 @@
         <code>@return</code>: <slot name="return" />
     </div>
 {/if}
+{#if $$slots.throws}
+    <div class="throws">
+        <code>@throws</code>: <slot name="throws" />
+    </div>
+{/if}
 
 <style lang="scss">
     .details {
@@ -34,6 +39,12 @@
         }
     }
     .return {
+        font-size: 1rem;
+        code {
+            background-color: $--bg-color-secondary;
+        }
+    }
+    .throws {
         font-size: 1rem;
         code {
             background-color: $--bg-color-secondary;

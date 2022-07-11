@@ -10,7 +10,7 @@
 
 <Highlight
     language={cppHighlight}
-    code={`VkInstance getInstanceHandle() const;`}
+    code={`const VkInstance getInstanceHandle() const;`}
 />
 <MethodDescription>
     <span slot="details">
