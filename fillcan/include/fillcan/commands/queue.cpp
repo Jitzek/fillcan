@@ -13,6 +13,7 @@
 // std
 #include <iostream>
 #include <memory>
+#include <vector>
 
 namespace fillcan {
     Queue::Queue(LogicalDevice* pLogicalDevice, unsigned int queueFamilyIndex, unsigned int queueIndex)
@@ -24,7 +25,7 @@ namespace fillcan {
 
     Queue::~Queue() { this->upCommandPool.reset(); }
 
-    VkQueue Queue::getQueueHandle() { return this->hQueue; }
+    const VkQueue Queue::getQueueHandle() const { return this->hQueue; }
 
     CommandRecording* Queue::createRecording(unsigned int primaryCommandBufferCount, unsigned int secondaryCommandBufferCount) {
         CommandRecording recording = {};
@@ -44,39 +45,48 @@ namespace fillcan {
 
     bool Queue::submitRecordings(std::vector<CommandRecording*> pCommandRecordings, Fence* pFence) {
         bool success = true;
-        for (CommandRecording* pCommandRecording : pCommandRecordings) {
+
+        std::vector<std::vector<VkSemaphore>> hWaitSemaphoresCollection(pCommandRecordings.size());
+        std::vector<std::vector<VkCommandBuffer>> hCommandBuffersCollection(pCommandRecordings.size());
+        std::vector<std::vector<VkSemaphore>> hSignalSemaphoresCollection(pCommandRecordings.size());
+
+        std::vector<VkSubmitInfo> submitInfos = {};
+        for (int i = 0; i < pCommandRecordings.size(); i++) {
             VkSubmitInfo submitInfo = {};
             submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
             submitInfo.pNext = nullptr;
 
-            std::vector<VkSemaphore> hWaitSemaphores = {};
-            hWaitSemaphores.reserve(pCommandRecording->pWaitSemaphores.size());
-            std::transform(pCommandRecording->pWaitSemaphores.begin(), pCommandRecording->pWaitSemaphores.end(), std::back_inserter(hWaitSemaphores),
+            hWaitSemaphoresCollection.at(i) = {};
+            hWaitSemaphoresCollection.at(i).reserve(pCommandRecordings.at(i)->pWaitSemaphores.size());
+            std::transform(pCommandRecordings.at(i)->pWaitSemaphores.begin(), pCommandRecordings.at(i)->pWaitSemaphores.end(),
+                           std::back_inserter(hWaitSemaphoresCollection.at(i)),
                            [](Semaphore* pWaitSemaphore) { return pWaitSemaphore->getSemaphoreHandle(); });
-            submitInfo.waitSemaphoreCount = hWaitSemaphores.size();
-            submitInfo.pWaitSemaphores = hWaitSemaphores.data();
+            submitInfo.waitSemaphoreCount = hWaitSemaphoresCollection.at(i).size();
+            submitInfo.pWaitSemaphores = hWaitSemaphoresCollection.at(i).data();
 
-            submitInfo.pWaitDstStageMask = &pCommandRecording->waitDstStageMask;
-            std::vector<VkCommandBuffer> hCommandBuffers = {};
-            hCommandBuffers.reserve(pCommandRecording->pPrimaryCommandBuffers.size());
-            std::transform(pCommandRecording->pPrimaryCommandBuffers.begin(), pCommandRecording->pPrimaryCommandBuffers.end(),
-                           std::back_inserter(hCommandBuffers),
+            submitInfo.pWaitDstStageMask = &pCommandRecordings.at(i)->waitDstStageMask;
+
+            hCommandBuffersCollection.at(i) = {};
+            hCommandBuffersCollection.at(i).reserve(pCommandRecordings.at(i)->pPrimaryCommandBuffers.size());
+            std::transform(pCommandRecordings.at(i)->pPrimaryCommandBuffers.begin(), pCommandRecordings.at(i)->pPrimaryCommandBuffers.end(),
+                           std::back_inserter(hCommandBuffersCollection.at(i)),
                            [](CommandBuffer* pCommandBuffer) { return pCommandBuffer->getCommandBufferHandle(); });
-            submitInfo.commandBufferCount = hCommandBuffers.size();
-            submitInfo.pCommandBuffers = hCommandBuffers.data();
+            submitInfo.commandBufferCount = hCommandBuffersCollection.at(i).size();
+            submitInfo.pCommandBuffers = hCommandBuffersCollection.at(i).data();
 
-            std::vector<VkSemaphore> hSignalSemaphores = {};
-            hSignalSemaphores.reserve(pCommandRecording->pSignalSemaphores.size());
-            std::transform(pCommandRecording->pSignalSemaphores.begin(), pCommandRecording->pSignalSemaphores.end(),
-                           std::back_inserter(hSignalSemaphores), [](Semaphore* pSignalSemaphore) { return pSignalSemaphore->getSemaphoreHandle(); });
-            submitInfo.signalSemaphoreCount = hSignalSemaphores.size();
-            submitInfo.pSignalSemaphores = hSignalSemaphores.data();
-            success =
-                success && vkQueueSubmit(this->hQueue, 1, &submitInfo, pFence != nullptr ? pFence->getFenceHandle() : VK_NULL_HANDLE) == VK_SUCCESS
-                    ? true
-                    : false;
+            hSignalSemaphoresCollection.at(i) = {};
+            hSignalSemaphoresCollection.at(i).reserve(pCommandRecordings.at(i)->pSignalSemaphores.size());
+            std::transform(pCommandRecordings.at(i)->pSignalSemaphores.begin(), pCommandRecordings.at(i)->pSignalSemaphores.end(),
+                           std::back_inserter(hSignalSemaphoresCollection.at(i)),
+                           [](Semaphore* pSignalSemaphore) { return pSignalSemaphore->getSemaphoreHandle(); });
+            submitInfo.signalSemaphoreCount = hSignalSemaphoresCollection.at(i).size();
+            submitInfo.pSignalSemaphores = hSignalSemaphoresCollection.at(i).data();
+
+            submitInfos.push_back(submitInfo);
         }
-        return success;
+
+        return vkQueueSubmit(this->hQueue, submitInfos.size(), submitInfos.data(), pFence != nullptr ? pFence->getFenceHandle() : VK_NULL_HANDLE) ==
+               VK_SUCCESS;
     }
 
     bool Queue::resetRecording(CommandRecording* pCommandRecording, VkCommandBufferResetFlags flags) {
