@@ -79,6 +79,14 @@
     import GetPresentQueue from "$components/Documentation/Sections/Logical_Device/getPresentQueue.svelte";
     import BeginSingleTimeCommandRecording from "$components/Documentation/Sections/Logical_Device/beginSingleTimeCommandRecording.svelte";
     import EndSingleTimeCommandRecording from "$components/Documentation/Sections/Logical_Device/endSingleTimeCommandRecording.svelte";
+    import Queue from "$components/Documentation/Sections/Queue/Queue.svelte";
+    import QueueConstructor from "$components/Documentation/Sections/Queue/QueueConstructor.svelte";
+    import GetQueueHandle from "$components/Documentation/Sections/Queue/getQueueHandle.svelte";
+    import CreateRecording from "$components/Documentation/Sections/Queue/createRecording.svelte";
+    import SubmitRecordings from "$components/Documentation/Sections/Queue/submitRecordings.svelte";
+    import ResetRecording from "$components/Documentation/Sections/Queue/resetRecording.svelte";
+    import FreeRecording from "$components/Documentation/Sections/Queue/freeRecording.svelte";
+    import QueueWaitIdle from "$components/Documentation/Sections/Queue/QueueWaitIdle.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -582,6 +590,70 @@
             label: "endSingleTimeCommandRecording",
             heading: 3,
             content: EndSingleTimeCommandRecording,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.QUEUE,
+            label: "Queue",
+            heading: 2,
+            content: Queue,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.QUEUE_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: QueueConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.QUEUE_getQueueHandle,
+            label: "getQueueHandle",
+            heading: 3,
+            content: GetQueueHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.QUEUE_createRecording,
+            label: "createRecording",
+            heading: 3,
+            content: CreateRecording,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.QUEUE_submitRecordings,
+            label: "submitRecordings",
+            heading: 3,
+            content: SubmitRecordings,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.QUEUE_resetRecording,
+            label: "resetRecording",
+            heading: 3,
+            content: ResetRecording,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.QUEUE_freeRecording,
+            label: "freeRecording",
+            heading: 3,
+            content: FreeRecording,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.QUEUE_waitIdle,
+            label: "waitIdle",
+            heading: 3,
+            content: QueueWaitIdle,
             props: {},
             visible: false,
         },

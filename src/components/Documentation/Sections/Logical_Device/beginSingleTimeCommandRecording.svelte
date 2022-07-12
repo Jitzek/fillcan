@@ -10,7 +10,7 @@
 
 <Highlight
     language={cppHighlight}
-    code={`CommandRecording* Fillcan::beginSingleTimeRecording(Queue* pQueue);`}
+    code={`CommandRecording* Fillcan::beginSingleTimeCommandRecording(Queue* pQueue);`}
 />
 <MethodDescription>
     <span slot="details">

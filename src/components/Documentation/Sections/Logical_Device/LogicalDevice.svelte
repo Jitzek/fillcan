@@ -12,7 +12,7 @@
     language={cppHighlight}
     code={"#include <fillcan/instance/logical_device.hpp>"}
 />
-The Logical Device class takes in a pointer to the <Reference
+The <code>Logical Device</code> class takes in a pointer to the <Reference
     sectionID={SectionID.PHYSICAL_DEVICE}>Physical Device</Reference
 > to construct around. It uses the <Reference
     sectionID={SectionID.PHYSICAL_DEVICE}>Physical Device</Reference

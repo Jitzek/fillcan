@@ -10,7 +10,7 @@
 
 <Highlight
     language={cppHighlight}
-    code={`void endSingleTimeRecording(CommandRecording* pCommandRecording);`}
+    code={`void endSingleTimeCommandRecording(CommandRecording* pCommandRecording);`}
 />
 <MethodDescription>
     <span slot="details">

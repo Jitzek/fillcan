@@ -86,16 +86,33 @@ export enum SectionID {
     LOGICAL_DEVICE_beginSingleTimeCommandRecording = "Logical-Device-beginSingleTimeCommandRecording",
     LOGICAL_DEVICE_endSingleTimeCommandRecording = "Logical-Device-endSingleTimeCommandRecording",
 
+    // QUEUE
+    QUEUE = "Queue",
+    QUEUE_Constructor = "Queue-Constructor",
+    QUEUE_getQueueHandle = "Queue-getQueueHandle",
+    QUEUE_createRecording = "Queue-createRecording",
+    QUEUE_submitRecordings = "Queue-submitRecordings",
+    QUEUE_resetRecording = "Queue-resetRecording",
+    QUEUE_freeRecording = "Queue-freeRecording",
+    QUEUE_waitIdle = "Queue-waitIdle",
+
+    COMMAND_POOL = "Command-Pool",
+    COMMAND_POOL_freeCommandBuffers = "Command-Pool-freeCommandBuffers",
+
     SWAPCHAIN = "Swapchain",
     DESCRIPTOR_SET_LAYOUT_BUILDER = "Descriptor-Set-Layout-Builder",
     DESCRIPTOR_SET_LAYOUT = "Descriptor-Set-Layout",
     DESCRIPTOR_POOL_BUILDER = "Descriptor-Pool-Builder",
     DESCRIPTOR_POOL = "Descriptor-Pool",
     DESCRIPTOR_SET = "Descriptor-Set",
-    QUEUE = "Queue",
     COMMAND_RECORDING = "Command-Recording",
+
     COMMAND_BUFFER = "Command-Buffer",
+    COMMAND_BUFFER_reset = "Command-Buffer-reset",
+
     ASSET_MANAGER = "Asset-Manager",
     BUFFER = "Buffer",
     IMAGE = "Image",
+    FENCE = "Fence",
+    SEMAPHORE = "Semaphore",
 }
