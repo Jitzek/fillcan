@@ -9,6 +9,7 @@
 
 // std
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -159,30 +160,29 @@ namespace fillcan {
          * @param features A bitmask specifying the features supported by a buffer this format should support.
          * @see https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkFormatFeatureFlagBits.html
          *
-         * @return The first format in the list of given formats that supports the given tiling and features.
-         *
-         * @throws std::runtime_error if none of the given formats supports the given tiling and features.
+         * @return An optional value of the first format in the list of given formats that supports the given tiling and features or std::nullopt if none of the given formats supports the given tiling and features. 
+         * @see https://en.cppreference.com/w/cpp/utility/optional/nullopt.
          */
-        const VkFormat findSupportedFormat(std::vector<VkFormat> formats, VkImageTiling tiling, VkFormatFeatureFlags features) const;
+        const std::optional<VkFormat> findSupportedFormat(std::vector<VkFormat> formats, VkImageTiling tiling, VkFormatFeatureFlags features) const;
 
         /**
          * @brief Get the queue family index for the graphics Queue.
          *
-         * @return the queue family index for the graphics Queue or -1 if no Queue was found.
+         * @return The queue family index for the graphics Queue or -1 if no Queue was found.
          */
         int getGraphicsQueueFamilyIndex();
 
         /**
          * @brief Get the queue family index for the present Queue.
          *
-         * @return the queue family index for the present Queue or -1 if no present Queue was found.
+         * @return The queue family index for the present Queue or -1 if no present Queue was found.
          */
         int getPresentQueueFamilyIndex();
 
         /**
          * @brief Get the queue family index for the compute Queue.
          *
-         * @return the queue family index for the compute Queue or -1 if no compute Queue was found.
+         * @return The queue family index for the compute Queue or -1 if no compute Queue was found.
          */
         int getComputeQueueFamilyIndex();
     };

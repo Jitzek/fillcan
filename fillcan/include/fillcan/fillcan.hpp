@@ -119,29 +119,5 @@ namespace fillcan {
                                                          std::vector<std::unique_ptr<DescriptorSetLayout>> upDescriptorSetLayouts,
                                                          std::unique_ptr<DescriptorPool> upDescriptorPool, bool preprocess = true,
                                                          bool optimize = false);
-
-        /**
-         * @brief Start a Command Recording with a given Queue.
-         *
-         * @details Creates a Command Recording using the given Queue pointer. This Command Recording will contain 1 (one) Primary Command Buffer and
-         * 0 (zero) Secondary Command Buffers. To end the recording, call @see Fillcan#endSingleTimeRecording.
-         *
-         * @see CommandRecording
-         * @see CommandBuffer
-         *
-         * @param pQueue A pointer to the Queue from which a Command Recording will be created from.
-         * @return A pointer to the created Command Recording.
-         */
-        CommandRecording* beginSingleTimeRecording(Queue* pQueue);
-
-        /**
-         * @brief End a Command Recording.
-         *
-         * @details Ends a Command Recording (preferably created using @see Fillcan#beginSingleTimeRecording), submits the recording and waits for the
-         * Queue to idle before returning.
-         *
-         * @param pCommandRecording The Command Recording to end.
-         */
-        void endSingleTimeRecording(CommandRecording* pCommandRecording);
     };
 } // namespace fillcan

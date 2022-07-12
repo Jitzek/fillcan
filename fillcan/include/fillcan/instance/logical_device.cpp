@@ -10,7 +10,7 @@
 #include <stdexcept>
 
 namespace fillcan {
-    LogicalDevice::LogicalDevice(PhysicalDevice* pPhysicalDevice, VkPhysicalDeviceFeatures features) : pPhysicalDevice(pPhysicalDevice) {
+    LogicalDevice::LogicalDevice(PhysicalDevice* pPhysicalDevice) : pPhysicalDevice(pPhysicalDevice) {
         int graphicsQueueFamilyIndex = pPhysicalDevice->getGraphicsQueueFamilyIndex();
         int presentQueueFamilyIndex = pPhysicalDevice->getPresentQueueFamilyIndex();
         int computeQueueFamilyIndex = pPhysicalDevice->getComputeQueueFamilyIndex();
@@ -85,12 +85,14 @@ namespace fillcan {
 
     const VkDevice LogicalDevice::getLogicalDeviceHandle() const { return this->hLogicalDevice; }
 
-    PhysicalDevice* LogicalDevice::getPhysicalDevice() { return this->pPhysicalDevice; }
+    const PhysicalDevice* LogicalDevice::getPhysicalDevice() const { return this->pPhysicalDevice; }
 
     void LogicalDevice::waitIdle() { vkDeviceWaitIdle(this->hLogicalDevice); }
 
     Queue* LogicalDevice::getGraphicsQueue() const { return this->upGraphicsQueue.get(); }
+
     Queue* LogicalDevice::getPresentQueue() const { return this->upPresentQueue.get(); }
+
     Queue* LogicalDevice::getComputeQueue() const { return this->upComputeQueue.get(); }
 
     CommandRecording* LogicalDevice::beginSingleTimeCommandRecording(Queue* pQueue) {

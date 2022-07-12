@@ -371,11 +371,15 @@ namespace simple_cube {
         renderPassBuilder.addColorAttachment(swapChainAttachmentIndex, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, false);
 
         // Add attachment for subpass 1 describing the depth image
+        std::optional<VkFormat> depthImageFormat = this->upFillcan->getCurrentDevice()->getPhysicalDevice()->findSupportedFormat(
+                                                 {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
+                                                 VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
+        if (!depthImageFormat.has_value()) {
+            throw std::runtime_error("Failed to find a supported format for the depth image attachment.");
+        }
         unsigned int depthImageAttachmentIndex =
             renderPassBuilder.addAttachment({.flags = 0,
-                                             .format = this->upFillcan->getCurrentDevice()->getPhysicalDevice()->findSupportedFormat(
-                                                 {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
-                                                 VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT),
+                                             .format = depthImageFormat.value(),
                                              .samples = VK_SAMPLE_COUNT_1_BIT,
                                              .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
                                              .storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,

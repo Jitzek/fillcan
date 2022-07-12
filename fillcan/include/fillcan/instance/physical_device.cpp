@@ -9,6 +9,7 @@
 #include <cstring>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 
 namespace fillcan {
@@ -221,7 +222,8 @@ namespace fillcan {
         return formatProperties;
     }
 
-    const VkFormat PhysicalDevice::findSupportedFormat(std::vector<VkFormat> formats, VkImageTiling tiling, VkFormatFeatureFlags features) const {
+    const std::optional<VkFormat> PhysicalDevice::findSupportedFormat(std::vector<VkFormat> formats, VkImageTiling tiling,
+                                                                      VkFormatFeatureFlags features) const {
         for (VkFormat format : formats) {
             VkFormatProperties formatProperties = this->getFormatProperties(format);
             if ((tiling == VK_IMAGE_TILING_LINEAR && (formatProperties.linearTilingFeatures & features)) ||
@@ -229,7 +231,7 @@ namespace fillcan {
                 return format;
             }
         }
-        throw std::runtime_error("Failed to find supported format");
+        return std::nullopt;
     }
 
     int PhysicalDevice::getGraphicsQueueFamilyIndex() { return this->graphicsQueueFamilyIndex; }
