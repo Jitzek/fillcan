@@ -9,17 +9,19 @@
     import cppHighlight from "svelte-highlight/languages/cpp";
 </script>
 
-<Highlight language={cppHighlight} code={`int getPresentQueueFamilyIndex();`} />
+<Highlight language={cppHighlight} code={`Queue* getPresentQueue();`} />
 <MethodDescription>
     <span slot="details">
-        Get the queue family index for the present <Reference
-            sectionID={SectionID.QUEUE}>Queue</Reference
+        Get a pointer to the present <Reference sectionID={SectionID.QUEUE}
+            >Queue</Reference
         >.
     </span>
     <span slot="return">
-        The queue family index for the present Queue or <code>-1</code> if no
-        present
-        <Reference sectionID={SectionID.QUEUE}>Queue</Reference> was found.</span
+        A pointer to the present <Reference sectionID={SectionID.QUEUE}
+            >Queue</Reference
+        > or <code>nullptr</code> if no <Reference sectionID={SectionID.QUEUE}
+            >Queue</Reference
+        > was found.</span
     >
 </MethodDescription>
 

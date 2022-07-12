@@ -20,7 +20,7 @@
             >Command Recording</Anchor
         > (preferably created using <Anchor
             href="{getState().URL
-                .documentation}#{SectionID.FILLCAN_beginSingleTimeRecording}"
+                .documentation}#{SectionID.LOGICAL_DEVICE_beginSingleTimeCommandRecording}"
             >beginSingleTimeRecording</Anchor
         >), submits the recording and waits for the <Anchor
             href="{getState().URL.documentation}#{SectionID.QUEUE}"

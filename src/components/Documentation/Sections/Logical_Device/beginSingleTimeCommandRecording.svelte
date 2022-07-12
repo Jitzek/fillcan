@@ -35,7 +35,7 @@
             >Command Buffers</Anchor
         >. To end the recording, call <Anchor
             href="{getState().URL
-                .documentation}#{SectionID.FILLCAN_endSingleTimeRecording}"
+                .documentation}#{SectionID.LOGICAL_DEVICE_endSingleTimeCommandRecording}"
             >endSingleTimeRecording</Anchor
         >.
     </span>

@@ -11,7 +11,10 @@
 
 <Highlight
     language={cppHighlight}
-    code={`const VkFormat findSupportedFormat(std::vector<VkFormat> formats, VkImageTiling tiling, VkFormatFeatureFlags features) const;`}
+    code={`const std::optional<VkFormat> findSupportedFormat(
+        std::vector<VkFormat> formats, 
+        VkImageTiling tiling, 
+        VkFormatFeatureFlags features\n) const;`}
 />
 <MethodDescription>
     <span slot="details">
@@ -43,14 +46,30 @@
         </li>
     </div>
     <span slot="return">
-        The first format in the list of given formats that supports the given
-        tiling and features.
+        An optional value of the first format in the list of given formats that
+        supports the given tiling and features or <Anchor
+            href="https://en.cppreference.com/w/cpp/utility/optional/nullopt"
+            target="_blank">std::nullopt</Anchor
+        > if none of the given formats supports the given tiling and features.
     </span>
-    <span slot="throws">
-        <code>std::runtime_error</code> if none of the given formats supports the
-        given tiling and features.
-    </span>
-</MethodDescription>
+</MethodDescription><br />
+Example:
+<Highlight
+    language={cppHighlight}
+    code={`std::vector<VkFormat> formats = { VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT };
+VkImageTiling tiling = VK_IMAGE_TILING_OPTIMAL;
+VkFormatFeatureFlags features = VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
+
+std::optional<VkFormat> optFormat = fillcan.getCurrentDevice()->getPhysicalDevice()->findSupportedFormat(
+    formats, tiling, features
+);
+
+if (!optFormat.has_value()) {
+    throw std::runtime_error("Failed to find a supported format");
+}
+
+VkFormat supportedFormat = optFormat.value();`}
+/>
 
 <style lang="scss">
 </style>

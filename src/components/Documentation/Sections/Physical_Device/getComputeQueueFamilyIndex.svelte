@@ -17,7 +17,7 @@
         >.
     </span>
     <span slot="return">
-        the queue family index for the compute Queue or <code>-1</code> if no
+        The queue family index for the compute Queue or <code>-1</code> if no
         compute
         <Reference sectionID={SectionID.QUEUE}>Queue</Reference> was found.</span
     >

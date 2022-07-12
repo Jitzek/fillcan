@@ -9,18 +9,16 @@
     import cppHighlight from "svelte-highlight/languages/cpp";
 </script>
 
-<Highlight language={cppHighlight} code={`int getPresentQueueFamilyIndex();`} />
+<Highlight language={cppHighlight} code={`void waitIdle();`} />
 <MethodDescription>
     <span slot="details">
-        Get the queue family index for the present <Reference
+        Wait for the Logical Device to become idle.<br />
+        Waits on the host for the completion of ongoing <Reference
             sectionID={SectionID.QUEUE}>Queue</Reference
-        >.
+        > operations for all
+        <Reference sectionID={SectionID.QUEUE}>Queues</Reference> on this Logical
+        Device.
     </span>
-    <span slot="return">
-        The queue family index for the present Queue or <code>-1</code> if no
-        present
-        <Reference sectionID={SectionID.QUEUE}>Queue</Reference> was found.</span
-    >
 </MethodDescription>
 
 <style lang="scss">

@@ -9,18 +9,21 @@
     import cppHighlight from "svelte-highlight/languages/cpp";
 </script>
 
-<Highlight language={cppHighlight} code={`int getPresentQueueFamilyIndex();`} />
+<Highlight
+    language={cppHighlight}
+    code={`const PhysicalDevice* getPhysicalDevice() const;`}
+/>
 <MethodDescription>
     <span slot="details">
-        Get the queue family index for the present <Reference
-            sectionID={SectionID.QUEUE}>Queue</Reference
-        >.
+        Get a pointer to the <Reference sectionID={SectionID.PHYSICAL_DEVICE}
+            >Physical Device</Reference
+        > this Logical Device is constructed around.
     </span>
     <span slot="return">
-        The queue family index for the present Queue or <code>-1</code> if no
-        present
-        <Reference sectionID={SectionID.QUEUE}>Queue</Reference> was found.</span
-    >
+        A pointer to the <Reference sectionID={SectionID.PHYSICAL_DEVICE}
+            >Physical Device</Reference
+        > this Logical Device is constructed around.
+    </span>
 </MethodDescription>
 
 <style lang="scss">

@@ -24,8 +24,6 @@
     import GetWindow from "$components/Documentation/Sections/Fillcan_Graphics/getWindow.svelte";
     import CreateShaderModule from "$components/Documentation/Sections/Fillcan/createShaderModule.svelte";
     import HamburgerMenuIcon from "$components/NavBar/HamburgerMenuIcon.svelte";
-    import BeginSingleTimeRecording from "$components/Documentation/Sections/Fillcan/beginSingleTimeRecording.svelte";
-    import EndSingleTimeRecording from "$components/Documentation/Sections/Fillcan/endSingleTimeRecording.svelte";
     import FillcanGraphics from "$components/Documentation/Sections/Fillcan_Graphics/FillcanGraphics.svelte";
     import FillcanGraphicsConstructor from "$components/Documentation/Sections/Fillcan_Graphics/FillcanGraphicsConstructor.svelte";
     import MainLoop from "$components/Documentation/Sections/Fillcan_Graphics/mainLoop.svelte";
@@ -71,6 +69,16 @@
     import GetGraphicsQueueFamilyIndex from "$components/Documentation/Sections/Physical_Device/getGraphicsQueueFamilyIndex.svelte";
     import GetPresentQueueFamilyIndex from "$components/Documentation/Sections/Physical_Device/getPresentQueueFamilyIndex.svelte";
     import GetComputeQueueFamilyIndex from "$components/Documentation/Sections/Physical_Device/getComputeQueueFamilyIndex.svelte";
+    import LogicalDevice from "$components/Documentation/Sections/Logical_Device/LogicalDevice.svelte";
+    import LogicalDeviceConstructor from "$components/Documentation/Sections/Logical_Device/LogicalDeviceConstructor.svelte";
+    import GetLogicalDeviceHandle from "$components/Documentation/Sections/Logical_Device/getLogicalDeviceHandle.svelte";
+    import GetPhysicalDevice from "$components/Documentation/Sections/Logical_Device/getPhysicalDevice.svelte";
+    import WaitIdle from "$components/Documentation/Sections/Logical_Device/waitIdle.svelte";
+    import GetGraphicsQueue from "$components/Documentation/Sections/Logical_Device/getGraphicsQueue.svelte";
+    import GetComputeQueue from "$components/Documentation/Sections/Logical_Device/getComputeQueue.svelte";
+    import GetPresentQueue from "$components/Documentation/Sections/Logical_Device/getPresentQueue.svelte";
+    import BeginSingleTimeCommandRecording from "$components/Documentation/Sections/Logical_Device/beginSingleTimeCommandRecording.svelte";
+    import EndSingleTimeCommandRecording from "$components/Documentation/Sections/Logical_Device/endSingleTimeCommandRecording.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -134,22 +142,6 @@
             label: "createShaderModule",
             heading: 3,
             content: CreateShaderModule,
-            props: {},
-            visible: false,
-        },
-        {
-            id: SectionID.FILLCAN_beginSingleTimeRecording,
-            label: "beginSingleTimeRecording",
-            heading: 3,
-            content: BeginSingleTimeRecording,
-            props: {},
-            visible: false,
-        },
-        {
-            id: SectionID.FILLCAN_endSingleTimeRecording,
-            label: "endSingleTimeRecording",
-            heading: 3,
-            content: EndSingleTimeRecording,
             props: {},
             visible: false,
         },
@@ -510,6 +502,86 @@
             label: "getComputeQueueFamilyIndex",
             heading: 3,
             content: GetComputeQueueFamilyIndex,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.LOGICAL_DEVICE,
+            label: "Logical Device",
+            heading: 2,
+            content: LogicalDevice,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.LOGICAL_DEVICE_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: LogicalDeviceConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.LOGICAL_DEVICE_getLogicalDeviceHandle,
+            label: "getLogicalDeviceHandle",
+            heading: 3,
+            content: GetLogicalDeviceHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.LOGICAL_DEVICE_getPhysicalDevice,
+            label: "getPhysicalDevice",
+            heading: 3,
+            content: GetPhysicalDevice,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.LOGICAL_DEVICE_waitIdle,
+            label: "waitIdle",
+            heading: 3,
+            content: WaitIdle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.LOGICAL_DEVICE_getGraphicsQueue,
+            label: "getGraphicsQueue",
+            heading: 3,
+            content: GetGraphicsQueue,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.LOGICAL_DEVICE_getPresentQueue,
+            label: "getPresentQueue",
+            heading: 3,
+            content: GetPresentQueue,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.LOGICAL_DEVICE_getComputeQueue,
+            label: "getComputeQueue",
+            heading: 3,
+            content: GetComputeQueue,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.LOGICAL_DEVICE_beginSingleTimeCommandRecording,
+            label: "beginSingleTimeCommandRecording",
+            heading: 3,
+            content: BeginSingleTimeCommandRecording,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.LOGICAL_DEVICE_endSingleTimeCommandRecording,
+            label: "endSingleTimeCommandRecording",
+            heading: 3,
+            content: EndSingleTimeCommandRecording,
             props: {},
             visible: false,
         },

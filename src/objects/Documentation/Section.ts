@@ -18,8 +18,6 @@ export enum SectionID {
     FILLCAN_selectDevice = "Fillcan-selectDevice",
     FILLCAN_getCurrentDevice = "Fillcan-getCurrentDevice",
     FILLCAN_createShaderModule = "Fillcan-createShaderModule",
-    FILLCAN_beginSingleTimeRecording = "Fillcan-beginSingleTimeRecording",
-    FILLCAN_endSingleTimeRecording = "Fillcan-endSingleTimeRecording",
 
     // FILLCAN GRAPHICS
     FILLCAN_GRAPHICS = "Fillcan-Graphics",
@@ -76,7 +74,18 @@ export enum SectionID {
     PHYSICAL_DEVICE_getPresentQueueFamilyIndex = "Physical-Device-getPresentQueueFamilyIndex",
     PHYSICAL_DEVICE_getComputeQueueFamilyIndex = "Physical-Device-getComputeQueueFamilyIndex",
 
+    // LOGICAL DEVICE
     LOGICAL_DEVICE = "Logical-Device",
+    LOGICAL_DEVICE_Constructor = "Logical-Device-Constructor",
+    LOGICAL_DEVICE_getLogicalDeviceHandle = "Logical-Device-getLogicalDeviceHandle",
+    LOGICAL_DEVICE_getPhysicalDevice = "Logical-Device-getPhysicalDevice",
+    LOGICAL_DEVICE_waitIdle = "Logical-Device-waitIdle",
+    LOGICAL_DEVICE_getGraphicsQueue = "Logical-Device-getGraphicsQueue",
+    LOGICAL_DEVICE_getPresentQueue = "Logical-Device-getPresentQueue",
+    LOGICAL_DEVICE_getComputeQueue = "Logical-Device-getComputeQueue",
+    LOGICAL_DEVICE_beginSingleTimeCommandRecording = "Logical-Device-beginSingleTimeCommandRecording",
+    LOGICAL_DEVICE_endSingleTimeCommandRecording = "Logical-Device-endSingleTimeCommandRecording",
+
     SWAPCHAIN = "Swapchain",
     DESCRIPTOR_SET_LAYOUT_BUILDER = "Descriptor-Set-Layout-Builder",
     DESCRIPTOR_SET_LAYOUT = "Descriptor-Set-Layout",

@@ -1,7 +1,6 @@
 <script lang="ts">
     import Anchor from "$components/Documentation/Anchor.svelte";
     import MethodDescription from "$components/Documentation/MethodDescription.svelte";
-    import Reference from "$components/Documentation/Reference.svelte";
     import { SectionID } from "$objects/Documentation/Section";
     import { getState } from "$stores/StateStore";
     import { Highlight } from "svelte-highlight";
@@ -9,18 +8,23 @@
     import cppHighlight from "svelte-highlight/languages/cpp";
 </script>
 
-<Highlight language={cppHighlight} code={`int getPresentQueueFamilyIndex();`} />
+<Highlight
+    language={cppHighlight}
+    code={`const VkDevice getLogicalDeviceHandle() const;`}
+/>
 <MethodDescription>
     <span slot="details">
-        Get the queue family index for the present <Reference
-            sectionID={SectionID.QUEUE}>Queue</Reference
+        Get the handle to the <Anchor
+            href="https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkDevice.html"
+            target="_blank">Vulkan Device</Anchor
         >.
     </span>
     <span slot="return">
-        The queue family index for the present Queue or <code>-1</code> if no
-        present
-        <Reference sectionID={SectionID.QUEUE}>Queue</Reference> was found.</span
-    >
+        The handle to the <Anchor
+            href="https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkDevice.html"
+            target="_blank">Vulkan Device</Anchor
+        >.
+    </span>
 </MethodDescription>
 
 <style lang="scss">
