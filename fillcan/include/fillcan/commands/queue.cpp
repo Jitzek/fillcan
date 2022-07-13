@@ -2,6 +2,7 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
+#include <algorithm>
 #include <fillcan/commands/command_buffer.hpp>
 #include <fillcan/commands/command_pool.hpp>
 #include <fillcan/commands/command_recording.hpp>
@@ -13,32 +14,46 @@
 // std
 #include <iostream>
 #include <memory>
+#include <stdexcept>
 #include <vector>
 
 namespace fillcan {
     Queue::Queue(LogicalDevice* pLogicalDevice, unsigned int queueFamilyIndex, unsigned int queueIndex)
         : pLogicalDevice(pLogicalDevice), queueFamilyIndex(queueFamilyIndex), queueIndex(queueIndex) {
         vkGetDeviceQueue(this->pLogicalDevice->getLogicalDeviceHandle(), this->queueFamilyIndex, this->queueIndex, &this->hQueue);
-        this->upCommandPool = std::make_unique<CommandPool>(
-            this->pLogicalDevice, VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT, this->queueFamilyIndex);
+        this->createCommandPool(VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
     }
 
-    Queue::~Queue() { this->upCommandPool.reset(); }
+    Queue::~Queue() {}
 
     const VkQueue Queue::getQueueHandle() const { return this->hQueue; }
 
-    CommandRecording* Queue::createRecording(unsigned int primaryCommandBufferCount, unsigned int secondaryCommandBufferCount) {
+    unsigned int Queue::createCommandPool(VkCommandPoolCreateFlags flags) {
+        this->upCommandPools.push_back(std::move(std::make_unique<CommandPool>(this->pLogicalDevice, flags, this->queueFamilyIndex)));
+        return upCommandPools.size() - 1;
+    }
+
+    CommandPool* Queue::getCommandPool(unsigned int index) { return this->upCommandPools.at(index).get(); }
+
+    void Queue::destroyCommandPool(unsigned int index) { this->upCommandPools.erase(this->upCommandPools.begin() + index); }
+
+    CommandRecording* Queue::createRecording(unsigned int primaryCommandBufferCount, unsigned int secondaryCommandBufferCount,
+                                             CommandPool* pCommandPool) {
+        if (pCommandPool == nullptr) {
+            if (this->upCommandPools.empty()) {
+                throw std::runtime_error("Attempted to create a recording without any allocated Command Pools.");
+            }
+            pCommandPool = this->upCommandPools.at(0).get();
+        }
         CommandRecording recording = {};
         if (primaryCommandBufferCount > 0) {
-            recording.pPrimaryCommandBuffers =
-                this->upCommandPool->allocateCommandBuffers(VK_COMMAND_BUFFER_LEVEL_PRIMARY, primaryCommandBufferCount);
+            recording.pPrimaryCommandBuffers = pCommandPool->allocateCommandBuffers(VK_COMMAND_BUFFER_LEVEL_PRIMARY, primaryCommandBufferCount);
         }
         if (secondaryCommandBufferCount > 0) {
-            recording.pSecondaryCommandBuffers =
-                this->upCommandPool->allocateCommandBuffers(VK_COMMAND_BUFFER_LEVEL_SECONDARY, secondaryCommandBufferCount);
+            recording.pSecondaryCommandBuffers = pCommandPool->allocateCommandBuffers(VK_COMMAND_BUFFER_LEVEL_SECONDARY, secondaryCommandBufferCount);
         }
         recording.pQueue = this;
-        // recording.createFence(this->pLogicalDevice, 0);
+        recording.pCommandPool = pCommandPool;
         this->upCommandRecordings.emplace_back(std::move(std::make_unique<CommandRecording>(std::move(recording))));
         return this->upCommandRecordings.back().get();
     }
@@ -108,7 +123,7 @@ namespace fillcan {
         std::vector<CommandBuffer*> pCommandBuffers = pCommandRecording->pPrimaryCommandBuffers;
         pCommandBuffers.insert(pCommandBuffers.end(), pCommandRecording->pSecondaryCommandBuffers.begin(),
                                pCommandRecording->pSecondaryCommandBuffers.end());
-        this->upCommandPool->freeCommandBuffers(pCommandBuffers);
+        pCommandRecording->pCommandPool->freeCommandBuffers(pCommandBuffers);
         this->upCommandRecordings.erase(std::remove_if(
             this->upCommandRecordings.begin(), this->upCommandRecordings.end(),
             [pCommandRecording](std::unique_ptr<CommandRecording>& rupCommandRecording) { return rupCommandRecording.get() == pCommandRecording; }));

@@ -1,14 +1,17 @@
 #pragma once
 
 // vulkan
+#include "glm/detail/type_vec.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
+#include <cstddef>
 #include <fillcan/commands/command_recording.hpp>
 #include <fillcan/graphics/texture.hpp>
 #include <fillcan/memory/buffer.hpp>
 
 // std
+#include <functional>
 #include <memory>
 #include <string>
 #include <vector>

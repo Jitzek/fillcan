@@ -20,7 +20,7 @@ namespace fillcan {
         LogicalDevice* pLogicalDevice;
         unsigned int queueFamilyIndex;
         unsigned int queueIndex;
-        std::unique_ptr<CommandPool> upCommandPool;
+        std::vector<std::unique_ptr<CommandPool>> upCommandPools = {};
         std::vector<std::unique_ptr<CommandRecording>> upCommandRecordings = {};
 
       public:
@@ -28,7 +28,8 @@ namespace fillcan {
          * @brief Create a new Queue.
          *
          * @details The Queue class takes a pointer to a Logical Device along with the queue family index and queue index and uses this information to
-         * construct a Command Pool. Each device in Vulkan has one or more Queues. The Queue is the part of the device that does the actual work. It
+         * construct one Command Pool.
+         * Each device in Vulkan has one or more Queues. The Queue is the part of the device that does the actual work. It
          * can be thought of as a sub-device that exposes a subset of the functionality of the device.
          * Queues are grouped into one or more queue families, each containing one or more Queues. Queues within a single family are essentially
          * identical. Their capabilities are the same, their performance level and access to system resources is the same, and there is no cost (other
@@ -51,14 +52,43 @@ namespace fillcan {
         const VkQueue getQueueHandle() const;
 
         /**
+         * @brief Create a Command Pool.
+         *
+         * @param flags A bitmask of VkCommandPoolCreateFlagBits that specifies usage behavior for the pool and the command buffers assigned to it. In
+         * order to be able to call CommandBuffer#reset on the Command Buffers allocated from this Command Pool the flag
+         * VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT should be set.
+         *
+         * @return The index of the newly created Command Pool.
+         */
+        unsigned int createCommandPool(VkCommandPoolCreateFlags flags);
+
+        /**
+         * @brief Get a pointer to a Command Pool by index.
+         *
+         * @param index The index the Command Pool to get.
+         * @return A pointer to the requested Command Pool.
+         */
+        CommandPool* getCommandPool(unsigned int index = 0);
+
+        /**
+         * @brief Destroy a Command Pool by index.
+         *
+         * @param index The index of the Command Pool to destroy.
+         */
+        void destroyCommandPool(unsigned int index);
+
+        /**
          * @brief Create a Command Recording.
          *
-         * @param primaryCommandBufferCount The amount of Primary Command Buffers the Command Recording should contain.
-         * @param secondaryCommandBufferCount The amount of Secondary Command Buffers the Command Recording should contain.
+         * @param primaryCommandBufferCount The amount of Primary Command Buffers the Command Recording should allocate.
+         * @param secondaryCommandBufferCount The amount of Secondary Command Buffers the Command Recording should allocate.
+         * @param pCommandPool The Command Pool to allocate the Command Buffers from.
          *
          * @return A pointer to the created Command Recording.
+         * @throws std::runtime_error if no Command Pools are allocated.
          */
-        CommandRecording* createRecording(unsigned int primaryCommandBufferCount, unsigned int secondaryCommandBufferCount);
+        CommandRecording* createRecording(unsigned int primaryCommandBufferCount, unsigned int secondaryCommandBufferCount,
+                                          CommandPool* pCommandPool = nullptr);
 
         /**
          * @brief Submit one or more Command Recordings to be executed by the Queue.

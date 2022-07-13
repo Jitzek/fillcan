@@ -14,8 +14,10 @@
 namespace fillcan {
     class Queue;
     class LogicalDevice;
+    class CommandPool;
     struct CommandRecording {
         Queue* pQueue;
+        CommandPool* pCommandPool;
         std::vector<CommandBuffer*> pPrimaryCommandBuffers = {};
         std::vector<CommandBuffer*> pSecondaryCommandBuffers = {};
         std::vector<Semaphore*> pWaitSemaphores = {};

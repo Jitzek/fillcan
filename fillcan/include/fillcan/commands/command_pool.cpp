@@ -37,6 +37,8 @@ namespace fillcan {
         vkDestroyCommandPool(this->pLogicalDevice->getLogicalDeviceHandle(), this->hCommandPool, nullptr);
     }
 
+    const VkCommandPool CommandPool::getCommandPoolHandle() const { return this->hCommandPool; }
+
     std::vector<CommandBuffer*> CommandPool::allocateCommandBuffers(VkCommandBufferLevel level, unsigned int commandBufferCount) {
         std::vector<VkCommandBuffer> commandBufferHandles(commandBufferCount);
         VkCommandBufferAllocateInfo commandBufferAllocateInfo = {};

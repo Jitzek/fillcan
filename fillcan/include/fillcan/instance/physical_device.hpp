@@ -44,7 +44,7 @@ namespace fillcan {
          * @see https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceFeatures.html
          * @param requiredDeviceFeatures The extensions a Physical Device should enable for the purposes of the application.
          * This should be a list of strings containing the names of the extensions to enable. The available extensions can be retrieved using
-         * vkEnumerateInstanceExtensionProperties()
+         * vkEnumerateInstanceExtensionProperties().
          * @see  https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkEnumerateInstanceExtensionProperties.html ).
          */
         PhysicalDevice(VkPhysicalDevice hPhysicalDevice, Window* pWindow, std::vector<const char*> requiredExtensions,
@@ -160,7 +160,8 @@ namespace fillcan {
          * @param features A bitmask specifying the features supported by a buffer this format should support.
          * @see https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkFormatFeatureFlagBits.html
          *
-         * @return An optional value of the first format in the list of given formats that supports the given tiling and features or std::nullopt if none of the given formats supports the given tiling and features. 
+         * @return An optional value of the first format in the list of given formats that supports the given tiling and features or std::nullopt if
+         * none of the given formats supports the given tiling and features.
          * @see https://en.cppreference.com/w/cpp/utility/optional/nullopt.
          */
         const std::optional<VkFormat> findSupportedFormat(std::vector<VkFormat> formats, VkImageTiling tiling, VkFormatFeatureFlags features) const;
