@@ -63,6 +63,13 @@ namespace fillcan {
         unsigned int createCommandPool(VkCommandPoolCreateFlags flags);
 
         /**
+         * @brief Get all the created Command Pools.
+         *
+         * @return A list of pointers to the created Command Pools.
+         */
+        std::vector<CommandPool*> getCommandPools();
+
+        /**
          * @brief Get a pointer to a Command Pool by index.
          *
          * @param index The index the Command Pool to get.
@@ -82,13 +89,13 @@ namespace fillcan {
          *
          * @param primaryCommandBufferCount The amount of Primary Command Buffers the Command Recording should allocate.
          * @param secondaryCommandBufferCount The amount of Secondary Command Buffers the Command Recording should allocate.
-         * @param pCommandPool The Command Pool to allocate the Command Buffers from.
+         * @param commandPoolIndex The index of the Command Pool to allocate the Command Buffers from.
          *
          * @return A pointer to the created Command Recording.
-         * @throws std::runtime_error if no Command Pools are allocated.
+         * @throws std::runtime_error if the given index exceeds the max possible index of a Command Pool for this Queue.
          */
         CommandRecording* createRecording(unsigned int primaryCommandBufferCount, unsigned int secondaryCommandBufferCount,
-                                          CommandPool* pCommandPool = nullptr);
+                                          unsigned int commandPoolIndex = 0);
 
         /**
          * @brief Submit one or more Command Recordings to be executed by the Queue.
@@ -107,7 +114,7 @@ namespace fillcan {
          * @see CommandBuffer#reset
          *
          * @param pCommandRecording The Command Recording to reset.
-         * @param flags Additional actions to perform while resetting the Command Buffer. This is a bitmask of VkCommandBufferResetFlagBits.
+         * @param flags Additional actions to perform while resetting the Command Buffers. This is a bitmask of VkCommandBufferResetFlagBits.
          * @see https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkCommandBufferResetFlagBits.html
          * @return true if the Command Recording was succesfully reset.
          * @return false if the Command Recording failed to reset.

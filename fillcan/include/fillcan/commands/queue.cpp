@@ -15,6 +15,7 @@
 #include <iostream>
 #include <memory>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 namespace fillcan {
@@ -33,18 +34,25 @@ namespace fillcan {
         return upCommandPools.size() - 1;
     }
 
+    std::vector<CommandPool*> Queue::getCommandPools() {
+        std::vector<CommandPool*> pCommandPools = {};
+        pCommandPools.reserve(this->upCommandPools.size());
+        std::transform(this->upCommandPools.begin(), this->upCommandPools.end(), std::back_inserter(pCommandPools),
+                       [](const std::unique_ptr<CommandPool>& upCommandPool) { return upCommandPool.get(); });
+        return pCommandPools;
+    }
+
     CommandPool* Queue::getCommandPool(unsigned int index) { return this->upCommandPools.at(index).get(); }
 
     void Queue::destroyCommandPool(unsigned int index) { this->upCommandPools.erase(this->upCommandPools.begin() + index); }
 
     CommandRecording* Queue::createRecording(unsigned int primaryCommandBufferCount, unsigned int secondaryCommandBufferCount,
-                                             CommandPool* pCommandPool) {
-        if (pCommandPool == nullptr) {
-            if (this->upCommandPools.empty()) {
-                throw std::runtime_error("Attempted to create a recording without any allocated Command Pools.");
-            }
-            pCommandPool = this->upCommandPools.at(0).get();
+                                             unsigned int commandPoolIndex) {
+        if (commandPoolIndex > this->upCommandPools.size() - 1) {
+            throw std::runtime_error("Command Pool index of " + std::to_string(commandPoolIndex) + " exceeds max possible index of " +
+                                     std::to_string(this->upCommandPools.size() - 1));
         }
+        CommandPool* pCommandPool = this->getCommandPool(commandPoolIndex);
         CommandRecording recording = {};
         if (primaryCommandBufferCount > 0) {
             recording.pPrimaryCommandBuffers = pCommandPool->allocateCommandBuffers(VK_COMMAND_BUFFER_LEVEL_PRIMARY, primaryCommandBufferCount);

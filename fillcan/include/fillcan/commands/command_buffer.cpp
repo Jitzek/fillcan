@@ -12,8 +12,8 @@ namespace fillcan {
     CommandBuffer::CommandBuffer(VkCommandBuffer hCommandBuffer, VkCommandBufferLevel level) : hCommandBuffer(hCommandBuffer), level(level) {}
     CommandBuffer::~CommandBuffer() {}
 
-    VkCommandBuffer CommandBuffer::getCommandBufferHandle() const { return this->hCommandBuffer; }
-    VkCommandBufferLevel CommandBuffer::getLevel() const { return this->level; }
+    const VkCommandBuffer CommandBuffer::getCommandBufferHandle() const { return this->hCommandBuffer; }
+    const VkCommandBufferLevel CommandBuffer::getLevel() const { return this->level; }
 
     bool CommandBuffer::begin(VkCommandBufferUsageFlags flags, VkCommandBufferInheritanceInfo* pSecondaryCommandBufferInheritanceInfo) {
         if (this->level == VK_COMMAND_BUFFER_LEVEL_SECONDARY && pSecondaryCommandBufferInheritanceInfo == nullptr) {
