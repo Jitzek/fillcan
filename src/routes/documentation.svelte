@@ -87,6 +87,22 @@
     import ResetRecording from "$components/Documentation/Sections/Queue/resetRecording.svelte";
     import FreeRecording from "$components/Documentation/Sections/Queue/freeRecording.svelte";
     import QueueWaitIdle from "$components/Documentation/Sections/Queue/QueueWaitIdle.svelte";
+    import CommandPool from "$components/Documentation/Sections/Command_Pool/CommandPool.svelte";
+    import CommandPoolConstructor from "$components/Documentation/Sections/Command_Pool/CommandPoolConstructor.svelte";
+    import AllocateCommandBuffers from "$components/Documentation/Sections/Command_Pool/allocateCommandBuffers.svelte";
+    import FreeCommandBuffers from "$components/Documentation/Sections/Command_Pool/freeCommandBuffers.svelte";
+    import CommandPoolReset from "$components/Documentation/Sections/Command_Pool/CommandPoolReset.svelte";
+    import GetCommandPoolHandle from "$components/Documentation/Sections/Command_Pool/getCommandPoolHandle.svelte";
+    import GetCommandBufferHandle from "$components/Documentation/Sections/Command_Buffer/getCommandBufferHandle.svelte";
+    import GetLevel from "$components/Documentation/Sections/Command_Buffer/getLevel.svelte";
+    import CommandBufferBegin from "$components/Documentation/Sections/Command_Buffer/CommandBufferBegin.svelte";
+    import CommandBufferEnd from "$components/Documentation/Sections/Command_Buffer/CommandBufferEnd.svelte";
+    import CommandBufferReset from "$components/Documentation/Sections/Command_Buffer/CommandBufferReset.svelte";
+    import CommandBuffer from "$components/Documentation/Sections/Command_Buffer/CommandBuffer.svelte";
+    import CreateCommandPool from "$components/Documentation/Sections/Queue/createCommandPool.svelte";
+    import GetCommandPool from "$components/Documentation/Sections/Queue/getCommandPool.svelte";
+    import DestroyCommandPool from "$components/Documentation/Sections/Queue/destroyCommandPool.svelte";
+    import CommandBufferConstructor from "$components/Documentation/Sections/Command_Buffer/CommandBufferConstructor.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -618,6 +634,30 @@
             visible: false,
         },
         {
+            id: SectionID.QUEUE_createCommandPool,
+            label: "createCommandPool",
+            heading: 3,
+            content: CreateCommandPool,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.QUEUE_getCommandPool,
+            label: "getCommandPool",
+            heading: 3,
+            content: GetCommandPool,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.QUEUE_destroyCommandPool,
+            label: "destroyCommandPool",
+            heading: 3,
+            content: DestroyCommandPool,
+            props: {},
+            visible: false,
+        },
+        {
             id: SectionID.QUEUE_createRecording,
             label: "createRecording",
             heading: 3,
@@ -654,6 +694,110 @@
             label: "waitIdle",
             heading: 3,
             content: QueueWaitIdle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_POOL,
+            label: "Command Pool",
+            heading: 2,
+            content: CommandPool,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_POOL_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: CommandPoolConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_POOL_getCommandPoolHandle,
+            label: "getCommandPoolHandle",
+            heading: 3,
+            content: GetCommandPoolHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_POOL_allocateCommandBuffers,
+            label: "allocateCommandBuffers",
+            heading: 3,
+            content: AllocateCommandBuffers,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_POOL_freeCommandBuffers,
+            label: "freeCommandBuffers",
+            heading: 3,
+            content: FreeCommandBuffers,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_POOL_reset,
+            label: "reset",
+            heading: 3,
+            content: CommandPoolReset,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_BUFFER,
+            label: "Command Buffer",
+            heading: 2,
+            content: CommandBuffer,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_BUFFER_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: CommandBufferConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_BUFFER_getCommandBufferHandle,
+            label: "getCommandBufferHandle",
+            heading: 3,
+            content: GetCommandBufferHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_BUFFER_getLevel,
+            label: "getLevel",
+            heading: 3,
+            content: GetLevel,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_BUFFER_begin,
+            label: "begin",
+            heading: 3,
+            content: CommandBufferBegin,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_BUFFER_end,
+            label: "end",
+            heading: 3,
+            content: CommandBufferEnd,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_BUFFER_reset,
+            label: "reset",
+            heading: 3,
+            content: CommandBufferReset,
             props: {},
             visible: false,
         },

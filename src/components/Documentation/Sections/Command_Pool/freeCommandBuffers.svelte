@@ -11,26 +11,22 @@
 
 <Highlight
     language={cppHighlight}
-    code={`Queue(LogicalDevice* pLogicalDevice, unsigned int queueFamilyIndex, unsigned int queueIndex);`}
+    code={`void freeCommandBuffers(std::vector<CommandBuffer*> pCommandBuffers);`}
 />
 <MethodDescription>
     <span slot="details">
-        Create a new Queue.<br />
+        Free the given Command Buffers.<br />
+        Freeing a <Reference sectionID={SectionID.COMMAND_BUFFER}
+            >Command Buffer</Reference
+        > does not necessarily free all its resources, but returns them to the Command
+        Pool from which they were allocated.
     </span>
     <div slot="params">
         <li>
-            <code>pLogicalDevice</code><br />
-            A pointer to the <Reference sectionID={SectionID.LOGICAL_DEVICE}
-                >Logical Device</Reference
-            > that owns the Queue.
-        </li>
-        <li>
-            <code>queueFamilyIndex</code><br />
-            The index of the chosen queue family.
-        </li>
-        <li>
-            <code>queueIndex</code><br />
-            The index of the chosen queue from the queue family.
+            <code>pCommandBuffers</code><br />
+            The <Reference sectionID={SectionID.COMMAND_BUFFER}
+                >Command Buffers</Reference
+            > to free.
         </li>
     </div>
 </MethodDescription>

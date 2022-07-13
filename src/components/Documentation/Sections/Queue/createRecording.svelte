@@ -11,7 +11,10 @@
 
 <Highlight
     language={cppHighlight}
-    code={`CommandRecording* createRecording(unsigned int primaryCommandBufferCount, unsigned int secondaryCommandBufferCount);`}
+    code={`CommandRecording* createRecording(
+        unsigned int primaryCommandBufferCount, 
+        unsigned int secondaryCommandBufferCount,
+        CommandPool* pCommandPool = nullptr\n);`}
 />
 <MethodDescription>
     <span slot="details">
@@ -26,7 +29,7 @@
                 sectionID={SectionID.COMMAND_BUFFER}>Command Buffers</Reference
             > the <Reference sectionID={SectionID.COMMAND_RECORDING}
                 >Command Recording</Reference
-            > should contain.
+            > should allocate.
         </li>
         <li>
             <code>secondaryCommandBufferCount</code><br />
@@ -34,13 +37,29 @@
                 sectionID={SectionID.COMMAND_BUFFER}>Command Buffers</Reference
             > the <Reference sectionID={SectionID.COMMAND_RECORDING}
                 >Command Recording</Reference
-            > should contain.
+            > should allocate.
+        </li>
+        <li>
+            <code>pCommandPool</code><br />
+            The <Reference sectionID={SectionID.COMMAND_POOL}
+                >Command Pool</Reference
+            > to allocate the <Reference sectionID={SectionID.COMMAND_BUFFER}
+                >Command Buffers</Reference
+            > from.<br />
+            If <code>nullptr</code>, it will default to the first <Reference
+                sectionID={SectionID.COMMAND_POOL}>Command Pool</Reference
+            > it can find.
         </li>
     </div>
     <span slot="return">
         A pointer to the created <Reference
             sectionID={SectionID.COMMAND_RECORDING}>Command Recording</Reference
         >.
+    </span>
+    <span slot="throws">
+        <code>std::runtime_error</code> if no <Reference
+            sectionID={SectionID.COMMAND_POOL}>Command Pools</Reference
+        > are allocated.
     </span>
 </MethodDescription>
 

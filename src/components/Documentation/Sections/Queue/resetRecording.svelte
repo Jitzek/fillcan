@@ -25,42 +25,7 @@
         > in the given <Reference sectionID={SectionID.COMMAND_RECORDING}
             >Command Recording</Reference
         >.
-
-        <br />
-        <br />
-        <span style="color: orange;">TODO:</span> Move to <Reference
-            sectionID={SectionID.COMMAND_BUFFER}>Command Buffer</Reference
-        >.<br />
-        Many applications use a similar set of commands to render all or part of
-        each frame. Therefore, it is likely that similar <Reference
-            sectionID={SectionID.COMMAND_BUFFER}>Command Buffers</Reference
-        > are included in the application over and over again.<br />
-        Allocating and freeing <Reference sectionID={SectionID.COMMAND_BUFFER}
-            >Command Buffers</Reference
-        > (using <Reference sectionID={SectionID.QUEUE_freeRecording}
-            >freeRecording</Reference
-        >) every frame is a relatively heavy operation. If the application
-        reuses a <Reference sectionID={SectionID.COMMAND_BUFFER}
-            >Command Buffer</Reference
-        > many times in a row for similar work, it may be more efficient to reset
-        the <Reference sectionID={SectionID.COMMAND_BUFFER}
-            >Command Buffer</Reference
-        >.<br />
-        This effectively restores the <Reference
-            sectionID={SectionID.COMMAND_BUFFER}>Command Buffer</Reference
-        > to its original state, but does not necessarily interact with the <Reference
-            sectionID={SectionID.COMMAND_POOL}>Command Pool</Reference
-        > to do so. Therefore, if the <Reference
-            sectionID={SectionID.COMMAND_BUFFER}>Command Buffer</Reference
-        > dynamically allocates resources from the <Reference
-            sectionID={SectionID.COMMAND_POOL}>Command Pool</Reference
-        > as the <Reference sectionID={SectionID.COMMAND_BUFFER}
-            >Command Buffer</Reference
-        > grows, the <Reference sectionID={SectionID.COMMAND_BUFFER}
-            >Command Buffer</Reference
-        > can hold onto those resources and avoid the cost of reallocation the next
-        time it is rebuilt.</span
-    >
+    </span>
     <div slot="params">
         <li>
             <code>pCommandRecordings</code><br />

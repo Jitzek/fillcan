@@ -28,17 +28,6 @@
         > in the given <Reference sectionID={SectionID.COMMAND_RECORDING}
             >Command Recording</Reference
         >.
-
-        <br />
-        <br />
-        <span style="color: orange;">TODO:</span> Move to <Reference
-            sectionID={SectionID.COMMAND_POOL}>Command Pool</Reference
-        >.<br />
-        Freeing a <Reference sectionID={SectionID.COMMAND_BUFFER}
-            >Command Buffer</Reference
-        > does not necessarily free all its resources, but returns them to the <Reference
-            sectionID={SectionID.COMMAND_POOL}>Command Pool</Reference
-        > from which they were allocated.
     </span>
     <div slot="params">
         <li>

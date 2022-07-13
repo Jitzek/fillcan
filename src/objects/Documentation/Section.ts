@@ -90,14 +90,31 @@ export enum SectionID {
     QUEUE = "Queue",
     QUEUE_Constructor = "Queue-Constructor",
     QUEUE_getQueueHandle = "Queue-getQueueHandle",
+    QUEUE_createCommandPool = "Queue-createCommandPool",
+    QUEUE_getCommandPool = "Queue-getCommandPool",
+    QUEUE_destroyCommandPool = "Queue-destroyCommandPool",
     QUEUE_createRecording = "Queue-createRecording",
     QUEUE_submitRecordings = "Queue-submitRecordings",
     QUEUE_resetRecording = "Queue-resetRecording",
     QUEUE_freeRecording = "Queue-freeRecording",
     QUEUE_waitIdle = "Queue-waitIdle",
 
+    // COMMAND POOL
     COMMAND_POOL = "Command-Pool",
+    COMMAND_POOL_Constructor = "Command-Pool-Constructor",
+    COMMAND_POOL_getCommandPoolHandle = "Command-Pool-getCommandPoolHandle",
+    COMMAND_POOL_allocateCommandBuffers = "Command-Pool-allocateCommandBuffers",
     COMMAND_POOL_freeCommandBuffers = "Command-Pool-freeCommandBuffers",
+    COMMAND_POOL_reset = "Command-Pool-reset",
+
+    // COMMAND BUFFER
+    COMMAND_BUFFER = "Command-Buffer",
+    COMMAND_BUFFER_Constructor = "Command-Buffer-Constructor",
+    COMMAND_BUFFER_getCommandBufferHandle = "Command-Buffer-getCommandBufferHandle",
+    COMMAND_BUFFER_getLevel = "Command-Buffer-getLevel",
+    COMMAND_BUFFER_begin = "Command-Buffer-begin",
+    COMMAND_BUFFER_end = "Command-Buffer-end",
+    COMMAND_BUFFER_reset = "Command-Buffer-reset",
 
     SWAPCHAIN = "Swapchain",
     DESCRIPTOR_SET_LAYOUT_BUILDER = "Descriptor-Set-Layout-Builder",
@@ -106,9 +123,6 @@ export enum SectionID {
     DESCRIPTOR_POOL = "Descriptor-Pool",
     DESCRIPTOR_SET = "Descriptor-Set",
     COMMAND_RECORDING = "Command-Recording",
-
-    COMMAND_BUFFER = "Command-Buffer",
-    COMMAND_BUFFER_reset = "Command-Buffer-reset",
 
     ASSET_MANAGER = "Asset-Manager",
     BUFFER = "Buffer",

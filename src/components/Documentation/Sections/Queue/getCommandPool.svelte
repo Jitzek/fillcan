@@ -11,28 +11,30 @@
 
 <Highlight
     language={cppHighlight}
-    code={`Queue(LogicalDevice* pLogicalDevice, unsigned int queueFamilyIndex, unsigned int queueIndex);`}
+    code={`CommandPool* getCommandPool(unsigned int index = 0);`}
 />
 <MethodDescription>
     <span slot="details">
-        Create a new Queue.<br />
+        Get a pointer to a <Reference sectionID={SectionID.COMMAND_POOL}
+            >Command Pool</Reference
+        > by index.
     </span>
     <div slot="params">
         <li>
-            <code>pLogicalDevice</code><br />
-            A pointer to the <Reference sectionID={SectionID.LOGICAL_DEVICE}
-                >Logical Device</Reference
-            > that owns the Queue.
-        </li>
-        <li>
-            <code>queueFamilyIndex</code><br />
-            The index of the chosen queue family.
-        </li>
-        <li>
-            <code>queueIndex</code><br />
-            The index of the chosen queue from the queue family.
+            <code>index</code><br />
+            The index of the <Reference sectionID={SectionID.COMMAND_POOL}
+                >Command Pool</Reference
+            > to get. This index was returned by <Reference
+                sectionID={SectionID.QUEUE_createCommandPool}
+                >createCommandPool</Reference
+            >.
         </li>
     </div>
+    <span slot="return"
+        >A pointer to the requested <Reference
+            sectionID={SectionID.COMMAND_POOL}>Command Pool</Reference
+        >.
+    </span>
 </MethodDescription>
 
 <style lang="scss">

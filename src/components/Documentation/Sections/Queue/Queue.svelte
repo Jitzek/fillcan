@@ -10,13 +10,13 @@
 
 <Highlight
     language={cppHighlight}
-    code={"Queue(LogicalDevice* pLogicalDevice, unsigned int queueFamilyIndex, unsigned int queueIndex);"}
+    code={"#include <fillcan/commands/queue.hpp>"}
 />
 
 The <code>Queue</code> class takes a pointer to a <Reference
     sectionID={SectionID.LOGICAL_DEVICE}>Logical Device</Reference
 > along with the queue family index and queue index and uses this information to
-construct a <Reference sectionID={SectionID.COMMAND_POOL}
+construct one <Reference sectionID={SectionID.COMMAND_POOL}
     >Command Pool</Reference
 >.<br />
 Each device in Vulkan has one or more Queues. The Queue is the part of the device
