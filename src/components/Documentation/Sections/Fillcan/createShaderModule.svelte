@@ -28,7 +28,7 @@
         shader might need should be passed using the descriptor set layouts and
         the descriptor pool, both are <Anchor
             href="https://en.cppreference.com/w/cpp/memory/unique_ptr"
-            >unique pointers</Anchor
+            target="_blank">unique pointers</Anchor
         > which ownerships should be moved to the Shader Module using <Anchor
             href="https://en.cppreference.com/w/cpp/utility/move"
             >std::move</Anchor
@@ -52,7 +52,10 @@
         </li>
         <li>
             <code>upDescriptorSetLayouts</code><br />
-            A unique pointer to a list of the <Anchor
+            A <Anchor
+                href="https://en.cppreference.com/w/cpp/memory/unique_ptr"
+                target="_blank">unique pointer</Anchor
+            > to a list of the <Anchor
                 href="{getState().URL
                     .documentation}#{SectionID.DESCRIPTOR_SET_LAYOUT}"
                 >Descriptor Set Layouts</Anchor

@@ -11,28 +11,18 @@
 
 <Highlight
     language={cppHighlight}
-    code={`bool resetRecording(CommandRecording* pCommandRecording, VkCommandBufferResetFlags flags);`}
+    code={`bool reset(VkCommandBufferResetFlags flags = 0);`}
 />
 <MethodDescription>
     <span slot="details">
-        Reset a <Reference sectionID={SectionID.COMMAND_RECORDING}
-            >Command Recording</Reference
-        >.<br />
-        This will call <Reference sectionID={SectionID.COMMAND_BUFFER_reset}
-            >reset</Reference
-        > on every <Reference sectionID={SectionID.COMMAND_BUFFER}
-            >Command Buffer</Reference
-        > in the given <Reference sectionID={SectionID.COMMAND_RECORDING}
-            >Command Recording</Reference
-        >.
+        Resets the recording and resets all structure variables to their default
+        values.<br />
+        Calls <Reference sectionID={SectionID.QUEUE_resetRecording}
+            >resetRecording</Reference
+        > for this recording before resetting all structure variables to their default
+        values.
     </span>
     <div slot="params">
-        <li>
-            <code>pCommandRecordings</code><br />
-            The <Reference sectionID={SectionID.COMMAND_RECORDING}
-                >Command Recordings</Reference
-            > to reset.
-        </li>
         <li>
             <code>flags</code><br />
             Additional actions to perform while resetting the <Reference
@@ -44,12 +34,8 @@
         </li>
     </div>
     <span slot="return">
-        <code>true</code> if the <Reference
-            sectionID={SectionID.COMMAND_RECORDING}>Command Recording</Reference
-        > was succesfully reset.
-        <code>false</code> if the <Reference
-            sectionID={SectionID.COMMAND_RECORDING}>Command Recording</Reference
-        > failed to reset.
+        <code>true</code> if the recording was succesfully reset.
+        <code>false</code> if the recording failed to reset.
     </span>
 </MethodDescription>
 

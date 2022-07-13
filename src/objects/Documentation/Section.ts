@@ -91,6 +91,7 @@ export enum SectionID {
     QUEUE_Constructor = "Queue-Constructor",
     QUEUE_getQueueHandle = "Queue-getQueueHandle",
     QUEUE_createCommandPool = "Queue-createCommandPool",
+    QUEUE_getCommandPools = "Queue-getCommandPools",
     QUEUE_getCommandPool = "Queue-getCommandPool",
     QUEUE_destroyCommandPool = "Queue-destroyCommandPool",
     QUEUE_createRecording = "Queue-createRecording",
@@ -116,13 +117,21 @@ export enum SectionID {
     COMMAND_BUFFER_end = "Command-Buffer-end",
     COMMAND_BUFFER_reset = "Command-Buffer-reset",
 
+    // COMMAND RECORDING
+    COMMAND_RECORDING = "Command-Recording",
+    COMMAND_RECORDING_endAll = "Command-Recording-endAll",
+    COMMAND_RECORDING_submit = "Command-Recording-submit",
+    COMMAND_RECORDING_reset = "Command-Recording-reset",
+    COMMAND_RECORDING_free = "Command-Recording-free",
+    COMMAND_RECORDING_createFence = "Command-Recording-createFence",
+    COMMAND_RECORDING_waitForFence = "Command-Recording-waitForFence",
+
     SWAPCHAIN = "Swapchain",
     DESCRIPTOR_SET_LAYOUT_BUILDER = "Descriptor-Set-Layout-Builder",
     DESCRIPTOR_SET_LAYOUT = "Descriptor-Set-Layout",
     DESCRIPTOR_POOL_BUILDER = "Descriptor-Pool-Builder",
     DESCRIPTOR_POOL = "Descriptor-Pool",
     DESCRIPTOR_SET = "Descriptor-Set",
-    COMMAND_RECORDING = "Command-Recording",
 
     ASSET_MANAGER = "Asset-Manager",
     BUFFER = "Buffer",

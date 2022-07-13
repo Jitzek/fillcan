@@ -103,6 +103,14 @@
     import GetCommandPool from "$components/Documentation/Sections/Queue/getCommandPool.svelte";
     import DestroyCommandPool from "$components/Documentation/Sections/Queue/destroyCommandPool.svelte";
     import CommandBufferConstructor from "$components/Documentation/Sections/Command_Buffer/CommandBufferConstructor.svelte";
+    import GetCommandPools from "$components/Documentation/Sections/Queue/getCommandPools.svelte";
+    import CommandRecording from "$components/Documentation/Sections/Command_Recording/CommandRecording.svelte";
+    import CommandRecordingEndAll from "$components/Documentation/Sections/Command_Recording/CommandRecordingEndAll.svelte";
+    import CommandRecordingSubmit from "$components/Documentation/Sections/Command_Recording/CommandRecordingSubmit.svelte";
+    import CommandRecordingReset from "$components/Documentation/Sections/Command_Recording/CommandRecordingReset.svelte";
+    import CommandRecordingFree from "$components/Documentation/Sections/Command_Recording/CommandRecordingFree.svelte";
+    import CommandRecordingCreateFence from "$components/Documentation/Sections/Command_Recording/CommandRecordingCreateFence.svelte";
+    import CommandRecordingWaitForFence from "$components/Documentation/Sections/Command_Recording/CommandRecordingWaitForFence.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -642,6 +650,14 @@
             visible: false,
         },
         {
+            id: SectionID.QUEUE_getCommandPools,
+            label: "getCommandPools",
+            heading: 3,
+            content: GetCommandPools,
+            props: {},
+            visible: false,
+        },
+        {
             id: SectionID.QUEUE_getCommandPool,
             label: "getCommandPool",
             heading: 3,
@@ -798,6 +814,62 @@
             label: "reset",
             heading: 3,
             content: CommandBufferReset,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_RECORDING,
+            label: "Command Recording",
+            heading: 2,
+            content: CommandRecording,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_RECORDING_endAll,
+            label: "endAll",
+            heading: 3,
+            content: CommandRecordingEndAll,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_RECORDING_submit,
+            label: "submit",
+            heading: 3,
+            content: CommandRecordingSubmit,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_RECORDING_reset,
+            label: "reset",
+            heading: 3,
+            content: CommandRecordingReset,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_RECORDING_free,
+            label: "free",
+            heading: 3,
+            content: CommandRecordingFree,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_RECORDING_createFence,
+            label: "createFence",
+            heading: 3,
+            content: CommandRecordingCreateFence,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMMAND_RECORDING_waitForFence,
+            label: "waitForFence",
+            heading: 3,
+            content: CommandRecordingWaitForFence,
             props: {},
             visible: false,
         },

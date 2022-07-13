@@ -14,7 +14,7 @@
     code={`CommandRecording* createRecording(
         unsigned int primaryCommandBufferCount, 
         unsigned int secondaryCommandBufferCount,
-        CommandPool* pCommandPool = nullptr\n);`}
+        unsigned int commandPoolIndex = 0\n);`}
 />
 <MethodDescription>
     <span slot="details">
@@ -40,15 +40,12 @@
             > should allocate.
         </li>
         <li>
-            <code>pCommandPool</code><br />
-            The <Reference sectionID={SectionID.COMMAND_POOL}
+            <code>commandPoolIndex</code><br />
+            The index of the <Reference sectionID={SectionID.COMMAND_POOL}
                 >Command Pool</Reference
             > to allocate the <Reference sectionID={SectionID.COMMAND_BUFFER}
                 >Command Buffers</Reference
-            > from.<br />
-            If <code>nullptr</code>, it will default to the first <Reference
-                sectionID={SectionID.COMMAND_POOL}>Command Pool</Reference
-            > it can find.
+            > from.
         </li>
     </div>
     <span slot="return">
@@ -57,9 +54,10 @@
         >.
     </span>
     <span slot="throws">
-        <code>std::runtime_error</code> if no <Reference
-            sectionID={SectionID.COMMAND_POOL}>Command Pools</Reference
-        > are allocated.
+        <code>std::runtime_error</code> if the given index exceeds the max
+        possible index of a <Reference sectionID={SectionID.COMMAND_POOL}
+            >Command Pool</Reference
+        > for this Queue.
     </span>
 </MethodDescription>
 
