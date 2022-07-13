@@ -7,7 +7,6 @@
 // glm
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #define GLM_FORCE_RADIANS
-#include <glm/detail/func_trigonometric.hpp>
 #include <glm/detail/type_mat.hpp>
 #include <glm/detail/type_vec.hpp>
 #include <glm/glm.hpp>
