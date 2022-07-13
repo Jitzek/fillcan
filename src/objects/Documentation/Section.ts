@@ -126,7 +126,21 @@ export enum SectionID {
     COMMAND_RECORDING_createFence = "Command-Recording-createFence",
     COMMAND_RECORDING_waitForFence = "Command-Recording-waitForFence",
 
+    // SWAPCHAIN
     SWAPCHAIN = "Swapchain",
+    SWAPCHAIN_Constructor = "Swapchain-Constructor",
+    SWAPCHAIN_getSwapchainHandle = "Swapchain-getSwapchainHandle",
+    SWAPCHAIN_getNextImage = "Swapchain-getNextImage",
+    SWAPCHAIN_getSurfaceFormat = "Swapchain-getSurfaceFormat",
+    SWAPCHAIN_getImageCount = "Swapchain-getImageCount",
+    SWAPCHAIN_getImageArrayLayers = "Swapchain-getImageArrayLayers",
+    SWAPCHAIN_getImageUsage = "Swapchain-getImageUsage",
+    SWAPCHAIN_getImageSharingMode = "Swapchain-getImageSharingMode",
+    SWAPCHAIN_getImageExtent = "Swapchain-getImageExtent",
+    SWAPCHAIN_getPresentMode = "Swapchain-getPresentMode",
+    SWAPCHAIN_getQueueFamilyIndices = "Swapchain-getQueueFamilyIndices",
+    SWAPCHAIN_present = "Swapchain-present",
+
     DESCRIPTOR_SET_LAYOUT_BUILDER = "Descriptor-Set-Layout-Builder",
     DESCRIPTOR_SET_LAYOUT = "Descriptor-Set-Layout",
     DESCRIPTOR_POOL_BUILDER = "Descriptor-Pool-Builder",

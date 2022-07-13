@@ -111,6 +111,19 @@
     import CommandRecordingFree from "$components/Documentation/Sections/Command_Recording/CommandRecordingFree.svelte";
     import CommandRecordingCreateFence from "$components/Documentation/Sections/Command_Recording/CommandRecordingCreateFence.svelte";
     import CommandRecordingWaitForFence from "$components/Documentation/Sections/Command_Recording/CommandRecordingWaitForFence.svelte";
+    import Swapchain from "$components/Documentation/Sections/Swapchain/Swapchain.svelte";
+    import SwapchainConstructor from "$components/Documentation/Sections/Swapchain/SwapchainConstructor.svelte";
+    import GetSwapchainHandle from "$components/Documentation/Sections/Swapchain/getSwapchainHandle.svelte";
+    import SwapchaingetNextImage from "$components/Documentation/Sections/Swapchain/SwapchaingetNextImage.svelte";
+    import SwapchainGetSurfaceFormat from "$components/Documentation/Sections/Swapchain/SwapchainGetSurfaceFormat.svelte";
+    import SwapchainGetImageCount from "$components/Documentation/Sections/Swapchain/SwapchainGetImageCount.svelte";
+    import SwapchainGetImageArrayLayers from "$components/Documentation/Sections/Swapchain/SwapchainGetImageArrayLayers.svelte";
+    import SwapchainGetImageUsage from "$components/Documentation/Sections/Swapchain/SwapchainGetImageUsage.svelte";
+    import SwapchainGetImageSharingMode from "$components/Documentation/Sections/Swapchain/SwapchainGetImageSharingMode.svelte";
+    import SwapchainGetPresentMode from "$components/Documentation/Sections/Swapchain/SwapchainGetPresentMode.svelte";
+    import SwapchainGetImageExtent from "$components/Documentation/Sections/Swapchain/SwapchainGetImageExtent.svelte";
+    import SwapchainGetQueueFamilyIndices from "$components/Documentation/Sections/Swapchain/SwapchainGetQueueFamilyIndices.svelte";
+    import SwapchainPresent from "$components/Documentation/Sections/Swapchain/SwapchainPresent.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -870,6 +883,110 @@
             label: "waitForFence",
             heading: 3,
             content: CommandRecordingWaitForFence,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SWAPCHAIN,
+            label: "Swapchain",
+            heading: 2,
+            content: Swapchain,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SWAPCHAIN_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: SwapchainConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SWAPCHAIN_getSwapchainHandle,
+            label: "getSwapchainHandle",
+            heading: 3,
+            content: GetSwapchainHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SWAPCHAIN_getNextImage,
+            label: "getNextImage",
+            heading: 3,
+            content: SwapchaingetNextImage,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SWAPCHAIN_getSurfaceFormat,
+            label: "getSurfaceFormat",
+            heading: 3,
+            content: SwapchainGetSurfaceFormat,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SWAPCHAIN_getImageCount,
+            label: "getImageCount",
+            heading: 3,
+            content: SwapchainGetImageCount,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SWAPCHAIN_getImageArrayLayers,
+            label: "getImageArrayLayers",
+            heading: 3,
+            content: SwapchainGetImageArrayLayers,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SWAPCHAIN_getImageUsage,
+            label: "getImageUsage",
+            heading: 3,
+            content: SwapchainGetImageUsage,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SWAPCHAIN_getImageSharingMode,
+            label: "getImageSharingMode",
+            heading: 3,
+            content: SwapchainGetImageSharingMode,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SWAPCHAIN_getImageExtent,
+            label: "getImageExtent",
+            heading: 3,
+            content: SwapchainGetImageExtent,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SWAPCHAIN_getPresentMode,
+            label: "getPresentMode",
+            heading: 3,
+            content: SwapchainGetPresentMode,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SWAPCHAIN_getQueueFamilyIndices,
+            label: "getQueueFamilyIndices",
+            heading: 3,
+            content: SwapchainGetQueueFamilyIndices,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SWAPCHAIN_present,
+            label: "present",
+            heading: 3,
+            content: SwapchainPresent,
             props: {},
             visible: false,
         },
