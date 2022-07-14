@@ -117,7 +117,7 @@ namespace fillcan {
         vkDestroySwapchainKHR(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSwapchain, nullptr);
     }
 
-    VkSwapchainKHR Swapchain::getSwapchainHandle() { return this->hSwapchain; }
+    const VkSwapchainKHR Swapchain::getSwapchainHandle() const { return this->hSwapchain; }
 
     uint32_t Swapchain::getImageCount() { return this->upSwapchainImages.size(); }
 
@@ -146,7 +146,7 @@ namespace fillcan {
         SwapchainImage returnImage = {.outOfDate = false,
                                       .index = swapchainImageIndex,
                                       .pSwapchainImageView = this->upSwapchainImages.at(this->currentImageIndex)->getImageViews().at(0),
-                                      .pDepthBufferImageView = this->upDepthImages.at(this->currentImageIndex)->getImageViews().at(0),
+                                      .pDepthImageView = this->upDepthImages.at(this->currentImageIndex)->getImageViews().at(0),
                                       .pSemaphoreImageReady = this->upImageReadySemaphores[this->currentImageIndex].get(),
                                       .pSemaphorePresentReady = this->upPresentReadySemaphores.at(this->currentImageIndex).get()};
         this->currentImageIndex = (this->currentImageIndex + 1) % (this->getImageCount());
