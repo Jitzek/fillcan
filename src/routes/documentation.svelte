@@ -125,6 +125,22 @@
     import SwapchainGetQueueFamilyIndices from "$components/Documentation/Sections/Swapchain/SwapchainGetQueueFamilyIndices.svelte";
     import SwapchainPresent from "$components/Documentation/Sections/Swapchain/SwapchainPresent.svelte";
     import SwapchainImage from "$components/Documentation/Sections/Swapchain/SwapchainImage.svelte";
+    import Buffer from "$components/Documentation/Sections/Buffer/Buffer.svelte";
+    import BufferConstructor from "$components/Documentation/Sections/Buffer/BufferConstructor.svelte";
+    import GetBufferHandle from "$components/Documentation/Sections/Buffer/getBufferHandle.svelte";
+    import BufferGetFlags from "$components/Documentation/Sections/Buffer/BufferGetFlags.svelte";
+    import BufferGetSize from "$components/Documentation/Sections/Buffer/BufferGetSize.svelte";
+    import BufferGetUsage from "$components/Documentation/Sections/Buffer/BufferGetUsage.svelte";
+    import BufferGetSharingMode from "$components/Documentation/Sections/Buffer/BufferGetSharingMode.svelte";
+    import BufferGetQueueFamilyIndices from "$components/Documentation/Sections/Buffer/BufferGetQueueFamilyIndices.svelte";
+    import BufferBindMemory from "$components/Documentation/Sections/Buffer/BufferBindMemory.svelte";
+    import BufferGetMemory from "$components/Documentation/Sections/Buffer/BufferGetMemory.svelte";
+    import BufferCreateBufferView from "$components/Documentation/Sections/Buffer/BufferCreateBufferView.svelte";
+    import BufferGetBufferView from "$components/Documentation/Sections/Buffer/BufferGetBufferView.svelte";
+    import BufferGetBufferViews from "$components/Documentation/Sections/Buffer/BufferGetBufferViews.svelte";
+    import BufferDestroyBufferView from "$components/Documentation/Sections/Buffer/BufferDestroyBufferView.svelte";
+    import BufferDestroyBufferViews from "$components/Documentation/Sections/Buffer/BufferDestroyBufferViews.svelte";
+    import BufferCopyTo from "$components/Documentation/Sections/Buffer/BufferCopyTo.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -996,6 +1012,134 @@
             label: "present",
             heading: 3,
             content: SwapchainPresent,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER,
+            label: "Buffer",
+            heading: 2,
+            content: Buffer,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: BufferConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_getBufferHandle,
+            label: "getBufferHandle",
+            heading: 3,
+            content: GetBufferHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_getFlags,
+            label: "getFlags",
+            heading: 3,
+            content: BufferGetFlags,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_getSize,
+            label: "getSize",
+            heading: 3,
+            content: BufferGetSize,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_getUsage,
+            label: "getUsage",
+            heading: 3,
+            content: BufferGetUsage,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_getSharingMode,
+            label: "getSharingMode",
+            heading: 3,
+            content: BufferGetSharingMode,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_getQueueFamilyIndices,
+            label: "getQueueFamilyIndices",
+            heading: 3,
+            content: BufferGetQueueFamilyIndices,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_bindMemory,
+            label: "bindMemory",
+            heading: 3,
+            content: BufferBindMemory,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_getMemory,
+            label: "getMemory",
+            heading: 3,
+            content: BufferGetMemory,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_createBufferView,
+            label: "createBufferView",
+            heading: 3,
+            content: BufferCreateBufferView,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_getBufferView,
+            label: "getBufferView",
+            heading: 3,
+            content: BufferGetBufferView,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_getBufferViews,
+            label: "getBufferViews",
+            heading: 3,
+            content: BufferGetBufferViews,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_destroyBufferView,
+            label: "destroyBufferView",
+            heading: 3,
+            content: BufferDestroyBufferView,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_destroyBufferViews,
+            label: "destroyBufferViews",
+            heading: 3,
+            content: BufferDestroyBufferViews,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_copyTo,
+            label: "copyTo",
+            heading: 3,
+            content: BufferCopyTo,
             props: {},
             visible: false,
         },
