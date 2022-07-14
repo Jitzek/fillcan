@@ -69,9 +69,9 @@ namespace fillcan {
 
     Memory* Buffer::getMemory() const { return this->pMemory; }
 
-    BufferView* Buffer::createBufferView(VkFormat format, VkDeviceSize size, VkDeviceSize range) {
+    unsigned int Buffer::createBufferView(VkFormat format, VkDeviceSize size, VkDeviceSize range) {
         this->upBufferViews.emplace_back(std::make_unique<BufferView>(this->pLogicalDevice, this, format, size, range));
-        return this->upBufferViews.back().get();
+        return this->upBufferViews.size() - 1;
     }
 
     std::vector<BufferView*> Buffer::getBufferViews() {
@@ -81,6 +81,12 @@ namespace fillcan {
                        [](const std::unique_ptr<BufferView>& upBufferView) { return upBufferView.get(); });
         return pBufferViews;
     }
+
+    BufferView* Buffer::getBufferView(unsigned int index) { return this->upBufferViews.at(index).get(); }
+
+    void Buffer::destroyBufferView(unsigned int index) { this->upBufferViews.erase(this->upBufferViews.begin() + index); }
+
+    void Buffer::destroyBufferViews() { this->upBufferViews.clear(); }
 
     void Buffer::copyTo(CommandBuffer* pCommandBuffer, Buffer* pBuffer, std::vector<VkBufferCopy>& regions) {
         vkCmdCopyBuffer(pCommandBuffer->getCommandBufferHandle(), this->hBuffer, pBuffer->getBufferHandle(), static_cast<uint32_t>(regions.size()),

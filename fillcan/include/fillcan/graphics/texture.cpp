@@ -103,17 +103,7 @@ namespace fillcan {
 
     Image* Texture::getImage() { return this->upImage.get(); }
 
-    ImageView* Texture::getImageView() { return this->upImage->getImageViews().at(0); }
+    ImageView* Texture::getImageView() { return this->upImage->getImageView(0); }
 
     Sampler* Texture::getSampler() { return this->upSampler.get(); }
-
-    // void Texture::write() {
-    //     CommandRecording* pCommandRecording = this->pLogicalDevice->beginSingleTimeCommandRecording(this->pLogicalDevice->getGraphicsQueue());
-    //     this->upImage->transitionImageLayout(pCommandRecording->pPrimaryCommandBuffers[0], VK_IMAGE_LAYOUT_UNDEFINED,
-    //                                          VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, 0, VK_ACCESS_SHADER_READ_BIT,
-    //                                          VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
-    //     this->pLogicalDevice->endSingleTimeCommandRecording(pCommandRecording);
-    //     this->pDescriptorSet->writeImage(this->descriptorSetBinding, this->upImage->getImageViews()[0], VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-    //                                this->upSampler.get());
-    // }
 } // namespace fillcan

@@ -145,8 +145,8 @@ namespace fillcan {
 
         SwapchainImage returnImage = {.outOfDate = false,
                                       .index = swapchainImageIndex,
-                                      .pSwapchainImageView = this->upSwapchainImages.at(this->currentImageIndex)->getImageViews().at(0),
-                                      .pDepthImageView = this->upDepthImages.at(this->currentImageIndex)->getImageViews().at(0),
+                                      .pSwapchainImageView = this->upSwapchainImages.at(this->currentImageIndex)->getImageView(0),
+                                      .pDepthImageView = this->upDepthImages.at(this->currentImageIndex)->getImageView(0),
                                       .pSemaphoreImageReady = this->upImageReadySemaphores[this->currentImageIndex].get(),
                                       .pSemaphorePresentReady = this->upPresentReadySemaphores.at(this->currentImageIndex).get()};
         this->currentImageIndex = (this->currentImageIndex + 1) % (this->getImageCount());
