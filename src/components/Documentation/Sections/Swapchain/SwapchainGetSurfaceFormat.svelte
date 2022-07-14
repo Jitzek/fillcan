@@ -1,0 +1,30 @@
+<script lang="ts">
+    import Anchor from "$components/Documentation/Anchor.svelte";
+    import MethodDescription from "$components/Documentation/MethodDescription.svelte";
+    import Reference from "$components/Documentation/Reference.svelte";
+    import { SectionID } from "$objects/Documentation/Section";
+    import { getState } from "$stores/StateStore";
+    import { Highlight } from "svelte-highlight";
+
+    import cppHighlight from "svelte-highlight/languages/cpp";
+</script>
+
+<Highlight
+    language={cppHighlight}
+    code={`VkSurfaceFormatKHR getSurfaceFormat();`}
+/>
+<MethodDescription>
+    <span slot="details">
+        Get the intended Swapchain format and colorspace pair.</span
+    >
+    <span slot="return">
+        A <Anchor
+            href="https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkSurfaceFormatKHR.html"
+            target="_blank">VkSurfaceFormatKHR</Anchor
+        >-structure describing the intended Swapchain format and colorspace
+        pair.
+    </span>
+</MethodDescription>
+
+<style lang="scss">
+</style>

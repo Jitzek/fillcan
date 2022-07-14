@@ -128,6 +128,7 @@ export enum SectionID {
 
     // SWAPCHAIN
     SWAPCHAIN = "Swapchain",
+    SWAPCHAIN_Swapchain_Image = "Swapchain-Swapchain-Image",
     SWAPCHAIN_Constructor = "Swapchain-Constructor",
     SWAPCHAIN_getSwapchainHandle = "Swapchain-getSwapchainHandle",
     SWAPCHAIN_getNextImage = "Swapchain-getNextImage",
@@ -150,6 +151,7 @@ export enum SectionID {
     ASSET_MANAGER = "Asset-Manager",
     BUFFER = "Buffer",
     IMAGE = "Image",
+    IMAGE_VIEW = "Image-View",
     FENCE = "Fence",
     SEMAPHORE = "Semaphore",
 }

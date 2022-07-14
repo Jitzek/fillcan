@@ -124,6 +124,7 @@
     import SwapchainGetImageExtent from "$components/Documentation/Sections/Swapchain/SwapchainGetImageExtent.svelte";
     import SwapchainGetQueueFamilyIndices from "$components/Documentation/Sections/Swapchain/SwapchainGetQueueFamilyIndices.svelte";
     import SwapchainPresent from "$components/Documentation/Sections/Swapchain/SwapchainPresent.svelte";
+    import SwapchainImage from "$components/Documentation/Sections/Swapchain/SwapchainImage.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -891,6 +892,14 @@
             label: "Swapchain",
             heading: 2,
             content: Swapchain,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SWAPCHAIN_Swapchain_Image,
+            label: "Swapchain Image",
+            heading: 3,
+            content: SwapchainImage,
             props: {},
             visible: false,
         },

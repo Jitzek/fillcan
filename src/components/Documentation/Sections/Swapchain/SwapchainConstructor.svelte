@@ -45,7 +45,14 @@
             <code>imageCount</code><br />
             The amount of <Reference sectionID={SectionID.IMAGE}
                 >Images</Reference
-            > the Swapchain should prepare.
+            > the Swapchain should prepare.<br />
+            Setting <code>imageCount</code> to 2 enables double buffering. Setting <code>imageCount</code>
+            to 3 enables triple buffering. Setting <code>imageCount</code> to 1 represents a request
+            to render directly to the frontbuffer or to the screen.<br />
+            Setting <code>imageCount</code> to 2 means that one frontbuffer and one backbuffer
+            will be created. After the presentation of a completed backbuffer is
+            activated, rendering to the frontbuffer cannot begin until the presentation
+            of the frontbuffer has completed.
         </li>
         <li>
             <code>presentMode</code><br />
