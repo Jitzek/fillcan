@@ -189,6 +189,8 @@ export enum SectionID {
     IMAGE_copyTo = "Image-copyTo",
     IMAGE_transitionImageLayout = "Image-transitionImageLayout",
 
+    MEMORY = "Memory",
+
     DESCRIPTOR_SET_LAYOUT_BUILDER = "Descriptor-Set-Layout-Builder",
     DESCRIPTOR_SET_LAYOUT = "Descriptor-Set-Layout",
     DESCRIPTOR_POOL_BUILDER = "Descriptor-Pool-Builder",
@@ -196,6 +198,7 @@ export enum SectionID {
     DESCRIPTOR_SET = "Descriptor-Set",
 
     ASSET_MANAGER = "Asset-Manager",
+    BUFFER_VIEW = "Buffer-View",
     IMAGE_VIEW = "Image-View",
     FENCE = "Fence",
     SEMAPHORE = "Semaphore",

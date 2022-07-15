@@ -11,7 +11,7 @@
 
 <Highlight
     language={cppHighlight}
-    code={`std::vector<uint32_t>& getQueueFamilyIndices();`}
+    code={`const std::vector<uint32_t>& getQueueFamilyIndices() const;`}
 />
 <MethodDescription>
     <span slot="details">
