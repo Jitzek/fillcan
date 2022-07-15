@@ -52,7 +52,7 @@ namespace fillcan {
          * buffer on multiple queues at once. Using VK_SHARING_MODE_CONCURRENT may result in lower performance on some systems, so unless necessary,
          * sharingMode should be set to VK_SHARING_MODE_EXCLUSIVE.
          * @see https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSharingMode.html
-         * @param queueFamilyIndices A pointer to an array of queue family indices on which the buffer will be used.
+         * @param queueFamilyIndices An array of queue family indices on which the buffer will be used.
          */
         Buffer(LogicalDevice* pLogicalDevice, VkBufferCreateFlags& flags, VkDeviceSize& size, VkBufferUsageFlags& usage, VkSharingMode& sharingMode,
                std::vector<uint32_t> queueFamilyIndices = {});

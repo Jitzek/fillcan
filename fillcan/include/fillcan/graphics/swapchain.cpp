@@ -129,7 +129,7 @@ namespace fillcan {
 
     VkPresentModeKHR Swapchain::getPresentMode() { return this->presentMode; }
 
-    std::vector<uint32_t>& Swapchain::getQueueFamilyIndices() { return this->queueFamilyIndices; }
+    const std::vector<uint32_t>& Swapchain::getQueueFamilyIndices() const { return this->queueFamilyIndices; }
 
     SwapchainImage Swapchain::getNextImage(Fence* pFence) {
         uint32_t swapchainImageIndex = 0;
