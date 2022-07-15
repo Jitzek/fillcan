@@ -182,11 +182,11 @@ namespace fillcan {
         VkPresentModeKHR getPresentMode();
 
         /**
-         * @brief The queue families between which an image is shared.
+         * @brief Get the queue families between which an image is shared.
          *
          * @return A list of queue family indices between which an image is shared.
          */
-        std::vector<uint32_t>& getQueueFamilyIndices();
+        const std::vector<uint32_t>& getQueueFamilyIndices() const;
 
         /**
          * @brief Present a Swapchain Image to the Window surface.

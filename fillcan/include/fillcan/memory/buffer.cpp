@@ -47,7 +47,7 @@ namespace fillcan {
         vkDestroyBuffer(this->pLogicalDevice->getLogicalDeviceHandle(), this->hBuffer, nullptr);
     }
 
-    VkBuffer Buffer::getBufferHandle() { return this->hBuffer; }
+    const VkBuffer Buffer::getBufferHandle() const { return this->hBuffer; }
 
     VkBufferCreateFlags Buffer::getFlags() { return this->flags; }
 
