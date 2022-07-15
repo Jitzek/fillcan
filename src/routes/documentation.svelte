@@ -141,6 +141,30 @@
     import BufferDestroyBufferView from "$components/Documentation/Sections/Buffer/BufferDestroyBufferView.svelte";
     import BufferDestroyBufferViews from "$components/Documentation/Sections/Buffer/BufferDestroyBufferViews.svelte";
     import BufferCopyTo from "$components/Documentation/Sections/Buffer/BufferCopyTo.svelte";
+    import Image from "$components/Documentation/Sections/Image/Image.svelte";
+    import ImageConstructor from "$components/Documentation/Sections/Image/ImageConstructor.svelte";
+    import GetImageHandle from "$components/Documentation/Sections/Image/getImageHandle.svelte";
+    import ImageGetFlags from "$components/Documentation/Sections/Image/ImageGetFlags.svelte";
+    import ImageGetSize from "$components/Documentation/Sections/Image/ImageGetSize.svelte";
+    import ImageGetUsage from "$components/Documentation/Sections/Image/ImageGetUsage.svelte";
+    import ImageGetSharingMode from "$components/Documentation/Sections/Image/ImageGetSharingMode.svelte";
+    import ImageGetQueueFamilyIndices from "$components/Documentation/Sections/Image/ImageGetQueueFamilyIndices.svelte";
+    import ImageBindMemory from "$components/Documentation/Sections/Image/ImageBindMemory.svelte";
+    import ImageGetMemory from "$components/Documentation/Sections/Image/ImageGetMemory.svelte";
+    import ImageCreateImageView from "$components/Documentation/Sections/Image/ImageCreateImageView.svelte";
+    import ImageGetImageView from "$components/Documentation/Sections/Image/ImageGetImageView.svelte";
+    import ImageDestroyImageViews from "$components/Documentation/Sections/Image/ImageDestroyImageViews.svelte";
+    import ImageDestroyImageView from "$components/Documentation/Sections/Image/ImageDestroyImageView.svelte";
+    import ImageCopyTo from "$components/Documentation/Sections/Image/ImageCopyTo.svelte";
+    import ImageGetType from "$components/Documentation/Sections/Image/ImageGetType.svelte";
+    import ImageGetFormat from "$components/Documentation/Sections/Image/ImageGetFormat.svelte";
+    import ImageGetExtent from "$components/Documentation/Sections/Image/ImageGetExtent.svelte";
+    import ImageGetMipLevels from "$components/Documentation/Sections/Image/ImageGetMipLevels.svelte";
+    import ImageGetArrayLayers from "$components/Documentation/Sections/Image/ImageGetArrayLayers.svelte";
+    import ImageGetSamples from "$components/Documentation/Sections/Image/ImageGetSamples.svelte";
+    import ImageGetTiling from "$components/Documentation/Sections/Image/ImageGetTiling.svelte";
+    import ImageGetInitialLayout from "$components/Documentation/Sections/Image/ImageGetInitialLayout.svelte";
+    import ImageTransitionImageLayout from "$components/Documentation/Sections/Image/ImageTransitionImageLayout.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -1140,6 +1164,206 @@
             label: "copyTo",
             heading: 3,
             content: BufferCopyTo,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE,
+            label: "Image",
+            heading: 2,
+            content: Image,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: ImageConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_getImageHandle,
+            label: "getImageHandle",
+            heading: 3,
+            content: GetImageHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_getFlags,
+            label: "getFlags",
+            heading: 3,
+            content: ImageGetFlags,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_getSize,
+            label: "getSize",
+            heading: 3,
+            content: ImageGetSize,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_getUsage,
+            label: "getUsage",
+            heading: 3,
+            content: ImageGetUsage,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_getSharingMode,
+            label: "getSharingMode",
+            heading: 3,
+            content: ImageGetSharingMode,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_getQueueFamilyIndices,
+            label: "getQueueFamilyIndices",
+            heading: 3,
+            content: ImageGetQueueFamilyIndices,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_getType,
+            label: "getType",
+            heading: 3,
+            content: ImageGetType,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_getFormat,
+            label: "getFormat",
+            heading: 3,
+            content: ImageGetFormat,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_getExtent,
+            label: "getExtent",
+            heading: 3,
+            content: ImageGetExtent,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_getMipLevels,
+            label: "getMipLevels",
+            heading: 3,
+            content: ImageGetMipLevels,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_getArrayLayers,
+            label: "getArrayLayers",
+            heading: 3,
+            content: ImageGetArrayLayers,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_getSamples,
+            label: "getSamples",
+            heading: 3,
+            content: ImageGetSamples,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_getTiling,
+            label: "getTiling",
+            heading: 3,
+            content: ImageGetTiling,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_getInitialLayout,
+            label: "getInitialLayout",
+            heading: 3,
+            content: ImageGetInitialLayout,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_bindMemory,
+            label: "bindMemory",
+            heading: 3,
+            content: ImageBindMemory,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_getMemory,
+            label: "getMemory",
+            heading: 3,
+            content: ImageGetMemory,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_createBufferView,
+            label: "createImageView",
+            heading: 3,
+            content: ImageCreateImageView,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_getImageViews,
+            label: "getImageViews",
+            heading: 3,
+            content: ImageGetImageView,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_getImageView,
+            label: "getImageView",
+            heading: 3,
+            content: ImageGetImageView,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_destroyImageViews,
+            label: "destroyImageViews",
+            heading: 3,
+            content: ImageDestroyImageViews,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_destroyImageView,
+            label: "destroyImageView",
+            heading: 3,
+            content: ImageDestroyImageView,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_copyTo,
+            label: "copyTo",
+            heading: 3,
+            content: ImageCopyTo,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_transitionImageLayout,
+            label: "transitionImageLayout",
+            heading: 3,
+            content: ImageTransitionImageLayout,
             props: {},
             visible: false,
         },

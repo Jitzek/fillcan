@@ -86,8 +86,9 @@
         </li>
         <li>
             <code>queueFamilyIndices</code><br />
-            An array of <Reference sectionID={SectionID.QUEUE}>Queue</Reference>
-            family indices on which the buffer will be used.
+            A pointer to an array of <Reference sectionID={SectionID.QUEUE}
+                >Queue</Reference
+            > family indices on which the buffer will be used.
         </li>
     </div>
 </MethodDescription>
