@@ -67,8 +67,6 @@ namespace fillcan {
     }
 
     bool Queue::submitRecordings(std::vector<CommandRecording*> pCommandRecordings, Fence* pFence) {
-        bool success = true;
-
         std::vector<std::vector<VkSemaphore>> hWaitSemaphoresCollection(pCommandRecordings.size());
         std::vector<std::vector<VkCommandBuffer>> hCommandBuffersCollection(pCommandRecordings.size());
         std::vector<std::vector<VkSemaphore>> hSignalSemaphoresCollection(pCommandRecordings.size());

@@ -68,37 +68,37 @@ namespace fillcan {
         const VkBuffer getBufferHandle() const;
 
         /**
-         * @brief Get the flags given in the Constructor.
+         * @brief Get the flags used for creating the Buffer.
          *
-         * @return The flags given in the Constructor.
+         * @return The flags set when creating of the Buffer.
          */
         VkBufferCreateFlags getFlags();
 
         /**
-         * @brief Get the size given in the Constructor.
+         * @brief Get the size of the Buffer.
          *
-         * @return The size given in the Constructor.
+         * @return The size of the Buffer.
          */
         VkDeviceSize getSize();
 
         /**
-         * @brief Get the usage given in the Constructor.
+         * @brief Get the intended usage of the Buffer.
          *
-         * @return The usage given in the Constructor.
+         * @return The intended usage of the Buffer.
          */
         VkBufferUsageFlags getUsage();
 
         /**
-         * @brief Get the sharing mode given in the Constructor.
+         * @brief Get the sharing mode of the Buffer.
          *
-         * @return The sharing mode given in the Constructor.
+         * @return The sharing mode of the Buffer.
          */
         VkSharingMode getSharingMode();
 
         /**
-         * @brief Get the queue family indices given in the Constructor.
+         * @brief Get the queue family indices of the Buffer.
          *
-         * @return The queue family indices given in the Constructor.
+         * @return The queue family indices of the Buffer.
          */
         const std::vector<uint32_t>& getQueueFamilyIndices() const;
 
@@ -126,6 +126,7 @@ namespace fillcan {
          * Buffer View should start. To create a Buffer View of the entire Buffer, this must be 0.
          * @param range The number of bytes the Buffer Views will contain from offset. To create a buffer representation of the entire
          * buffer, this must be VK_WHOLE_SIZE.
+         *
          * @return The index of the newly created Buffer View.
          */
         unsigned int createBufferView(VkFormat format, VkDeviceSize offset = 0, VkDeviceSize range = VK_WHOLE_SIZE);
