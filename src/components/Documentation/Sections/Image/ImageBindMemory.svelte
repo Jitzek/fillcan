@@ -15,20 +15,20 @@
 />
 <MethodDescription>
     <span slot="details"
-        >Bind <Reference sectionID={SectionID.MEMORY}>Memory</Reference> to the Buffer.</span
+        >Bind <Reference sectionID={SectionID.MEMORY}>Memory</Reference> to the Image.</span
     >
     <div slot="params">
         <li>
             <code>pMemory</code><br />
             A pointer to the <Reference sectionID={SectionID.MEMORY}
                 >Memory</Reference
-            > to bind to the Buffer.
+            > to bind to the Image.
         </li>
         <li>
             <code>memoryOffset</code><br />
             Specifies the offset in the <Reference sectionID={SectionID.MEMORY}
                 >Memory</Reference
-            > object the Buffer will live. If only one resource will be bound to
+            > object the Image will live. If only one resource will be bound to
             the <Reference sectionID={SectionID.MEMORY}>Memory</Reference> object,
             this can be set to
             <code>0</code>.

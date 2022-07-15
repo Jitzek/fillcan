@@ -9,11 +9,11 @@
     import cppHighlight from "svelte-highlight/languages/cpp";
 </script>
 
-<Highlight language={cppHighlight} code={`void destroyBufferViews();`} />
+<Highlight language={cppHighlight} code={`void destroyImageViews();`} />
 <MethodDescription>
     <span slot="details"
-        >Destroy all created <Reference sectionID={SectionID.BUFFER_VIEW}
-            >Buffer Views</Reference
+        >Destroy all created <Reference sectionID={SectionID.IMAGE_VIEW}
+            >Image Views</Reference
         >.</span
     >
 </MethodDescription>

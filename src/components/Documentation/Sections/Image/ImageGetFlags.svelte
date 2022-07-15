@@ -9,18 +9,10 @@
     import cppHighlight from "svelte-highlight/languages/cpp";
 </script>
 
-<Highlight language={cppHighlight} code={`VkBufferCreateFlags getFlags();`} />
+<Highlight language={cppHighlight} code={`VkImageCreateFlags getFlags();`} />
 <MethodDescription>
-    <span slot="details">
-        Get the flags given in the <Reference
-            sectionID={SectionID.BUFFER_Constructor}>Constructor</Reference
-        >.
-    </span>
-    <span slot="return">
-        The flags given in the <Reference
-            sectionID={SectionID.BUFFER_Constructor}>Constructor</Reference
-        >.
-    </span>
+    <span slot="details">Get the flags used for creating the Image.</span>
+    <span slot="return">The flags set when creating of the Image.</span>
 </MethodDescription>
 
 <style lang="scss">

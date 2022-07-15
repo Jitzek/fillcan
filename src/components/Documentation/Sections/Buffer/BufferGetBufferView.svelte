@@ -11,25 +11,17 @@
 
 <Highlight
     language={cppHighlight}
-    code={`BufferView* getBufferView(unsigned int index);`}
+    code={`std::vector<BufferView*> getBufferViews();`}
 />
 <MethodDescription>
     <span slot="details"
-        >Get a pointer to a <Reference sectionID={SectionID.BUFFER_VIEW}
-            >Buffer View</Reference
-        > by index.</span
+        >Get all the created <Reference sectionID={SectionID.BUFFER_VIEW}
+            >Buffer Views</Reference
+        >.</span
     >
-    <div slot="params">
-        <li>
-            <code>index</code><br />
-            The index the <Reference sectionID={SectionID.BUFFER_VIEW}
-                >Buffer View</Reference
-            > to get.
-        </li>
-    </div>
     <span slot="return"
-        >A pointer to the requested <Reference sectionID={SectionID.BUFFER_VIEW}
-            >Buffer View</Reference
+        >A list of pointers to the created <Reference
+            sectionID={SectionID.BUFFER_VIEW}>Buffer Views</Reference
         >.</span
     >
 </MethodDescription>

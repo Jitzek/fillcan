@@ -11,16 +11,8 @@
 
 <Highlight language={cppHighlight} code={`VkSharingMode getSharingMode();`} />
 <MethodDescription>
-    <span slot="details">
-        Get the sharing mode given in the <Reference
-            sectionID={SectionID.BUFFER_Constructor}>Constructor</Reference
-        >.
-    </span>
-    <span slot="return">
-        The sharing mode given in the <Reference
-            sectionID={SectionID.BUFFER_Constructor}>Constructor</Reference
-        >.
-    </span>
+    <span slot="details">Get the sharing mode of the Image.</span>
+    <span slot="return">The sharing mode of the Image.</span>
 </MethodDescription>
 
 <style lang="scss">

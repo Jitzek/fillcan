@@ -11,47 +11,68 @@
 
 <Highlight
     language={cppHighlight}
-    code={`unsigned int createBufferView(VkFormat format, VkDeviceSize offset = 0, VkDeviceSize range = VK_WHOLE_SIZE);`}
+    code={`unsigned int createImageView(
+    VkImageViewType viewType, 
+    VkFormat format,
+    VkImageSubresourceRange subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1},
+    VkComponentMapping components = {VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY,
+                                    VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY}\n);`}
 />
 <MethodDescription>
     <span slot="details"
-        >Create a <Reference sectionID={SectionID.BUFFER_VIEW}
-            >Buffer View</Reference
+        >Create an <Reference sectionID={SectionID.IMAGE_VIEW}
+            >Image View</Reference
         >.</span
     >
     <div slot="params">
         <li>
+            <code>viewType</code><br />
+            The type of view to create. The display type must be compatible with
+            the parent Image type and is a member of the <Anchor
+                href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageViewType.html"
+                target="_blank">VkImageViewType</Anchor
+            >-enumeration, which is larger than the <Anchor
+                href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageViewType.html"
+                target="_blank">VkImageViewType</Anchor
+            >-enumeration used when creating the parent Image.
+        </li>
+        <li>
             <code>format</code><br />
-            The format in which to interpret the Buffer.
+            The format of the new <Reference sectionID={SectionID.IMAGE_VIEW}
+                >Image View</Reference
+            >. This must be a format compatible with the parent image. If two
+            formats have the same number of bits per pixel, they are generally
+            considered compatible.
         </li>
         <li>
-            <code>offset</code><br />
-            The <Reference sectionID={SectionID.BUFFER_VIEW}
-                >Buffer View</Reference
-            > will be a "window" into the parent buffer. The <code>offset</code>
-            is the number of bytes within the Buffer where the <Reference
-                sectionID={SectionID.BUFFER_VIEW}>Buffer View</Reference
-            > should start. To create a <Reference
-                sectionID={SectionID.BUFFER_VIEW}>Buffer View</Reference
-            > of the entire Buffer, this must be 0.
+            <code>subresourceRange</code><br />
+            The <Reference sectionID={SectionID.IMAGE_VIEW}
+                >Image View</Reference
+            > can be a subset of the parent Image. This subset is specified using
+            the embedded <Anchor
+                href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageSubresourceRange.html"
+                target="_blank">VkImageSubresourceRange</Anchor
+            >-structure.
         </li>
         <li>
-            <code>range</code><br />
-            The number of bytes the <Reference sectionID={SectionID.BUFFER_VIEW}
-                >Buffer View</Reference
-            > will contain from <code>offset</code>. To create a <Reference
-                sectionID={SectionID.BUFFER_VIEW}>Buffer View</Reference
-            > of the entire Buffer, this must be
-            <code>VK_WHOLE_SIZE</code>.
+            <code>components</code><br />
+            The order of the components in the <Reference
+                sectionID={SectionID.IMAGE_VIEW}>Image View</Reference
+            > may differ from that in the parent Image. This makes it possible, for
+            example, to create an RGBA representation of an Image in BGRA format.
+            This remapping is specified using an instance of the <Anchor
+                href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkComponentMapping.html"
+                target="_blank">VkComponentMapping</Anchor
+            >-structure.
         </li>
     </div>
     <span slot="return">
         The index of the newly created <Reference
-            sectionID={SectionID.BUFFER_VIEW}>Buffer View</Reference
+            sectionID={SectionID.IMAGE_VIEW}>Image View</Reference
         >. This index can be used to get the created <Reference
-            sectionID={SectionID.BUFFER_VIEW}>Buffer View</Reference
-        > using <Reference sectionID={SectionID.BUFFER_getBufferView}
-            >getBufferView</Reference
+            sectionID={SectionID.IMAGE_VIEW}>Image View</Reference
+        > using <Reference sectionID={SectionID.IMAGE_getImageView}
+            >getImageView</Reference
         >.
     </span>
 </MethodDescription>

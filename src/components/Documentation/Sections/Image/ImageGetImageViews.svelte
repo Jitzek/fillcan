@@ -11,19 +11,19 @@
 
 <Highlight
     language={cppHighlight}
-    code={`std::vector<BufferView*> getBufferViews();`}
+    code={`std::vector<ImageView*> getImageViews();`}
 />
 <MethodDescription>
     <span slot="details"
-        >Get all the created <Reference sectionID={SectionID.BUFFER_VIEW}
-            >Buffer Views</Reference
+        >Get all the created <Reference sectionID={SectionID.IMAGE_VIEW}
+            >Image Views</Reference
         >.</span
     >
-    <span slot="return">
-        A list of pointers to the created <Reference
-            sectionID={SectionID.BUFFER_VIEW}>Buffer Views</Reference
-        >.
-    </span>
+    <span slot="return"
+        >A list of pointers to the created <Reference
+            sectionID={SectionID.IMAGE_VIEW}>Image Views</Reference
+        >.</span
+    >
 </MethodDescription>
 
 <style lang="scss">

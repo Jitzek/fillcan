@@ -10,19 +10,19 @@
 
 <Highlight
     language={cppHighlight}
-    code={`const VkBuffer getBufferHandle() const;`}
+    code={`const VkImage getImageHandle() const;`}
 />
 <MethodDescription>
     <span slot="details">
         Get the handle to the <Anchor
-            href="https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkBuffer.html"
-            target="_blank">Vulkan Buffer</Anchor
+            href="https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkImage.html"
+            target="_blank">Vulkan Image</Anchor
         >.
     </span>
     <span slot="return">
         The handle to the <Anchor
-            href="https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkBuffer.html"
-            target="_blank">Vulkan Buffer</Anchor
+            href="https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkImage.html"
+            target="_blank">Vulkan Image</Anchor
         >.
     </span>
 </MethodDescription>

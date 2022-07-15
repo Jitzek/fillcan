@@ -145,7 +145,6 @@
     import ImageConstructor from "$components/Documentation/Sections/Image/ImageConstructor.svelte";
     import GetImageHandle from "$components/Documentation/Sections/Image/getImageHandle.svelte";
     import ImageGetFlags from "$components/Documentation/Sections/Image/ImageGetFlags.svelte";
-    import ImageGetSize from "$components/Documentation/Sections/Image/ImageGetSize.svelte";
     import ImageGetUsage from "$components/Documentation/Sections/Image/ImageGetUsage.svelte";
     import ImageGetSharingMode from "$components/Documentation/Sections/Image/ImageGetSharingMode.svelte";
     import ImageGetQueueFamilyIndices from "$components/Documentation/Sections/Image/ImageGetQueueFamilyIndices.svelte";
@@ -165,6 +164,7 @@
     import ImageGetTiling from "$components/Documentation/Sections/Image/ImageGetTiling.svelte";
     import ImageGetInitialLayout from "$components/Documentation/Sections/Image/ImageGetInitialLayout.svelte";
     import ImageTransitionImageLayout from "$components/Documentation/Sections/Image/ImageTransitionImageLayout.svelte";
+import ImageGetImageViews from "$components/Documentation/Sections/Image/ImageGetImageViews.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -1200,14 +1200,6 @@
             visible: false,
         },
         {
-            id: SectionID.IMAGE_getSize,
-            label: "getSize",
-            heading: 3,
-            content: ImageGetSize,
-            props: {},
-            visible: false,
-        },
-        {
             id: SectionID.IMAGE_getUsage,
             label: "getUsage",
             heading: 3,
@@ -1323,7 +1315,7 @@
             id: SectionID.IMAGE_getImageViews,
             label: "getImageViews",
             heading: 3,
-            content: ImageGetImageView,
+            content: ImageGetImageViews,
             props: {},
             visible: false,
         },
@@ -1398,20 +1390,6 @@
     style="--sidebar-width: 20rem;"
 >
     <div class="documentation-sidebar">
-        <!-- <ul class="references-list">
-            {#each sections as section, i}
-                <li
-                    class="reference-item h{section.heading} {currentVisibleSection !==
-                        null && section.id === currentVisibleSection.id
-                        ? 'active'
-                        : ''}"
-                >
-                    <a href="{getState().URL.root}/documentation#{section.id}">
-                        {section.label}
-                    </a>
-                </li>
-            {/each}
-        </ul> -->
         <DocumentationSectionList {sections} />
     </div>
     {#if $stateStore.Screen.displayType === DisplayType.MOBILE}

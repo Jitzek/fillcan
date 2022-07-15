@@ -20,6 +20,11 @@
         <code>@throws</code>: <slot name="throws" />
     </div>
 {/if}
+{#if $$slots.note}
+    <div class="note">
+        <code>@note</code>: <slot name="note" />
+    </div>
+{/if}
 
 <style lang="scss">
     .details {
@@ -49,5 +54,10 @@
         code {
             background-color: $--bg-color-secondary;
         }
+    }
+    .note {
+        margin-top: 1rem;
+        background-color: $--bg-color-secondary;
+        font-size: 1rem;
     }
 </style>

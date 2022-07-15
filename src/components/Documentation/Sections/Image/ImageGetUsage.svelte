@@ -9,18 +9,10 @@
     import cppHighlight from "svelte-highlight/languages/cpp";
 </script>
 
-<Highlight language={cppHighlight} code={`VkBufferUsageFlags getUsage();`} />
+<Highlight language={cppHighlight} code={`VkImageUsageFlags getUsage();`} />
 <MethodDescription>
-    <span slot="details">
-        Get the usage given in the <Reference
-            sectionID={SectionID.BUFFER_Constructor}>Constructor</Reference
-        >.
-    </span>
-    <span slot="return">
-        The usage given in the <Reference
-            sectionID={SectionID.BUFFER_Constructor}>Constructor</Reference
-        >.
-    </span>
+    <span slot="details">Get the intended usage of the Image.</span>
+    <span slot="return">The intended usage of the Image.</span>
 </MethodDescription>
 
 <style lang="scss">

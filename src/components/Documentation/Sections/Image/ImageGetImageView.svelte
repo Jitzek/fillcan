@@ -11,25 +11,25 @@
 
 <Highlight
     language={cppHighlight}
-    code={`BufferView* getBufferView(unsigned int index);`}
+    code={`ImageView* getImageView(unsigned int index);`}
 />
 <MethodDescription>
     <span slot="details"
-        >Get a pointer to a <Reference sectionID={SectionID.BUFFER_VIEW}
-            >Buffer View</Reference
+        >Get a pointer to an <Reference sectionID={SectionID.IMAGE_VIEW}
+            >Image View</Reference
         > by index.</span
     >
     <div slot="params">
         <li>
             <code>index</code><br />
-            The index the <Reference sectionID={SectionID.BUFFER_VIEW}
-                >Buffer View</Reference
+            The index the <Reference sectionID={SectionID.IMAGE_VIEW}
+                >Image View</Reference
             > to get.
         </li>
     </div>
     <span slot="return"
-        >A pointer to the requested <Reference sectionID={SectionID.BUFFER_VIEW}
-            >Buffer View</Reference
+        >A pointer to the requested <Reference sectionID={SectionID.IMAGE_VIEW}
+            >Image View</Reference
         >.</span
     >
 </MethodDescription>

@@ -11,19 +11,19 @@
 
 <Highlight
     language={cppHighlight}
-    code={`void destroyBufferView(unsigned int index);`}
+    code={`void destroyImageView(unsigned int index);`}
 />
 <MethodDescription>
     <span slot="details"
-        >Destroy a <Reference sectionID={SectionID.BUFFER_VIEW}
-            >Buffer View</Reference
+        >Destroy an <Reference sectionID={SectionID.IMAGE_VIEW}
+            >Image View</Reference
         > by index.</span
     >
     <div slot="params">
         <li>
             <code>index</code><br />
-            The index the <Reference sectionID={SectionID.BUFFER_VIEW}
-                >Buffer View</Reference
+            The index the <Reference sectionID={SectionID.IMAGE_VIEW}
+                >Image View</Reference
             > to destroy.
         </li>
     </div>

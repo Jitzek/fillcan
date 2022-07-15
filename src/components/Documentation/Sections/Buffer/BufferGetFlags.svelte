@@ -11,16 +11,8 @@
 
 <Highlight language={cppHighlight} code={`VkBufferCreateFlags getFlags();`} />
 <MethodDescription>
-    <span slot="details">
-        Get the flags given in the <Reference
-            sectionID={SectionID.BUFFER_Constructor}>Constructor</Reference
-        >.
-    </span>
-    <span slot="return">
-        The flags given in the <Reference
-            sectionID={SectionID.BUFFER_Constructor}>Constructor</Reference
-        >.
-    </span>
+    <span slot="details">Get the flags used for creating the Buffer.</span>
+    <span slot="return">The flags set when creating of the Buffer.</span>
 </MethodDescription>
 
 <style lang="scss">

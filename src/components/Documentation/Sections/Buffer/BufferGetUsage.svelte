@@ -11,16 +11,8 @@
 
 <Highlight language={cppHighlight} code={`VkBufferUsageFlags getUsage();`} />
 <MethodDescription>
-    <span slot="details">
-        Get the usage given in the <Reference
-            sectionID={SectionID.BUFFER_Constructor}>Constructor</Reference
-        >.
-    </span>
-    <span slot="return">
-        The usage given in the <Reference
-            sectionID={SectionID.BUFFER_Constructor}>Constructor</Reference
-        >.
-    </span>
+    <span slot="details">Get the intended usage of the Buffer.</span>
+    <span slot="return">The intended usage of the Buffer.</span>
 </MethodDescription>
 
 <style lang="scss">

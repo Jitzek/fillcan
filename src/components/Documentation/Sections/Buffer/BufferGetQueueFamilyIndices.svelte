@@ -9,18 +9,13 @@
     import cppHighlight from "svelte-highlight/languages/cpp";
 </script>
 
-<Highlight language={cppHighlight} code={`const std::vector<uint32_t>& getQueueFamilyIndices() const;`} />
+<Highlight
+    language={cppHighlight}
+    code={`const std::vector<uint32_t>& getQueueFamilyIndices() const;`}
+/>
 <MethodDescription>
-    <span slot="details">
-        Get the queue family indices given in the <Reference
-            sectionID={SectionID.BUFFER_Constructor}>Constructor</Reference
-        >.
-    </span>
-    <span slot="return">
-        The queue family indices given in the <Reference
-            sectionID={SectionID.BUFFER_Constructor}>Constructor</Reference
-        >.
-    </span>
+    <span slot="details"> Get the queue family indices of the Image. </span>
+    <span slot="return"> The queue family indices of the Image. </span>
 </MethodDescription>
 
 <style lang="scss">

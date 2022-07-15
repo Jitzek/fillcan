@@ -160,14 +160,13 @@ export enum SectionID {
     BUFFER_destroyBufferView = "Buffer-destroyBufferView",
     BUFFER_copyTo = "Buffer-copyTo",
 
-    BUFFER_DIRECTOR = "Buffer-Directory",
+    BUFFER_DIRECTOR = "Buffer-Director",
     BUFFER_BUILDER = "Buffer-Builder",
 
     IMAGE = "Image",
     IMAGE_Constructor = "Image-Constructor",
     IMAGE_getImageHandle = "Image-getImageHandle",
     IMAGE_getFlags = "Image-getFlags",
-    IMAGE_getSize = "Image-getSize",
     IMAGE_getUsage = "Image-getUsage",
     IMAGE_getSharingMode = "Image-getSharingMode",
     IMAGE_getQueueFamilyIndices = "Image-getQueueFamilyIndices",
@@ -189,6 +188,9 @@ export enum SectionID {
     IMAGE_copyTo = "Image-copyTo",
     IMAGE_transitionImageLayout = "Image-transitionImageLayout",
 
+    IMAGE_DIRECTOR = "Image-Director",
+    IMAGE_BUILDER = "Image-Builder",
+
     MEMORY = "Memory",
 
     DESCRIPTOR_SET_LAYOUT_BUILDER = "Descriptor-Set-Layout-Builder",
@@ -206,4 +208,5 @@ export enum SectionID {
     PIPELINE = "Pipeline",
     GRAPHICS_PIPELINE = "Graphics-Pipeline",
     COMPUTE_PIPELINE = "Compute-Pipeline",
+    RENDER_PASS = "Render-Pass",
 }
