@@ -52,6 +52,20 @@ namespace fillcan {
         const VkQueue getQueueHandle() const;
 
         /**
+         * @brief Get the index of the queue family of this Queue.
+         *
+         * @return The index of the queue family of this Queue.
+         */
+        unsigned int getQueueFamilyIndex();
+
+        /**
+         * @brief Get the index of this Queue within the queue family.
+         *
+         * @return The index of this Queue within the queue family.
+         */
+        unsigned int getQueueIndex();
+
+        /**
          * @brief Create a Command Pool.
          *
          * @param flags A bitmask of VkCommandPoolCreateFlagBits that specifies usage behavior for the pool and the command buffers assigned to it. In

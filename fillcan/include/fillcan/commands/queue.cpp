@@ -29,6 +29,10 @@ namespace fillcan {
 
     const VkQueue Queue::getQueueHandle() const { return this->hQueue; }
 
+    unsigned int Queue::getQueueFamilyIndex() { return this->queueFamilyIndex; }
+
+    unsigned int Queue::getQueueIndex() { return this->queueIndex; }
+
     unsigned int Queue::createCommandPool(VkCommandPoolCreateFlags flags) {
         this->upCommandPools.push_back(std::move(std::make_unique<CommandPool>(this->pLogicalDevice, flags, this->queueFamilyIndex)));
         return upCommandPools.size() - 1;

@@ -36,5 +36,5 @@ namespace fillcan {
         vkDestroyBufferView(this->pLogicalDevice->getLogicalDeviceHandle(), this->hBufferView, nullptr);
     }
 
-    VkBufferView BufferView::getBufferViewHandle() { return this->hBufferView; }
+    const VkBufferView BufferView::getBufferViewHandle() const { return this->hBufferView; }
 } // namespace fillcan

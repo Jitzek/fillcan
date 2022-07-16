@@ -28,5 +28,5 @@ namespace fillcan {
     }
     ImageView::~ImageView() { vkDestroyImageView(this->pLogicalDevice->getLogicalDeviceHandle(), this->hImageView, nullptr); }
 
-    VkImageView ImageView::getImageViewHandle() { return this->hImageView; }
+    const VkImageView ImageView::getImageViewHandle() const { return this->hImageView; }
 } // namespace fillcan
