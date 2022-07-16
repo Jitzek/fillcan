@@ -222,6 +222,12 @@ namespace fillcan {
         return formatProperties;
     }
 
+    const VkPhysicalDeviceMemoryProperties PhysicalDevice::getMemoryProperties() const {
+        VkPhysicalDeviceMemoryProperties memoryProperties;
+        vkGetPhysicalDeviceMemoryProperties(this->hPhysicalDevice, &memoryProperties);
+        return memoryProperties;
+    }
+
     const std::optional<VkFormat> PhysicalDevice::findSupportedFormat(std::vector<VkFormat> formats, VkImageTiling tiling,
                                                                       VkFormatFeatureFlags features) const {
         for (VkFormat format : formats) {

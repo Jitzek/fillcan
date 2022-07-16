@@ -152,6 +152,14 @@ namespace fillcan {
         const VkFormatProperties getFormatProperties(VkFormat format) const;
 
         /**
+         * @brief Query the memory properties of this Physical Device.
+         * 
+         * @return A VkPhysicalDeviceMemoryProperties-structure specifying the memory properties of this Physical Device.
+         * @see https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceMemoryProperties\.html
+         */
+        const VkPhysicalDeviceMemoryProperties getMemoryProperties() const;
+
+        /**
          * @brief Find a format from a list of given formats which supports the given tiling and features.
          *
          * @param formats The formats to query support for.
