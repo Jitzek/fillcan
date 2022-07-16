@@ -90,6 +90,8 @@ export enum SectionID {
     QUEUE = "Queue",
     QUEUE_Constructor = "Queue-Constructor",
     QUEUE_getQueueHandle = "Queue-getQueueHandle",
+    QUEUE_getQueueFamilyIndex = "Queue-getQueueFamilyIndex",
+    QUEUE_getQueueIndex = "Queue-getQueueIndex",
     QUEUE_createCommandPool = "Queue-createCommandPool",
     QUEUE_getCommandPools = "Queue-getCommandPools",
     QUEUE_getCommandPool = "Queue-getCommandPool",
@@ -160,6 +162,10 @@ export enum SectionID {
     BUFFER_destroyBufferView = "Buffer-destroyBufferView",
     BUFFER_copyTo = "Buffer-copyTo",
 
+    BUFFER_VIEW = "Buffer-View",
+    BUFFER_VIEW_Constructor = "Buffer-View-Constructor",
+    BUFFER_VIEW_getBufferViewHandle = "Buffer-View-getBufferViewHandle",
+
     BUFFER_DIRECTOR = "Buffer-Director",
     BUFFER_BUILDER = "Buffer-Builder",
 
@@ -180,13 +186,17 @@ export enum SectionID {
     IMAGE_getInitialLayout = "Image-getInitialLayout",
     IMAGE_bindMemory = "Image-bindMemory",
     IMAGE_getMemory = "Image-getMemory",
-    IMAGE_createBufferView = "Image-createBufferView",
+    IMAGE_createImageView = "Image-createImageView",
     IMAGE_getImageViews = "Image-getImageViews",
     IMAGE_getImageView = "Image-getImageView",
     IMAGE_destroyImageViews = "Image-destroyImageViews",
     IMAGE_destroyImageView = "Image-destroyImageView",
     IMAGE_copyTo = "Image-copyTo",
     IMAGE_transitionImageLayout = "Image-transitionImageLayout",
+
+    IMAGE_VIEW = "Image-View",
+    IMAGE_VIEW_Constructor = "Image-View-Constructor",
+    IMAGE_VIEW_getImageViewHandle = "Image-View-getImageViewHandle",
 
     IMAGE_DIRECTOR = "Image-Director",
     IMAGE_BUILDER = "Image-Builder",
@@ -200,8 +210,6 @@ export enum SectionID {
     DESCRIPTOR_SET = "Descriptor-Set",
 
     ASSET_MANAGER = "Asset-Manager",
-    BUFFER_VIEW = "Buffer-View",
-    IMAGE_VIEW = "Image-View",
     FENCE = "Fence",
     SEMAPHORE = "Semaphore",
 
@@ -209,4 +217,5 @@ export enum SectionID {
     GRAPHICS_PIPELINE = "Graphics-Pipeline",
     COMPUTE_PIPELINE = "Compute-Pipeline",
     RENDER_PASS = "Render-Pass",
+    FRAMEBUFFER = "Framebuffer",
 }

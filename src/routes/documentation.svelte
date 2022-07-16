@@ -164,7 +164,15 @@
     import ImageGetTiling from "$components/Documentation/Sections/Image/ImageGetTiling.svelte";
     import ImageGetInitialLayout from "$components/Documentation/Sections/Image/ImageGetInitialLayout.svelte";
     import ImageTransitionImageLayout from "$components/Documentation/Sections/Image/ImageTransitionImageLayout.svelte";
-import ImageGetImageViews from "$components/Documentation/Sections/Image/ImageGetImageViews.svelte";
+    import ImageGetImageViews from "$components/Documentation/Sections/Image/ImageGetImageViews.svelte";
+    import GetQueueFamilyIndex from "$components/Documentation/Sections/Queue/getQueueFamilyIndex.svelte";
+    import GetQueueIndex from "$components/Documentation/Sections/Queue/getQueueIndex.svelte";
+    import GetBufferViewHandle from "$components/Documentation/Sections/Buffer_View/getBufferViewHandle.svelte";
+    import BufferViewConstructor from "$components/Documentation/Sections/Buffer_View/BufferViewConstructor.svelte";
+    import BufferView from "$components/Documentation/Sections/Buffer_View/BufferView.svelte";
+    import ImageView from "$components/Documentation/Sections/Image_View/ImageView.svelte";
+    import ImageViewConstructor from "$components/Documentation/Sections/Image_View/ImageViewConstructor.svelte";
+    import GetImageViewHandle from "$components/Documentation/Sections/Image_View/getImageViewHandle.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -696,6 +704,22 @@ import ImageGetImageViews from "$components/Documentation/Sections/Image/ImageGe
             visible: false,
         },
         {
+            id: SectionID.QUEUE_getQueueFamilyIndex,
+            label: "getQueueFamilyIndex",
+            heading: 3,
+            content: GetQueueFamilyIndex,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.QUEUE_getQueueIndex,
+            label: "getQueueIndex",
+            heading: 3,
+            content: GetQueueIndex,
+            props: {},
+            visible: false,
+        },
+        {
             id: SectionID.QUEUE_createCommandPool,
             label: "createCommandPool",
             heading: 3,
@@ -1168,6 +1192,30 @@ import ImageGetImageViews from "$components/Documentation/Sections/Image/ImageGe
             visible: false,
         },
         {
+            id: SectionID.BUFFER_VIEW,
+            label: "Buffer View",
+            heading: 2,
+            content: BufferView,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_VIEW_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: BufferViewConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_VIEW_getBufferViewHandle,
+            label: "getBufferViewHandle",
+            heading: 3,
+            content: GetBufferViewHandle,
+            props: {},
+            visible: false,
+        },
+        {
             id: SectionID.IMAGE,
             label: "Image",
             heading: 2,
@@ -1304,7 +1352,7 @@ import ImageGetImageViews from "$components/Documentation/Sections/Image/ImageGe
             visible: false,
         },
         {
-            id: SectionID.IMAGE_createBufferView,
+            id: SectionID.IMAGE_createImageView,
             label: "createImageView",
             heading: 3,
             content: ImageCreateImageView,
@@ -1356,6 +1404,30 @@ import ImageGetImageViews from "$components/Documentation/Sections/Image/ImageGe
             label: "transitionImageLayout",
             heading: 3,
             content: ImageTransitionImageLayout,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_VIEW,
+            label: "ImageView",
+            heading: 2,
+            content: ImageView,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_VIEW_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: ImageViewConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_VIEW_getImageViewHandle,
+            label: "getImageViewHandle",
+            heading: 3,
+            content: GetImageViewHandle,
             props: {},
             visible: false,
         },
