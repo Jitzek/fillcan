@@ -173,6 +173,14 @@
     import ImageView from "$components/Documentation/Sections/Image_View/ImageView.svelte";
     import ImageViewConstructor from "$components/Documentation/Sections/Image_View/ImageViewConstructor.svelte";
     import GetImageViewHandle from "$components/Documentation/Sections/Image_View/getImageViewHandle.svelte";
+    import Memory from "$components/Documentation/Sections/Memory/Memory.svelte";
+    import MemoryConstructor from "$components/Documentation/Sections/Memory/MemoryConstructor.svelte";
+    import GetMemoryHandle from "$components/Documentation/Sections/Memory/getMemoryHandle.svelte";
+    import MemoryMap from "$components/Documentation/Sections/Memory/MemoryMap.svelte";
+    import MemoryUnmap from "$components/Documentation/Sections/Memory/MemoryUnmap.svelte";
+    import MemoryGetData from "$components/Documentation/Sections/Memory/MemoryGetData.svelte";
+    import MemoryFlush from "$components/Documentation/Sections/Memory/MemoryFlush.svelte";
+    import MemoryInvalidate from "$components/Documentation/Sections/Memory/MemoryInvalidate.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -1428,6 +1436,70 @@
             label: "getImageViewHandle",
             heading: 3,
             content: GetImageViewHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.MEMORY,
+            label: "Memory",
+            heading: 2,
+            content: Memory,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.MEMORY_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: MemoryConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.MEMORY_getMemoryHandle,
+            label: "getMemoryHandle",
+            heading: 3,
+            content: GetMemoryHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.MEMORY_map,
+            label: "map",
+            heading: 3,
+            content: MemoryMap,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.MEMORY_unmap,
+            label: "unmap",
+            heading: 3,
+            content: MemoryUnmap,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.MEMORY_getData,
+            label: "getData",
+            heading: 3,
+            content: MemoryGetData,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.MEMORY_flush,
+            label: "flush",
+            heading: 3,
+            content: MemoryFlush,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.MEMORY_invalidate,
+            label: "invalidate",
+            heading: 3,
+            content: MemoryInvalidate,
             props: {},
             visible: false,
         },

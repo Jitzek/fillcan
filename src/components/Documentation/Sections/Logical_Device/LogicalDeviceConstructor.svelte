@@ -23,6 +23,12 @@
             > to create a Logical Device from.
         </li>
     </div>
+    <span slot="throws">
+        <code>std::runtime_error</code> if the <Anchor
+            href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDevice.html"
+            target="_blank">Vulkan Device</Anchor
+        > couldn't be created.
+    </span>
 </MethodDescription><br />
 The Logical Device can be retrieved using the <Reference
     sectionID={SectionID.FILLCAN}>Fillcan</Reference

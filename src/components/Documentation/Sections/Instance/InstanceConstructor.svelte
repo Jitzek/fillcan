@@ -69,6 +69,14 @@
             running in Debug mode.
         </li>
     </div>
+    <span slot="throws">
+        <code>std::runtime_error</code> if the <Anchor
+            href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkInstance.html"
+            target="_blank">Vulkan Instance</Anchor
+        > couldn't be created.<br />
+        throws <code>std::runtime_error</code> aswell when running in DEBUG mode
+        and the debug messenger couldn't be created.
+    </span>
 </MethodDescription>
 
 <style lang="scss">

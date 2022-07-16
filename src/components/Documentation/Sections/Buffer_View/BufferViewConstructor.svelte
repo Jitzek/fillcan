@@ -94,6 +94,12 @@
             requested.
         </li>
     </div>
+    <span slot="throws">
+        <code>std::runtime_error</code> if the <Anchor
+            href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferView.html"
+            target="_blank">Vulkan Buffer View</Anchor
+        > couldn't be created.
+    </span>
 </MethodDescription>
 
 <style lang="scss">

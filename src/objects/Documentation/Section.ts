@@ -69,6 +69,7 @@ export enum SectionID {
     PHYSICAL_DEVICE_getSurfacePresentModesKHR = "Physical-Device-getSurfacePresentModesKHR",
     PHYSICAL_DEVICE_getQueueFamilyProperties = "Physical-Device-getQueueFamilyProperties",
     PHYSICAL_DEVICE_getFormatProperties = "Physical-Device-getFormatProperties",
+    PHYSICAL_DEVICE_getMemoryProperties = "Physical-Device-getMemoryProperties",
     PHYSICAL_DEVICE_findSupportedFormat = "Physical-Device-findSupportedFormat",
     PHYSICAL_DEVICE_getGraphicsQueueFamilyIndex = "Physical-Device-getGraphicsQueueFamilyIndex",
     PHYSICAL_DEVICE_getPresentQueueFamilyIndex = "Physical-Device-getPresentQueueFamilyIndex",
@@ -194,14 +195,23 @@ export enum SectionID {
     IMAGE_copyTo = "Image-copyTo",
     IMAGE_transitionImageLayout = "Image-transitionImageLayout",
 
+    // IMAGE VIEW
     IMAGE_VIEW = "Image-View",
     IMAGE_VIEW_Constructor = "Image-View-Constructor",
     IMAGE_VIEW_getImageViewHandle = "Image-View-getImageViewHandle",
 
+    // MEMORY
+    MEMORY = "Memory",
+    MEMORY_Constructor = "Memory-Constructor",
+    MEMORY_getMemoryHandle = "Memory-getMemoryHandle",
+    MEMORY_map = "Memory-map",
+    MEMORY_unmap = "Memory-unmap",
+    MEMORY_getData = "Memory-getData",
+    MEMORY_flush = "Memory-flush",
+    MEMORY_invalidate = "Memory-invalidate",
+
     IMAGE_DIRECTOR = "Image-Director",
     IMAGE_BUILDER = "Image-Builder",
-
-    MEMORY = "Memory",
 
     DESCRIPTOR_SET_LAYOUT_BUILDER = "Descriptor-Set-Layout-Builder",
     DESCRIPTOR_SET_LAYOUT = "Descriptor-Set-Layout",

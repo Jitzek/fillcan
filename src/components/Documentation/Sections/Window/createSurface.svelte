@@ -31,6 +31,9 @@
             > to create a surface in.
         </li>
     </div>
+    <span slot="throws">
+        <code>std::runtime_error</code> if the surface failed to be created.
+    </span>
 </MethodDescription>
 
 <style lang="scss">

@@ -25,8 +25,8 @@
         <li>
             <code>flags</code><br />
             A bitmask of <Anchor
-                href="https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkCommandPoolCreateFlagBits.html" target="_blank"
-                >VkCommandPoolCreateFlagBits</Anchor
+                href="https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkCommandPoolCreateFlagBits.html"
+                target="_blank">VkCommandPoolCreateFlagBits</Anchor
             > that specifies usage behavior for the pool and the <Reference
                 sectionID={SectionID.COMMAND_BUFFER}>Command Buffers</Reference
             >
@@ -48,6 +48,12 @@
             > allocated from this pool are sent.
         </li>
     </div>
+    <span slot="throws">
+        <code>std::runtime_error</code> if the <Anchor
+            href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkCommandPool.html"
+            target="_blank">Vulkan Command Pool</Anchor
+        > couldn't be created.
+    </span>
 </MethodDescription>
 
 <style lang="scss">
