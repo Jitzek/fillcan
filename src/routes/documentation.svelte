@@ -181,6 +181,28 @@
     import MemoryGetData from "$components/Documentation/Sections/Memory/MemoryGetData.svelte";
     import MemoryFlush from "$components/Documentation/Sections/Memory/MemoryFlush.svelte";
     import MemoryInvalidate from "$components/Documentation/Sections/Memory/MemoryInvalidate.svelte";
+    import BufferDirector from "$components/Documentation/Sections/Buffer_Director/BufferDirector.svelte";
+    import BufferDirectorConstructor from "$components/Documentation/Sections/Buffer_Director/BufferDirectorConstructor.svelte";
+    import BufferDirectorMakeVertexBuffer from "$components/Documentation/Sections/Buffer_Director/BufferDirectorMakeVertexBuffer.svelte";
+    import BufferDirectorMakeVertexTransferDestinationBuffer from "$components/Documentation/Sections/Buffer_Director/BufferDirectorMakeVertexTransferDestinationBuffer.svelte";
+    import BufferDirectorMakeUniformBuffer from "$components/Documentation/Sections/Buffer_Director/BufferDirectorMakeUniformBuffer.svelte";
+    import BufferDirectorMakeStorageBuffer from "$components/Documentation/Sections/Buffer_Director/BufferDirectorMakeStorageBuffer.svelte";
+    import BufferDirectorMakeUniformTexelBuffer from "$components/Documentation/Sections/Buffer_Director/BufferDirectorMakeUniformTexelBuffer.svelte";
+    import BufferDirectorMakeStorageTexelBuffer from "$components/Documentation/Sections/Buffer_Director/BufferDirectorMakeStorageTexelBuffer.svelte";
+    import BufferDirectorMakeIndexBuffer from "$components/Documentation/Sections/Buffer_Director/BufferDirectorMakeIndexBuffer.svelte";
+    import BufferDirectorMakeIndexTransferDestinationBuffer from "$components/Documentation/Sections/Buffer_Director/BufferDirectorMakeIndexTransferDestinationBuffer.svelte";
+    import BufferDirectorMakeIndirectBuffer from "$components/Documentation/Sections/Buffer_Director/BufferDirectorMakeIndirectBuffer.svelte";
+    import BufferDirectorMakeStagingBuffer from "$components/Documentation/Sections/Buffer_Director/BufferDirectorMakeStagingBuffer.svelte";
+    import BufferBuilder from "$components/Documentation/Sections/Buffer_Builder/BufferBuilder.svelte";
+    import BufferBuilderConstructor from "$components/Documentation/Sections/Buffer_Builder/BufferBuilderConstructor.svelte";
+    import BufferBuilderSetLogicalDevice from "$components/Documentation/Sections/Buffer_Builder/BufferBuilderSetLogicalDevice.svelte";
+    import BufferBuilderSetFlags from "$components/Documentation/Sections/Buffer_Builder/BufferBuilderSetFlags.svelte";
+    import BufferBuilderSetSize from "$components/Documentation/Sections/Buffer_Builder/BufferBuilderSetSize.svelte";
+    import BufferBuilderSetUsage from "$components/Documentation/Sections/Buffer_Builder/BufferBuilderSetUsage.svelte";
+    import BufferBuilderSetSharingMode from "$components/Documentation/Sections/Buffer_Builder/BufferBuilderSetSharingMode.svelte";
+    import BufferBuilderSetQueueFamilyIndices from "$components/Documentation/Sections/Buffer_Builder/BufferBuilderSetQueueFamilyIndices.svelte";
+    import BufferBuilderReset from "$components/Documentation/Sections/Buffer_Builder/BufferBuilderReset.svelte";
+    import BufferBuilderGetResult from "$components/Documentation/Sections/Buffer_Builder/BufferBuilderGetResult.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -1072,6 +1094,182 @@
             visible: false,
         },
         {
+            id: SectionID.BUFFER_DIRECTOR,
+            label: "Buffer Director",
+            heading: 2,
+            content: BufferDirector,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_DIRECTOR_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: BufferDirectorConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_DIRECTOR_makeVertexBuffer,
+            label: "makeVertexBuffer",
+            heading: 3,
+            content: BufferDirectorMakeVertexBuffer,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_DIRECTOR_makeVertexTransferDestinationBuffer,
+            label: "makeVertexTransferDestinationBuffer",
+            heading: 3,
+            content: BufferDirectorMakeVertexTransferDestinationBuffer,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_DIRECTOR_makeUniformBuffer,
+            label: "makeUniformBuffer",
+            heading: 3,
+            content: BufferDirectorMakeUniformBuffer,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_DIRECTOR_makeStorageBuffer,
+            label: "makeStorageBuffer",
+            heading: 3,
+            content: BufferDirectorMakeStorageBuffer,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_DIRECTOR_makeUniformTexelBuffer,
+            label: "makeUniformTexelBuffer",
+            heading: 3,
+            content: BufferDirectorMakeUniformTexelBuffer,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_DIRECTOR_makeStorageTexelBuffer,
+            label: "makeStorageTexelBuffer",
+            heading: 3,
+            content: BufferDirectorMakeStorageTexelBuffer,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_DIRECTOR_makeIndexBuffer,
+            label: "makeIndexBuffer",
+            heading: 3,
+            content: BufferDirectorMakeIndexBuffer,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_DIRECTOR_makeIndexTransferDestinationBuffer,
+            label: "makeIndexTransferDestinationBuffer",
+            heading: 3,
+            content: BufferDirectorMakeIndexTransferDestinationBuffer,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_DIRECTOR_makeIndirectBuffer,
+            label: "makeIndirectBuffer",
+            heading: 3,
+            content: BufferDirectorMakeIndirectBuffer,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_DIRECTOR_makeStagingBuffer,
+            label: "makeStagingBuffer",
+            heading: 3,
+            content: BufferDirectorMakeStagingBuffer,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_BUILDER,
+            label: "Buffer Builder",
+            heading: 2,
+            content: BufferBuilder,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_BUILDER_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: BufferBuilderConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_BUILDER_setLogicalDevice,
+            label: "setLogicalDevice",
+            heading: 3,
+            content: BufferBuilderSetLogicalDevice,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_BUILDER_setFlags,
+            label: "setFlags",
+            heading: 3,
+            content: BufferBuilderSetFlags,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_BUILDER_setSize,
+            label: "setSize",
+            heading: 3,
+            content: BufferBuilderSetSize,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_BUILDER_setUsage,
+            label: "setUsage",
+            heading: 3,
+            content: BufferBuilderSetUsage,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_BUILDER_setSharingMode,
+            label: "setSharingMode",
+            heading: 3,
+            content: BufferBuilderSetSharingMode,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_BUILDER_setQueueFamilyIndices,
+            label: "setQueueFamilyIndices",
+            heading: 3,
+            content: BufferBuilderSetQueueFamilyIndices,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_BUILDER_getResult,
+            label: "getResult",
+            heading: 3,
+            content: BufferBuilderGetResult,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.BUFFER_BUILDER_reset,
+            label: "reset",
+            heading: 3,
+            content: BufferBuilderReset,
+            props: {},
+            visible: false,
+        },
+        {
             id: SectionID.BUFFER,
             label: "Buffer",
             heading: 2,
@@ -1521,6 +1719,10 @@
     function handleHamburgerMenuClick(_e: MouseEvent) {
         showHamburgerMenu = !showHamburgerMenu;
     }
+
+    function onReferenceClick(_e: MouseEvent) {
+        showHamburgerMenu = false;
+    }
 </script>
 
 <svelte:head>
@@ -1567,6 +1769,7 @@
                         <a
                             href="{getState().URL
                                 .root}/documentation#{section.id}"
+                            on:click={onReferenceClick}
                         >
                             {section.label}
                         </a>
@@ -1614,7 +1817,9 @@
             font-family: $--font-family-default;
             color: $--fg-color-primary;
             margin-left: var(--sidebar-width);
-            padding: 0 15vw 0 5vw;
+            padding: 0 5vw 0 5vw;
+            max-width: 100%;
+            overflow-wrap: break-word;
 
             hr {
                 color: $--fg-color-tertiary;

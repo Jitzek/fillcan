@@ -167,8 +167,31 @@ export enum SectionID {
     BUFFER_VIEW_Constructor = "Buffer-View-Constructor",
     BUFFER_VIEW_getBufferViewHandle = "Buffer-View-getBufferViewHandle",
 
+    // BUFFER DIRECTOR
     BUFFER_DIRECTOR = "Buffer-Director",
+    BUFFER_DIRECTOR_Constructor = "Buffer-Director-Constructor",
+    BUFFER_DIRECTOR_makeVertexBuffer = "Buffer-Director-makeVertexBuffer",
+    BUFFER_DIRECTOR_makeVertexTransferDestinationBuffer = "Buffer-Director-makeVertexTransferDestinationBuffer",
+    BUFFER_DIRECTOR_makeUniformBuffer = "Buffer-Director-makeUniformBuffer",
+    BUFFER_DIRECTOR_makeStorageBuffer = "Buffer-Director-makeStorageBuffer",
+    BUFFER_DIRECTOR_makeUniformTexelBuffer = "Buffer-Director-makeUniformTexelBuffer",
+    BUFFER_DIRECTOR_makeStorageTexelBuffer = "Buffer-Director-makeStorageTexelBuffer",
+    BUFFER_DIRECTOR_makeIndexBuffer = "Buffer-Director-makeIndexBuffer",
+    BUFFER_DIRECTOR_makeIndexTransferDestinationBuffer = "Buffer-Director-makeIndexTransferDestinationBuffer",
+    BUFFER_DIRECTOR_makeIndirectBuffer = "Buffer-Director-makeIndirectBuffer",
+    BUFFER_DIRECTOR_makeStagingBuffer = "Buffer-Director-makeStagingBuffer",
+
+    // BUFFER BUILDER
     BUFFER_BUILDER = "Buffer-Builder",
+    BUFFER_BUILDER_Constructor = "Buffer-Builder-Constructor",
+    BUFFER_BUILDER_setLogicalDevice = "Buffer-Builder-setLogicalDevice",
+    BUFFER_BUILDER_setFlags = "Buffer-Builder-setFlags",
+    BUFFER_BUILDER_setSize = "Buffer-Builder-setSize",
+    BUFFER_BUILDER_setUsage = "Buffer-Builder-setUsage",
+    BUFFER_BUILDER_setSharingMode = "Buffer-Builder-setSharingMode",
+    BUFFER_BUILDER_setQueueFamilyIndices = "Buffer-Builder-setQueueFamilyIndices",
+    BUFFER_BUILDER_getResult = "Buffer-Builder-getResult",
+    BUFFER_BUILDER_reset = "Buffer-Builder-reset",
 
     IMAGE = "Image",
     IMAGE_Constructor = "Image-Constructor",
