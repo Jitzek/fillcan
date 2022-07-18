@@ -260,6 +260,20 @@ export enum SectionID {
     MEMORY_flush = "Memory-flush",
     MEMORY_invalidate = "Memory-invalidate",
 
+    // SEMAPHORE
+    SEMAPHORE = "Semaphore",
+    SEMAPHORE_Constructor = "Semaphore-Constructor",
+    SEMAPHORE_getSemaphoreHandle = "Semaphore-getSemaphoreHandle",
+
+    // FENCE
+    FENCE = "Fence",
+    FENCE_Constructor = "Fence-Constructor",
+    FENCE_getFenceHandle = "Fence-getFenceHandle",
+    FENCE_waitFor = "Fence-waitFor",
+    FENCE_reset = "Fence-reset",
+    FENCE_s_waitForAll = "Fence-s_waitForAll",
+    FENCE_s_resetAll = "Fence-s_resetAll",
+
     DESCRIPTOR_SET_LAYOUT_BUILDER = "Descriptor-Set-Layout-Builder",
     DESCRIPTOR_SET_LAYOUT = "Descriptor-Set-Layout",
     DESCRIPTOR_POOL_BUILDER = "Descriptor-Pool-Builder",
@@ -267,8 +281,6 @@ export enum SectionID {
     DESCRIPTOR_SET = "Descriptor-Set",
 
     ASSET_MANAGER = "Asset-Manager",
-    FENCE = "Fence",
-    SEMAPHORE = "Semaphore",
 
     PIPELINE = "Pipeline",
     GRAPHICS_PIPELINE = "Graphics-Pipeline",

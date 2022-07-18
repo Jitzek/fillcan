@@ -11,26 +11,18 @@
 
 <Highlight
     language={cppHighlight}
-    code={`bool waitForFence(uint64_t timeout = UINT64_MAX);`}
+    code={`Semaphore(LogicalDevice* pLogicalDevice);`}
 />
 <MethodDescription>
-    <span slot="details">
-        Wait for the <Reference sectionID={SectionID.FENCE}>Fence</Reference> defined
-        with <Reference sectionID={SectionID.COMMAND_RECORDING_createFence}
-            >createFence</Reference
-        >.
-    </span>
+    <span slot="details">Create a new Semaphore.</span>
     <div slot="params">
         <li>
-            <code>timeout</code><br />
-            The timeout period in units of nanoseconds to wait before returning.
+            <code>pLogicalDevice</code><br />
+            A pointer to the <Reference sectionID={SectionID.LOGICAL_DEVICE}
+                >Logical Device</Reference
+            > the Semaphore should be associated with.
         </li>
     </div>
-    <span slot="return">
-        <code>true</code> if the <Reference sectionID={SectionID.FENCE}
-            >Fence</Reference
-        > was succesfully waited for. <code>false</code> if the timeout expired.
-    </span>
 </MethodDescription>
 
 <style lang="scss">

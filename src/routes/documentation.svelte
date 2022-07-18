@@ -224,6 +224,16 @@
     import ImageBuilderSetInitialLayout from "$components/Documentation/Sections/Image_Builder/ImageBuilderSetInitialLayout.svelte";
     import ImageBuilderReset from "$components/Documentation/Sections/Image_Builder/ImageBuilderReset.svelte";
     import ImageBuilderGetResult from "$components/Documentation/Sections/Image_Builder/ImageBuilderGetResult.svelte";
+    import Fence from "$components/Documentation/Sections/Fence/Fence.svelte";
+    import FenceConstructor from "$components/Documentation/Sections/Fence/FenceConstructor.svelte";
+    import GetFenceHandle from "$components/Documentation/Sections/Fence/getFenceHandle.svelte";
+    import FenceWaitFor from "$components/Documentation/Sections/Fence/FenceWaitFor.svelte";
+    import FenceSWaitForAll from "$components/Documentation/Sections/Fence/FenceS_WaitForAll.svelte";
+    import FenceSResetAll from "$components/Documentation/Sections/Fence/FenceS_ResetAll.svelte";
+    import FenceReset from "$components/Documentation/Sections/Fence/FenceReset.svelte";
+    import Semaphore from "$components/Documentation/Sections/Semaphore/Semaphore.svelte";
+    import SemaphoreConstructor from "$components/Documentation/Sections/Semaphore/SemaphoreConstructor.svelte";
+    import GetSemaphoreHandle from "$components/Documentation/Sections/Semaphore/getSemaphoreHandle.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -1887,6 +1897,86 @@
             label: "invalidate",
             heading: 3,
             content: MemoryInvalidate,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SEMAPHORE,
+            label: "Semaphore",
+            heading: 2,
+            content: Semaphore,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SEMAPHORE_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: SemaphoreConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SEMAPHORE_getSemaphoreHandle,
+            label: "getSemaphoreHandle",
+            heading: 3,
+            content: GetSemaphoreHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FENCE,
+            label: "Fence",
+            heading: 2,
+            content: Fence,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FENCE_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: FenceConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FENCE_getFenceHandle,
+            label: "getFenceHandle",
+            heading: 3,
+            content: GetFenceHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FENCE_waitFor,
+            label: "waitFor",
+            heading: 3,
+            content: FenceWaitFor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FENCE_reset,
+            label: "reset",
+            heading: 3,
+            content: FenceReset,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FENCE_s_waitForAll,
+            label: "s_waitForAll",
+            heading: 3,
+            content: FenceSWaitForAll,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FENCE_s_resetAll,
+            label: "s_resetAll",
+            heading: 3,
+            content: FenceSResetAll,
             props: {},
             visible: false,
         },

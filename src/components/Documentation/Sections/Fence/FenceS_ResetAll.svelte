@@ -11,25 +11,27 @@
 
 <Highlight
     language={cppHighlight}
-    code={`bool waitForFence(uint64_t timeout = UINT64_MAX);`}
+    code={`static bool s_resetAll(LogicalDevice* pLogicalDevice, std::vector<Fence*> pFences);`}
 />
 <MethodDescription>
-    <span slot="details">
-        Wait for the <Reference sectionID={SectionID.FENCE}>Fence</Reference> defined
-        with <Reference sectionID={SectionID.COMMAND_RECORDING_createFence}
-            >createFence</Reference
-        >.
-    </span>
+    <span slot="details">Reset all given Fences.</span>
     <div slot="params">
         <li>
-            <code>timeout</code><br />
-            The timeout period in units of nanoseconds to wait before returning.
+            <code>pLogicalDevice</code><br />
+            The <Reference sectionID={SectionID.LOGICAL_DEVICE}
+                >Logical Device</Reference
+            > which owns the given Fences.
+        </li>
+        <li>
+            <code>pFences</code><br />
+            A list of pointers to the <Reference sectionID={SectionID.FENCE}
+                >Fences</Reference
+            > to reset.
         </li>
     </div>
     <span slot="return">
-        <code>true</code> if the <Reference sectionID={SectionID.FENCE}
-            >Fence</Reference
-        > was succesfully waited for. <code>false</code> if the timeout expired.
+        <code>true</code> if all the Fences were succesfully reset.
+        <code>false</code> if not all Fences could be reset.
     </span>
 </MethodDescription>
 
