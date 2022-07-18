@@ -124,13 +124,17 @@ namespace fillcan {
          * @see https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkFenceCreateFlagBits.html
          */
         void createFence(LogicalDevice* pLogicalDevice, VkFenceCreateFlags flags = 0);
-        
+
         /**
          * @brief Wait for the Fence defined with CommandRecording#createFence.
          * @see CommandRecording#createFence
-         * 
+         *
          * @param timeout The timeout period in units of nanoseconds to wait before returning.
+         *
+         * @return true if the Fence was succesfully waited for.
+         * @return false if the timeout expired.
+         * @see Fence#waitFor
          */
-        void waitForFence(uint64_t timeout = UINT64_MAX);
+        bool waitForFence(uint64_t timeout = UINT64_MAX);
     };
 } // namespace fillcan

@@ -47,6 +47,6 @@ namespace fillcan {
         this->upFenceWorkCompleted = std::make_unique<Fence>(pLogicalDevice, flags);
     }
 
-    void CommandRecording::waitForFence(uint64_t timeout) { this->upFenceWorkCompleted->waitFor(timeout); }
+    bool CommandRecording::waitForFence(uint64_t timeout) { return this->upFenceWorkCompleted->waitFor(timeout); }
 
 } // namespace fillcan

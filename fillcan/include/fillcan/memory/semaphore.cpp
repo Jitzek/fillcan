@@ -30,5 +30,5 @@ namespace fillcan {
         vkDestroySemaphore(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSemaphore, nullptr);
     }
 
-    VkSemaphore Semaphore::getSemaphoreHandle() { return this->hSemaphore; }
+    const VkSemaphore Semaphore::getSemaphoreHandle() const { return this->hSemaphore; }
 } // namespace fillcan
