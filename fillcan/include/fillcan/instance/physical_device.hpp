@@ -20,12 +20,13 @@ namespace fillcan {
         Window* pWindow;
         std::vector<const char*> requiredExtensions;
         VkPhysicalDeviceFeatures requiredFeatures;
-        int graphicsQueueFamilyIndex = -1;
-        int presentQueueFamilyIndex = -1;
-        int computeQueueFamilyIndex = -1;
+        std::vector<unsigned int> graphicsQueueFamilyIndices = {};
+        std::vector<unsigned int> presentQueueFamilyIndices = {};
+        std::vector<unsigned int> computeQueueFamilyIndices = {};
 
-        void findGraphicsAndPresentQueueFamilyIndex(std::vector<VkQueueFamilyProperties> queueFamilyProperties = {});
-        void findComputeQueueFamilyIndex(std::vector<VkQueueFamilyProperties> queueFamilyProperties = {});
+        void findGraphicsQueueFamilyIndices(std::vector<VkQueueFamilyProperties> queueFamilyProperties = {});
+        void findPresentQueueFamilyIndices(std::vector<VkQueueFamilyProperties> queueFamilyProperties = {});
+        void findComputeQueueFamilyIndices(std::vector<VkQueueFamilyProperties> queueFamilyProperties = {});
 
       public:
         /**
@@ -153,7 +154,7 @@ namespace fillcan {
 
         /**
          * @brief Query the memory properties of this Physical Device.
-         * 
+         *
          * @return A VkPhysicalDeviceMemoryProperties-structure specifying the memory properties of this Physical Device.
          * @see https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceMemoryProperties\.html
          */
@@ -175,24 +176,24 @@ namespace fillcan {
         const std::optional<VkFormat> findSupportedFormat(std::vector<VkFormat> formats, VkImageTiling tiling, VkFormatFeatureFlags features) const;
 
         /**
-         * @brief Get the queue family index for the graphics Queue.
+         * @brief Get the queue family indices for the graphics Queues.
          *
-         * @return The queue family index for the graphics Queue or -1 if no Queue was found.
+         * @return The queue family indices for the graphics Queues.
          */
-        int getGraphicsQueueFamilyIndex();
+        const std::vector<unsigned int>& getGraphicsQueueFamilyIndices() const;
 
         /**
-         * @brief Get the queue family index for the present Queue.
+         * @brief Get the queue family indices for the present Queues.
          *
-         * @return The queue family index for the present Queue or -1 if no present Queue was found.
+         * @return The queue family indices for the present Queues.
          */
-        int getPresentQueueFamilyIndex();
+        const std::vector<unsigned int>& getPresentQueueFamilyIndices() const;
 
         /**
-         * @brief Get the queue family index for the compute Queue.
+         * @brief Get the queue family indices for the compute Queues.
          *
-         * @return The queue family index for the compute Queue or -1 if no compute Queue was found.
+         * @return The queue family indices for the compute Queues.
          */
-        int getComputeQueueFamilyIndex();
+        const std::vector<unsigned int>& getComputeQueueFamilyIndices() const;
     };
 } // namespace fillcan

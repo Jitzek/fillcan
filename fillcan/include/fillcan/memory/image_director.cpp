@@ -16,7 +16,7 @@ namespace fillcan {
     ImageDirector::~ImageDirector() {}
 
     std::unique_ptr<Image> ImageDirector::make2DTexture(LogicalDevice* pLogicalDevice, unsigned int width, unsigned int height,
-                                                        VkSampleCountFlagBits samples) {
+                                                        VkSampleCountFlagBits samples, VkSharingMode sharingMode) {
         this->builder.reset();
         this->builder.setLogicalDevice(pLogicalDevice);
         this->builder.setFlags(0);
@@ -28,13 +28,13 @@ namespace fillcan {
         this->builder.setSamples(samples);
         this->builder.setImageTiling(VK_IMAGE_TILING_OPTIMAL);
         this->builder.setImageUsage(VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
-        this->builder.setSharingMode(VK_SHARING_MODE_EXCLUSIVE);
+        this->builder.setSharingMode(sharingMode);
         this->builder.setInitialLayout(VK_IMAGE_LAYOUT_UNDEFINED);
         return std::move(this->builder.getResult());
     }
 
     std::unique_ptr<Image> ImageDirector::makeDepthImage(LogicalDevice* pLogicalDevice, unsigned int width, unsigned int height,
-                                                         VkSampleCountFlagBits samples) {
+                                                         VkSampleCountFlagBits samples, VkSharingMode sharingMode) {
         this->builder.reset();
         this->builder.setLogicalDevice(pLogicalDevice);
         this->builder.setFlags(0);
@@ -52,7 +52,7 @@ namespace fillcan {
         this->builder.setSamples(samples);
         this->builder.setImageTiling(VK_IMAGE_TILING_OPTIMAL);
         this->builder.setImageUsage(VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
-        this->builder.setSharingMode(VK_SHARING_MODE_EXCLUSIVE);
+        this->builder.setSharingMode(sharingMode);
         this->builder.setInitialLayout(VK_IMAGE_LAYOUT_UNDEFINED);
         return std::move(this->builder.getResult());
     }

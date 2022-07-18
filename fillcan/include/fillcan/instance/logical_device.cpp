@@ -11,19 +11,22 @@
 
 namespace fillcan {
     LogicalDevice::LogicalDevice(PhysicalDevice* pPhysicalDevice) : pPhysicalDevice(pPhysicalDevice) {
-        int graphicsQueueFamilyIndex = pPhysicalDevice->getGraphicsQueueFamilyIndex();
-        int presentQueueFamilyIndex = pPhysicalDevice->getPresentQueueFamilyIndex();
-        int computeQueueFamilyIndex = pPhysicalDevice->getComputeQueueFamilyIndex();
-
         std::set<int> queueFamilyIndices = {};
 
-        if (graphicsQueueFamilyIndex != -1) {
+        int graphicsQueueFamilyIndex = -1;
+        int presentQueueFamilyIndex = -1;
+        int computeQueueFamilyIndex = -1;
+
+        if (pPhysicalDevice->getGraphicsQueueFamilyIndices().size() > 0) {
+            graphicsQueueFamilyIndex = pPhysicalDevice->getGraphicsQueueFamilyIndices().at(0);
             queueFamilyIndices.insert(graphicsQueueFamilyIndex);
         }
-        if (presentQueueFamilyIndex != -1) {
+        if (pPhysicalDevice->getPresentQueueFamilyIndices().size() > 0) {
+            presentQueueFamilyIndex = pPhysicalDevice->getPresentQueueFamilyIndices().at(0);
             queueFamilyIndices.insert(presentQueueFamilyIndex);
         }
-        if (computeQueueFamilyIndex != -1) {
+        if (pPhysicalDevice->getComputeQueueFamilyIndices().size() > 0) {
+            computeQueueFamilyIndex = pPhysicalDevice->getComputeQueueFamilyIndices().at(0);
             queueFamilyIndices.insert(computeQueueFamilyIndex);
         }
         if (queueFamilyIndices.size() == 0) {

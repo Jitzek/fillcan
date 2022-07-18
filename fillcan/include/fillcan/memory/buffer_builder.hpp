@@ -28,7 +28,8 @@ namespace fillcan {
          *
          * @details The Buffer Builder class is part of the creational design pattern to construct complex objects step by step.
          * The Builder pattern allows you to produce different types and representations of an object using the same construction code.
-         * It is recommended to use the Buffer Director for creating Buffers unless the director doesn't offer the required configuration.
+         *
+         * @note It is recommended to use the Buffer Director for creating Buffers unless the director doesn't offer the required configuration.
          */
         BufferBuilder();
         ~BufferBuilder();

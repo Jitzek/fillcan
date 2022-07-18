@@ -58,18 +58,18 @@ namespace fillcan {
 
                                if (pWindow != nullptr) {
                                    // Check if the physical device supports graphics operations
-                                   if (physicalDevice.getGraphicsQueueFamilyIndex() == -1) {
+                                   if (!(physicalDevice.getComputeQueueFamilyIndices().size() > 0)) {
                                        return true;
                                    }
 
                                    // Check if the physical device supports present operations
-                                   if (physicalDevice.getPresentQueueFamilyIndex() == -1) {
+                                   if (!(physicalDevice.getPresentQueueFamilyIndices().size() > 0)) {
                                        return true;
                                    }
                                }
 
                                // Check if the physical device supports compute operations
-                               if (physicalDevice.getComputeQueueFamilyIndex() == -1) {
+                               if (!(physicalDevice.getComputeQueueFamilyIndices().size() > 0)) {
                                    return true;
                                }
 
