@@ -71,9 +71,9 @@ export enum SectionID {
     PHYSICAL_DEVICE_getFormatProperties = "Physical-Device-getFormatProperties",
     PHYSICAL_DEVICE_getMemoryProperties = "Physical-Device-getMemoryProperties",
     PHYSICAL_DEVICE_findSupportedFormat = "Physical-Device-findSupportedFormat",
-    PHYSICAL_DEVICE_getGraphicsQueueFamilyIndex = "Physical-Device-getGraphicsQueueFamilyIndex",
-    PHYSICAL_DEVICE_getPresentQueueFamilyIndex = "Physical-Device-getPresentQueueFamilyIndex",
-    PHYSICAL_DEVICE_getComputeQueueFamilyIndex = "Physical-Device-getComputeQueueFamilyIndex",
+    PHYSICAL_DEVICE_getGraphicsQueueFamilyIndices = "Physical-Device-getGraphicsQueueFamilyIndices",
+    PHYSICAL_DEVICE_getPresentQueueFamilyIndices = "Physical-Device-getPresentQueueFamilyIndices",
+    PHYSICAL_DEVICE_getComputeQueueFamilyIndices = "Physical-Device-getComputeQueueFamilyIndices",
 
     // LOGICAL DEVICE
     LOGICAL_DEVICE = "Logical-Device",
@@ -163,6 +163,7 @@ export enum SectionID {
     BUFFER_destroyBufferView = "Buffer-destroyBufferView",
     BUFFER_copyTo = "Buffer-copyTo",
 
+    // BUFFER VIEW
     BUFFER_VIEW = "Buffer-View",
     BUFFER_VIEW_Constructor = "Buffer-View-Constructor",
     BUFFER_VIEW_getBufferViewHandle = "Buffer-View-getBufferViewHandle",
@@ -193,6 +194,7 @@ export enum SectionID {
     BUFFER_BUILDER_getResult = "Buffer-Builder-getResult",
     BUFFER_BUILDER_reset = "Buffer-Builder-reset",
 
+    // IMAGE
     IMAGE = "Image",
     IMAGE_Constructor = "Image-Constructor",
     IMAGE_getImageHandle = "Image-getImageHandle",
@@ -223,6 +225,31 @@ export enum SectionID {
     IMAGE_VIEW_Constructor = "Image-View-Constructor",
     IMAGE_VIEW_getImageViewHandle = "Image-View-getImageViewHandle",
 
+    // IMAGE DIRECTOR
+    IMAGE_DIRECTOR = "Image-Director",
+    IMAGE_DIRECTOR_Constructor = "Image-Director-Constructor",
+    IMAGE_DIRECTOR_make2DTexture = "Image-Director-make2DTexture",
+    IMAGE_DIRECTOR_makeDepthImage = "Image-Director-makeDepthImage",
+
+    // IMAGE BUILDER
+    IMAGE_BUILDER = "Image-Builder",
+    IMAGE_BUILDER_Constructor = "Image-Builder-Constructor",
+    IMAGE_BUILDER_setLogicalDevice = "Image-Builder-setLogicalDevice",
+    IMAGE_BUILDER_setFlags = "Image-Builder-setFlags",
+    IMAGE_BUILDER_setImageType = "Image-Builder-setImageType",
+    IMAGE_BUILDER_setFormat = "Image-Builder-setFormat",
+    IMAGE_BUILDER_setExtent = "Image-Builder-setExtent",
+    IMAGE_BUILDER_setMipLevels = "Image-Builder-setMipLevels",
+    IMAGE_BUILDER_setArrayLayers = "Image-Builder-setArrayLayers",
+    IMAGE_BUILDER_setSamples = "Image-Builder-setSamples",
+    IMAGE_BUILDER_setImageTiling = "Image-Builder-setImageTiling",
+    IMAGE_BUILDER_setImageUsage = "Image-Builder-setImageUsage",
+    IMAGE_BUILDER_setSharingMode = "Image-Builder-setSharingMode",
+    IMAGE_BUILDER_setQueueFamilyIndices = "Image-Builder-setQueueFamilyIndices",
+    IMAGE_BUILDER_setInitialLayout = "Image-Builder-setInitialLayout",
+    IMAGE_BUILDER_reset = "Image-Builder-reset",
+    IMAGE_BUILDER_getResult = "Image-Builder-getResult",
+
     // MEMORY
     MEMORY = "Memory",
     MEMORY_Constructor = "Memory-Constructor",
@@ -232,9 +259,6 @@ export enum SectionID {
     MEMORY_getData = "Memory-getData",
     MEMORY_flush = "Memory-flush",
     MEMORY_invalidate = "Memory-invalidate",
-
-    IMAGE_DIRECTOR = "Image-Director",
-    IMAGE_BUILDER = "Image-Builder",
 
     DESCRIPTOR_SET_LAYOUT_BUILDER = "Descriptor-Set-Layout-Builder",
     DESCRIPTOR_SET_LAYOUT = "Descriptor-Set-Layout",

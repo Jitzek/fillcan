@@ -39,7 +39,7 @@
             A member of the <Anchor
                 href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSharingMode.html"
                 target="_blank">VkSharingMode</Anchor
-            >-enumerant indicating how the Buffer will be used in the multiple
+            >-enumerant indicating how the <Reference sectionID={SectionID.BUFFER}>Buffer</Reference> will be used in the multiple
             device <Reference sectionID={SectionID.QUEUE}>Queues</Reference> supported
             by the Device.
         </li>

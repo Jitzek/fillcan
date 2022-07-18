@@ -66,9 +66,9 @@
     import GetQueueFamilyProperties from "$components/Documentation/Sections/Physical_Device/getQueueFamilyProperties.svelte";
     import GetFormatProperties from "$components/Documentation/Sections/Physical_Device/getFormatProperties.svelte";
     import FindSupportedFormat from "$components/Documentation/Sections/Physical_Device/findSupportedFormat.svelte";
-    import GetGraphicsQueueFamilyIndex from "$components/Documentation/Sections/Physical_Device/getGraphicsQueueFamilyIndex.svelte";
-    import GetPresentQueueFamilyIndex from "$components/Documentation/Sections/Physical_Device/getPresentQueueFamilyIndex.svelte";
-    import GetComputeQueueFamilyIndex from "$components/Documentation/Sections/Physical_Device/getComputeQueueFamilyIndex.svelte";
+    import GetGraphicsQueueFamilyIndices from "$components/Documentation/Sections/Physical_Device/getGraphicsQueueFamilyIndices.svelte";
+    import GetPresentQueueFamilyIndices from "$components/Documentation/Sections/Physical_Device/getPresentQueueFamilyIndices.svelte";
+    import GetComputeQueueFamilyIndices from "$components/Documentation/Sections/Physical_Device/getComputeQueueFamilyIndices.svelte";
     import LogicalDevice from "$components/Documentation/Sections/Logical_Device/LogicalDevice.svelte";
     import LogicalDeviceConstructor from "$components/Documentation/Sections/Logical_Device/LogicalDeviceConstructor.svelte";
     import GetLogicalDeviceHandle from "$components/Documentation/Sections/Logical_Device/getLogicalDeviceHandle.svelte";
@@ -203,6 +203,27 @@
     import BufferBuilderSetQueueFamilyIndices from "$components/Documentation/Sections/Buffer_Builder/BufferBuilderSetQueueFamilyIndices.svelte";
     import BufferBuilderReset from "$components/Documentation/Sections/Buffer_Builder/BufferBuilderReset.svelte";
     import BufferBuilderGetResult from "$components/Documentation/Sections/Buffer_Builder/BufferBuilderGetResult.svelte";
+    import ImageDirectorConstructor from "$components/Documentation/Sections/Image_Director/ImageDirectorConstructor.svelte";
+    import ImageDirector from "$components/Documentation/Sections/Image_Director/ImageDirector.svelte";
+    import ImageDirectorMake2DTexture from "$components/Documentation/Sections/Image_Director/ImageDirectorMake2DTexture.svelte";
+    import ImageDirectorMakeDepthImage from "$components/Documentation/Sections/Image_Director/ImageDirectorMakeDepthImage.svelte";
+    import ImageBuilder from "$components/Documentation/Sections/Image_Builder/ImageBuilder.svelte";
+    import ImageBuilderConstructor from "$components/Documentation/Sections/Image_Builder/ImageBuilderConstructor.svelte";
+    import ImageBuilderSetLogicalDevice from "$components/Documentation/Sections/Image_Builder/ImageBuilderSetLogicalDevice.svelte";
+    import ImageBuilderSetFlags from "$components/Documentation/Sections/Image_Builder/ImageBuilderSetFlags.svelte";
+    import ImageBuilderSetImageType from "$components/Documentation/Sections/Image_Builder/ImageBuilderSetImageType.svelte";
+    import ImageBuilderSetFormat from "$components/Documentation/Sections/Image_Builder/ImageBuilderSetFormat.svelte";
+    import ImageBuilderSetExtent from "$components/Documentation/Sections/Image_Builder/ImageBuilderSetExtent.svelte";
+    import ImageBuilderSetMipLevels from "$components/Documentation/Sections/Image_Builder/ImageBuilderSetMipLevels.svelte";
+    import ImageBuilderSetArrayLayers from "$components/Documentation/Sections/Image_Builder/ImageBuilderSetArrayLayers.svelte";
+    import ImageBuilderSetSamples from "$components/Documentation/Sections/Image_Builder/ImageBuilderSetSamples.svelte";
+    import ImageBuilderSetImageTiling from "$components/Documentation/Sections/Image_Builder/ImageBuilderSetImageTiling.svelte";
+    import ImageBuilderSetImageUsage from "$components/Documentation/Sections/Image_Builder/ImageBuilderSetImageUsage.svelte";
+    import ImageBuilderSetSharingMode from "$components/Documentation/Sections/Image_Builder/ImageBuilderSetSharingMode.svelte";
+    import ImageBuilderSetQueueFamilyIndices from "$components/Documentation/Sections/Image_Builder/ImageBuilderSetQueueFamilyIndices.svelte";
+    import ImageBuilderSetInitialLayout from "$components/Documentation/Sections/Image_Builder/ImageBuilderSetInitialLayout.svelte";
+    import ImageBuilderReset from "$components/Documentation/Sections/Image_Builder/ImageBuilderReset.svelte";
+    import ImageBuilderGetResult from "$components/Documentation/Sections/Image_Builder/ImageBuilderGetResult.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -606,26 +627,26 @@
             visible: false,
         },
         {
-            id: SectionID.PHYSICAL_DEVICE_getGraphicsQueueFamilyIndex,
-            label: "getGraphicsQueueFamilyIndex",
+            id: SectionID.PHYSICAL_DEVICE_getGraphicsQueueFamilyIndices,
+            label: "getGraphicsQueueFamilyIndices",
             heading: 3,
-            content: GetGraphicsQueueFamilyIndex,
+            content: GetGraphicsQueueFamilyIndices,
             props: {},
             visible: false,
         },
         {
-            id: SectionID.PHYSICAL_DEVICE_getPresentQueueFamilyIndex,
-            label: "getPresentQueueFamilyIndex",
+            id: SectionID.PHYSICAL_DEVICE_getPresentQueueFamilyIndices,
+            label: "getPresentQueueFamilyIndices",
             heading: 3,
-            content: GetPresentQueueFamilyIndex,
+            content: GetPresentQueueFamilyIndices,
             props: {},
             visible: false,
         },
         {
-            id: SectionID.PHYSICAL_DEVICE_getComputeQueueFamilyIndex,
-            label: "getComputeQueueFamilyIndex",
+            id: SectionID.PHYSICAL_DEVICE_getComputeQueueFamilyIndices,
+            label: "getComputeQueueFamilyIndices",
             heading: 3,
-            content: GetComputeQueueFamilyIndex,
+            content: GetComputeQueueFamilyIndices,
             props: {},
             visible: false,
         },
@@ -1418,6 +1439,174 @@
             label: "getBufferViewHandle",
             heading: 3,
             content: GetBufferViewHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_DIRECTOR,
+            label: "Image Director",
+            heading: 2,
+            content: ImageDirector,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_DIRECTOR_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: ImageDirectorConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_DIRECTOR_make2DTexture,
+            label: "make2DTexture",
+            heading: 3,
+            content: ImageDirectorMake2DTexture,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_DIRECTOR_makeDepthImage,
+            label: "makeDepthImage",
+            heading: 3,
+            content: ImageDirectorMakeDepthImage,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_BUILDER,
+            label: "Image Builder",
+            heading: 2,
+            content: ImageBuilder,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_BUILDER_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: ImageBuilderConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_BUILDER_setLogicalDevice,
+            label: "setLogicalDevice",
+            heading: 3,
+            content: ImageBuilderSetLogicalDevice,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_BUILDER_setFlags,
+            label: "setFlags",
+            heading: 3,
+            content: ImageBuilderSetFlags,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_BUILDER_setImageType,
+            label: "setImageType",
+            heading: 3,
+            content: ImageBuilderSetImageType,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_BUILDER_setFormat,
+            label: "setFormat",
+            heading: 3,
+            content: ImageBuilderSetFormat,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_BUILDER_setExtent,
+            label: "setExtent",
+            heading: 3,
+            content: ImageBuilderSetExtent,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_BUILDER_setMipLevels,
+            label: "setMipLevels",
+            heading: 3,
+            content: ImageBuilderSetMipLevels,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_BUILDER_setArrayLayers,
+            label: "setArrayLayers",
+            heading: 3,
+            content: ImageBuilderSetArrayLayers,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_BUILDER_setSamples,
+            label: "setSamples",
+            heading: 3,
+            content: ImageBuilderSetSamples,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_BUILDER_setImageTiling,
+            label: "setImageTiling",
+            heading: 3,
+            content: ImageBuilderSetImageTiling,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_BUILDER_setImageUsage,
+            label: "setImageUsage",
+            heading: 3,
+            content: ImageBuilderSetImageUsage,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_BUILDER_setSharingMode,
+            label: "setSharingMode",
+            heading: 3,
+            content: ImageBuilderSetSharingMode,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_BUILDER_setQueueFamilyIndices,
+            label: "setQueueFamilyIndices",
+            heading: 3,
+            content: ImageBuilderSetQueueFamilyIndices,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_BUILDER_setInitialLayout,
+            label: "setInitialLayout",
+            heading: 3,
+            content: ImageBuilderSetInitialLayout,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_BUILDER_reset,
+            label: "reset",
+            heading: 3,
+            content: ImageBuilderReset,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.IMAGE_BUILDER_getResult,
+            label: "getResult",
+            heading: 3,
+            content: ImageBuilderGetResult,
             props: {},
             visible: false,
         },

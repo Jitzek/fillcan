@@ -9,18 +9,23 @@
     import cppHighlight from "svelte-highlight/languages/cpp";
 </script>
 
-<Highlight language={cppHighlight} code={`int getPresentQueueFamilyIndex();`} />
+<Highlight
+    language={cppHighlight}
+    code={`std::unique_ptr<Image> getResult();`}
+/>
 <MethodDescription>
     <span slot="details">
-        Get the queue family index for the present <Reference
-            sectionID={SectionID.QUEUE}>Queue</Reference
+        Get the resulting <Reference sectionID={SectionID.IMAGE}
+            >Image</Reference
         >.
     </span>
     <span slot="return">
-        The queue family index for the present Queue or <code>-1</code> if no
-        present
-        <Reference sectionID={SectionID.QUEUE}>Queue</Reference> was found.</span
-    >
+        A <Anchor
+            href="https://en.cppreference.com/w/cpp/memory/unique_ptr"
+            target="_blank">unique pointer</Anchor
+        > to the <Reference sectionID={SectionID.IMAGE}>Image</Reference>, it's
+        ownership will be moved.
+    </span>
 </MethodDescription>
 
 <style lang="scss">

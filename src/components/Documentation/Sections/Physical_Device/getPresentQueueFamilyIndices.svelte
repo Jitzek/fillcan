@@ -9,18 +9,19 @@
     import cppHighlight from "svelte-highlight/languages/cpp";
 </script>
 
-<Highlight language={cppHighlight} code={`int getComputeQueueFamilyIndex();`} />
+<Highlight
+    language={cppHighlight}
+    code={`const std::vector<unsigned int>& getPresentQueueFamilyIndices() const;`}
+/>
 <MethodDescription>
     <span slot="details">
-        Get the queue family index for the compute <Reference
-            sectionID={SectionID.QUEUE}>Queue</Reference
+        Get the queue family indices for the present <Reference
+            sectionID={SectionID.QUEUE}>Queues</Reference
         >.
     </span>
     <span slot="return">
-        The queue family index for the compute Queue or <code>-1</code> if no
-        compute
-        <Reference sectionID={SectionID.QUEUE}>Queue</Reference> was found.</span
-    >
+        The queue family indices for the present Queues.
+    </span>
 </MethodDescription>
 
 <style lang="scss">
