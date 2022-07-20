@@ -32,6 +32,11 @@ namespace fillcan {
          * @param pBuffer A pointer to the Buffer to create a Memory allocation for.
          * @param flags A bitmask of VkMemoryPropertyFlagBits specifying the required properties for the Memory.
          * @see https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkMemoryPropertyFlagBits.html
+         *
+         * @throws std::runtime_error if the Vulkan Device Memory couldn't be created.
+         * @throws std::runtime_error if the given flags are not supported.
+         * @throws std::runtime_error if the memory requirements are not supported by the Physical Device.
+         * @see https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDeviceMemory.html
          */
         Memory(LogicalDevice* pLogicalDevice, Buffer* pBuffer, VkMemoryPropertyFlags flags);
 

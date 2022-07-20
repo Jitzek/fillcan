@@ -60,6 +60,9 @@ namespace fillcan {
          * of strings containing the names of the extensions to enable. The available extensions can be retrieved using
          * vkEnumerateInstanceExtensionProperties(). To be able to use a Swapchain this list should contain VK_KHR_SWAPCHAIN_EXTENSION_NAME (Fillcan
          * Graphics contains this by default).
+         *
+         * @throws std::runtime_error if the Instance couldn't be created.
+         * @throws std::runtime_error if the Device Pool couldn't be created.
          */
         Fillcan(const char* pApplicationName, uint32_t applicationVersion, VkPhysicalDeviceFeatures requiredDeviceFeatures = {},
                 std::vector<const char*> requiredDeviceExtensions = {});
@@ -113,6 +116,8 @@ namespace fillcan {
          * @param preprocess Whether to preprocess the shader to validate the GLSL code. This will throw an exception if the shader failed to compile.
          * @param optimize Whether the optimize the shader.
          * @return A unique pointer of the created Shader Module (ownership will be transferred to the implementation).
+         *
+         * @throws std::runtime_error if the Shader Module couldn't be created.
          */
         std::unique_ptr<ShaderModule> createShaderModule(const std::string shaderDirectory, const std::string shaderFileName,
                                                          shaderc_shader_kind shaderKind,

@@ -101,6 +101,9 @@ namespace fillcan {
          * @param pOldSwapchain A pointer to the old Swapchain which can be used to return an existing Swapchain associated with the surface to Vulkan
          * for recycling. This will be used when one Swapchain is replaced by another, such as when a Window is resized and the Swapchain needs to be
          * remapped with larger images.
+         *
+         * @throws std::runtime_error if the Vulkan Swapchain couldn't be created.
+         * @see https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSwapchainKHR.html
          */
         Swapchain(LogicalDevice* pLogicalDevice, Window* pWindow, Queue* pPresentQueue, uint32_t imageCount = 3,
                   VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR, Swapchain* pOldSwapchain = nullptr);

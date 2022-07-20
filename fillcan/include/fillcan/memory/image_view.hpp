@@ -42,6 +42,9 @@ namespace fillcan {
          * @param components The order of the components in the view may differ from that in the parent image. This makes it possible, for example, to
          * create an RGBA representation of an image in BGRA format. This remapping is specified using an instance of the
          * VkComponentMapping-structure.
+         *
+         * @throws std::runtime_error if the Vulkan Image View couldn't be created.
+         * @see https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageView.html
          */
         ImageView(LogicalDevice* pLogicalDevice, Image* pImage, VkImageViewType viewType, VkFormat format, VkImageSubresourceRange subresourceRange,
                   VkComponentMapping components);

@@ -41,6 +41,10 @@ namespace fillcan {
          * @param requiredExtensions The Instance extensions that should be enabled. To get a list of supported extensions the function
          * vkEnumerateInstanceExtensionProperties() can be called
          * ( @see https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkEnumerateInstanceExtensionProperties.html ).
+         *
+         * @throws std::runtime_error if the Vulkan Instance couldn't be created.
+         * @throws std::runtime_error when running in DEBUG mode and the Debug Messanger couldn't be created.
+         * @see https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkInstance.html
          */
         Instance(std::string pApplicationName, unsigned int applicationVersion, std::vector<const char*> requiredLayers,
                  std::vector<const char*> requiredExtensions);

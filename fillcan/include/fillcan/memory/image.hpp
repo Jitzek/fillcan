@@ -224,6 +224,8 @@ namespace fillcan {
          * @see https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkComponentMapping.html
          *
          * @return The index of the newly created Buffer View.
+         *
+         * @throws std::runtime_error if the Image View couldn't be created.
          */
         unsigned int createImageView(VkImageViewType viewType, VkFormat format,
                                      VkImageSubresourceRange subresourceRange = {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1},

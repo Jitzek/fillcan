@@ -39,6 +39,9 @@ namespace fillcan {
          * buffer, the range divided by the size of a texel in format field must be less than or equal to this limit. maxTexelBufferElements is
          * guaranteed to be a minimum of 65,536, so if the view being created contains fewer texels, this limit does not need to be requested.
          * @see https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceLimits.html
+         *
+         * @throws std::runtime_error if the Vulkan Buffer View couldn't be created.
+         * @see https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBufferView.html
          */
         BufferView(LogicalDevice* pLogicalDevice, Buffer* pBuffer, VkFormat format, VkDeviceSize offset = 0, VkDeviceSize range = VK_WHOLE_SIZE);
         ~BufferView();

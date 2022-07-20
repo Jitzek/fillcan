@@ -34,6 +34,9 @@ namespace fillcan {
          * VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT should be set.
          * @see https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkCommandPoolCreateFlagBits.html
          * @param queueFamilyIndex The family index of Queues where Command Buffers allocated from this pool are sent.
+         *
+         * @throws std::runtime_error if the Vulkan Command Pool couldn't be created.
+         * @see https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkCommandPool.html
          */
         CommandPool(LogicalDevice* pLogicalDevice, VkCommandPoolCreateFlags flags, unsigned int queueFamilyIndex);
         ~CommandPool();

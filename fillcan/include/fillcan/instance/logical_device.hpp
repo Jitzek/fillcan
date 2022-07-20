@@ -31,6 +31,10 @@ namespace fillcan {
          * Logical Device that the application will communicate with most of the time.
          *
          * @param pPhysicalDevice A pointer to the Physical Device to create a Logical Device from.
+         *
+         * @throws std::runtime_error if the Vulkan Logical Device couldn't be created.
+         * @see https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDevice.html
+         * @throws std::runtime_error if no queues were found.
          */
         LogicalDevice(PhysicalDevice* pPhysicalDevice);
         ~LogicalDevice();

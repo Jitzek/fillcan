@@ -38,6 +38,8 @@ namespace fillcan {
          * @param pLogicalDevice A pointer to the Logical Device the Queue should be associated with.
          * @param queueFamilyIndex The index of the chosen queue family.
          * @param queueIndex The index of the chosen queue from the queue family.
+         *
+         * @throws When either {queueFamilyIndex} or {queueIndex} is out of range.
          */
         Queue(LogicalDevice* pLogicalDevice, unsigned int queueFamilyIndex, unsigned int queueIndex);
         ~Queue();

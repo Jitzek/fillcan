@@ -37,6 +37,9 @@ namespace fillcan {
          * of strings containing the names of the extensions to enable. The available extensions can be retrieved using
          * vkEnumerateInstanceExtensionProperties(). To be able to use a Swapchain this list should contain VK_KHR_SWAPCHAIN_EXTENSION_NAME (Fillcan
          * Graphics contains this by default).
+         *
+         * @throws std::runtime_error if the Instance couldn't be created.
+         * @throws std::runtime_error if the Device Pool couldn't be created.
          */
         FillcanGraphics(const char* pApplicationName, uint32_t applicationVersion, unsigned int windowWidth, unsigned int windowHeight,
                         VkPhysicalDeviceFeatures requiredDeviceFeatures = {},
@@ -70,6 +73,8 @@ namespace fillcan {
          * https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPresentModeKHR.html).
          *
          * @return The index of the created Swapchain.
+         *
+         * @throws std::runtime_error if the Swapchain couldn't be created.
          */
         unsigned int createSwapchain(uint32_t imageCount = 3, VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR);
 
@@ -82,6 +87,8 @@ namespace fillcan {
          * @param index The index of the Swapchain to be recreated. @see FillcanGraphics#createSwapchain.
          *
          * @return The index of the recreated Swapchain.
+         *
+         * @throws std::runtime_error if the Swapchain couldn't be recreated.
          */
         unsigned int recreateSwapchain(uint32_t imageCount, VkPresentModeKHR presentMode, unsigned int index = 0);
 
@@ -91,6 +98,8 @@ namespace fillcan {
          * @param index The index of the Swapchain. @see FillcanGraphics#createSwapchain.
          *
          * @return The index of the recreated Swapchain.
+         *
+         * @throws std::runtime_error if the Swapchain couldn't be recreated.
          */
         unsigned int recreateSwapchain(unsigned int index = 0);
 

@@ -30,8 +30,10 @@ namespace fillcan {
          * @see https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/VkPhysicalDeviceFeatures.html
          * @param requiredDeviceFeatures The extensions a Physical Device should enable for the purposes of the application.
          * This should be a list of strings containing the names of the extensions to enable. The available extensions can be retrieved using
-         * vkEnumerateInstanceExtensionProperties() 
+         * vkEnumerateInstanceExtensionProperties()
          * @see https://www.khronos.org/registry/vulkan/specs/1.3-extensions/man/html/vkEnumerateInstanceExtensionProperties.html.
+         *
+         * @throws std::runtime_error if no devices with Vulkan support were found.
          */
         DevicePool(Instance* pInstance, Window* pWindow, std::vector<const char*> requiredDeviceExtensions,
                    VkPhysicalDeviceFeatures requiredDeviceFeatures);
@@ -54,6 +56,8 @@ namespace fillcan {
          * @see DevicePool#getSupportedPhysicalDevices
          *
          * @return A pointer to the created logical device.
+         *
+         * @throws std::runtime_error if the Logical Device couldn't be created.
          */
         LogicalDevice* selectDevice(unsigned int deviceIndex);
 

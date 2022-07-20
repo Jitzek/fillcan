@@ -53,6 +53,9 @@ namespace fillcan {
          * sharingMode should be set to VK_SHARING_MODE_EXCLUSIVE.
          * @see https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSharingMode.html
          * @param queueFamilyIndices An array of queue family indices on which the buffer will be used.
+         *
+         * @throws std::runtime_error if the Vulkan Buffer couldn't be created.
+         * @see https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBuffer.html
          */
         Buffer(LogicalDevice* pLogicalDevice, VkBufferCreateFlags& flags, VkDeviceSize& size, VkBufferUsageFlags& usage, VkSharingMode& sharingMode,
                std::vector<uint32_t> queueFamilyIndices = {});
@@ -128,6 +131,8 @@ namespace fillcan {
          * buffer, this must be VK_WHOLE_SIZE.
          *
          * @return The index of the newly created Buffer View.
+         *
+         * @throws std::runtime_error if the Buffer View couldn't be created.
          */
         unsigned int createBufferView(VkFormat format, VkDeviceSize offset = 0, VkDeviceSize range = VK_WHOLE_SIZE);
 
