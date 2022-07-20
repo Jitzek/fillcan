@@ -42,6 +42,15 @@
             > specifying the required properties for the Memory.
         </li>
     </div>
+    <span slot="throws">
+        <code>std::runtime_error</code> if the <Anchor
+            href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDeviceMemory.html"
+            target="_blank">Vulkan Device Memory</Anchor
+        > couldn't be created, the given <code>flags</code> are not supported or
+        the memory requirements are not supported by the <Reference
+            sectionID={SectionID.PHYSICAL_DEVICE}>Physical Device</Reference
+        >.
+    </span>
 </MethodDescription><br />
 
 <Highlight

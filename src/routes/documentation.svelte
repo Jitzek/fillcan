@@ -234,6 +234,11 @@
     import Semaphore from "$components/Documentation/Sections/Semaphore/Semaphore.svelte";
     import SemaphoreConstructor from "$components/Documentation/Sections/Semaphore/SemaphoreConstructor.svelte";
     import GetSemaphoreHandle from "$components/Documentation/Sections/Semaphore/getSemaphoreHandle.svelte";
+import ShaderModule from "$components/Documentation/Sections/Shader_Module/ShaderModule.svelte";
+import ShaderModuleConstructor from "$components/Documentation/Sections/Shader_Module/ShaderModuleConstructor.svelte";
+import GetShaderModuleHandle from "$components/Documentation/Sections/Shader_Module/getShaderModuleHandle.svelte";
+import ShaderModuleGetDescriptorSetLayouts from "$components/Documentation/Sections/Shader_Module/ShaderModuleGetDescriptorSetLayouts.svelte";
+import ShaderModuleGetDescriptorPool from "$components/Documentation/Sections/Shader_Module/ShaderModuleGetDescriptorPool.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -1814,7 +1819,7 @@
         },
         {
             id: SectionID.IMAGE_VIEW,
-            label: "ImageView",
+            label: "Image View",
             heading: 2,
             content: ImageView,
             props: {},
@@ -1977,6 +1982,46 @@
             label: "s_resetAll",
             heading: 3,
             content: FenceSResetAll,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SHADER_MODULE,
+            label: "Shader Module",
+            heading: 2,
+            content: ShaderModule,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SHADER_MODULE_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: ShaderModuleConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SHADER_MODULE_getShaderModuleHandle,
+            label: "getShaderModuleHandle",
+            heading: 3,
+            content: GetShaderModuleHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SHADER_MODULE_getDescriptorSetLayouts,
+            label: "getDescriptorSetLayouts",
+            heading: 3,
+            content: ShaderModuleGetDescriptorSetLayouts,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SHADER_MODULE_getDescriptorPool,
+            label: "getDescriptorPool",
+            heading: 3,
+            content: ShaderModuleGetDescriptorPool,
             props: {},
             visible: false,
         },

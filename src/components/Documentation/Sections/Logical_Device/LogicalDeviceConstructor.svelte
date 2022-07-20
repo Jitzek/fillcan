@@ -27,7 +27,10 @@
         <code>std::runtime_error</code> if the <Anchor
             href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDevice.html"
             target="_blank">Vulkan Device</Anchor
-        > couldn't be created.
+        > couldn't be created.<br />
+        throws <code>std::runtime_error</code> aswell if no <Reference
+            sectionID={SectionID.QUEUE}>queues</Reference
+        > were found.
     </span>
 </MethodDescription><br />
 The Logical Device can be retrieved using the <Reference

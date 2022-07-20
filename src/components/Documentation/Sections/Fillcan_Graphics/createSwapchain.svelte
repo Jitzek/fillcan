@@ -1,7 +1,7 @@
 <script lang="ts">
     import Anchor from "$components/Documentation/Anchor.svelte";
     import MethodDescription from "$components/Documentation/MethodDescription.svelte";
-import Reference from "$components/Documentation/Reference.svelte";
+    import Reference from "$components/Documentation/Reference.svelte";
     import { SectionID } from "$objects/Documentation/Section";
     import { getState } from "$stores/StateStore";
     import { Highlight } from "svelte-highlight";
@@ -23,7 +23,9 @@ import Reference from "$components/Documentation/Reference.svelte";
     <div slot="params">
         <li>
             <code>imageCount</code><br />
-            The amount of <Reference sectionID={SectionID.IMAGE}>Images</Reference> the <Anchor
+            The amount of <Reference sectionID={SectionID.IMAGE}
+                >Images</Reference
+            > the <Anchor
                 href="{getState().URL.documentation}#{SectionID.SWAPCHAIN}"
                 >Swapchain</Anchor
             > should have.
@@ -45,4 +47,9 @@ import Reference from "$components/Documentation/Reference.svelte";
             >Swapchain</Anchor
         >.</span
     >
+    <span slot="throws">
+        <code>std::runtime_error</code> if the <Reference
+            sectionID={SectionID.SWAPCHAIN}>Swapchain</Reference
+        > couldn't be created.
+    </span>
 </MethodDescription>

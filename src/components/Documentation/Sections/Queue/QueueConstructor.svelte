@@ -14,9 +14,7 @@
     code={`Queue(LogicalDevice* pLogicalDevice, unsigned int queueFamilyIndex, unsigned int queueIndex);`}
 />
 <MethodDescription>
-    <span slot="details">
-        Create a new Queue.<br />
-    </span>
+    <span slot="details"> Create a new Queue. </span>
     <div slot="params">
         <li>
             <code>pLogicalDevice</code><br />
@@ -33,6 +31,10 @@
             The index of the chosen queue from the queue family.
         </li>
     </div>
+    <span slot="throws">
+        When either <code>queueFamilyIndex</code> or <code>queueIndex</code> is out
+        of range.
+    </span>
 </MethodDescription>
 
 <style lang="scss">

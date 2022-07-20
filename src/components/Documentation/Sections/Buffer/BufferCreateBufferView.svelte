@@ -54,6 +54,11 @@
             >getBufferView</Reference
         >.
     </span>
+    <span slot="throws">
+        <code>std::runtime_error</code> if the <Reference
+            sectionID={SectionID.BUFFER_VIEW}>Buffer View</Reference
+        > couldn't be created.
+    </span>
 </MethodDescription>
 
 <style lang="scss">

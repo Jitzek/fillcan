@@ -30,6 +30,12 @@
             > which specify the initial state and behaviour of the fence.
         </li>
     </div>
+    <span slot="throws">
+        <code>std::runtime_error</code> if the <Anchor
+            href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkFence.html"
+            target="_blank">Vulkan Fence</Anchor
+        > couldn't be created.
+    </span>
 </MethodDescription>
 
 <style lang="scss">

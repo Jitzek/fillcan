@@ -16,7 +16,7 @@ The <code>Semaphore</code> class takes in a pointer to a <Reference
     sectionID={SectionID.LOGICAL_DEVICE}>Logical Device</Reference
 > uses this information to construct a new <Anchor
     href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSemaphore.html"
-    target="_blank">Vulkan Semaphroe</Anchor
+    target="_blank">Vulkan Semaphore</Anchor
 ><br />
 A semaphore is a type of synchronization primitive that allows work performed by
 different <Reference sectionID={SectionID.QUEUE}>queues</Reference> to be properly

@@ -59,6 +59,11 @@
             >Swapchain</Anchor
         >.</span
     >
+    <span slot="throws">
+        <code>std::runtime_error</code> if the <Reference
+            sectionID={SectionID.SWAPCHAIN}>Swapchain</Reference
+        > couldn't be recreated.
+    </span>
 </MethodDescription><br />
 <Highlight
     language={cppHighlight}
@@ -91,4 +96,9 @@
             >Swapchain</Anchor
         >.</span
     >
+    <span slot="throws">
+        <code>std::runtime_error</code> if the <Reference
+            sectionID={SectionID.SWAPCHAIN}>Swapchain</Reference
+        > couldn't be recreated.
+    </span>
 </MethodDescription>

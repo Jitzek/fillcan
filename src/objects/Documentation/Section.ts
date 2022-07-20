@@ -274,6 +274,13 @@ export enum SectionID {
     FENCE_s_waitForAll = "Fence-s_waitForAll",
     FENCE_s_resetAll = "Fence-s_resetAll",
 
+    // SHADER MODULE
+    SHADER_MODULE = "Shader-Module",
+    SHADER_MODULE_Constructor = "Shader-Module-Constructor",
+    SHADER_MODULE_getShaderModuleHandle = "Shader-Module-getShaderModuleHandle",
+    SHADER_MODULE_getDescriptorSetLayouts = "Shader-Module-getDescriptorSetLayouts",
+    SHADER_MODULE_getDescriptorPool = "Shader-Module-getDescriptorPool",
+
     DESCRIPTOR_SET_LAYOUT_BUILDER = "Descriptor-Set-Layout-Builder",
     DESCRIPTOR_SET_LAYOUT = "Descriptor-Set-Layout",
     DESCRIPTOR_POOL_BUILDER = "Descriptor-Pool-Builder",

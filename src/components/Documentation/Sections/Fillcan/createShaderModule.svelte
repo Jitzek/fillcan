@@ -1,6 +1,7 @@
 <script lang="ts">
     import Anchor from "$components/Documentation/Anchor.svelte";
     import MethodDescription from "$components/Documentation/MethodDescription.svelte";
+    import Reference from "$components/Documentation/Reference.svelte";
     import { SectionID } from "$objects/Documentation/Section";
     import { getState } from "$stores/StateStore";
     import { Highlight } from "svelte-highlight";
@@ -105,8 +106,14 @@
         </li>
     </div>
     <span slot="return">
-        A unique pointer of the created Shader Module (ownership will be
-        transferred to the implementation).
+        A unique pointer to the created <Reference
+            sectionID={SectionID.SHADER_MODULE}>Shader Module</Reference
+        > (ownership will be transferred to the implementation).
+    </span>
+    <span slot="throws">
+        <code>std::runtime_error</code> if the <Reference
+            sectionID={SectionID.SHADER_MODULE}>Shader Module</Reference
+        > couldn't be created.
     </span>
 </MethodDescription><br />
 Example:
