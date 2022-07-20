@@ -281,8 +281,13 @@ export enum SectionID {
     SHADER_MODULE_getDescriptorSetLayouts = "Shader-Module-getDescriptorSetLayouts",
     SHADER_MODULE_getDescriptorPool = "Shader-Module-getDescriptorPool",
 
-    DESCRIPTOR_SET_LAYOUT_BUILDER = "Descriptor-Set-Layout-Builder",
+    // DESCRIPTOR SET LAYOUT
     DESCRIPTOR_SET_LAYOUT = "Descriptor-Set-Layout",
+    DESCRIPTOR_SET_LAYOUT_Constructor = "Descriptor-Set-Layout-Constructor",
+    DESCRIPTOR_SET_LAYOUT_getDescriptorSetLayoutHandle = "Descriptor-Set-Layout-getDescriptorSetLayoutHandle",
+    DESCRIPTOR_SET_LAYOUT_getBindings = "Descriptor-Set-Layout-getBindings",
+
+    DESCRIPTOR_SET_LAYOUT_BUILDER = "Descriptor-Set-Layout-Builder",
     DESCRIPTOR_POOL_BUILDER = "Descriptor-Pool-Builder",
     DESCRIPTOR_POOL = "Descriptor-Pool",
     DESCRIPTOR_SET = "Descriptor-Set",
@@ -290,6 +295,7 @@ export enum SectionID {
     ASSET_MANAGER = "Asset-Manager",
 
     PIPELINE = "Pipeline",
+    PIPELINE_LAYOUT = "Pipeline-Layout",
     GRAPHICS_PIPELINE = "Graphics-Pipeline",
     COMPUTE_PIPELINE = "Compute-Pipeline",
     RENDER_PASS = "Render-Pass",

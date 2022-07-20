@@ -22,12 +22,16 @@
 />
 <MethodDescription>
     <span slot="details">
-        Create a Shader Module object. Uses <Anchor
-            href="https://github.com/google/shaderc">Shaderc</Anchor
-        > to compile the file (defined by <code>shaderDirectory</code> and
-        <code>shaderFileName</code>) from GLSL to SPIR-V. Any resources the
-        shader might need should be passed using the descriptor set layouts and
-        the descriptor pool, both are <Anchor
+        Create a Shader Module object.<br />
+        Uses <Anchor href="https://github.com/google/shaderc">Shaderc</Anchor> to
+        compile a file (defined by <code>shaderDirectory</code> and
+        <code>shaderFileName</code>) from <Anchor
+            href="https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)"
+            target="_blank">GLSL</Anchor
+        > to <Anchor href="https://www.khronos.org/spir/" target="_blank"
+            >SPIR-V</Anchor
+        >. Any resources the shader might need should be passed using the
+        descriptor set layouts and the descriptor pool, both are <Anchor
             href="https://en.cppreference.com/w/cpp/memory/unique_ptr"
             target="_blank">unique pointers</Anchor
         > which ownerships should be moved to the Shader Module using <Anchor
@@ -38,11 +42,17 @@
     <div slot="params">
         <li>
             <code>shaderDirectory</code><br />
-            The directory where the GLSL shader file is located.
+            The directory where the <Anchor
+                href="https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)"
+                target="_blank">GLSL</Anchor
+            > shader file is located.
         </li>
         <li>
             <code>shaderFileName</code><br />
-            The name of the GLSL shader file.
+            The name of the <Anchor
+                href="https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)"
+                target="_blank">GLSL</Anchor
+            > shader file.
         </li>
         <li>
             <code>shaderKind</code><br />
@@ -97,8 +107,10 @@
         </li>
         <li>
             <code>preprocess</code><br />
-            Whether to preprocess the shader to validate the GLSL code. This will
-            throw an exception if the shader failed to compile.
+            Whether to preprocess the shader to validate the <Anchor
+                href="https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)"
+                target="_blank">GLSL</Anchor
+            > code. This will throw an exception if the shader failed to compile.
         </li>
         <li>
             <code>optimize</code><br />

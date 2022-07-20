@@ -40,9 +40,11 @@
             A member of the <Anchor
                 href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkSharingMode.html"
                 target="_blank">VkSharingMode</Anchor
-            >-enumerant indicating how the <Reference sectionID={SectionID.BUFFER}>Buffer</Reference> will be used in the multiple
-            device <Reference sectionID={SectionID.QUEUE}>Queues</Reference> supported
-            by the Device.
+            >-enumerant indicating how the <Reference
+                sectionID={SectionID.BUFFER}>Buffer</Reference
+            > will be used in the multiple device <Reference
+                sectionID={SectionID.QUEUE}>Queues</Reference
+            > supported by the Device.
         </li>
     </div>
     <span slot="return">
@@ -51,6 +53,11 @@
             target="_blank">unique pointer</Anchor
         > to the <Reference sectionID={SectionID.BUFFER}>Buffer</Reference>,
         it's ownership will be moved.
+    </span>
+    <span slot="throws">
+        <code>std::runtime_error</code> if the <Reference
+            sectionID={SectionID.BUFFER}>Buffer</Reference
+        > couldn't be created.
     </span>
 </MethodDescription>
 

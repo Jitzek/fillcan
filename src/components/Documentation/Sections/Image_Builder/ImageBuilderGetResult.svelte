@@ -26,6 +26,11 @@
         > to the <Reference sectionID={SectionID.IMAGE}>Image</Reference>, it's
         ownership will be moved.
     </span>
+    <span slot="throws">
+        <code>std::runtime_error</code> if the <Reference
+            sectionID={SectionID.IMAGE}>Image</Reference
+        > couldn't be created.
+    </span>
 </MethodDescription>
 
 <style lang="scss">

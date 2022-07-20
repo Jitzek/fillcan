@@ -234,11 +234,15 @@
     import Semaphore from "$components/Documentation/Sections/Semaphore/Semaphore.svelte";
     import SemaphoreConstructor from "$components/Documentation/Sections/Semaphore/SemaphoreConstructor.svelte";
     import GetSemaphoreHandle from "$components/Documentation/Sections/Semaphore/getSemaphoreHandle.svelte";
-import ShaderModule from "$components/Documentation/Sections/Shader_Module/ShaderModule.svelte";
-import ShaderModuleConstructor from "$components/Documentation/Sections/Shader_Module/ShaderModuleConstructor.svelte";
-import GetShaderModuleHandle from "$components/Documentation/Sections/Shader_Module/getShaderModuleHandle.svelte";
-import ShaderModuleGetDescriptorSetLayouts from "$components/Documentation/Sections/Shader_Module/ShaderModuleGetDescriptorSetLayouts.svelte";
-import ShaderModuleGetDescriptorPool from "$components/Documentation/Sections/Shader_Module/ShaderModuleGetDescriptorPool.svelte";
+    import ShaderModule from "$components/Documentation/Sections/Shader_Module/ShaderModule.svelte";
+    import ShaderModuleConstructor from "$components/Documentation/Sections/Shader_Module/ShaderModuleConstructor.svelte";
+    import GetShaderModuleHandle from "$components/Documentation/Sections/Shader_Module/getShaderModuleHandle.svelte";
+    import ShaderModuleGetDescriptorSetLayouts from "$components/Documentation/Sections/Shader_Module/ShaderModuleGetDescriptorSetLayouts.svelte";
+    import ShaderModuleGetDescriptorPool from "$components/Documentation/Sections/Shader_Module/ShaderModuleGetDescriptorPool.svelte";
+    import DescriptorSetLayout from "$components/Documentation/Sections/Descriptor_Set_Layout/DescriptorSetLayout.svelte";
+    import DescriptorSetLayoutConstructor from "$components/Documentation/Sections/Descriptor_Set_Layout/DescriptorSetLayoutConstructor.svelte";
+    import GetDescriptorSetLayoutHandle from "$components/Documentation/Sections/Descriptor_Set_Layout/getDescriptorSetLayoutHandle.svelte";
+    import DescriptorSetLayoutGetBindings from "$components/Documentation/Sections/Descriptor_Set_Layout/DescriptorSetLayoutGetBindings.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -2022,6 +2026,38 @@ import ShaderModuleGetDescriptorPool from "$components/Documentation/Sections/Sh
             label: "getDescriptorPool",
             heading: 3,
             content: ShaderModuleGetDescriptorPool,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_SET_LAYOUT,
+            label: "Descriptor Set Layout",
+            heading: 2,
+            content: DescriptorSetLayout,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_SET_LAYOUT_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: DescriptorSetLayoutConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_SET_LAYOUT_getDescriptorSetLayoutHandle,
+            label: "getDescriptorSetLayoutHandle",
+            heading: 3,
+            content: GetDescriptorSetLayoutHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_SET_LAYOUT_getBindings,
+            label: "getBindings",
+            heading: 3,
+            content: DescriptorSetLayoutGetBindings,
             props: {},
             visible: false,
         },
