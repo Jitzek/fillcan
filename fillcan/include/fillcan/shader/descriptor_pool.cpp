@@ -43,48 +43,7 @@ namespace fillcan {
         vkDestroyDescriptorPool(this->pLogicalDevice->getLogicalDeviceHandle(), this->hDescriptorPool, nullptr);
     }
 
-    bool DescriptorPool::allocateDescriptorSets(std::vector<DescriptorSetLayout*> pDescriptorSetLayouts) {
-        std::vector<VkDescriptorSetLayout> descriptorSetLayoutsHandles = {};
-        std::vector<DescriptorSetLayout*> _pDescriptorSetLayouts = {};
-        for (size_t i = 0; i < pDescriptorSetLayouts.size(); i++) {
-            for (size_t j = 0; j < this->poolSizes.at(i).descriptorCount; j++) {
-                _pDescriptorSetLayouts.push_back(pDescriptorSetLayouts.at(i));
-            }
-        }
-        pDescriptorSetLayouts = _pDescriptorSetLayouts;
-        for (DescriptorSetLayout* pDescriptorSetLayout : pDescriptorSetLayouts) {
-            descriptorSetLayoutsHandles.push_back(pDescriptorSetLayout->getDescriptorSetLayoutHandle());
-        }
-
-        VkDescriptorSetAllocateInfo descriptorSetAllocateInfo = {};
-        descriptorSetAllocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-        descriptorSetAllocateInfo.pNext = nullptr;
-        descriptorSetAllocateInfo.descriptorPool = this->hDescriptorPool;
-        descriptorSetAllocateInfo.descriptorSetCount = descriptorSetLayoutsHandles.size();
-        descriptorSetAllocateInfo.pSetLayouts = descriptorSetLayoutsHandles.data();
-
-        std::vector<VkDescriptorSet> descriptorSetsHandles(descriptorSetLayoutsHandles.size());
-        if (vkAllocateDescriptorSets(this->pLogicalDevice->getLogicalDeviceHandle(), &descriptorSetAllocateInfo, descriptorSetsHandles.data()) !=
-            VK_SUCCESS) {
-            return false;
-        }
-        this->upDescriptorSets.reserve(descriptorSetsHandles.size());
-        // for (DescriptorSetLayout* pDescriptorSetLayout : pDescriptorSetLayouts) {
-        //     for (size_t i = 0; i < pDescriptorSetLayout->getBindings().size(); i++) {
-        //         if (this->poolSizes.at(i).type == pDescriptorSetLayout->getBindings().at(i).descriptorType) {
-        //             for (size_t j = 0; j < this->poolSizes.at(i).descriptorCount; j++) {
-        //                 this->upDescriptorSets.push_back(
-        //                     std::make_unique<DescriptorSet>(this->pLogicalDevice, descriptorSetsHandles[i], pDescriptorSetLayouts[i]));
-        //             }
-        //         }
-        //     }
-        // }
-        for (int i = 0; i < descriptorSetsHandles.size(); i++) {
-            this->upDescriptorSets.push_back(
-                std::make_unique<DescriptorSet>(this->pLogicalDevice, descriptorSetsHandles[i], pDescriptorSetLayouts[i]));
-        }
-        return true;
-    }
+    const VkDescriptorPool DescriptorPool::getDescriptorPoolHandle() const { return this->hDescriptorPool; }
 
     DescriptorSet* DescriptorPool::allocateDescriptorSet(DescriptorSetLayout* pDescriptorSetLayout, std::string name) {
         VkDescriptorSetAllocateInfo descriptorSetAllocateInfo = {};
@@ -97,19 +56,26 @@ namespace fillcan {
 
         VkDescriptorSet hDescriptorSet;
         if (vkAllocateDescriptorSets(this->pLogicalDevice->getLogicalDeviceHandle(), &descriptorSetAllocateInfo, &hDescriptorSet) != VK_SUCCESS) {
-            throw std::runtime_error("Failed to allocated descriptor set");
+            throw std::runtime_error("Failed to allocate descriptor set");
         }
         this->upDescriptorSets.push_back(std::make_unique<DescriptorSet>(this->pLogicalDevice, hDescriptorSet, pDescriptorSetLayout, name));
         return this->upDescriptorSets.back().get();
     }
-
-    VkDescriptorPool DescriptorPool::getDescriptorPoolHandle() { return this->hDescriptorPool; }
 
     std::vector<DescriptorSet*> DescriptorPool::getDescriptorSets() {
         std::vector<DescriptorSet*> pDescriptorSets = {};
         std::transform(this->upDescriptorSets.begin(), this->upDescriptorSets.end(), std::back_inserter(pDescriptorSets),
                        [](const std::unique_ptr<DescriptorSet>& upDescriptorSet) { return upDescriptorSet.get(); });
         return pDescriptorSets;
+    }
+
+    DescriptorSet* DescriptorPool::getDescriptorSet(std::string name) {
+        for (std::unique_ptr<DescriptorSet>& upDescriptorSet : this->upDescriptorSets) {
+            if (upDescriptorSet->getName() == name) {
+                return upDescriptorSet.get();
+            }
+        }
+        return nullptr;
     }
 
     bool DescriptorPool::freeDescriptorSets(std::vector<DescriptorSet*> pDescriptorSets) {
@@ -147,15 +113,6 @@ namespace fillcan {
                                     descriptorSetsHandles.data()) == VK_SUCCESS
                    ? true
                    : false;
-    }
-
-    DescriptorSet* DescriptorPool::getDescriptorSet(std::string name) {
-        for (std::unique_ptr<DescriptorSet>& upDescriptorSet : this->upDescriptorSets) {
-            if (upDescriptorSet->getName() == name) {
-                return upDescriptorSet.get();
-            }
-        }
-        throw std::runtime_error("Failed to find descriptor set with name: \"" + name + "\"");
     }
 
     bool DescriptorPool::reset() {
