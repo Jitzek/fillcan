@@ -36,7 +36,7 @@ namespace fillcan {
         vkDestroyDescriptorSetLayout(this->pLogicalDevice->getLogicalDeviceHandle(), this->hDescriptorSetLayout, nullptr);
     }
 
-    VkDescriptorSetLayout DescriptorSetLayout::getDescriptorSetLayoutHandle() { return this->hDescriptorSetLayout; }
+    const VkDescriptorSetLayout DescriptorSetLayout::getDescriptorSetLayoutHandle() const { return this->hDescriptorSetLayout; }
 
     const std::vector<VkDescriptorSetLayoutBinding>& DescriptorSetLayout::getBindings() const { return this->bindings; }
 } // namespace fillcan

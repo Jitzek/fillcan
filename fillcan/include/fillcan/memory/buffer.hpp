@@ -56,6 +56,8 @@ namespace fillcan {
          *
          * @throws std::runtime_error if the Vulkan Buffer couldn't be created.
          * @see https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBuffer.html
+         *
+         * @note It is recommended to not create a Buffer by it's Constructor, but to use a Buffer Director or Buffer Builder instead.
          */
         Buffer(LogicalDevice* pLogicalDevice, VkBufferCreateFlags& flags, VkDeviceSize& size, VkBufferUsageFlags& usage, VkSharingMode& sharingMode,
                std::vector<uint32_t> queueFamilyIndices = {});

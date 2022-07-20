@@ -80,6 +80,8 @@ namespace fillcan {
          * VK_IMAGE_LAYOUT_PREINITIALIZED should only be used if there is data in memory that is bound immediately to the image source.
          * VK_IMAGE_LAYOUT_UNDEFINED should be used when moving the resource to another layout before use. Images can be moved out of the
          * VK_IMAGE_LAYOUT_UNDEFINED layout at any time with little or no time cost.
+         *
+         * @note It is recommended to not create a Image by it's Constructor, but to use an Image Director or Image Builder instead.
          */
         Image(LogicalDevice* pLogicalDevice, VkImageCreateFlags flags, VkImageType type, VkFormat format, VkExtent3D extent, unsigned int mipLevels,
               unsigned int arrayLayers, VkSampleCountFlagBits samples, VkImageTiling tiling, VkImageUsageFlags usage, VkSharingMode sharingMode,
