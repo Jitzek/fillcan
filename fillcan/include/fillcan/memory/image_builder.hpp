@@ -154,8 +154,16 @@ namespace fillcan {
          */
         void setInitialLayout(VkImageLayout initialLayout);
 
-        void reset();
-
+        /**
+         * @brief Get the resulting Image.
+         *
+         * @return A unique pointer to the Image, it's ownership will be moved.
+         */
         std::unique_ptr<Image> getResult();
+
+        /**
+         * @brief Reset the Builder to it's default values.
+         */
+        void reset();
     };
 } // namespace fillcan

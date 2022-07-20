@@ -242,7 +242,7 @@ namespace compute_pipeline {
         // OutputBuffer
         descriptorSetLayoutBuilder.addBinding(2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT);
 
-        upDescriptorSetLayouts.emplace_back(descriptorSetLayoutBuilder.getResult());
+        upDescriptorSetLayouts.push_back(descriptorSetLayoutBuilder.getResult());
 
         return std::move(upDescriptorSetLayouts);
     }
