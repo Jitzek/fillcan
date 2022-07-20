@@ -249,6 +249,14 @@
     import DescriptorSetLayoutBuilderAddBinding from "$components/Documentation/Sections/Descriptor_Set_Layout_Builder/DescriptorSetLayoutBuilderAddBinding.svelte";
     import DescriptorSetLayoutBuilderGetResult from "$components/Documentation/Sections/Descriptor_Set_Layout_Builder/DescriptorSetLayoutBuilderGetResult.svelte";
     import DescriptorSetLayoutBuilderReset from "$components/Documentation/Sections/Descriptor_Set_Layout_Builder/DescriptorSetLayoutBuilderReset.svelte";
+    import DescriptorPool from "$components/Documentation/Sections/Descriptor_Pool/DescriptorPool.svelte";
+    import DescriptorPoolConstructor from "$components/Documentation/Sections/Descriptor_Pool/DescriptorPoolConstructor.svelte";
+    import GetDescriptorPoolHandle from "$components/Documentation/Sections/Descriptor_Pool/getDescriptorPoolHandle.svelte";
+    import DescriptorPoolAllocateDescriptorSet from "$components/Documentation/Sections/Descriptor_Pool/DescriptorPoolAllocateDescriptorSet.svelte";
+    import DescriptorPoolGetDescriptorSets from "$components/Documentation/Sections/Descriptor_Pool/DescriptorPoolGetDescriptorSets.svelte";
+    import DescriptorPoolGetDescriptorSet from "$components/Documentation/Sections/Descriptor_Pool/DescriptorPoolGetDescriptorSet.svelte";
+    import DescriptorPoolFreeDescriptorSets from "$components/Documentation/Sections/Descriptor_Pool/DescriptorPoolFreeDescriptorSets.svelte";
+    import DescriptorPoolReset from "$components/Documentation/Sections/Descriptor_Pool/DescriptorPoolReset.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -2112,6 +2120,70 @@
             label: "getBindings",
             heading: 3,
             content: DescriptorSetLayoutGetBindings,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_POOL,
+            label: "Descriptor Pool",
+            heading: 2,
+            content: DescriptorPool,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_POOL_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: DescriptorPoolConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_POOL_getDescriptorPoolHandle,
+            label: "getDescriptorPoolHandle",
+            heading: 3,
+            content: GetDescriptorPoolHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_POOL_allocateDescriptorSet,
+            label: "allocateDescriptorSet",
+            heading: 3,
+            content: DescriptorPoolAllocateDescriptorSet,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_POOL_getDescriptorSets,
+            label: "getDescriptorSets",
+            heading: 3,
+            content: DescriptorPoolGetDescriptorSets,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_POOL_getDescriptorSet,
+            label: "getDescriptorSet",
+            heading: 3,
+            content: DescriptorPoolGetDescriptorSet,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_POOL_freeDescriptorSets,
+            label: "freeDescriptorSets",
+            heading: 3,
+            content: DescriptorPoolFreeDescriptorSets,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_POOL_reset,
+            label: "reset",
+            heading: 3,
+            content: DescriptorPoolReset,
             props: {},
             visible: false,
         },

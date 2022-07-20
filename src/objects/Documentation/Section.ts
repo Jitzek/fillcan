@@ -295,8 +295,17 @@ export enum SectionID {
     DESCRIPTOR_SET_LAYOUT_getDescriptorSetLayoutHandle = "Descriptor-Set-Layout-getDescriptorSetLayoutHandle",
     DESCRIPTOR_SET_LAYOUT_getBindings = "Descriptor-Set-Layout-getBindings",
 
-    DESCRIPTOR_POOL_BUILDER = "Descriptor-Pool-Builder",
+    // DESCRIPTOR POOL
     DESCRIPTOR_POOL = "Descriptor-Pool",
+    DESCRIPTOR_POOL_Constructor = "Descriptor-Pool-Constructor",
+    DESCRIPTOR_POOL_getDescriptorPoolHandle = "Descriptor-Pool-getDescriptorPoolHandle",
+    DESCRIPTOR_POOL_allocateDescriptorSet = "Descriptor-Pool-allocateDescriptorSet",
+    DESCRIPTOR_POOL_getDescriptorSets = "Descriptor-Pool-getDescriptorSets",
+    DESCRIPTOR_POOL_getDescriptorSet = "Descriptor-Pool-getDescriptorSet",
+    DESCRIPTOR_POOL_freeDescriptorSets = "Descriptor-Pool-freeDescriptorSets",
+    DESCRIPTOR_POOL_reset = "Descriptor-Pool-reset",
+
+    DESCRIPTOR_POOL_BUILDER = "Descriptor-Pool-Builder",
     DESCRIPTOR_SET = "Descriptor-Set",
 
     ASSET_MANAGER = "Asset-Manager",
