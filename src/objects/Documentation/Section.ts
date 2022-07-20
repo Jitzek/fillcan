@@ -281,13 +281,20 @@ export enum SectionID {
     SHADER_MODULE_getDescriptorSetLayouts = "Shader-Module-getDescriptorSetLayouts",
     SHADER_MODULE_getDescriptorPool = "Shader-Module-getDescriptorPool",
 
+    // DESCRIPTOR SET LAYOUT BUILDER
+    DESCRIPTOR_SET_LAYOUT_BUILDER = "Descriptor-Set-Layout-Builder",
+    DESCRIPTOR_SET_LAYOUT_BUILDER_Constructor = "Descriptor-Set-Layout-Builder-Constructor",
+    DESCRIPTOR_SET_LAYOUT_BUILDER_setLogicalDevice = "Descriptor-Set-Layout-Builder-setLogicalDevice",
+    DESCRIPTOR_SET_LAYOUT_BUILDER_addBinding = "Descriptor-Set-Layout-Builder-addBinding",
+    DESCRIPTOR_SET_LAYOUT_BUILDER_getResult = "Descriptor-Set-Layout-Builder-getResult",
+    DESCRIPTOR_SET_LAYOUT_BUILDER_reset = "Descriptor-Set-Layout-Builder-reset",
+
     // DESCRIPTOR SET LAYOUT
     DESCRIPTOR_SET_LAYOUT = "Descriptor-Set-Layout",
     DESCRIPTOR_SET_LAYOUT_Constructor = "Descriptor-Set-Layout-Constructor",
     DESCRIPTOR_SET_LAYOUT_getDescriptorSetLayoutHandle = "Descriptor-Set-Layout-getDescriptorSetLayoutHandle",
     DESCRIPTOR_SET_LAYOUT_getBindings = "Descriptor-Set-Layout-getBindings",
 
-    DESCRIPTOR_SET_LAYOUT_BUILDER = "Descriptor-Set-Layout-Builder",
     DESCRIPTOR_POOL_BUILDER = "Descriptor-Pool-Builder",
     DESCRIPTOR_POOL = "Descriptor-Pool",
     DESCRIPTOR_SET = "Descriptor-Set",
@@ -300,4 +307,5 @@ export enum SectionID {
     COMPUTE_PIPELINE = "Compute-Pipeline",
     RENDER_PASS = "Render-Pass",
     FRAMEBUFFER = "Framebuffer",
+    SAMPLER = "Sampler",
 }

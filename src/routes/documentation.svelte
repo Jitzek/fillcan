@@ -243,6 +243,12 @@
     import DescriptorSetLayoutConstructor from "$components/Documentation/Sections/Descriptor_Set_Layout/DescriptorSetLayoutConstructor.svelte";
     import GetDescriptorSetLayoutHandle from "$components/Documentation/Sections/Descriptor_Set_Layout/getDescriptorSetLayoutHandle.svelte";
     import DescriptorSetLayoutGetBindings from "$components/Documentation/Sections/Descriptor_Set_Layout/DescriptorSetLayoutGetBindings.svelte";
+    import DescriptorSetLayoutBuilder from "$components/Documentation/Sections/Descriptor_Set_Layout_Builder/DescriptorSetLayoutBuilder.svelte";
+    import DescriptorSetLayoutBuilderConstructor from "$components/Documentation/Sections/Descriptor_Set_Layout_Builder/DescriptorSetLayoutBuilderConstructor.svelte";
+    import DescriptorSetLayoutBuilderSetLogicalDevice from "$components/Documentation/Sections/Descriptor_Set_Layout_Builder/DescriptorSetLayoutBuilderSetLogicalDevice.svelte";
+    import DescriptorSetLayoutBuilderAddBinding from "$components/Documentation/Sections/Descriptor_Set_Layout_Builder/DescriptorSetLayoutBuilderAddBinding.svelte";
+    import DescriptorSetLayoutBuilderGetResult from "$components/Documentation/Sections/Descriptor_Set_Layout_Builder/DescriptorSetLayoutBuilderGetResult.svelte";
+    import DescriptorSetLayoutBuilderReset from "$components/Documentation/Sections/Descriptor_Set_Layout_Builder/DescriptorSetLayoutBuilderReset.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -2026,6 +2032,54 @@
             label: "getDescriptorPool",
             heading: 3,
             content: ShaderModuleGetDescriptorPool,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_SET_LAYOUT_BUILDER,
+            label: "Descriptor Set Layout Builder",
+            heading: 2,
+            content: DescriptorSetLayoutBuilder,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_SET_LAYOUT_BUILDER_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: DescriptorSetLayoutBuilderConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_SET_LAYOUT_BUILDER_setLogicalDevice,
+            label: "setLogicalDevice",
+            heading: 3,
+            content: DescriptorSetLayoutBuilderSetLogicalDevice,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_SET_LAYOUT_BUILDER_addBinding,
+            label: "addBinding",
+            heading: 3,
+            content: DescriptorSetLayoutBuilderAddBinding,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_SET_LAYOUT_BUILDER_getResult,
+            label: "getResult",
+            heading: 3,
+            content: DescriptorSetLayoutBuilderGetResult,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_SET_LAYOUT_BUILDER_reset,
+            label: "reset",
+            heading: 3,
+            content: DescriptorSetLayoutBuilderReset,
             props: {},
             visible: false,
         },
