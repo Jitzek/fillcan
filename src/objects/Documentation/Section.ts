@@ -295,6 +295,15 @@ export enum SectionID {
     DESCRIPTOR_SET_LAYOUT_getDescriptorSetLayoutHandle = "Descriptor-Set-Layout-getDescriptorSetLayoutHandle",
     DESCRIPTOR_SET_LAYOUT_getBindings = "Descriptor-Set-Layout-getBindings",
 
+    // DESCRIPTOR POOL BUILDER
+    DESCRIPTOR_POOL_BUILDER = "Descriptor-Pool-Builder",
+    DESCRIPTOR_POOL_BUILDER_Constructor = "Descriptor-Pool-Builder-Constructor",
+    DESCRIPTOR_POOL_BUILDER_setLogicalDevice = "Descriptor-Pool-Builder-setLogicalDevice",
+    DESCRIPTOR_POOL_BUILDER_setFlags = "Descriptor-Pool-Builder-setFlags",
+    DESCRIPTOR_POOL_BUILDER_addSet = "Descriptor-Pool-Builder-addSet",
+    DESCRIPTOR_POOL_BUILDER_getResult = "Descriptor-Pool-Builder-getResult",
+    DESCRIPTOR_POOL_BUILDER_reset = "Descriptor-Pool-Builder-reset",
+
     // DESCRIPTOR POOL
     DESCRIPTOR_POOL = "Descriptor-Pool",
     DESCRIPTOR_POOL_Constructor = "Descriptor-Pool-Constructor",
@@ -305,13 +314,30 @@ export enum SectionID {
     DESCRIPTOR_POOL_freeDescriptorSets = "Descriptor-Pool-freeDescriptorSets",
     DESCRIPTOR_POOL_reset = "Descriptor-Pool-reset",
 
-    DESCRIPTOR_POOL_BUILDER = "Descriptor-Pool-Builder",
+    // DESCRIPTOR SET
     DESCRIPTOR_SET = "Descriptor-Set",
+    DESCRIPTOR_SET_Constructor = "Descriptor-Set-Constructor",
+    DESCRIPTOR_SET_getDescriptorSetHandle = "Descriptor-Set-getDescriptorSetHandle",
+    DESCRIPTOR_SET_getLayout = "Descriptor-Set-getLayout",
+    DESCRIPTOR_SET_getName = "Descriptor-Set-getName",
+    DESCRIPTOR_SET_writeImage = "Descriptor-Set-writeImage",
+    DESCRIPTOR_SET_writeBuffer = "Descriptor-Set-writeBuffer",
+    DESCRIPTOR_SET_writeTexelBufferView = "Descriptor-Set-writeTexelBufferView",
+    DESCRIPTOR_SET_copy = "Descriptor-Set-copy",
+
+    // PIPELINE LAYOUT
+    PIPELINE_LAYOUT = "Pipeline-Layout",
+    PIPELINE_LAYOUT_PUSH_CONSTANT = "Pipeline-Layout-Push-Constant",
+    PIPELINE_LAYOUT_Constructor = "Pipeline-Layout-Constructor",
+    PIPELINE_LAYOUT_getPipelineLayoutHandle = "Pipeline-Layout-getPipelineLayoutHandle",
+    PIPELINE_LAYOUT_pushConstantData = "Pipeline-Layout-pushConstantData",
+
+    PIPELINE_BUILDER = "Pipeline-Builder",
+    PIPELINE_BUILDER_addPushConstant = "Pipeline-Builder-addPushConstant",
 
     ASSET_MANAGER = "Asset-Manager",
 
     PIPELINE = "Pipeline",
-    PIPELINE_LAYOUT = "Pipeline-Layout",
     GRAPHICS_PIPELINE = "Graphics-Pipeline",
     COMPUTE_PIPELINE = "Compute-Pipeline",
     RENDER_PASS = "Render-Pass",

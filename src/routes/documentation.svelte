@@ -257,6 +257,27 @@
     import DescriptorPoolGetDescriptorSet from "$components/Documentation/Sections/Descriptor_Pool/DescriptorPoolGetDescriptorSet.svelte";
     import DescriptorPoolFreeDescriptorSets from "$components/Documentation/Sections/Descriptor_Pool/DescriptorPoolFreeDescriptorSets.svelte";
     import DescriptorPoolReset from "$components/Documentation/Sections/Descriptor_Pool/DescriptorPoolReset.svelte";
+    import DescriptorPoolBuilder from "$components/Documentation/Sections/Descriptor_Pool_Builder/DescriptorPoolBuilder.svelte";
+    import DescriptorPoolBuilderConstructor from "$components/Documentation/Sections/Descriptor_Pool_Builder/DescriptorPoolBuilderConstructor.svelte";
+    import DescriptorPoolBuilderSetLogicalDevice from "$components/Documentation/Sections/Descriptor_Pool_Builder/DescriptorPoolBuilderSetLogicalDevice.svelte";
+    import DescriptorPoolBuilderSetFlags from "$components/Documentation/Sections/Descriptor_Pool_Builder/DescriptorPoolBuilderSetFlags.svelte";
+    import DescriptorPoolBuilderAddSet from "$components/Documentation/Sections/Descriptor_Pool_Builder/DescriptorPoolBuilderAddSet.svelte";
+    import DescriptorPoolBuilderGetResult from "$components/Documentation/Sections/Descriptor_Pool_Builder/DescriptorPoolBuilderGetResult.svelte";
+    import DescriptorPoolBuilderReset from "$components/Documentation/Sections/Descriptor_Pool_Builder/DescriptorPoolBuilderReset.svelte";
+    import DescriptorSet from "$components/Documentation/Sections/Descriptor_Set/DescriptorSet.svelte";
+    import DescriptorSetConstructor from "$components/Documentation/Sections/Descriptor_Set/DescriptorSetConstructor.svelte";
+    import GetDescriptorSetHandle from "$components/Documentation/Sections/Descriptor_Set/getDescriptorSetHandle.svelte";
+    import DescriptorSetGetLayout from "$components/Documentation/Sections/Descriptor_Set/DescriptorSetGetLayout.svelte";
+    import DescriptorSetGetName from "$components/Documentation/Sections/Descriptor_Set/DescriptorSetGetName.svelte";
+    import DescriptorSetWriteImage from "$components/Documentation/Sections/Descriptor_Set/DescriptorSetWriteImage.svelte";
+    import DescriptorSetWriteBuffer from "$components/Documentation/Sections/Descriptor_Set/DescriptorSetWriteBuffer.svelte";
+    import DescriptorSetWriteTexelBufferView from "$components/Documentation/Sections/Descriptor_Set/DescriptorSetWriteTexelBufferView.svelte";
+    import DescriptorSetCopy from "$components/Documentation/Sections/Descriptor_Set/DescriptorSetCopy.svelte";
+    import PipelineLayout from "$components/Documentation/Sections/Pipeline_Layout/PipelineLayout.svelte";
+    import PipelineLayoutConstructor from "$components/Documentation/Sections/Pipeline_Layout/PipelineLayoutConstructor.svelte";
+    import GetPipelineLayoutHandle from "$components/Documentation/Sections/Pipeline_Layout/getPipelineLayoutHandle.svelte";
+    import PipelineLayoutPushConstantData from "$components/Documentation/Sections/Pipeline_Layout/PipelineLayoutPushConstantData.svelte";
+    import PushConstant from "$components/Documentation/Sections/Pipeline_Layout/PushConstant.svelte";
 
     const sections: Array<SectionObject> = [
         {
@@ -2124,6 +2145,62 @@
             visible: false,
         },
         {
+            id: SectionID.DESCRIPTOR_POOL_BUILDER,
+            label: "Descriptor Pool Builder",
+            heading: 2,
+            content: DescriptorPoolBuilder,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_POOL_BUILDER_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: DescriptorPoolBuilderConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_POOL_BUILDER_setLogicalDevice,
+            label: "setLogicalDevice",
+            heading: 3,
+            content: DescriptorPoolBuilderSetLogicalDevice,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_POOL_BUILDER_setFlags,
+            label: "setFlags",
+            heading: 3,
+            content: DescriptorPoolBuilderSetFlags,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_POOL_BUILDER_addSet,
+            label: "addSet",
+            heading: 3,
+            content: DescriptorPoolBuilderAddSet,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_POOL_BUILDER_getResult,
+            label: "getResult",
+            heading: 3,
+            content: DescriptorPoolBuilderGetResult,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_POOL_BUILDER_reset,
+            label: "reset",
+            heading: 3,
+            content: DescriptorPoolBuilderReset,
+            props: {},
+            visible: false,
+        },
+        {
             id: SectionID.DESCRIPTOR_POOL,
             label: "Descriptor Pool",
             heading: 2,
@@ -2184,6 +2261,118 @@
             label: "reset",
             heading: 3,
             content: DescriptorPoolReset,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_SET,
+            label: "Descriptor Set",
+            heading: 2,
+            content: DescriptorSet,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_SET_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: DescriptorSetConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_SET_getDescriptorSetHandle,
+            label: "getDescriptorSetHandle",
+            heading: 3,
+            content: GetDescriptorSetHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_SET_getLayout,
+            label: "getLayout",
+            heading: 3,
+            content: DescriptorSetGetLayout,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_SET_getName,
+            label: "getName",
+            heading: 3,
+            content: DescriptorSetGetName,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_SET_writeImage,
+            label: "writeImage",
+            heading: 3,
+            content: DescriptorSetWriteImage,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_SET_writeBuffer,
+            label: "writeBuffer",
+            heading: 3,
+            content: DescriptorSetWriteBuffer,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_SET_writeTexelBufferView,
+            label: "writeTexelBufferView",
+            heading: 3,
+            content: DescriptorSetWriteTexelBufferView,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.DESCRIPTOR_SET_copy,
+            label: "copy",
+            heading: 3,
+            content: DescriptorSetCopy,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_LAYOUT,
+            label: "Pipeline Layout",
+            heading: 2,
+            content: PipelineLayout,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_LAYOUT_PUSH_CONSTANT,
+            label: "Push Constant",
+            heading: 3,
+            content: PushConstant,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_LAYOUT_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: PipelineLayoutConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_LAYOUT_getPipelineLayoutHandle,
+            label: "getPipelineLayoutHandle",
+            heading: 3,
+            content: GetPipelineLayoutHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_LAYOUT_pushConstantData,
+            label: "pushConstantData",
+            heading: 3,
+            content: PipelineLayoutPushConstantData,
             props: {},
             visible: false,
         },

@@ -26,8 +26,7 @@ std::vector<VkDescriptorSetLayoutBinding> bindings = {};`}
 Example:
 <Highlight
     language={glslHighlight}
-    code=
-{`#version 450 core
+    code={`#version 450 core
 
 layout (local_size_x=256, local_size_y=1, local_size_z=1) in;
 
@@ -64,11 +63,8 @@ void main(void)
 
 <Highlight
     language={cppHighlight}
-    code={`std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> upDescriptorSetLayouts;
-upDescriptorSetLayouts.reserve(1);
-
-fillcan::DescriptorSetLayoutBuilder descriptorSetLayoutBuilder{};
-descriptorSetLayoutBuilder.setLogicalDevice(this->upFillcan->getCurrentDevice());
+    code={`fillcan::DescriptorSetLayoutBuilder descriptorSetLayoutBuilder{};
+descriptorSetLayoutBuilder.setLogicalDevice(fillcan.getCurrentDevice());
 
 // Config
 descriptorSetLayoutBuilder.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT);
@@ -79,5 +75,5 @@ descriptorSetLayoutBuilder.addBinding(1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, V
 // OutputBuffer
 descriptorSetLayoutBuilder.addBinding(2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT);
 
-upDescriptorSetLayouts.push_back(descriptorSetLayoutBuilder.getResult());`}
+fillcan::DescriptorSetLayout descriptorSetLayout = descriptorSetLayoutBuilder.getResult();`}
 />

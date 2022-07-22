@@ -49,10 +49,9 @@
         >.</span
     >
     <span slot="throws">
-        <code>std::runtime_error</code> if the <Anchor
-            href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorSet.html"
-            target="_blank">Vulkan Descriptor Set</Anchor
-        > failed to be allocated.
+        <code>std::runtime_error</code> if the <Reference
+            sectionID={SectionID.DESCRIPTOR_SET}>Descriptor Set</Reference
+        > failed to be created.
     </span>
 </MethodDescription>
 
