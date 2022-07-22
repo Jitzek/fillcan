@@ -16,7 +16,6 @@ namespace fillcan {
     class PipelineBuilder {
       protected:
         LogicalDevice* pLogicalDevice = nullptr;
-        CommandBuffer* pCommandBuffer = nullptr;
         VkPipelineCreateFlags flags = 0;
         std::vector<PushConstant> pushConstants = {};
         VkPipelineCache pipelineCache = VK_NULL_HANDLE;

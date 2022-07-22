@@ -49,10 +49,10 @@ namespace fillcan {
     void PipelineLayout::pushConstantData(CommandBuffer* pCommandBuffer, std::string name, std::unique_ptr<PushConstantData> upPushConstantData) {
         auto pushConstant = std::find_if(this->pushConstants.begin(), this->pushConstants.end(),
                                          [name](PushConstant& pushConstant) -> bool { return pushConstant.name == name; });
-        pushConstant->upData = std::move(upPushConstantData);
         if (pushConstant == this->pushConstants.end()) {
-            throw std::runtime_error("Failed to push constant data: Push constant with name: \"" + name + "\" Does not exist");
+            throw std::runtime_error("Failed to push constant data: Push constant with name: \"" + name + "\" does not exist");
         }
+        pushConstant->upData = std::move(upPushConstantData);
         vkCmdPushConstants(pCommandBuffer->getCommandBufferHandle(), this->hPipelineLayout, pushConstant->range.stageFlags,
                            pushConstant->range.offset, pushConstant->range.size, pushConstant->upData.get());
     }

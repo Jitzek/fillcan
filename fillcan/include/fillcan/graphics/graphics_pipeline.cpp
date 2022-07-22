@@ -18,15 +18,15 @@
 
 namespace fillcan {
     GraphicsPipeline::GraphicsPipeline(
-        LogicalDevice* pLogicalDevice, CommandBuffer* pCommandBuffer, VkPipelineCreateFlags flags, std::vector<PipelineShaderStage> shaderStages,
+        LogicalDevice* pLogicalDevice, VkPipelineCreateFlags flags, std::vector<PipelineShaderStage> shaderStages,
         std::vector<PushConstant> pushConstants, VkPipelineCache pipelineCache, Pipeline* pBasePipeline,
         VkPipelineInputAssemblyStateCreateInfo* pInputAssemblyState, VkPipelineVertexInputStateCreateInfo* pVertexInputState,
         VkPipelineTessellationStateCreateInfo* pTessellationState, std::vector<VkPipelineViewportStateCreateInfo>& viewportState,
         VkPipelineRasterizationStateCreateInfo* pRasterizationState, VkPipelineMultisampleStateCreateInfo* pMultisampleState,
         VkPipelineDepthStencilStateCreateInfo* pDepthStencilState, VkPipelineColorBlendStateCreateInfo* pColorBlendState,
         VkPipelineDynamicStateCreateInfo* pDynamicState, RenderPass* pRenderPass, unsigned int subpass)
-        : Pipeline(pLogicalDevice, pCommandBuffer, flags, shaderStages, std::move(pushConstants), pipelineCache, pBasePipeline),
-          pRenderPass(pRenderPass), subpass(subpass) {
+        : Pipeline(pLogicalDevice, flags, shaderStages, std::move(pushConstants), pipelineCache, pBasePipeline), pRenderPass(pRenderPass),
+          subpass(subpass) {
         this->setBindPoint(VK_PIPELINE_BIND_POINT_GRAPHICS);
         VkGraphicsPipelineCreateInfo graphicsPipelineCreateInfo = {};
         graphicsPipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;

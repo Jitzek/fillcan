@@ -20,7 +20,7 @@ namespace fillcan {
     }
 
     std::unique_ptr<ComputePipeline> ComputePipelineBuilder::getResult() {
-        return std::move(std::make_unique<ComputePipeline>(this->pLogicalDevice, this->pCommandBuffer, this->flags,
+        return std::move(std::make_unique<ComputePipeline>(this->pLogicalDevice, this->flags,
                                                            std::vector<PipelineShaderStage>(1, this->pipelineShaderStage),
                                                            std::move(this->pushConstants), this->pipelineCache, this->pBasePipeline));
     }

@@ -16,14 +16,12 @@
 #include <vector>
 
 namespace fillcan {
-    Pipeline::Pipeline(LogicalDevice* pLogicalDevice, CommandBuffer* pCommandBuffer, VkPipelineCreateFlags flags,
-                       std::vector<PipelineShaderStage> shaderStages, std::vector<PushConstant> pushConstants, VkPipelineCache pipelineCache,
-                       Pipeline* pBasePipeline)
-        : pLogicalDevice(pLogicalDevice), pCommandBuffer(pCommandBuffer), flags(flags), shaderStages(shaderStages) {
+    Pipeline::Pipeline(LogicalDevice* pLogicalDevice, VkPipelineCreateFlags flags, std::vector<PipelineShaderStage> shaderStages,
+                       std::vector<PushConstant> pushConstants, VkPipelineCache pipelineCache, Pipeline* pBasePipeline)
+        : pLogicalDevice(pLogicalDevice), flags(flags), shaderStages(shaderStages) {
         for (PipelineShaderStage shaderStage : this->shaderStages) {
             std::vector<DescriptorSetLayout*> shaderStageDescriptorSetLayouts = shaderStage.pShaderModule->getDescriptorSetLayouts();
             if (shaderStage.pShaderModule->getDescriptorSetLayouts().size() > 0 && shaderStage.pShaderModule->getDescriptorPool() != nullptr) {
-
                 this->pDescriptorSetLayouts.insert(this->pDescriptorSetLayouts.begin(), shaderStageDescriptorSetLayouts.begin(),
                                                    shaderStageDescriptorSetLayouts.end());
                 std::vector<DescriptorSet*> shaderStageDescriptorSets = shaderStage.pShaderModule->getDescriptorPool()->getDescriptorSets();
@@ -44,7 +42,7 @@ namespace fillcan {
         vkDestroyPipeline(this->pLogicalDevice->getLogicalDeviceHandle(), this->hPipeline, nullptr);
     }
 
-    VkPipeline Pipeline::getPipelineHandle() { return this->hPipeline; }
+    const VkPipeline Pipeline::getPipelineHandle() const { return this->hPipeline; }
 
     PipelineLayout* Pipeline::getPipelineLayout() { return this->layout.get(); }
 
@@ -94,24 +92,16 @@ namespace fillcan {
     }
 
     void Pipeline::bindDescriptorSets(std::vector<std::string> names, unsigned int firstSet) {
-        if (this->bindPoint == VK_PIPELINE_BIND_POINT_MAX_ENUM) {
-            throw std::runtime_error("Pipeline bind point not set before binding descriptor sets, please use Pipeline::setPipelineBindPoint before "
-                                     "calling this function");
-        }
-        if (this->pCommandBuffer == nullptr) {
-            throw std::runtime_error("Not bound to a command buffer before binding descriptor sets, please use Pipeline::bindToCommandBuffer before "
-                                     "calling this function");
-        }
-        std::vector<VkDescriptorSet> hDescriptorSets = {};
+        std::vector<DescriptorSet*> pDescriptorSets = {};
+        pDescriptorSets.reserve(names.size());
         for (std::string& name : names) {
-            for (DescriptorSet*& pDescriptorSet : this->pDescriptorSets) {
-                if (pDescriptorSet->getName() == name) {
-                    hDescriptorSets.push_back(pDescriptorSet->getDescriptorSetHandle());
-                }
+            DescriptorSet* pDescriptorSet = this->getDescriptorSet(name);
+            if (pDescriptorSet == nullptr) {
+                throw std::runtime_error("Failed to find descriptor set with name: \"" + name + "\"");
             }
+            pDescriptorSets.push_back(this->getDescriptorSet(name));
         }
-        vkCmdBindDescriptorSets(this->pCommandBuffer->getCommandBufferHandle(), this->bindPoint, this->layout->getPipelineLayoutHandle(), firstSet,
-                                static_cast<uint32_t>(hDescriptorSets.size()), hDescriptorSets.data(), 0, nullptr);
+        this->bindDescriptorSets(pDescriptorSets, firstSet);
     }
 
     std::vector<DescriptorSet*>& Pipeline::getDescriptorSets() { return this->pDescriptorSets; }
@@ -124,16 +114,6 @@ namespace fillcan {
                 return pDescriptorSet;
             }
         }
-        throw std::runtime_error("Failed to find descriptor set with name: \"" + name + "\"");
-    }
-
-    void Pipeline::start() {
-        if (this->pCommandBuffer == nullptr) {
-            std::runtime_error("Failed to start pipeline because no commandbuffer was bound");
-        }
-        this->bindToCommandBuffer(this->pCommandBuffer);
-        if (this->pDescriptorSets.size() > 0) {
-            this->bindDescriptorSets();
-        }
+        return nullptr;
     }
 } // namespace fillcan

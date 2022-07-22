@@ -23,14 +23,13 @@ namespace fillcan {
         Buffer* pIndexBuffer = nullptr;
 
       public:
-        GraphicsPipeline(LogicalDevice* pLogicalDevice, CommandBuffer* pCommandBuffer, VkPipelineCreateFlags flags,
-                         std::vector<PipelineShaderStage> shaderStages, std::vector<PushConstant> pushConstants, VkPipelineCache pipelineCache,
-                         Pipeline* pBasePipeline, VkPipelineInputAssemblyStateCreateInfo* pInputAssemblyState,
-                         VkPipelineVertexInputStateCreateInfo* pVertexInputState, VkPipelineTessellationStateCreateInfo* pTessellationState,
-                         std::vector<VkPipelineViewportStateCreateInfo>& viewportState, VkPipelineRasterizationStateCreateInfo* pRasterizationState,
-                         VkPipelineMultisampleStateCreateInfo* pMultisampleState, VkPipelineDepthStencilStateCreateInfo* pDepthStencilState,
-                         VkPipelineColorBlendStateCreateInfo* pColorBlendState, VkPipelineDynamicStateCreateInfo* pDynamicState,
-                         RenderPass* pRenderPass, unsigned int subpass);
+        GraphicsPipeline(LogicalDevice* pLogicalDevice, VkPipelineCreateFlags flags, std::vector<PipelineShaderStage> shaderStages,
+                         std::vector<PushConstant> pushConstants, VkPipelineCache pipelineCache, Pipeline* pBasePipeline,
+                         VkPipelineInputAssemblyStateCreateInfo* pInputAssemblyState, VkPipelineVertexInputStateCreateInfo* pVertexInputState,
+                         VkPipelineTessellationStateCreateInfo* pTessellationState, std::vector<VkPipelineViewportStateCreateInfo>& viewportState,
+                         VkPipelineRasterizationStateCreateInfo* pRasterizationState, VkPipelineMultisampleStateCreateInfo* pMultisampleState,
+                         VkPipelineDepthStencilStateCreateInfo* pDepthStencilState, VkPipelineColorBlendStateCreateInfo* pColorBlendState,
+                         VkPipelineDynamicStateCreateInfo* pDynamicState, RenderPass* pRenderPass, unsigned int subpass);
         ~GraphicsPipeline();
 
         GraphicsPipeline(const GraphicsPipeline&) = delete;

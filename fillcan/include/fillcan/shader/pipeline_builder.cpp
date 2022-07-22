@@ -29,7 +29,6 @@ namespace fillcan {
 
     void PipelineBuilder::reset() {
         this->pLogicalDevice = nullptr;
-        this->pCommandBuffer = nullptr;
         this->flags = 0;
         this->pushConstants.clear();
         this->pipelineCache = VK_NULL_HANDLE;
