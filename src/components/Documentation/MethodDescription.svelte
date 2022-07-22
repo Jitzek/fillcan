@@ -44,6 +44,7 @@
         }
     }
     .return {
+        margin-top: 1rem;
         font-size: 1rem;
         code {
             background-color: $--bg-color-secondary;

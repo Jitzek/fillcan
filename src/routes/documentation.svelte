@@ -278,8 +278,19 @@
     import GetPipelineLayoutHandle from "$components/Documentation/Sections/Pipeline_Layout/getPipelineLayoutHandle.svelte";
     import PipelineLayoutPushConstantData from "$components/Documentation/Sections/Pipeline_Layout/PipelineLayoutPushConstantData.svelte";
     import PushConstant from "$components/Documentation/Sections/Pipeline_Layout/PushConstant.svelte";
+    import Pipeline from "$components/Documentation/Sections/Pipeline/Pipeline.svelte";
+    import PipelineConstructor from "$components/Documentation/Sections/Pipeline/PipelineConstructor.svelte";
+    import GetPipelineHandle from "$components/Documentation/Sections/Pipeline/getPipelineHandle.svelte";
+    import PipelineGetPipelineLayout from "$components/Documentation/Sections/Pipeline/PipelineGetPipelineLayout.svelte";
+    import PipelineBindToCommandBuffer from "$components/Documentation/Sections/Pipeline/PipelineBindToCommandBuffer.svelte";
+    import PipelineGetCommandBuffer from "$components/Documentation/Sections/Pipeline/PipelineGetCommandBuffer.svelte";
+    import PipelineBindDescriptorSets from "$components/Documentation/Sections/Pipeline/PipelineBindDescriptorSets.svelte";
+    import PipelineGetDescriptorSets from "$components/Documentation/Sections/Pipeline/PipelineGetDescriptorSets.svelte";
+    import PipelineGetDescriptorSet from "$components/Documentation/Sections/Pipeline/PipelineGetDescriptorSet.svelte";
+    import PipelineShaderStage from "$components/Documentation/Sections/Pipeline/PipelineShaderStage.svelte";
 
     const sections: Array<SectionObject> = [
+        // GETTING STARTED
         {
             id: SectionID.GETTING_STARTED,
             label: "Getting Started",
@@ -296,6 +307,8 @@
             props: {},
             visible: false,
         },
+
+        // FILLCAN
         {
             id: SectionID.FILLCAN,
             label: "Fillcan",
@@ -344,6 +357,8 @@
             props: {},
             visible: false,
         },
+
+        // FILLCAN GRAPHICS
         {
             id: SectionID.FILLCAN_GRAPHICS,
             label: "Fillcan Graphics",
@@ -424,6 +439,8 @@
             props: {},
             visible: false,
         },
+
+        // WINDOW
         {
             id: SectionID.WINDOW,
             label: "Window",
@@ -496,6 +513,8 @@
             props: {},
             visible: false,
         },
+
+        // INSTANCE
         {
             id: SectionID.INSTANCE,
             label: "Instance",
@@ -520,6 +539,8 @@
             props: {},
             visible: false,
         },
+
+        // DEVICE POOL
         {
             id: SectionID.DEVICE_POOL,
             label: "Device Pool",
@@ -560,6 +581,8 @@
             props: {},
             visible: false,
         },
+
+        // PHYSICAL DEVICE
         {
             id: SectionID.PHYSICAL_DEVICE,
             label: "Physical Device",
@@ -704,6 +727,8 @@
             props: {},
             visible: false,
         },
+
+        // LOGICAL DEVICE
         {
             id: SectionID.LOGICAL_DEVICE,
             label: "Logical Device",
@@ -784,6 +809,8 @@
             props: {},
             visible: false,
         },
+
+        // QUEUE
         {
             id: SectionID.QUEUE,
             label: "Queue",
@@ -896,6 +923,8 @@
             props: {},
             visible: false,
         },
+
+        // COMMAND POOL
         {
             id: SectionID.COMMAND_POOL,
             label: "Command Pool",
@@ -944,6 +973,8 @@
             props: {},
             visible: false,
         },
+
+        // COMMAND BUFFER
         {
             id: SectionID.COMMAND_BUFFER,
             label: "Command Buffer",
@@ -1000,6 +1031,8 @@
             props: {},
             visible: false,
         },
+
+        // COMMAND RECORDING
         {
             id: SectionID.COMMAND_RECORDING,
             label: "Command Recording",
@@ -1056,6 +1089,8 @@
             props: {},
             visible: false,
         },
+
+        // SWAPCHAIN
         {
             id: SectionID.SWAPCHAIN,
             label: "Swapchain",
@@ -1168,6 +1203,8 @@
             props: {},
             visible: false,
         },
+
+        // BUFFER DIRECTOR
         {
             id: SectionID.BUFFER_DIRECTOR,
             label: "Buffer Director",
@@ -1264,6 +1301,8 @@
             props: {},
             visible: false,
         },
+
+        // BUFFER BUILDER
         {
             id: SectionID.BUFFER_BUILDER,
             label: "Buffer Builder",
@@ -1344,6 +1383,8 @@
             props: {},
             visible: false,
         },
+
+        // BUFFER
         {
             id: SectionID.BUFFER,
             label: "Buffer",
@@ -1472,6 +1513,8 @@
             props: {},
             visible: false,
         },
+
+        // BUFFER VIEW
         {
             id: SectionID.BUFFER_VIEW,
             label: "Buffer View",
@@ -1496,6 +1539,8 @@
             props: {},
             visible: false,
         },
+
+        // IMAGE DIRECTOR
         {
             id: SectionID.IMAGE_DIRECTOR,
             label: "Image Director",
@@ -1528,6 +1573,8 @@
             props: {},
             visible: false,
         },
+
+        // IMAGE BUILDER
         {
             id: SectionID.IMAGE_BUILDER,
             label: "Image Builder",
@@ -1664,6 +1711,8 @@
             props: {},
             visible: false,
         },
+
+        // IMAGE
         {
             id: SectionID.IMAGE,
             label: "Image",
@@ -1856,6 +1905,8 @@
             props: {},
             visible: false,
         },
+
+        // IMAGE VIEW
         {
             id: SectionID.IMAGE_VIEW,
             label: "Image View",
@@ -1880,6 +1931,8 @@
             props: {},
             visible: false,
         },
+
+        // MEMORY
         {
             id: SectionID.MEMORY,
             label: "Memory",
@@ -1944,6 +1997,8 @@
             props: {},
             visible: false,
         },
+
+        // SEMAPHORE
         {
             id: SectionID.SEMAPHORE,
             label: "Semaphore",
@@ -1968,6 +2023,8 @@
             props: {},
             visible: false,
         },
+
+        // FENCE
         {
             id: SectionID.FENCE,
             label: "Fence",
@@ -2024,6 +2081,8 @@
             props: {},
             visible: false,
         },
+
+        // SHADER MODULE
         {
             id: SectionID.SHADER_MODULE,
             label: "Shader Module",
@@ -2064,6 +2123,8 @@
             props: {},
             visible: false,
         },
+
+        // DESCRIPTOR SET LAYOUT BUILDER
         {
             id: SectionID.DESCRIPTOR_SET_LAYOUT_BUILDER,
             label: "Descriptor Set Layout Builder",
@@ -2144,6 +2205,8 @@
             props: {},
             visible: false,
         },
+
+        // DESCRIPTOR POOL BUILDER
         {
             id: SectionID.DESCRIPTOR_POOL_BUILDER,
             label: "Descriptor Pool Builder",
@@ -2200,6 +2263,8 @@
             props: {},
             visible: false,
         },
+
+        // DESCRIPTOR POOL
         {
             id: SectionID.DESCRIPTOR_POOL,
             label: "Descriptor Pool",
@@ -2264,6 +2329,8 @@
             props: {},
             visible: false,
         },
+
+        // DESCRIPTOR SET
         {
             id: SectionID.DESCRIPTOR_SET,
             label: "Descriptor Set",
@@ -2336,6 +2403,90 @@
             props: {},
             visible: false,
         },
+
+        // PIPELINE
+        {
+            id: SectionID.PIPELINE,
+            label: "Pipeline",
+            heading: 2,
+            content: Pipeline,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_PIPELINE_SHADER_STAGE,
+            label: "Pipeline Shader Stage",
+            heading: 3,
+            content: PipelineShaderStage,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: PipelineConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_getPipelineHandle,
+            label: "getPipelineHandle",
+            heading: 3,
+            content: GetPipelineHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_getPipelineLayout,
+            label: "getPipelineLayout",
+            heading: 3,
+            content: PipelineGetPipelineLayout,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_bindToCommandBuffer,
+            label: "bindToCommandBuffer",
+            heading: 3,
+            content: PipelineBindToCommandBuffer,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_getCommandBuffer,
+            label: "getCommandBuffer",
+            heading: 3,
+            content: PipelineGetCommandBuffer,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_bindDescriptorSets,
+            label: "bindDescriptorSets",
+            heading: 3,
+            content: PipelineBindDescriptorSets,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_getDescriptorSets,
+            label: "getDescriptorSets",
+            heading: 3,
+            content: PipelineGetDescriptorSets,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_getDescriptorSet,
+            label: "getDescriptorSet",
+            heading: 3,
+            content: PipelineGetDescriptorSet,
+            props: {},
+            visible: false,
+        },
+
+        // PIPELINE LAYOUT
         {
             id: SectionID.PIPELINE_LAYOUT,
             label: "Pipeline Layout",

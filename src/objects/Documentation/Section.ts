@@ -332,12 +332,23 @@ export enum SectionID {
     PIPELINE_LAYOUT_getPipelineLayoutHandle = "Pipeline-Layout-getPipelineLayoutHandle",
     PIPELINE_LAYOUT_pushConstantData = "Pipeline-Layout-pushConstantData",
 
+    // PIPELINE
+    PIPELINE = "Pipeline",
+    PIPELINE_PIPELINE_SHADER_STAGE = "Pipeline-Pipeline-Shader-Stage",
+    PIPELINE_Constructor = "Pipeline-Constructor",
+    PIPELINE_getPipelineHandle = "Pipeline-getPipelineHandle",
+    PIPELINE_getPipelineLayout = "Pipeline-getPipelineLayout",
+    PIPELINE_bindToCommandBuffer = "Pipeline-bindToCommandBuffer",
+    PIPELINE_getCommandBuffer = "Pipeline-getCommandBuffer",
+    PIPELINE_bindDescriptorSets = "Pipeline-bindDescriptorSets",
+    PIPELINE_getDescriptorSets = "Pipeline-getDescriptorSets",
+    PIPELINE_getDescriptorSet = "Pipeline-getDescriptorSet",
+
     PIPELINE_BUILDER = "Pipeline-Builder",
     PIPELINE_BUILDER_addPushConstant = "Pipeline-Builder-addPushConstant",
 
     ASSET_MANAGER = "Asset-Manager",
 
-    PIPELINE = "Pipeline",
     GRAPHICS_PIPELINE = "Graphics-Pipeline",
     COMPUTE_PIPELINE = "Compute-Pipeline",
     RENDER_PASS = "Render-Pass",
