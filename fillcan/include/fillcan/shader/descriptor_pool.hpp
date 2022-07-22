@@ -75,8 +75,7 @@ namespace fillcan {
          * @param name The identifying name of the descriptor set.
          * @return A pointer to the created descriptor set.
          *
-         * @throws std::runtime_error if the Vulkan Descriptor Set failed to be allocated.
-         * @see https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkDescriptorSet.html
+         * @throws std::runtime_error if the Descriptor Set failed to be created.
          */
         DescriptorSet* allocateDescriptorSet(DescriptorSetLayout* pDescriptorSetLayout, std::string name);
 

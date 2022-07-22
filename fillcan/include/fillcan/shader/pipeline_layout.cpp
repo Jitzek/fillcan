@@ -44,21 +44,7 @@ namespace fillcan {
     }
     PipelineLayout::~PipelineLayout() { vkDestroyPipelineLayout(this->pLogicalDevice->getLogicalDeviceHandle(), this->hPipelineLayout, nullptr); }
 
-    VkPipelineLayout PipelineLayout::getPipelineLayoutHandle() { return this->hPipelineLayout; }
-
-    std::vector<DescriptorSetLayout*> PipelineLayout::getDescriptorSetLayouts() { return this->pDescriptorSetLayouts; }
-
-    std::vector<PushConstant>& PipelineLayout::getPushConstants() { return this->pushConstants; }
-
-    // PushConstant& PipelineLayout::getPushConstant(std::string name) {
-    //     // return this->pushConstants[0];
-    //     // for (size_t i = 0; i < this->pushConstants.size(); i++) {
-    //     //     if (this->pushConstants.at(i).name == name)
-    //     //         return this->pushConstants.at(i);
-    //     // }
-    //     return *std::find_if(this->pushConstants.begin(), this->pushConstants.end(),
-    //                          [name](PushConstant& pushConstant) -> bool { return pushConstant.name == name; });
-    // }
+    const VkPipelineLayout PipelineLayout::getPipelineLayoutHandle() const { return this->hPipelineLayout; }
 
     void PipelineLayout::pushConstantData(CommandBuffer* pCommandBuffer, std::string name, std::unique_ptr<PushConstantData> upPushConstantData) {
         auto pushConstant = std::find_if(this->pushConstants.begin(), this->pushConstants.end(),
@@ -70,5 +56,4 @@ namespace fillcan {
         vkCmdPushConstants(pCommandBuffer->getCommandBufferHandle(), this->hPipelineLayout, pushConstant->range.stageFlags,
                            pushConstant->range.offset, pushConstant->range.size, pushConstant->upData.get());
     }
-
 } // namespace fillcan

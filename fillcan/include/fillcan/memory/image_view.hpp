@@ -45,6 +45,8 @@ namespace fillcan {
          *
          * @throws std::runtime_error if the Vulkan Image View couldn't be created.
          * @see https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageView.html
+         *
+         * @note It is recommended to not create an Image View by it's Constructor, but to use Image#createImageView instead.
          */
         ImageView(LogicalDevice* pLogicalDevice, Image* pImage, VkImageViewType viewType, VkFormat format, VkImageSubresourceRange subresourceRange,
                   VkComponentMapping components);
@@ -52,6 +54,11 @@ namespace fillcan {
         ImageView(const ImageView&) = delete;
         ImageView& operator=(const ImageView&) = delete;
 
+        /**
+         * @brief Get the handle to the Vulkan Image View.
+         *
+         * @return The handle to the Vulkan Image View.
+         */
         const VkImageView getImageViewHandle() const;
     };
 } // namespace fillcan

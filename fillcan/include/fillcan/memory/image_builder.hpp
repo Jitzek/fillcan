@@ -47,7 +47,7 @@ namespace fillcan {
         void setLogicalDevice(LogicalDevice* pLogicalDevice);
 
         /**
-         * @brief Set the flags for the Buffer.
+         * @brief Set the flags for the Image.
          *
          * @param flags A bitmask of VkImageCreateFlagBits that describe some properties of the image.
          * @see https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImageCreateFlagBits.html

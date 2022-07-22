@@ -46,19 +46,7 @@ namespace fillcan {
     const VkDescriptorPool DescriptorPool::getDescriptorPoolHandle() const { return this->hDescriptorPool; }
 
     DescriptorSet* DescriptorPool::allocateDescriptorSet(DescriptorSetLayout* pDescriptorSetLayout, std::string name) {
-        VkDescriptorSetAllocateInfo descriptorSetAllocateInfo = {};
-        descriptorSetAllocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-        descriptorSetAllocateInfo.pNext = nullptr;
-        descriptorSetAllocateInfo.descriptorPool = this->hDescriptorPool;
-        descriptorSetAllocateInfo.descriptorSetCount = 1;
-        std::vector<VkDescriptorSetLayout> hDescriptorSetLayouts = {pDescriptorSetLayout->getDescriptorSetLayoutHandle()};
-        descriptorSetAllocateInfo.pSetLayouts = hDescriptorSetLayouts.data();
-
-        VkDescriptorSet hDescriptorSet;
-        if (vkAllocateDescriptorSets(this->pLogicalDevice->getLogicalDeviceHandle(), &descriptorSetAllocateInfo, &hDescriptorSet) != VK_SUCCESS) {
-            throw std::runtime_error("Failed to allocate descriptor set");
-        }
-        this->upDescriptorSets.push_back(std::make_unique<DescriptorSet>(this->pLogicalDevice, hDescriptorSet, pDescriptorSetLayout, name));
+        this->upDescriptorSets.push_back(std::make_unique<DescriptorSet>(this->pLogicalDevice, this, pDescriptorSetLayout, name));
         return this->upDescriptorSets.back().get();
     }
 
