@@ -73,7 +73,7 @@
             where the child and parent pipeline are expected to have a lot of commonality.
             The purpose of derived pipelines is that they can be made cheaper with
             the parent in mind, and that it is more efficient (on host or device)
-            to switch/bind between .
+            to switch/bind between.
         </li>
     </div>
     <span slot="throws">

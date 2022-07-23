@@ -11,30 +11,24 @@
 
 <Highlight
     language={cppHighlight}
-    code={`DescriptorSet* getDescriptorSet(std::string name);`}
+    code={`void setLogicalDevice(LogicalDevice* pLogicalDevice);`}
 />
 <MethodDescription>
     <span slot="details">
-        Get a <Reference sectionID={SectionID.DESCRIPTOR_SET}
-            >descriptor set</Reference
-        > by name.
+        Set the <Reference sectionID={SectionID.LOGICAL_DEVICE}
+            >Logical Device</Reference
+        > for the <Reference sectionID={SectionID.PIPELINE}>Pipeline</Reference
+        >.
     </span>
     <div slot="params">
         <li>
-            <code>name</code><br />
-            The name of the <Reference sectionID={SectionID.DESCRIPTOR_SET}
-                >descriptor set</Reference
-            > to get.
+            <code>pLogicalDevice</code><br />
+            A pointer to the <Reference sectionID={SectionID.LOGICAL_DEVICE}
+                >Logical Device</Reference
+            > the <Reference sectionID={SectionID.PIPELINE}>Pipeline</Reference>
+            should be associated with.
         </li>
     </div>
-    <span slot="return">
-        The <Reference sectionID={SectionID.DESCRIPTOR_SET}
-            >descriptor set</Reference
-        > with the given name, or <code>nullptr</code> if no <Reference
-            sectionID={SectionID.DESCRIPTOR_SET}>descriptor set</Reference
-        >
-        with the given name was found.
-    </span>
 </MethodDescription>
 
 <style lang="scss">

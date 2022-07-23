@@ -10,7 +10,7 @@
 
 <Highlight
     language={cppHighlight}
-    code={"#include <fillcan/shader/descriptor_pool_layout_builder.hpp>"}
+    code={"#include <fillcan/shader/descriptor_pool_builder.hpp>"}
 />
 The <code>Descriptor Pool Builder</code> class is part of the creational design
 pattern to construct complex objects step by step.<br />

@@ -11,30 +11,23 @@
 
 <Highlight
     language={cppHighlight}
-    code={`DescriptorSet* getDescriptorSet(std::string name);`}
+    code={`void setFlags(VkPipelineCreateFlags flags);`}
 />
 <MethodDescription>
     <span slot="details">
-        Get a <Reference sectionID={SectionID.DESCRIPTOR_SET}
-            >descriptor set</Reference
-        > by name.
+        Set the flags for the <Reference sectionID={SectionID.PIPELINE}
+            >Pipeline</Reference
+        >.
     </span>
     <div slot="params">
         <li>
-            <code>name</code><br />
-            The name of the <Reference sectionID={SectionID.DESCRIPTOR_SET}
-                >descriptor set</Reference
-            > to get.
+            <code>flags</code><br />
+            A bitmask of <Anchor
+                href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipelineCreateFlags.html"
+                target="_blank">VkPipelineCreateFlags</Anchor
+            > controlling how the pipeline is created.
         </li>
     </div>
-    <span slot="return">
-        The <Reference sectionID={SectionID.DESCRIPTOR_SET}
-            >descriptor set</Reference
-        > with the given name, or <code>nullptr</code> if no <Reference
-            sectionID={SectionID.DESCRIPTOR_SET}>descriptor set</Reference
-        >
-        with the given name was found.
-    </span>
 </MethodDescription>
 
 <style lang="scss">

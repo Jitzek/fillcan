@@ -36,7 +36,9 @@
     <span slot="throws">
         <code>std::runtime_error</code> if the pipeline bindpoint is not set,
         this should be done by the class that extends the pipeline.<br />
-        Also throws std::runtime_error if there is no command buffer bound.
+        Also throws std::runtime_error if there is no <Reference
+            sectionID={SectionID.COMMAND_BUFFER}>command buffer</Reference
+        > bound.
     </span>
 </MethodDescription><br />
 
@@ -85,7 +87,9 @@
     <span slot="throws">
         <code>std::runtime_error</code> if the pipeline bindpoint is not set,
         this should be done by the class that extends the pipeline.<br />
-        Also throws std::runtime_error if there is no command buffer bound.
+        Also throws std::runtime_error if there is no <Reference
+            sectionID={SectionID.COMMAND_BUFFER}>command buffer</Reference
+        > bound.
     </span>
 </MethodDescription>
 
@@ -134,7 +138,9 @@
     <span slot="throws">
         <code>std::runtime_error</code> if the pipeline bindpoint is not set,
         this should be done by the class that extends the pipeline.<br />
-        Also throws std::runtime_error if there is no command buffer bound.
+        Also throws std::runtime_error if there is no <Reference
+            sectionID={SectionID.COMMAND_BUFFER}>command buffer</Reference
+        > bound.
     </span>
 </MethodDescription>
 

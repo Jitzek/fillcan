@@ -343,9 +343,16 @@ export enum SectionID {
     PIPELINE_bindDescriptorSets = "Pipeline-bindDescriptorSets",
     PIPELINE_getDescriptorSets = "Pipeline-getDescriptorSets",
     PIPELINE_getDescriptorSet = "Pipeline-getDescriptorSet",
+    PIPELINE_pushConstantData = "Pipeline-pushConstantData",
 
     PIPELINE_BUILDER = "Pipeline-Builder",
+    PIPELINE_BUILDER_Constructor = "Pipeline-Builder-Constructor",
+    PIPELINE_BUILDER_setLogicalDevice = "Pipeline-Builder-setLogicalDevice",
+    PIPELINE_BUILDER_setFlags = "Pipeline-Builder-setFlags",
     PIPELINE_BUILDER_addPushConstant = "Pipeline-Builder-addPushConstant",
+    PIPELINE_BUILDER_setPipelineCache = "Pipeline-Builder-setPipelineCache",
+    PIPELINE_BUILDER_setBasePipeline = "Pipeline-Builder-setBasePipeline",
+    PIPELINE_BUILDER_reset = "Pipeline-Builder-reset",
 
     ASSET_MANAGER = "Asset-Manager",
 

@@ -288,6 +288,15 @@
     import PipelineGetDescriptorSets from "$components/Documentation/Sections/Pipeline/PipelineGetDescriptorSets.svelte";
     import PipelineGetDescriptorSet from "$components/Documentation/Sections/Pipeline/PipelineGetDescriptorSet.svelte";
     import PipelineShaderStage from "$components/Documentation/Sections/Pipeline/PipelineShaderStage.svelte";
+    import PipelinePushConstantData from "$components/Documentation/Sections/Pipeline/PipelinePushConstantData.svelte";
+    import PipelineBuilder from "$components/Documentation/Sections/Pipeline_Builder/PipelineBuilder.svelte";
+    import PipelineBuilderConstructor from "$components/Documentation/Sections/Pipeline_Builder/PipelineBuilderConstructor.svelte";
+    import PipelineBuilderSetLogicalDevice from "$components/Documentation/Sections/Pipeline_Builder/PipelineBuilderSetLogicalDevice.svelte";
+    import PipelineBuilderSetFlags from "$components/Documentation/Sections/Pipeline_Builder/PipelineBuilderSetFlags.svelte";
+    import PipelineBuilderAddPushConstant from "$components/Documentation/Sections/Pipeline_Builder/PipelineBuilderAddPushConstant.svelte";
+    import PipelineBuilderSetPipelineCache from "$components/Documentation/Sections/Pipeline_Builder/PipelineBuilderSetPipelineCache.svelte";
+    import PipelineBuilderReset from "$components/Documentation/Sections/Pipeline_Builder/PipelineBuilderReset.svelte";
+    import PipelineBuilderSetBasePipeline from "$components/Documentation/Sections/Pipeline_Builder/PipelineBuilderSetBasePipeline.svelte";
 
     const sections: Array<SectionObject> = [
         // GETTING STARTED
@@ -2404,6 +2413,72 @@
             visible: false,
         },
 
+        // PIPELINE BUILDER
+        {
+            id: SectionID.PIPELINE_BUILDER,
+            label: "Pipeline Builder",
+            heading: 2,
+            content: PipelineBuilder,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_BUILDER_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: PipelineBuilderConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_BUILDER_setLogicalDevice,
+            label: "setLogicalDevice",
+            heading: 3,
+            content: PipelineBuilderSetLogicalDevice,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_BUILDER_setFlags,
+            label: "setFlags",
+            heading: 3,
+            content: PipelineBuilderSetFlags,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_BUILDER_addPushConstant,
+            label: "addPushConstant",
+            heading: 3,
+            content: PipelineBuilderAddPushConstant,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_BUILDER_setPipelineCache,
+            label: "setPipelineCache",
+            heading: 3,
+            content: PipelineBuilderSetPipelineCache,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_BUILDER_setBasePipeline,
+            label: "setBasePipeline",
+            heading: 3,
+            content: PipelineBuilderSetBasePipeline,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_BUILDER_reset,
+            label: "reset",
+            heading: 3,
+            content: PipelineBuilderReset,
+            props: {},
+            visible: false,
+        },
+
         // PIPELINE
         {
             id: SectionID.PIPELINE,
@@ -2482,6 +2557,14 @@
             label: "getDescriptorSet",
             heading: 3,
             content: PipelineGetDescriptorSet,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.PIPELINE_pushConstantData,
+            label: "pushConstantData",
+            heading: 3,
+            content: PipelinePushConstantData,
             props: {},
             visible: false,
         },

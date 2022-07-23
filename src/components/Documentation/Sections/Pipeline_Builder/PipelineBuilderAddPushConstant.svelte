@@ -11,30 +11,27 @@
 
 <Highlight
     language={cppHighlight}
-    code={`DescriptorSet* getDescriptorSet(std::string name);`}
+    code={`void addPushConstant(std::string name, VkPushConstantRange pushConstantRange);`}
 />
 <MethodDescription>
     <span slot="details">
-        Get a <Reference sectionID={SectionID.DESCRIPTOR_SET}
-            >descriptor set</Reference
-        > by name.
+        Set the <Reference sectionID={SectionID.PIPELINE_LAYOUT_PUSH_CONSTANT}
+            >push constants</Reference
+        > for the pipeline.
     </span>
     <div slot="params">
         <li>
             <code>name</code><br />
-            The name of the <Reference sectionID={SectionID.DESCRIPTOR_SET}
-                >descriptor set</Reference
-            > to get.
+            The identifying name for the push constant.
+        </li>
+        <li>
+            <code>pushConstantRange</code><br />
+            A <Anchor
+                href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPushConstantRange.html"
+                target="_blank">VkPushConstantRange</Anchor
+            >-structure defining the size and offset of the push constant.
         </li>
     </div>
-    <span slot="return">
-        The <Reference sectionID={SectionID.DESCRIPTOR_SET}
-            >descriptor set</Reference
-        > with the given name, or <code>nullptr</code> if no <Reference
-            sectionID={SectionID.DESCRIPTOR_SET}>descriptor set</Reference
-        >
-        with the given name was found.
-    </span>
 </MethodDescription>
 
 <style lang="scss">
