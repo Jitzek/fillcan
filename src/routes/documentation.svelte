@@ -297,6 +297,8 @@
     import PipelineBuilderSetPipelineCache from "$components/Documentation/Sections/Pipeline_Builder/PipelineBuilderSetPipelineCache.svelte";
     import PipelineBuilderReset from "$components/Documentation/Sections/Pipeline_Builder/PipelineBuilderReset.svelte";
     import PipelineBuilderSetBasePipeline from "$components/Documentation/Sections/Pipeline_Builder/PipelineBuilderSetBasePipeline.svelte";
+    import ComputePipeline from "$components/Documentation/Sections/Compute_Pipeline/ComputePipeline.svelte";
+    import ComputePipelineConstructor from "$components/Documentation/Sections/Compute_Pipeline/ComputePipelineConstructor.svelte";
 
     const sections: Array<SectionObject> = [
         // GETTING STARTED
@@ -2607,6 +2609,24 @@
             label: "pushConstantData",
             heading: 3,
             content: PipelineLayoutPushConstantData,
+            props: {},
+            visible: false,
+        },
+
+        // COMPUTE PIPELINE
+        {
+            id: SectionID.COMPUTE_PIPELINE,
+            label: "Compute Pipeline",
+            heading: 2,
+            content: ComputePipeline,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMPUTE_PIPELINE_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: ComputePipelineConstructor,
             props: {},
             visible: false,
         },

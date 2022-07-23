@@ -345,6 +345,10 @@ export enum SectionID {
     PIPELINE_getDescriptorSet = "Pipeline-getDescriptorSet",
     PIPELINE_pushConstantData = "Pipeline-pushConstantData",
 
+    // COMPUTE PIPELINE
+    COMPUTE_PIPELINE = "Compute Pipeline",
+    COMPUTE_PIPELINE_Constructor = "Compute Pipeline-Constructor",
+
     PIPELINE_BUILDER = "Pipeline-Builder",
     PIPELINE_BUILDER_Constructor = "Pipeline-Builder-Constructor",
     PIPELINE_BUILDER_setLogicalDevice = "Pipeline-Builder-setLogicalDevice",
@@ -357,7 +361,6 @@ export enum SectionID {
     ASSET_MANAGER = "Asset-Manager",
 
     GRAPHICS_PIPELINE = "Graphics-Pipeline",
-    COMPUTE_PIPELINE = "Compute-Pipeline",
     RENDER_PASS = "Render-Pass",
     FRAMEBUFFER = "Framebuffer",
     SAMPLER = "Sampler",
