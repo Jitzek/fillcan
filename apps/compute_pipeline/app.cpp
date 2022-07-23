@@ -192,13 +192,12 @@ namespace compute_pipeline {
 
         // Create recording to gain access to a primary commandbuffer
         fillcan::CommandRecording* pComputeCommandRecording = upFillcan->getCurrentDevice()->getComputeQueue()->createRecording(1, 0);
-        fillcan::CommandBuffer* pComputePrimaryCommandBuffer = pComputeCommandRecording->pPrimaryCommandBuffers[0];
+        fillcan::CommandBuffer* pComputePrimaryCommandBuffer = pComputeCommandRecording->pPrimaryCommandBuffers.at(0);
 
         // Begin compute recording commands
         pComputePrimaryCommandBuffer->begin();
         this->upComputePipeline->bindToCommandBuffer(pComputePrimaryCommandBuffer);
         this->upComputePipeline->bindDescriptorSets();
-        // this->upComputePipeline->start();
         int groupCount = ((integerCount) / 256) + 1;
         vkCmdDispatch(pComputePrimaryCommandBuffer->getCommandBufferHandle(), groupCount, 1, 1);
         pComputePrimaryCommandBuffer->end();
