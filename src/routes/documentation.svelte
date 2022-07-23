@@ -299,6 +299,11 @@
     import PipelineBuilderSetBasePipeline from "$components/Documentation/Sections/Pipeline_Builder/PipelineBuilderSetBasePipeline.svelte";
     import ComputePipeline from "$components/Documentation/Sections/Compute_Pipeline/ComputePipeline.svelte";
     import ComputePipelineConstructor from "$components/Documentation/Sections/Compute_Pipeline/ComputePipelineConstructor.svelte";
+import ComputePipelineBuilder from "$components/Documentation/Sections/Compute_Pipeline_Builder/ComputePipelineBuilder.svelte";
+import ComputePipelineBuilderConstructor from "$components/Documentation/Sections/Compute_Pipeline_Builder/ComputePipelineBuilderConstructor.svelte";
+import ComputePipelineBuilderSetShaderStage from "$components/Documentation/Sections/Compute_Pipeline_Builder/ComputePipelineBuilderSetShaderStage.svelte";
+import ComputePipelineBuilderGetResult from "$components/Documentation/Sections/Compute_Pipeline_Builder/ComputePipelineBuilderGetResult.svelte";
+import ComputePipelineBuilderReset from "$components/Documentation/Sections/Compute_Pipeline_Builder/ComputePipelineBuilderReset.svelte";
 
     const sections: Array<SectionObject> = [
         // GETTING STARTED
@@ -2609,6 +2614,48 @@
             label: "pushConstantData",
             heading: 3,
             content: PipelineLayoutPushConstantData,
+            props: {},
+            visible: false,
+        },
+
+        // COMPUTE PIPELINE BUILDER
+        {
+            id: SectionID.COMPUTE_PIPELINE_BUILDER,
+            label: "Compute Pipeline Builder",
+            heading: 2,
+            content: ComputePipelineBuilder,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMPUTE_PIPELINE_BUILDER_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: ComputePipelineBuilderConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMPUTE_PIPELINE_BUILDER_setShaderStage,
+            label: "setShaderStage",
+            heading: 3,
+            content: ComputePipelineBuilderSetShaderStage,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMPUTE_PIPELINE_BUILDER_getResult,
+            label: "getResult",
+            heading: 3,
+            content: ComputePipelineBuilderGetResult,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.COMPUTE_PIPELINE_BUILDER_reset,
+            label: "reset",
+            heading: 3,
+            content: ComputePipelineBuilderReset,
             props: {},
             visible: false,
         },

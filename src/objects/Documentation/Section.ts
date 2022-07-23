@@ -346,8 +346,15 @@ export enum SectionID {
     PIPELINE_pushConstantData = "Pipeline-pushConstantData",
 
     // COMPUTE PIPELINE
-    COMPUTE_PIPELINE = "Compute Pipeline",
+    COMPUTE_PIPELINE = "Compute-Pipeline",
     COMPUTE_PIPELINE_Constructor = "Compute Pipeline-Constructor",
+
+    // COMPUTE PIPELINE BUILDER
+    COMPUTE_PIPELINE_BUILDER = "Compute-Pipeline-Builder",
+    COMPUTE_PIPELINE_BUILDER_Constructor = "Compute-Pipeline-Builder-Constructor",
+    COMPUTE_PIPELINE_BUILDER_setShaderStage = "Compute-Pipeline-Builder-setShaderStage",
+    COMPUTE_PIPELINE_BUILDER_getResult = "Compute-Pipeline-Builder-getResult",
+    COMPUTE_PIPELINE_BUILDER_reset = "Compute-Pipeline-Builder-reset",
 
     PIPELINE_BUILDER = "Pipeline-Builder",
     PIPELINE_BUILDER_Constructor = "Pipeline-Builder-Constructor",

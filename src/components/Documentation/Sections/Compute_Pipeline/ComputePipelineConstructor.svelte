@@ -23,8 +23,13 @@
 <MethodDescription>
     <span slot="details">
         Create a new Compute Pipeline.<br />
-        The <code>Pipeline</code> class is meant to be extended as it only contains
-        the generic information and functionality shared by all pipelines.
+        The <code>Pipeline</code> class is meant to be extended as it only
+        contains the generic information and functionality shared by all
+        pipelines.<br />
+        It is recommended to not create a Compute Pipeline by it's Constructor, but
+        to use a <Reference sectionID={SectionID.COMPUTE_PIPELINE_BUILDER}
+            >Compute Pipeline Builder</Reference
+        > instead.
     </span>
     <div slot="params">
         <li>
