@@ -116,4 +116,12 @@ namespace fillcan {
         }
         return nullptr;
     }
+
+    void Pipeline::pushConstantData(std::string name, std::unique_ptr<PushConstantData> upPushConstantData) {
+        if (this->pCommandBuffer == nullptr) {
+            throw std::runtime_error(
+                "Not bound to a command buffer before pushing constant data, please use Pipeline::bindToCommandBuffer before calling this function");
+        }
+        this->layout->pushConstantData(this->pCommandBuffer, name, std::move(upPushConstantData));
+    }
 } // namespace fillcan

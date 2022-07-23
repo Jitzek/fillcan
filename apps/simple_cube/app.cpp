@@ -4,6 +4,7 @@
 // vulkan
 #include "fillcan/graphics/game_object.hpp"
 #include "fillcan/graphics/model.hpp"
+#include "fillcan/shader/pipeline_builder.hpp"
 #include "glm/detail/func_common.hpp"
 #include "shaderc/shaderc.h"
 #include "vulkan/vulkan_core.h"

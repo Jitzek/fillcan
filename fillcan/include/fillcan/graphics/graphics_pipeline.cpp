@@ -127,10 +127,4 @@ namespace fillcan {
         vkCmdDrawIndexed(this->pCommandBuffer->getCommandBufferHandle(), indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
     }
 
-    void GraphicsPipeline::pushConstantData(std::string name, std::unique_ptr<PushConstantData> upPushConstantData) {
-        this->layout->pushConstantData(this->pCommandBuffer, name, std::move(upPushConstantData));
-    }
-
-    // PushConstant& GraphicsPipeline::getPushConstant(std::string name) { return this->layout->getPushConstant(name); }
-
 } // namespace fillcan
