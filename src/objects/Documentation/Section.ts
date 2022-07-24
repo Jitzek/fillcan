@@ -325,6 +325,16 @@ export enum SectionID {
     DESCRIPTOR_SET_writeTexelBufferView = "Descriptor-Set-writeTexelBufferView",
     DESCRIPTOR_SET_copy = "Descriptor-Set-copy",
 
+    // PIPELINE BUILDER
+    PIPELINE_BUILDER = "Pipeline-Builder",
+    PIPELINE_BUILDER_Constructor = "Pipeline-Builder-Constructor",
+    PIPELINE_BUILDER_setLogicalDevice = "Pipeline-Builder-setLogicalDevice",
+    PIPELINE_BUILDER_setFlags = "Pipeline-Builder-setFlags",
+    PIPELINE_BUILDER_addPushConstant = "Pipeline-Builder-addPushConstant",
+    PIPELINE_BUILDER_setPipelineCache = "Pipeline-Builder-setPipelineCache",
+    PIPELINE_BUILDER_setBasePipeline = "Pipeline-Builder-setBasePipeline",
+    PIPELINE_BUILDER_reset = "Pipeline-Builder-reset",
+
     // PIPELINE LAYOUT
     PIPELINE_LAYOUT = "Pipeline-Layout",
     PIPELINE_LAYOUT_PUSH_CONSTANT = "Pipeline-Layout-Push-Constant",
@@ -356,19 +366,21 @@ export enum SectionID {
     COMPUTE_PIPELINE_BUILDER_getResult = "Compute-Pipeline-Builder-getResult",
     COMPUTE_PIPELINE_BUILDER_reset = "Compute-Pipeline-Builder-reset",
 
-    PIPELINE_BUILDER = "Pipeline-Builder",
-    PIPELINE_BUILDER_Constructor = "Pipeline-Builder-Constructor",
-    PIPELINE_BUILDER_setLogicalDevice = "Pipeline-Builder-setLogicalDevice",
-    PIPELINE_BUILDER_setFlags = "Pipeline-Builder-setFlags",
-    PIPELINE_BUILDER_addPushConstant = "Pipeline-Builder-addPushConstant",
-    PIPELINE_BUILDER_setPipelineCache = "Pipeline-Builder-setPipelineCache",
-    PIPELINE_BUILDER_setBasePipeline = "Pipeline-Builder-setBasePipeline",
-    PIPELINE_BUILDER_reset = "Pipeline-Builder-reset",
+    // RENDER PASS
+    RENDER_PASS = "Render-Pass",
+    RENDER_PASS_Constructor = "Render-Pass-Constructor",
+    RENDER_PASS_getRenderPassHandle = "Render-Pass-getRenderPassHandle",
+    RENDER_PASS_getAttachments = "Render-Pass-getAttachments",
+    RENDER_PASS_getSubpasses = "Render-Pass-getSubpasses",
+    RENDER_PASS_getDependencies = "Render-Pass-getDependencies",
+    RENDER_PASS_begin = "Render-Pass-begin",
+    RENDER_PASS_end = "Render-Pass-end",
+
+    RENDER_PASS_BUILDER = "Render-Pass-Builder",
 
     ASSET_MANAGER = "Asset-Manager",
 
     GRAPHICS_PIPELINE = "Graphics-Pipeline",
-    RENDER_PASS = "Render-Pass",
     FRAMEBUFFER = "Framebuffer",
     SAMPLER = "Sampler",
 }

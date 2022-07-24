@@ -304,6 +304,14 @@ import ComputePipelineBuilderConstructor from "$components/Documentation/Section
 import ComputePipelineBuilderSetShaderStage from "$components/Documentation/Sections/Compute_Pipeline_Builder/ComputePipelineBuilderSetShaderStage.svelte";
 import ComputePipelineBuilderGetResult from "$components/Documentation/Sections/Compute_Pipeline_Builder/ComputePipelineBuilderGetResult.svelte";
 import ComputePipelineBuilderReset from "$components/Documentation/Sections/Compute_Pipeline_Builder/ComputePipelineBuilderReset.svelte";
+import RenderPass from "$components/Documentation/Sections/Render_Pass/RenderPass.svelte";
+import RenderPassConstructor from "$components/Documentation/Sections/Render_Pass/RenderPassConstructor.svelte";
+import GetRenderPassHandle from "$components/Documentation/Sections/Render_Pass/getRenderPassHandle.svelte";
+import RenderPassGetAttachments from "$components/Documentation/Sections/Render_Pass/RenderPassGetAttachments.svelte";
+import RenderPassGetSubpasses from "$components/Documentation/Sections/Render_Pass/RenderPassGetSubpasses.svelte";
+import RenderPassGetDependencies from "$components/Documentation/Sections/Render_Pass/RenderPassGetDependencies.svelte";
+import RenderPassBegin from "$components/Documentation/Sections/Render_Pass/RenderPassBegin.svelte";
+import RenderPassEnd from "$components/Documentation/Sections/Render_Pass/RenderPassEnd.svelte";
 
     const sections: Array<SectionObject> = [
         // GETTING STARTED
@@ -2677,6 +2685,72 @@ import ComputePipelineBuilderReset from "$components/Documentation/Sections/Comp
             props: {},
             visible: false,
         },
+
+        // RENDER PASS
+        {
+            id: SectionID.RENDER_PASS,
+            label: "Render Pass",
+            heading: 2,
+            content: RenderPass,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.RENDER_PASS_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: RenderPassConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.RENDER_PASS_getRenderPassHandle,
+            label: "getRenderPassHandle",
+            heading: 3,
+            content: GetRenderPassHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.RENDER_PASS_getAttachments,
+            label: "getAttachments",
+            heading: 3,
+            content: RenderPassGetAttachments,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.RENDER_PASS_getSubpasses,
+            label: "getSubpasses",
+            heading: 3,
+            content: RenderPassGetSubpasses,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.RENDER_PASS_getDependencies,
+            label: "getDependencies",
+            heading: 3,
+            content: RenderPassGetDependencies,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.RENDER_PASS_begin,
+            label: "begin",
+            heading: 3,
+            content: RenderPassBegin,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.RENDER_PASS_end,
+            label: "end",
+            heading: 3,
+            content: RenderPassEnd,
+            props: {},
+            visible: false,
+        },
     ];
 
     let currentVisibleSection: SectionObject | null = null;
@@ -2845,55 +2919,6 @@ import ComputePipelineBuilderReset from "$components/Documentation/Sections/Comp
         top: $--navbar-height;
         height: calc(100% - $--navbar-height);
         overflow: auto;
-        .references-list {
-            font-family: $--font-family-input;
-            list-style: none;
-            text-decoration: none;
-            padding: 1.5rem 1.5rem 1.5rem 2.5rem;
-            margin: 0;
-            a {
-                letter-spacing: 0.025rem;
-                text-decoration: none;
-            }
-            .reference-item.h2 {
-                margin-top: 1rem;
-                a {
-                    color: $--input-fg-color-primary;
-                    text-transform: uppercase;
-                    font-size: 1.2rem;
-                }
-            }
-            .reference-item.h3 {
-                a {
-                    color: $--input-fg-color-secondary;
-                    padding-left: 1rem;
-                    font-size: 1.1rem;
-                }
-            }
-            .reference-item.h4 {
-                a {
-                    color: $--input-fg-color-secondary;
-                    padding-left: 2rem;
-                    font-size: 1.05rem;
-                }
-            }
-            .reference-item.h5 {
-                a {
-                    color: $--input-fg-color-secondary;
-                    padding-left: 3rem;
-                    font-size: 1rem;
-                }
-            }
-            .reference-item.active {
-                background-color: black !important;
-            }
-
-            a:hover,
-            a:focus,
-            a:active {
-                text-decoration: underline;
-            }
-        }
     }
 
     .documentation-pop-in {
