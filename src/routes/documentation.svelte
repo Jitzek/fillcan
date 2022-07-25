@@ -299,19 +299,31 @@
     import PipelineBuilderSetBasePipeline from "$components/Documentation/Sections/Pipeline_Builder/PipelineBuilderSetBasePipeline.svelte";
     import ComputePipeline from "$components/Documentation/Sections/Compute_Pipeline/ComputePipeline.svelte";
     import ComputePipelineConstructor from "$components/Documentation/Sections/Compute_Pipeline/ComputePipelineConstructor.svelte";
-import ComputePipelineBuilder from "$components/Documentation/Sections/Compute_Pipeline_Builder/ComputePipelineBuilder.svelte";
-import ComputePipelineBuilderConstructor from "$components/Documentation/Sections/Compute_Pipeline_Builder/ComputePipelineBuilderConstructor.svelte";
-import ComputePipelineBuilderSetShaderStage from "$components/Documentation/Sections/Compute_Pipeline_Builder/ComputePipelineBuilderSetShaderStage.svelte";
-import ComputePipelineBuilderGetResult from "$components/Documentation/Sections/Compute_Pipeline_Builder/ComputePipelineBuilderGetResult.svelte";
-import ComputePipelineBuilderReset from "$components/Documentation/Sections/Compute_Pipeline_Builder/ComputePipelineBuilderReset.svelte";
-import RenderPass from "$components/Documentation/Sections/Render_Pass/RenderPass.svelte";
-import RenderPassConstructor from "$components/Documentation/Sections/Render_Pass/RenderPassConstructor.svelte";
-import GetRenderPassHandle from "$components/Documentation/Sections/Render_Pass/getRenderPassHandle.svelte";
-import RenderPassGetAttachments from "$components/Documentation/Sections/Render_Pass/RenderPassGetAttachments.svelte";
-import RenderPassGetSubpasses from "$components/Documentation/Sections/Render_Pass/RenderPassGetSubpasses.svelte";
-import RenderPassGetDependencies from "$components/Documentation/Sections/Render_Pass/RenderPassGetDependencies.svelte";
-import RenderPassBegin from "$components/Documentation/Sections/Render_Pass/RenderPassBegin.svelte";
-import RenderPassEnd from "$components/Documentation/Sections/Render_Pass/RenderPassEnd.svelte";
+    import ComputePipelineBuilder from "$components/Documentation/Sections/Compute_Pipeline_Builder/ComputePipelineBuilder.svelte";
+    import ComputePipelineBuilderConstructor from "$components/Documentation/Sections/Compute_Pipeline_Builder/ComputePipelineBuilderConstructor.svelte";
+    import ComputePipelineBuilderSetShaderStage from "$components/Documentation/Sections/Compute_Pipeline_Builder/ComputePipelineBuilderSetShaderStage.svelte";
+    import ComputePipelineBuilderGetResult from "$components/Documentation/Sections/Compute_Pipeline_Builder/ComputePipelineBuilderGetResult.svelte";
+    import ComputePipelineBuilderReset from "$components/Documentation/Sections/Compute_Pipeline_Builder/ComputePipelineBuilderReset.svelte";
+    import RenderPass from "$components/Documentation/Sections/Render_Pass/RenderPass.svelte";
+    import RenderPassConstructor from "$components/Documentation/Sections/Render_Pass/RenderPassConstructor.svelte";
+    import GetRenderPassHandle from "$components/Documentation/Sections/Render_Pass/getRenderPassHandle.svelte";
+    import RenderPassGetAttachments from "$components/Documentation/Sections/Render_Pass/RenderPassGetAttachments.svelte";
+    import RenderPassGetSubpasses from "$components/Documentation/Sections/Render_Pass/RenderPassGetSubpasses.svelte";
+    import RenderPassGetDependencies from "$components/Documentation/Sections/Render_Pass/RenderPassGetDependencies.svelte";
+    import RenderPassBegin from "$components/Documentation/Sections/Render_Pass/RenderPassBegin.svelte";
+    import RenderPassEnd from "$components/Documentation/Sections/Render_Pass/RenderPassEnd.svelte";
+    import RenderPassBuilder from "$components/Documentation/Sections/Render_Pass_Builder/RenderPassBuilder.svelte";
+    import RenderPassBuilderConstructor from "$components/Documentation/Sections/Render_Pass_Builder/RenderPassBuilderConstructor.svelte";
+    import RenderPassBuilderSetLogicalDevice from "$components/Documentation/Sections/Render_Pass_Builder/RenderPassBuilderSetLogicalDevice.svelte";
+    import RenderPassBuilderAddAttachment from "$components/Documentation/Sections/Render_Pass_Builder/RenderPassBuilderAddAttachment.svelte";
+    import RenderPassBuilderAddInputAttachment from "$components/Documentation/Sections/Render_Pass_Builder/RenderPassBuilderAddInputAttachment.svelte";
+    import RenderPassBuilderAddColorAttachment from "$components/Documentation/Sections/Render_Pass_Builder/RenderPassBuilderAddColorAttachment.svelte";
+    import RenderPassBuilderSetDepthStencilAttachment from "$components/Documentation/Sections/Render_Pass_Builder/RenderPassBuilderSetDepthStencilAttachment.svelte";
+    import RenderPassBuilderResolveCurrentAttachments from "$components/Documentation/Sections/Render_Pass_Builder/RenderPassBuilderResolveCurrentAttachments.svelte";
+    import RenderPassBuilderConstructSubpass from "$components/Documentation/Sections/Render_Pass_Builder/RenderPassBuilderConstructSubpass.svelte";
+    import RenderPassBuilderAddDependency from "$components/Documentation/Sections/Render_Pass_Builder/RenderPassBuilderAddDependency.svelte";
+    import RenderPassBuilderGetResult from "$components/Documentation/Sections/Render_Pass_Builder/RenderPassBuilderGetResult.svelte";
+    import RenderPassBuilderReset from "$components/Documentation/Sections/Render_Pass_Builder/RenderPassBuilderReset.svelte";
 
     const sections: Array<SectionObject> = [
         // GETTING STARTED
@@ -2686,6 +2698,104 @@ import RenderPassEnd from "$components/Documentation/Sections/Render_Pass/Render
             visible: false,
         },
 
+        // RENDER PASS BUILDER
+        {
+            id: SectionID.RENDER_PASS_BUILDER,
+            label: "Render Pass Builder",
+            heading: 2,
+            content: RenderPassBuilder,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.RENDER_PASS_BUILDER_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: RenderPassBuilderConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.RENDER_PASS_BUILDER_setLogicalDevice,
+            label: "setLogicalDevice",
+            heading: 3,
+            content: RenderPassBuilderSetLogicalDevice,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.RENDER_PASS_BUILDER_addAttachment,
+            label: "addAttachment",
+            heading: 3,
+            content: RenderPassBuilderAddAttachment,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.RENDER_PASS_BUILDER_addInputAttachment,
+            label: "addInputAttachment",
+            heading: 3,
+            content: RenderPassBuilderAddInputAttachment,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.RENDER_PASS_BUILDER_addColorAttachment,
+            label: "addColorAttachment",
+            heading: 3,
+            content: RenderPassBuilderAddColorAttachment,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.RENDER_PASS_BUILDER_setDepthStencilAttachment,
+            label: "setDepthStencilAttachment",
+            heading: 3,
+            content: RenderPassBuilderSetDepthStencilAttachment,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.RENDER_PASS_BUILDER_resolveCurrentAttachments,
+            label: "resolveCurrentAttachments",
+            heading: 3,
+            content: RenderPassBuilderResolveCurrentAttachments,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.RENDER_PASS_BUILDER_constructSubpass,
+            label: "constructSubpass",
+            heading: 3,
+            content: RenderPassBuilderConstructSubpass,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.RENDER_PASS_BUILDER_addDependency,
+            label: "addDependency",
+            heading: 3,
+            content: RenderPassBuilderAddDependency,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.RENDER_PASS_BUILDER_getResult,
+            label: "getResult",
+            heading: 3,
+            content: RenderPassBuilderGetResult,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.RENDER_PASS_BUILDER_reset,
+            label: "reset",
+            heading: 3,
+            content: RenderPassBuilderReset,
+            props: {},
+            visible: false,
+        },
+        
         // RENDER PASS
         {
             id: SectionID.RENDER_PASS,

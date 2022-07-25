@@ -17,8 +17,8 @@
     <span slot="details">
         Set the <Reference sectionID={SectionID.LOGICAL_DEVICE}
             >Logical Device</Reference
-        > for the <Reference sectionID={SectionID.DESCRIPTOR_POOL}
-            >Descriptor Pool</Reference
+        > for the <Reference sectionID={SectionID.RENDER_PASS}
+            >Render Pass</Reference
         >.
     </span>
     <div slot="params">
@@ -26,8 +26,8 @@
             <code>pLogicalDevice</code><br />
             A pointer to the <Reference sectionID={SectionID.LOGICAL_DEVICE}
                 >Logical Device</Reference
-            > the <Reference sectionID={SectionID.DESCRIPTOR_POOL}
-                >Descriptor Pool</Reference
+            > the <Reference sectionID={SectionID.RENDER_PASS}
+                >Render Pass</Reference
             > should be associated with.
         </li>
     </div>

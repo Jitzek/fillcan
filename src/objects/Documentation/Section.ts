@@ -376,7 +376,19 @@ export enum SectionID {
     RENDER_PASS_begin = "Render-Pass-begin",
     RENDER_PASS_end = "Render-Pass-end",
 
+    // RENDER PASS BUILDER
     RENDER_PASS_BUILDER = "Render-Pass-Builder",
+    RENDER_PASS_BUILDER_Constructor = "Render-Pass-Builder-Constructor",
+    RENDER_PASS_BUILDER_setLogicalDevice = "Render-Pass-Builder-setLogicalDevice",
+    RENDER_PASS_BUILDER_addAttachment = "Render-Pass-Builder-addAttachment",
+    RENDER_PASS_BUILDER_addInputAttachment = "Render-Pass-Builder-addInputAttachment",
+    RENDER_PASS_BUILDER_addColorAttachment = "Render-Pass-Builder-addColorAttachment",
+    RENDER_PASS_BUILDER_setDepthStencilAttachment = "Render-Pass-Builder-setDepthStencilAttachment",
+    RENDER_PASS_BUILDER_resolveCurrentAttachments = "Render-Pass-Builder-resolveCurrentAttachments",
+    RENDER_PASS_BUILDER_constructSubpass = "Render-Pass-Builder-constructSubpass",
+    RENDER_PASS_BUILDER_addDependency = "Render-Pass-Builder-addDependency",
+    RENDER_PASS_BUILDER_getResult = "Render-Pass-Builder-getResult",
+    RENDER_PASS_BUILDER_reset = "Render-Pass-Builder-reset",
 
     ASSET_MANAGER = "Asset-Manager",
 
