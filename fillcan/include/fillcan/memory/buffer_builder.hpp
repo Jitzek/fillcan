@@ -88,6 +88,8 @@ namespace fillcan {
          * @brief Get the resulting Buffer.
          *
          * @return A unique pointer to the Buffer, it's ownership will be moved.
+         * 
+         * @throws std::runtime_error if the Buffer couldn't be created.
          */
         std::unique_ptr<Buffer> getResult();
 

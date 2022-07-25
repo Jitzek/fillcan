@@ -59,5 +59,5 @@ namespace fillcan {
         vkDestroySampler(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSampler, nullptr);
     }
 
-    VkSampler Sampler::getSamplerHandle() { return this->hSampler; }
+    const VkSampler Sampler::getSamplerHandle() const { return this->hSampler; }
 } // namespace fillcan

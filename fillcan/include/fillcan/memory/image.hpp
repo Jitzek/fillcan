@@ -81,6 +81,9 @@ namespace fillcan {
          * VK_IMAGE_LAYOUT_UNDEFINED should be used when moving the resource to another layout before use. Images can be moved out of the
          * VK_IMAGE_LAYOUT_UNDEFINED layout at any time with little or no time cost.
          *
+         * @throws std::runtime_error if the Vulkan Image couldn't be created.
+         * @see https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkImage.html
+         *
          * @note It is recommended to not create a Image by it's Constructor, but to use an Image Director or Image Builder instead.
          */
         Image(LogicalDevice* pLogicalDevice, VkImageCreateFlags flags, VkImageType type, VkFormat format, VkExtent3D extent, unsigned int mipLevels,

@@ -51,6 +51,7 @@ namespace fillcan {
         vkDestroyFramebuffer(this->pLogicalDevice->getLogicalDeviceHandle(), this->hFramebuffer, nullptr);
     }
 
-    VkFramebuffer Framebuffer::getFramebufferHandle() { return this->hFramebuffer; }
+    const VkFramebuffer Framebuffer::getFramebufferHandle() const { return this->hFramebuffer; }
     VkExtent2D Framebuffer::getExtent() { return this->extent; }
+    unsigned int Framebuffer::getLayers() { return this->layers; }
 } // namespace fillcan

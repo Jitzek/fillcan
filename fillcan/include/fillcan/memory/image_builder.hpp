@@ -158,6 +158,8 @@ namespace fillcan {
          * @brief Get the resulting Image.
          *
          * @return A unique pointer to the Image, it's ownership will be moved.
+         *
+         * @throws std::runtime_error if the Image couldn't be created.
          */
         std::unique_ptr<Image> getResult();
 
