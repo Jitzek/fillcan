@@ -15,8 +15,5 @@ layout(push_constant) uniform PushConstant {
 push_constant;
 
 void main() {
-    // outColor = vec4(inColor, 1.0);
-    // outColor = vec4(inTexCoordinate, 0.0, 1.0);
-    // outColor = texture(textureSampler, inTexCoordinate);
     outColor = texture(textureSamplers[push_constant.textureIndex], inTexCoordinate);
 }

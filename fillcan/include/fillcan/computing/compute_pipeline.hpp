@@ -20,7 +20,6 @@ namespace fillcan {
          * @brief Create a new Compute Pipeline.
          *
          * @details The Compute Pipeline class extends the Pipeline class.
-         *
          * The compute shader provides direct access to the computing capabilities of the Vulkan device. The device can be thought of as a collection
          * of broad vector processing units operating on related data. A compute shader is written as if it were a serial, single run track. However,
          * many of these run tracks can run simultaneously. This is how most Vulkan devices are built. Each track of execution is called an
@@ -48,6 +47,8 @@ namespace fillcan {
          * @throws std::runtime_error if the pipeline layout couldn't be created.
          * @throws std::runtime_error if the Vulkan Compute Pipeline couldn't be created.
          * @see https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkPipeline.html
+         *
+         * @note It is recommended to not create a Compute Pipeline by it's Constructor, but to use a Compute Pipeline Builder instead.
          */
         ComputePipeline(LogicalDevice* pLogicalDevice, VkPipelineCreateFlags flags, std::vector<PipelineShaderStage> shaderStages,
                         std::vector<PushConstant> pushConstants, VkPipelineCache pipelineCache = VK_NULL_HANDLE, Pipeline* pBasePipeline = nullptr);
