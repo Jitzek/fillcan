@@ -24,6 +24,7 @@ namespace fillcan {
         ~Framebuffer();
 
         Framebuffer(const Framebuffer&) = delete;
+        
         Framebuffer& operator=(const Framebuffer&) = delete;
 
         VkFramebuffer getFramebufferHandle();

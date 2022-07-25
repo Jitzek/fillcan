@@ -118,6 +118,12 @@ namespace fillcan {
         void begin(CommandBuffer* pCommandBuffer, Framebuffer* pFramebuffer, std::vector<VkClearValue>* pClearValues = nullptr,
                    VkRect2D* pRenderArea = nullptr);
 
+        /**
+         * @brief Terminate the rendering in the render pass.
+         *
+         * @details Once the render pass has started, drawing commands can be placed in the command buffer. All rendering is directed to the
+         * framebuffer specified in the framebuffer field passed to RenderPass#begin.
+         */
         void end();
     };
 } // namespace fillcan
