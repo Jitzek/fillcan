@@ -421,7 +421,13 @@ export enum SectionID {
     FRAMEBUFFER_getExtent = "Framebuffer-getExtent",
     FRAMEBUFFER_getLayers = "Framebuffer-getLayers",
 
-    ASSET_MANAGER = "Asset-Manager",
+    // GRAPHICS PIPELINE BUILDER
+    GRAPHICS_PIPELINE_BUILDER = "Graphics-Pipeline-Builder",
 
+    // GRAPHICS PIPELINE
     GRAPHICS_PIPELINE = "Graphics-Pipeline",
+    GRAPHICS_PIPELINE_Constructor = "Graphics-Pipeline-Constructor",
+    GRAPHICS_PIPELINE_getRenderPass = "Graphics-Pipeline-getRenderPass",
+
+    ASSET_MANAGER = "Asset-Manager",
 }

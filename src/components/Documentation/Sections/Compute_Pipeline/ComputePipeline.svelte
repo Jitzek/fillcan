@@ -123,10 +123,10 @@ fillcan::CommandBuffer* pComputePrimaryCommandBuffer = pComputeCommandRecording-
 pComputePrimaryCommandBuffer->begin();
 
 // Bind a command buffer to the compute pipeline
-computePipeline.bindToCommandBuffer(pComputePrimaryCommandBuffer);
+upComputePipeline->bindToCommandBuffer(pComputePrimaryCommandBuffer);
 
 // Bind the descriptor sets to the bound command buffer
-computePipeline.bindDescriptorSets();
+upComputePipeline->bindDescriptorSets();
 
 // Define the amount of local workgroups for the x-dimension
 // (the amount of computations to execute divided by the size of the local workgroup)

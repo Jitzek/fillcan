@@ -332,23 +332,26 @@
     import Sampler from "$components/Documentation/Sections/Sampler/Sampler.svelte";
     import SamplerConstructor from "$components/Documentation/Sections/Sampler/SamplerConstructor.svelte";
     import GetSamplerHandle from "$components/Documentation/Sections/Sampler/getSamplerHandle.svelte";
-import SamplerBuilder from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilder.svelte";
-import SamplerBuilderConstructor from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderConstructor.svelte";
-import SamplerBuilderSetLogicalDevice from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetLogicalDevice.svelte";
-import SamplerBuilderSetFilters from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetFilters.svelte";
-import SamplerBuilderSetMipmapMode from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetMipmapMode.svelte";
-import SamplerBuilderSetAddressModes from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetAddressModes.svelte";
-import SamplerBuilderSetMipLodBias from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetMipLodBias.svelte";
-import SamplerBuilderSetMaxAnisotropy from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetMaxAnisotropy.svelte";
-import SamplerBuilderUnsetMaxAnisotropy from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderUnsetMaxAnisotropy.svelte";
-import SamplerBuilderSetCompareOp from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetCompareOp.svelte";
-import SamplerBuilderUnsetCompareOp from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderUnsetCompareOp.svelte";
-import SamplerBuilderSetLod from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetLod.svelte";
-import SamplerBuilderSetBorderColor from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetBorderColor.svelte";
-import SamplerBuilderEnableUnnormalizedCoordinates from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderEnableUnnormalizedCoordinates.svelte";
-import SamplerBuilderDisableUnnormalizedCoordinates from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderDisableUnnormalizedCoordinates.svelte";
-import SamplerBuilderGetResult from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderGetResult.svelte";
-import SamplerBuilderReset from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderReset.svelte";
+    import SamplerBuilder from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilder.svelte";
+    import SamplerBuilderConstructor from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderConstructor.svelte";
+    import SamplerBuilderSetLogicalDevice from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetLogicalDevice.svelte";
+    import SamplerBuilderSetFilters from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetFilters.svelte";
+    import SamplerBuilderSetMipmapMode from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetMipmapMode.svelte";
+    import SamplerBuilderSetAddressModes from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetAddressModes.svelte";
+    import SamplerBuilderSetMipLodBias from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetMipLodBias.svelte";
+    import SamplerBuilderSetMaxAnisotropy from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetMaxAnisotropy.svelte";
+    import SamplerBuilderUnsetMaxAnisotropy from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderUnsetMaxAnisotropy.svelte";
+    import SamplerBuilderSetCompareOp from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetCompareOp.svelte";
+    import SamplerBuilderUnsetCompareOp from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderUnsetCompareOp.svelte";
+    import SamplerBuilderSetLod from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetLod.svelte";
+    import SamplerBuilderSetBorderColor from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetBorderColor.svelte";
+    import SamplerBuilderEnableUnnormalizedCoordinates from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderEnableUnnormalizedCoordinates.svelte";
+    import SamplerBuilderDisableUnnormalizedCoordinates from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderDisableUnnormalizedCoordinates.svelte";
+    import SamplerBuilderGetResult from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderGetResult.svelte";
+    import SamplerBuilderReset from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderReset.svelte";
+    import GraphicsPipeline from "$components/Documentation/Sections/Graphics_Pipeline/GraphicsPipeline.svelte";
+    import GraphicsPipelineConstructor from "$components/Documentation/Sections/Graphics_Pipeline/GraphicsPipelineConstructor.svelte";
+    import GraphicsPipelineGetRenderPass from "$components/Documentation/Sections/Graphics_Pipeline/GraphicsPipelineGetRenderPass.svelte";
 
     const sections: Array<SectionObject> = [
         // GETTING STARTED
@@ -3089,6 +3092,32 @@ import SamplerBuilderReset from "$components/Documentation/Sections/Sampler_Buil
             label: "getLayers",
             heading: 3,
             content: FramebufferGetLayers,
+            props: {},
+            visible: false,
+        },
+
+        // GRAPHICS PIPELINE
+        {
+            id: SectionID.GRAPHICS_PIPELINE,
+            label: "Graphics Pipeline",
+            heading: 2,
+            content: GraphicsPipeline,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.GRAPHICS_PIPELINE_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: GraphicsPipelineConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.GRAPHICS_PIPELINE_getRenderPass,
+            label: "getRenderPass",
+            heading: 3,
+            content: GraphicsPipelineGetRenderPass,
             props: {},
             visible: false,
         },
