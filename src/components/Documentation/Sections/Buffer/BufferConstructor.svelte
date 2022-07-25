@@ -2,6 +2,7 @@
     import Anchor from "$components/Documentation/Anchor.svelte";
     import MethodDescription from "$components/Documentation/MethodDescription.svelte";
     import Reference from "$components/Documentation/Reference.svelte";
+import VkReference from "$components/Documentation/VkReference.svelte";
     import { SectionID } from "$objects/Documentation/Section";
     import { getState } from "$stores/StateStore";
     import { Highlight } from "svelte-highlight";
@@ -91,9 +92,9 @@
         </li>
     </div>
     <span slot="throws">
-        <code>std::runtime_error</code> if the <Anchor
-            href="https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VkBuffer.html"
-            target="_blank">Vulkan Buffer</Anchor
+        <code>std::runtime_error</code> if the <VkReference
+            reference="VkBuffer"
+            version={1.3}>Vulkan Buffer</VkReference
         > couldn't be created.
     </span>
 </MethodDescription>

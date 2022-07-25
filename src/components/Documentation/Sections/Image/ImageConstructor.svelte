@@ -2,6 +2,7 @@
     import Anchor from "$components/Documentation/Anchor.svelte";
     import MethodDescription from "$components/Documentation/MethodDescription.svelte";
     import Reference from "$components/Documentation/Reference.svelte";
+    import VkReference from "$components/Documentation/VkReference.svelte";
     import { SectionID } from "$objects/Documentation/Section";
     import { getState } from "$stores/StateStore";
     import { Highlight } from "svelte-highlight";
@@ -167,6 +168,12 @@
             or no time cost.
         </li>
     </div>
+    <span slot="throws">
+        <code>std::runtime_error</code> if the <VkReference
+            reference="VkImage"
+            version={1.3}>Vulkan Image</VkReference
+        > couldn't be created.
+    </span>
 </MethodDescription><br />
 
 <Highlight
@@ -217,7 +224,7 @@
     <span slot="note"
         >This Constructor is primarily used by the Swapchain to create Image
         Views for it's images.<br />
-        By using this Constructor most getter methods will return their default value.
+        By using this Constructor most class members will have their default values.
     </span>
 </MethodDescription>
 

@@ -250,6 +250,30 @@ export enum SectionID {
     IMAGE_BUILDER_reset = "Image-Builder-reset",
     IMAGE_BUILDER_getResult = "Image-Builder-getResult",
 
+    // SAMPLER BUILDER
+    SAMPLER_BUILDER = "Sampler-Builder",
+    SAMPLER_BUILDER_Constructor = "Sampler-Builder-Constructor",
+    SAMPLER_BUILDER_setLogicalDevice = "Sampler-Builder-setLogicalDevice",
+    SAMPLER_BUILDER_setFilters = "Sampler-Builder-setFilters",
+    SAMPLER_BUILDER_setMipmapMode = "Sampler-Builder-setMipmapMode",
+    SAMPLER_BUILDER_setAddressModes = "Sampler-Builder-setAddressModes",
+    SAMPLER_BUILDER_setMipLodBias = "Sampler-Builder-setMipLodBias",
+    SAMPLER_BUILDER_setMaxAnisotropy = "Sampler-Builder-setMaxAnisotropy",
+    SAMPLER_BUILDER_unsetMaxAnisotropy = "Sampler-Builder-unsetMaxAnisotropy",
+    SAMPLER_BUILDER_setCompareOp = "Sampler-Builder-setCompareOp",
+    SAMPLER_BUILDER_unsetCompareOp = "Sampler-Builder-unsetCompareOp",
+    SAMPLER_BUILDER_setLod = "Sampler-Builder-setLod",
+    SAMPLER_BUILDER_setBorderColor = "Sampler-Builder-setBorderColor",
+    SAMPLER_BUILDER_enableUnnormalizedCoordinates = "Sampler-Builder-enableUnnormalizedCoordinates",
+    SAMPLER_BUILDER_disableUnnormalizedCoordinates = "Sampler-Builder-disableUnnormalizedCoordinates",
+    SAMPLER_BUILDER_getResult = "Sampler-Builder-getResult",
+    SAMPLER_BUILDER_reset = "Sampler-Builder-reset",
+
+    // SAMPLER
+    SAMPLER = "Sampler",
+    SAMPLER_Constructor = "Sampler-Constructor",
+    SAMPLER_getSamplerHandle = "Sampler-getSamplerHandle",
+
     // MEMORY
     MEMORY = "Memory",
     MEMORY_Constructor = "Memory-Constructor",
@@ -390,9 +414,14 @@ export enum SectionID {
     RENDER_PASS_BUILDER_getResult = "Render-Pass-Builder-getResult",
     RENDER_PASS_BUILDER_reset = "Render-Pass-Builder-reset",
 
+    // FRAMEBUFFER
+    FRAMEBUFFER = "Framebuffer",
+    FRAMEBUFFER_Constructor = "Framebuffer-Constructor",
+    FRAMEBUFFER_getFramebufferHandle = "Framebuffer-getFramebufferHandle",
+    FRAMEBUFFER_getExtent = "Framebuffer-getExtent",
+    FRAMEBUFFER_getLayers = "Framebuffer-getLayers",
+
     ASSET_MANAGER = "Asset-Manager",
 
     GRAPHICS_PIPELINE = "Graphics-Pipeline",
-    FRAMEBUFFER = "Framebuffer",
-    SAMPLER = "Sampler",
 }

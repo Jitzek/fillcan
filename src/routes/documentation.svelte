@@ -324,6 +324,31 @@
     import RenderPassBuilderAddDependency from "$components/Documentation/Sections/Render_Pass_Builder/RenderPassBuilderAddDependency.svelte";
     import RenderPassBuilderGetResult from "$components/Documentation/Sections/Render_Pass_Builder/RenderPassBuilderGetResult.svelte";
     import RenderPassBuilderReset from "$components/Documentation/Sections/Render_Pass_Builder/RenderPassBuilderReset.svelte";
+    import Framebuffer from "$components/Documentation/Sections/Framebuffer/Framebuffer.svelte";
+    import FramebufferConstructor from "$components/Documentation/Sections/Framebuffer/FramebufferConstructor.svelte";
+    import GetFramebufferHandle from "$components/Documentation/Sections/Framebuffer/getFramebufferHandle.svelte";
+    import FramebufferGetExtent from "$components/Documentation/Sections/Framebuffer/FramebufferGetExtent.svelte";
+    import FramebufferGetLayers from "$components/Documentation/Sections/Framebuffer/FramebufferGetLayers.svelte";
+    import Sampler from "$components/Documentation/Sections/Sampler/Sampler.svelte";
+    import SamplerConstructor from "$components/Documentation/Sections/Sampler/SamplerConstructor.svelte";
+    import GetSamplerHandle from "$components/Documentation/Sections/Sampler/getSamplerHandle.svelte";
+import SamplerBuilder from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilder.svelte";
+import SamplerBuilderConstructor from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderConstructor.svelte";
+import SamplerBuilderSetLogicalDevice from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetLogicalDevice.svelte";
+import SamplerBuilderSetFilters from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetFilters.svelte";
+import SamplerBuilderSetMipmapMode from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetMipmapMode.svelte";
+import SamplerBuilderSetAddressModes from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetAddressModes.svelte";
+import SamplerBuilderSetMipLodBias from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetMipLodBias.svelte";
+import SamplerBuilderSetMaxAnisotropy from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetMaxAnisotropy.svelte";
+import SamplerBuilderUnsetMaxAnisotropy from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderUnsetMaxAnisotropy.svelte";
+import SamplerBuilderSetCompareOp from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetCompareOp.svelte";
+import SamplerBuilderUnsetCompareOp from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderUnsetCompareOp.svelte";
+import SamplerBuilderSetLod from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetLod.svelte";
+import SamplerBuilderSetBorderColor from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderSetBorderColor.svelte";
+import SamplerBuilderEnableUnnormalizedCoordinates from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderEnableUnnormalizedCoordinates.svelte";
+import SamplerBuilderDisableUnnormalizedCoordinates from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderDisableUnnormalizedCoordinates.svelte";
+import SamplerBuilderGetResult from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderGetResult.svelte";
+import SamplerBuilderReset from "$components/Documentation/Sections/Sampler_Builder/SamplerBuilderReset.svelte";
 
     const sections: Array<SectionObject> = [
         // GETTING STARTED
@@ -1968,6 +1993,170 @@
             visible: false,
         },
 
+        // SAMPLER BUILDER
+        {
+            id: SectionID.SAMPLER_BUILDER,
+            label: "Sampler Builder",
+            heading: 2,
+            content: SamplerBuilder,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SAMPLER_BUILDER_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: SamplerBuilderConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SAMPLER_BUILDER_setLogicalDevice,
+            label: "setLogicalDevice",
+            heading: 3,
+            content: SamplerBuilderSetLogicalDevice,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SAMPLER_BUILDER_setFilters,
+            label: "setFilters",
+            heading: 3,
+            content: SamplerBuilderSetFilters,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SAMPLER_BUILDER_setMipmapMode,
+            label: "setMipmapMode",
+            heading: 3,
+            content: SamplerBuilderSetMipmapMode,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SAMPLER_BUILDER_setAddressModes,
+            label: "setAddressModes",
+            heading: 3,
+            content: SamplerBuilderSetAddressModes,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SAMPLER_BUILDER_setMipLodBias,
+            label: "setMipLodBias",
+            heading: 3,
+            content: SamplerBuilderSetMipLodBias,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SAMPLER_BUILDER_setMaxAnisotropy,
+            label: "setMaxAnisotropy",
+            heading: 3,
+            content: SamplerBuilderSetMaxAnisotropy,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SAMPLER_BUILDER_unsetMaxAnisotropy,
+            label: "unsetMaxAnisotropy",
+            heading: 3,
+            content: SamplerBuilderUnsetMaxAnisotropy,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SAMPLER_BUILDER_setCompareOp,
+            label: "setCompareOp",
+            heading: 3,
+            content: SamplerBuilderSetCompareOp,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SAMPLER_BUILDER_unsetCompareOp,
+            label: "unsetCompareOp",
+            heading: 3,
+            content: SamplerBuilderUnsetCompareOp,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SAMPLER_BUILDER_setLod,
+            label: "setLod",
+            heading: 3,
+            content: SamplerBuilderSetLod,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SAMPLER_BUILDER_setBorderColor,
+            label: "setBorderColor",
+            heading: 3,
+            content: SamplerBuilderSetBorderColor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SAMPLER_BUILDER_enableUnnormalizedCoordinates,
+            label: "enableUnnormalizedCoordinates",
+            heading: 3,
+            content: SamplerBuilderEnableUnnormalizedCoordinates,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SAMPLER_BUILDER_disableUnnormalizedCoordinates,
+            label: "disableUnnormalizedCoordinates",
+            heading: 3,
+            content: SamplerBuilderDisableUnnormalizedCoordinates,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SAMPLER_BUILDER_getResult,
+            label: "getResult",
+            heading: 3,
+            content: SamplerBuilderGetResult,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SAMPLER_BUILDER_reset,
+            label: "reset",
+            heading: 3,
+            content: SamplerBuilderReset,
+            props: {},
+            visible: false,
+        },
+
+        // SAMPLER
+        {
+            id: SectionID.SAMPLER,
+            label: "Sampler",
+            heading: 2,
+            content: Sampler,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SAMPLER_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: SamplerConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.SAMPLER_getSamplerHandle,
+            label: "getSamplerHandle",
+            heading: 3,
+            content: GetSamplerHandle,
+            props: {},
+            visible: false,
+        },
+
         // MEMORY
         {
             id: SectionID.MEMORY,
@@ -2795,7 +2984,7 @@
             props: {},
             visible: false,
         },
-        
+
         // RENDER PASS
         {
             id: SectionID.RENDER_PASS,
@@ -2858,6 +3047,48 @@
             label: "end",
             heading: 3,
             content: RenderPassEnd,
+            props: {},
+            visible: false,
+        },
+
+        // FRAMEBUFFER
+        {
+            id: SectionID.FRAMEBUFFER,
+            label: "Framebuffer",
+            heading: 2,
+            content: Framebuffer,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FRAMEBUFFER_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: FramebufferConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FRAMEBUFFER_getFramebufferHandle,
+            label: "getFramebufferHandle",
+            heading: 3,
+            content: GetFramebufferHandle,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FRAMEBUFFER_getExtent,
+            label: "getExtent",
+            heading: 3,
+            content: FramebufferGetExtent,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.FRAMEBUFFER_getLayers,
+            label: "getLayers",
+            heading: 3,
+            content: FramebufferGetLayers,
             props: {},
             visible: false,
         },
