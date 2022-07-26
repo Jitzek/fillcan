@@ -2,6 +2,9 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Jitzek/fillcan/blob/main/LICENSE)
 Fillcan is a C++20 library for rendering graphics using Vulkan.
 
+- [Home Page](https://jitzek.github.io/fillcan/)
+- [Documentation](https://jitzek.github.io/fillcan/documentation)
+
 ## About the library
 ![](https://user-images.githubusercontent.com/43340162/136829908-d752617e-49b9-487d-bb74-ee59acf96a2b.png)
 
