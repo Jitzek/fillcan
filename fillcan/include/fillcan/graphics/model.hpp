@@ -67,16 +67,17 @@ namespace fillcan {
         Model(LogicalDevice* pLogicalDevice, const std::vector<Vertex>& vertices, const std::vector<uint16_t>& indices);
         Model(LogicalDevice* pLogicalDevice, std::string filePath);
         ~Model();
-
         Model(const Model&) = delete;
         Model& operator=(const Model&) = delete;
 
-        void setTexture(Texture* pTexture);
-        Texture* getTexture();
+        // void setTexture(Texture* pTexture);
+        // Texture* getTexture();
 
         void bind(CommandBuffer* pCommandBuffer);
         void draw();
         void drawIndexed();
+
+        Texture* texture = nullptr;
     };
 
 } // namespace fillcan

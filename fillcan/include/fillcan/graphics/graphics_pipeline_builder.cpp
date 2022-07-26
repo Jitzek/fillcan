@@ -21,26 +21,20 @@ namespace fillcan {
         this->upInputAssemblyState = std::make_unique<PipelineInputAssemblyState>(inputAssemblyState);
     }
 
-    bool GraphicsPipelineBuilder::setVertexInputState(PipelineVertexInputState vertexInputState) {
-        // TODO: Check whether the descriptions are supported by the device.
+    void GraphicsPipelineBuilder::setVertexInputState(PipelineVertexInputState vertexInputState) {
         this->upVertexInputState = std::make_unique<PipelineVertexInputState>(vertexInputState);
-        return true;
     }
 
     void GraphicsPipelineBuilder::setTessellationState(PipelineTessellationState tessellationState) {
         this->upTessellationState = std::make_unique<PipelineTessellationState>(tessellationState);
     }
 
-    bool GraphicsPipelineBuilder::addViewportState(PipelineViewPortState viewportState) {
-        // TODO: Check whether the amount of viewports is supported by the device
+    void GraphicsPipelineBuilder::addViewportState(PipelineViewPortState viewportState) {
         this->upViewPortStates.push_back(std::move(std::make_unique<PipelineViewPortState>(viewportState)));
-        return true;
     }
 
-    bool GraphicsPipelineBuilder::setRasterizationState(PipelineRasterizationState rasterizationState) {
-        // TODO: Check whether the parameters are supported by the device
+    void GraphicsPipelineBuilder::setRasterizationState(PipelineRasterizationState rasterizationState) {
         this->upRasterizationState = std::make_unique<PipelineRasterizationState>(rasterizationState);
-        return true;
     }
 
     void GraphicsPipelineBuilder::setMultisampleState(PipelineMultisampleState multisampleState) {
@@ -89,6 +83,7 @@ namespace fillcan {
             inputAssemblyStateCreateInfo.primitiveRestartEnable = this->upInputAssemblyState->primitiveRestartEnable;
         }
 
+        // TODO: Check whether the descriptions are supported by the device.
         VkPipelineVertexInputStateCreateInfo vertexInputStateCreateInfo = {};
         if (this->upVertexInputState != nullptr) {
             vertexInputStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -110,6 +105,7 @@ namespace fillcan {
             tessellationStateCreateInfo.patchControlPoints = this->upTessellationState->patchControlPoints;
         }
 
+        // TODO: Check whether the amount of viewports is supported by the device
         std::vector<VkPipelineViewportStateCreateInfo> viewPortStateCreateInfos = {};
         viewPortStateCreateInfos.reserve(this->upViewPortStates.size());
         for (std::unique_ptr<PipelineViewPortState>& upViewPortState : this->upViewPortStates) {
@@ -124,6 +120,7 @@ namespace fillcan {
             viewPortStateCreateInfos.push_back(viewPortStateCreateInfo);
         }
 
+        // TODO: Check whether the parameters are supported by the device
         VkPipelineRasterizationStateCreateInfo rasterizationStateCreateInfo = {};
         if (this->upRasterizationState != nullptr) {
             rasterizationStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;

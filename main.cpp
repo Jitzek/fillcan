@@ -14,10 +14,10 @@
 int main(int argc, char* argv[]) {
     // compute_pipeline::App app{};
     // simple_triangle::App app{};
-    simple_cube::App app{};
+    // simple_cube::App app{};
     // simple_texture::App app{};
     // simple_model::App app{};
-    // simple_camera::App app{};
+    simple_camera::App app{};
 
     try {
         app.run();

@@ -174,7 +174,7 @@ namespace simple_model {
     void App::loadGameObjects() {
         std::shared_ptr<fillcan::Model> spModel =
             std::make_unique<fillcan::Model>(this->upFillcan->getCurrentDevice(), this->APP_DIR + "/models/viking_room.obj");
-        spModel->setTexture(this->upFillcan->getAssetManager()->getTexture(0));
+        spModel->texture = this->upFillcan->getAssetManager()->getTexture(0);
 
         fillcan::GameObject cubeGameObject = fillcan::GameObject::createGameObject();
         cubeGameObject.transform.translation = {0.0f, 0.f, 0.5};
@@ -199,8 +199,7 @@ namespace simple_model {
             //     glm::mod(gameObject.transform.rotation.x + (0.25f * this->upFillcan->deltaTimef()), glm::two_pi<float>());
             SimplePushConstantData data = {.transform = gameObject.transform.mat4(),
                                            .color = gameObject.color,
-                                           .textureIndex =
-                                               gameObject.model->getTexture() != nullptr ? gameObject.model->getTexture()->getIndex() : -1};
+                                           .textureIndex = gameObject.model->texture != nullptr ? gameObject.model->texture->getIndex() : -1};
             std::unique_ptr<SimplePushConstantData> simplePushConstantData = std::make_unique<SimplePushConstantData>(data);
             this->upGraphicsPipeline->pushConstantData("SimplePushConstant", std::move(simplePushConstantData));
 
@@ -229,21 +228,20 @@ namespace simple_model {
 
         // Add attachment for subpass 1 describing the depth image
         std::optional<VkFormat> depthImageFormat = this->upFillcan->getCurrentDevice()->getPhysicalDevice()->findSupportedFormat(
-                                                 {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
-                                                 VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
+            {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT}, VK_IMAGE_TILING_OPTIMAL,
+            VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
         if (!depthImageFormat.has_value()) {
             throw std::runtime_error("Failed to find a supported format for the depth image attachment.");
         }
-        unsigned int depthImageAttachmentIndex =
-            renderPassBuilder.addAttachment({.flags = 0,
-                                             .format = depthImageFormat.value(),
-                                             .samples = VK_SAMPLE_COUNT_1_BIT,
-                                             .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
-                                             .storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
-                                             .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
-                                             .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
-                                             .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
-                                             .finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL});
+        unsigned int depthImageAttachmentIndex = renderPassBuilder.addAttachment({.flags = 0,
+                                                                                  .format = depthImageFormat.value(),
+                                                                                  .samples = VK_SAMPLE_COUNT_1_BIT,
+                                                                                  .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+                                                                                  .storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+                                                                                  .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+                                                                                  .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+                                                                                  .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+                                                                                  .finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL});
         renderPassBuilder.setDepthStencilAttachment(depthImageAttachmentIndex, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, false);
 
         // Construct subpass 1, this will combine the attachment described before into a new subpass

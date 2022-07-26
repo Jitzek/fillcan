@@ -142,9 +142,9 @@ namespace fillcan {
         this->pLogicalDevice->endSingleTimeCommandRecording(pCommandRecording);
     }
 
-    void Model::setTexture(Texture* pTexture) { this->pTexture = pTexture; }
+    // void Model::setTexture(Texture* pTexture) { this->pTexture = pTexture; }
 
-    Texture* Model::getTexture() { return this->pTexture; }
+    // Texture* Model::getTexture() { return this->pTexture; }
 
     void Model::bind(CommandBuffer* pCommandBuffer) {
         VkBuffer hVertexBuffers[] = {upVertexBuffer->getBufferHandle()};

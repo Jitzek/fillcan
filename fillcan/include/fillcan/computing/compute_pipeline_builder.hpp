@@ -35,6 +35,8 @@ namespace fillcan {
          * @brief Get the resulting Compute Pipeline.
          *
          * @return A unique pointer to the Compute Pipeline, it's ownership will be moved.
+         *
+         * @throws std::runtime_error if the Graphics Pipeline couldn't be created.
          */
         std::unique_ptr<ComputePipeline> getResult();
 

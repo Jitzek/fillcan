@@ -188,7 +188,7 @@ namespace simple_camera {
     void App::loadGameObjects() {
         std::shared_ptr<fillcan::Model> spModel =
             std::make_unique<fillcan::Model>(this->upFillcan->getCurrentDevice(), this->APP_DIR + "/models/viking_room.obj");
-        spModel->setTexture(this->upFillcan->getAssetManager()->getTexture(0));
+        spModel->texture = this->upFillcan->getAssetManager()->getTexture(0);
 
         fillcan::GameObject cubeGameObject = fillcan::GameObject::createGameObject();
         cubeGameObject.transform.translation = {0.0f, 0.f, 0.5};
@@ -230,8 +230,7 @@ namespace simple_camera {
         for (fillcan::GameObject& gameObject : this->gameObjects) {
             SimplePushConstantData data = {.transform = gameObject.transform.mat4(),
                                            .color = gameObject.color,
-                                           .textureIndex =
-                                               gameObject.model->getTexture() != nullptr ? gameObject.model->getTexture()->getIndex() : -1};
+                                           .textureIndex = gameObject.model->texture != nullptr ? gameObject.model->texture->getIndex() : -1};
             std::unique_ptr<SimplePushConstantData> simplePushConstantData = std::make_unique<SimplePushConstantData>(data);
             this->upGraphicsPipeline->pushConstantData("SimplePushConstant", std::move(simplePushConstantData));
 
