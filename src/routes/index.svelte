@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { base } from "$app/paths";
+
     import HomeButton from "$components/Home/HomeButton.svelte";
     import DocumentationIcon from "$components/svg/DocumentationIcon.svelte";
     import GitHubIcon from "$components/svg/GitHubIcon.svelte";
@@ -15,8 +17,7 @@
     <div class="big-picture-container">
         <div
             class="big-picture"
-            style="--background-url: url({getState().URL
-                .root}/images/home/fillcan_thumbnail.png);"
+            style="--background-url: url({base}/images/home/fillcan_thumbnail.png);"
         />
     </div>
     <div class="main-overlay">
@@ -29,7 +30,7 @@
                     <div slot="label">Visit Repository</div>
                 </HomeButton>
             </a>
-            <a href="{getState().URL.root}/documentation">
+            <a href="{base}/documentation">
                 <HomeButton backgroundColor="blue">
                     <div class="icon-container" slot="icon">
                         <DocumentationIcon />

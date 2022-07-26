@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { base } from "$app/paths";
+
     import type { Section as SectionObject } from "$objects/Documentation/Section";
     import { stateStore } from "$stores/StateStore";
 
@@ -52,7 +54,7 @@
         >
             <a
                 bind:this={references[i]}
-                href="{$stateStore.URL.root}/documentation#{section.id}"
+                href="{base}/documentation#{section.id}"
                 on:click={handleReferenceClick}
             >
                 {section.label}

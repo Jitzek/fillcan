@@ -15,6 +15,7 @@ const config = {
     }),
 
     kit: {
+        appDir: "fillcan/_app",
         vite: {
             resolve: {
                 alias: {
@@ -37,9 +38,12 @@ const config = {
             fallback: null,
         }),
 
+        // paths: {
+        //     base: "",
+        //     assets: "",
+        // },
         paths: {
-            base: "",
-            assets: "",
+            base: process.env.NODE_ENV === "production" ? "/fillcan" : "",
         },
     },
 };

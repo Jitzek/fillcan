@@ -3,6 +3,7 @@
     import { DisplayType } from "$objects/State";
     import { getState, stateStore } from "$stores/StateStore";
     import HamburgerMenuIcon from "$components/NavBar/HamburgerMenuIcon.svelte";
+    import { base } from "$app/paths";
 
     class RouteObject {
         public url: string;
@@ -11,11 +12,11 @@
 
     const routes: Array<RouteObject> = [
         {
-            url: `${getState().URL.root}/`,
+            url: `${base}`,
             label: "Home",
         },
         {
-            url: `${getState().URL.root}/documentation`,
+            url: `${base}/documentation`,
             label: "Documentation",
         },
         // TODO:
@@ -40,13 +41,13 @@
     <div class="logo-container">
         <img
             class="paint-trail-image"
-            src="{getState().URL.root}/images/paint-trail.svg"
+            src="{base}/images/paint-trail.svg"
             alt="Paint"
         />
-        <a href="{getState().URL.root}/">
+        <a href="{base}">
             <img
                 class="fillcan-logo"
-                src="{getState().URL.root}/images/fillcan-logo-no-text.png"
+                src="{base}/images/fillcan-logo-no-text.png"
                 alt="Fillcan Logo"
             />
         </a>
