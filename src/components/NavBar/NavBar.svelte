@@ -18,10 +18,11 @@
             url: `${getState().URL.root}/documentation`,
             label: "Documentation",
         },
-        {
-            url: `${getState().URL.root}/examples`,
-            label: "Examples",
-        },
+        // TODO:
+        // {
+        //     url: `${getState().URL.root}/examples`,
+        //     label: "Examples",
+        // },
     ];
 
     let showHamburgerMenu = false;

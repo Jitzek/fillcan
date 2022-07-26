@@ -3,6 +3,8 @@
     import { stateStore } from "$stores/StateStore";
 
     export let sections: Array<SectionObject>;
+    export let onReferenceClick: Function = () => {};
+
     let currentVisibleSection: SectionObject | null = null;
     let references: Array<HTMLElement> = [];
     let currentReference: HTMLElement | null = null;
@@ -32,6 +34,10 @@
         if (currentReference === null) return;
         scrollIntoViewIfNeeded(currentReference);
     }
+
+    function handleReferenceClick(_e: MouseEvent) {
+        onReferenceClick();
+    }
 </script>
 
 <svelte:window on:scroll={window_handleScroll} />
@@ -47,8 +53,12 @@
             <a
                 bind:this={references[i]}
                 href="{$stateStore.URL.root}/documentation#{section.id}"
+                on:click={handleReferenceClick}
             >
                 {section.label}
+                {#if currentVisibleSection !== null && section.id === currentVisibleSection.id}
+                    <span class="visible-reference-indicator">{"<"}</span>
+                {/if}
             </a>
         </li>
     {/each}
@@ -95,7 +105,14 @@
             }
         }
         .reference-item.active {
-            background-color: black !important;
+            background-color: $--fg-color-accent-blue;
+        }
+
+        .visible-reference-indicator {
+            position: absolute;
+            right: 0.5rem;
+            font-weight: bold;
+            margin-top: 0.15rem;
         }
 
         a:hover,

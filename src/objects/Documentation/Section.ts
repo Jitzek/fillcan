@@ -423,6 +423,21 @@ export enum SectionID {
 
     // GRAPHICS PIPELINE BUILDER
     GRAPHICS_PIPELINE_BUILDER = "Graphics-Pipeline-Builder",
+    GRAPHICS_PIPELINE_BUILDER_Constructor = "Graphics-Pipeline-Builder-Constructor",
+    GRAPHICS_PIPELINE_BUILDER_addShaderStage = "Graphics-Pipeline-Builder-addShaderStage",
+    GRAPHICS_PIPELINE_BUILDER_setInputAssemblyState = "Graphics-Pipeline-Builder-setInputAssemblyState",
+    GRAPHICS_PIPELINE_BUILDER_setVertexInputState = "Graphics-Pipeline-Builder-setVertexInputState",
+    GRAPHICS_PIPELINE_BUILDER_setTessellationState = "Graphics-Pipeline-Builder-setTessellationState",
+    GRAPHICS_PIPELINE_BUILDER_addViewportState = "Graphics-Pipeline-Builder-addViewportState",
+    GRAPHICS_PIPELINE_BUILDER_setRasterizationState = "Graphics-Pipeline-Builder-setRasterizationState",
+    GRAPHICS_PIPELINE_BUILDER_setMultisampleState = "Graphics-Pipeline-Builder-setMultisampleState",
+    GRAPHICS_PIPELINE_BUILDER_setDepthStencilState = "Graphics-Pipeline-Builder-setDepthStencilState",
+    GRAPHICS_PIPELINE_BUILDER_setColorBlendState = "Graphics-Pipeline-Builder-setColorBlendState",
+    GRAPHICS_PIPELINE_BUILDER_setDynamicState = "Graphics-Pipeline-Builder-setDynamicState",
+    GRAPHICS_PIPELINE_BUILDER_setRenderPass = "Graphics-Pipeline-Builder-setRenderPass",
+    GRAPHICS_PIPELINE_BUILDER_setSubpass = "Graphics-Pipeline-Builder-setSubpass",
+    GRAPHICS_PIPELINE_BUILDER_getResult = "Graphics-Pipeline-Builder-getResult",
+    GRAPHICS_PIPELINE_BUILDER_reset = "Graphics-Pipeline-Builder-reset",
 
     // GRAPHICS PIPELINE
     GRAPHICS_PIPELINE = "Graphics-Pipeline",

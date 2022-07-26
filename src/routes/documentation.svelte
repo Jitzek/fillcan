@@ -352,6 +352,22 @@
     import GraphicsPipeline from "$components/Documentation/Sections/Graphics_Pipeline/GraphicsPipeline.svelte";
     import GraphicsPipelineConstructor from "$components/Documentation/Sections/Graphics_Pipeline/GraphicsPipelineConstructor.svelte";
     import GraphicsPipelineGetRenderPass from "$components/Documentation/Sections/Graphics_Pipeline/GraphicsPipelineGetRenderPass.svelte";
+    import GraphicsPipelineBuilder from "$components/Documentation/Sections/Graphics_Pipeline_Builder/GraphicsPipelineBuilder.svelte";
+    import GraphicsPipelineBuilderConstructor from "$components/Documentation/Sections/Graphics_Pipeline_Builder/GraphicsPipelineBuilderConstructor.svelte";
+    import GraphicsPipelineBuilderAddShaderStage from "$components/Documentation/Sections/Graphics_Pipeline_Builder/GraphicsPipelineBuilderAddShaderStage.svelte";
+    import GraphicsPipelineBuilderSetInputAssemblyState from "$components/Documentation/Sections/Graphics_Pipeline_Builder/GraphicsPipelineBuilderSetInputAssemblyState.svelte";
+    import GraphicsPipelineBuilderSetVertexInputState from "$components/Documentation/Sections/Graphics_Pipeline_Builder/GraphicsPipelineBuilderSetVertexInputState.svelte";
+    import GraphicsPipelineBuilderSetTessellationState from "$components/Documentation/Sections/Graphics_Pipeline_Builder/GraphicsPipelineBuilderSetTessellationState.svelte";
+    import GraphicsPipelineBuilderAddViewportState from "$components/Documentation/Sections/Graphics_Pipeline_Builder/GraphicsPipelineBuilderAddViewportState.svelte";
+    import GraphicsPipelineBuilderSetRasterizationState from "$components/Documentation/Sections/Graphics_Pipeline_Builder/GraphicsPipelineBuilderSetRasterizationState.svelte";
+    import GraphicsPipelineBuilderSetMultisampleState from "$components/Documentation/Sections/Graphics_Pipeline_Builder/GraphicsPipelineBuilderSetMultisampleState.svelte";
+    import GraphicsPipelineBuilderSetDepthStencilState from "$components/Documentation/Sections/Graphics_Pipeline_Builder/GraphicsPipelineBuilderSetDepthStencilState.svelte";
+    import GraphicsPipelineBuilderSetColorBlendState from "$components/Documentation/Sections/Graphics_Pipeline_Builder/GraphicsPipelineBuilderSetColorBlendState.svelte";
+    import GraphicsPipelineBuilderSetDynamicState from "$components/Documentation/Sections/Graphics_Pipeline_Builder/GraphicsPipelineBuilderSetDynamicState.svelte";
+    import GraphicsPipelineBuilderSetRenderPass from "$components/Documentation/Sections/Graphics_Pipeline_Builder/GraphicsPipelineBuilderSetRenderPass.svelte";
+    import GraphicsPipelineBuilderSetSubpass from "$components/Documentation/Sections/Graphics_Pipeline_Builder/GraphicsPipelineBuilderSetSubpass.svelte";
+    import GraphicsPipelineBuilderGetResult from "$components/Documentation/Sections/Graphics_Pipeline_Builder/GraphicsPipelineBuilderGetResult.svelte";
+    import GraphicsPipelineBuilderReset from "$components/Documentation/Sections/Graphics_Pipeline_Builder/GraphicsPipelineBuilderReset.svelte";
 
     const sections: Array<SectionObject> = [
         // GETTING STARTED
@@ -3096,6 +3112,149 @@
             visible: false,
         },
 
+        // GRAPHICS PIPELINE BUILDER
+        {
+            id: SectionID.GRAPHICS_PIPELINE_BUILDER,
+            label: "Graphics Pipeline Builder",
+            heading: 2,
+            content: GraphicsPipelineBuilder,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.GRAPHICS_PIPELINE_BUILDER_Constructor,
+            label: "Constructor",
+            heading: 3,
+            content: GraphicsPipelineBuilderConstructor,
+            props: {},
+            visible: false,
+        },
+        {
+            id: SectionID.GRAPHICS_PIPELINE_BUILDER_addShaderStage,
+            label: "addShaderStage",
+            heading: 3,
+            content: GraphicsPipelineBuilderAddShaderStage,
+            props: {},
+            visible: false,
+        },
+
+        {
+            id: SectionID.GRAPHICS_PIPELINE_BUILDER_setInputAssemblyState,
+            label: "setInputAssemblyState",
+            heading: 3,
+            content: GraphicsPipelineBuilderSetInputAssemblyState,
+            props: {},
+            visible: false,
+        },
+
+        {
+            id: SectionID.GRAPHICS_PIPELINE_BUILDER_setVertexInputState,
+            label: "setVertexInputState",
+            heading: 3,
+            content: GraphicsPipelineBuilderSetVertexInputState,
+            props: {},
+            visible: false,
+        },
+
+        {
+            id: SectionID.GRAPHICS_PIPELINE_BUILDER_setTessellationState,
+            label: "setTessellationState",
+            heading: 3,
+            content: GraphicsPipelineBuilderSetTessellationState,
+            props: {},
+            visible: false,
+        },
+
+        {
+            id: SectionID.GRAPHICS_PIPELINE_BUILDER_addViewportState,
+            label: "addViewportState",
+            heading: 3,
+            content: GraphicsPipelineBuilderAddViewportState,
+            props: {},
+            visible: false,
+        },
+
+        {
+            id: SectionID.GRAPHICS_PIPELINE_BUILDER_setRasterizationState,
+            label: "setRasterizationState",
+            heading: 3,
+            content: GraphicsPipelineBuilderSetRasterizationState,
+            props: {},
+            visible: false,
+        },
+
+        {
+            id: SectionID.GRAPHICS_PIPELINE_BUILDER_setMultisampleState,
+            label: "setMultisampleState",
+            heading: 3,
+            content: GraphicsPipelineBuilderSetMultisampleState,
+            props: {},
+            visible: false,
+        },
+
+        {
+            id: SectionID.GRAPHICS_PIPELINE_BUILDER_setDepthStencilState,
+            label: "setDepthStencilState",
+            heading: 3,
+            content: GraphicsPipelineBuilderSetDepthStencilState,
+            props: {},
+            visible: false,
+        },
+
+        {
+            id: SectionID.GRAPHICS_PIPELINE_BUILDER_setColorBlendState,
+            label: "setColorBlendState",
+            heading: 3,
+            content: GraphicsPipelineBuilderSetColorBlendState,
+            props: {},
+            visible: false,
+        },
+
+        {
+            id: SectionID.GRAPHICS_PIPELINE_BUILDER_setDynamicState,
+            label: "setDynamicState",
+            heading: 3,
+            content: GraphicsPipelineBuilderSetDynamicState,
+            props: {},
+            visible: false,
+        },
+
+        {
+            id: SectionID.GRAPHICS_PIPELINE_BUILDER_setRenderPass,
+            label: "setRenderPass",
+            heading: 3,
+            content: GraphicsPipelineBuilderSetRenderPass,
+            props: {},
+            visible: false,
+        },
+
+        {
+            id: SectionID.GRAPHICS_PIPELINE_BUILDER_setSubpass,
+            label: "setSubpass",
+            heading: 3,
+            content: GraphicsPipelineBuilderSetSubpass,
+            props: {},
+            visible: false,
+        },
+
+        {
+            id: SectionID.GRAPHICS_PIPELINE_BUILDER_getResult,
+            label: "getResult",
+            heading: 3,
+            content: GraphicsPipelineBuilderGetResult,
+            props: {},
+            visible: false,
+        },
+
+        {
+            id: SectionID.GRAPHICS_PIPELINE_BUILDER_reset,
+            label: "reset",
+            heading: 3,
+            content: GraphicsPipelineBuilderReset,
+            props: {},
+            visible: false,
+        },
+
         // GRAPHICS PIPELINE
         {
             id: SectionID.GRAPHICS_PIPELINE,
@@ -3140,9 +3299,14 @@
         showHamburgerMenu = !showHamburgerMenu;
     }
 
-    function onReferenceClick(_e: MouseEvent) {
+    function onReferenceClick() {
         showHamburgerMenu = false;
     }
+
+    let mobile = false;
+    stateStore.subscribe((newState) => {
+        mobile = newState.Screen.width <= 1000;
+    });
 </script>
 
 <svelte:head>
@@ -3150,15 +3314,13 @@
 </svelte:head>
 
 <div
-    class="documentation {$stateStore.Screen.displayType === DisplayType.MOBILE
-        ? 'mobile'
-        : ''}"
-    style="--sidebar-width: 20rem;"
+    class="documentation {mobile ? 'mobile' : ''}"
+    style="--sidebar-width: 22.5rem;"
 >
     <div class="documentation-sidebar">
-        <DocumentationSectionList {sections} />
+        <DocumentationSectionList {sections} {onReferenceClick} />
     </div>
-    {#if $stateStore.Screen.displayType === DisplayType.MOBILE}
+    {#if mobile}
         <div class="documentation-pop-in">
             <div class="documentation-pop-in-inner">
                 <button
@@ -3172,38 +3334,16 @@
             </div>
         </div>
     {/if}
-    {#if $stateStore.Screen.displayType === DisplayType.MOBILE && showHamburgerMenu}
+    {#if mobile && showHamburgerMenu}
         <div
             in:fly={{ y: -10, duration: 500, opacity: 0 }}
             out:fly={{ y: -20, duration: 250, opacity: 0 }}
             class="documentation-pop-in-content"
         >
-            <ul class="references-list">
-                {#each sections as section, i}
-                    <li
-                        class="reference-item h{section.heading} {currentVisibleSection !==
-                            null && section.id === currentVisibleSection.id
-                            ? 'active'
-                            : ''}"
-                    >
-                        <a
-                            href="{getState().URL
-                                .root}/documentation#{section.id}"
-                            on:click={onReferenceClick}
-                        >
-                            {section.label}
-                        </a>
-                    </li>
-                {/each}
-            </ul>
+            <DocumentationSectionList {sections} {onReferenceClick} />
         </div>
     {/if}
-    <div
-        class="documentation-container  {$stateStore.Screen.displayType ===
-        DisplayType.MOBILE
-            ? 'mobile'
-            : 'desktop'}"
-    >
+    <div class="documentation-container {mobile ? 'mobile' : 'desktop'}">
         <h1>Documentation</h1>
         <p>
             This page contains the documentation for Fillcan (v{getState()
