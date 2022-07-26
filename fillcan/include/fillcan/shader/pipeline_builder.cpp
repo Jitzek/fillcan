@@ -1,9 +1,13 @@
 
-// fillcan
-#include "fillcan/commands/command_buffer.hpp"
-#include "fillcan/shader/pipeline_layout.hpp"
+// vulkan
 #include "vulkan/vulkan_core.h"
+
+// fillcan
+#include <fillcan/commands/command_buffer.hpp>
 #include <fillcan/shader/pipeline_builder.hpp>
+#include <fillcan/shader/pipeline_layout.hpp>
+
+// std
 #include <memory>
 
 namespace fillcan {
@@ -25,7 +29,6 @@ namespace fillcan {
 
     void PipelineBuilder::reset() {
         this->pLogicalDevice = nullptr;
-        this->pCommandBuffer = nullptr;
         this->flags = 0;
         this->pushConstants.clear();
         this->pipelineCache = VK_NULL_HANDLE;

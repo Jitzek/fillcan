@@ -1,16 +1,16 @@
 #pragma once
 
 // fillcan
-#include "fillcan/memory/memory.hpp"
-#include "glm/detail/func_trigonometric.hpp"
-#include "glm/detail/type_vec.hpp"
-#include "glm/gtc/matrix_transform.hpp"
 #include <fillcan/memory/buffer.hpp>
+#include <fillcan/memory/memory.hpp>
 
+// glm
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #define GLM_FORCE_RADIANS
 #include <glm/detail/type_mat.hpp>
+#include <glm/detail/type_vec.hpp>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 // std
 #include <memory>
@@ -73,13 +73,11 @@ namespace fillcan {
         glm::vec3 rotation = glm::vec3(0.f);
 
       public:
-        Camera(LogicalDevice* pLogicalDevice, unsigned int bufferCount, unsigned int maxBufferCount = 3);
+        Camera(LogicalDevice* pLogicalDevice, unsigned int bufferCount);
         ~Camera();
 
-        void resizeBufferCount(unsigned int bufferCount);
-
         void bindDescriptorSets(std::vector<DescriptorSet*> pDescriptorSets);
-        void updateBuffer(GraphicsPipeline* pPipeline, unsigned int firstSet, int index);
+        void updateBuffer(GraphicsPipeline* pPipeline);
 
         std::vector<std::unique_ptr<DescriptorSetLayout>> getDescriptorSetLayouts(unsigned int binding);
 

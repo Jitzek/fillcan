@@ -31,7 +31,6 @@
 #include "fillcan/shader/descriptor_pool_builder.hpp"
 #include "fillcan/shader/descriptor_set_layout.hpp"
 #include "fillcan/shader/shader_module.hpp"
-#include <exception>
 #include <fillcan/graphics/asset_manager.hpp>
 #include <fillcan/graphics/graphics_pipeline_builder.hpp>
 #include <fillcan/shader/pipeline.hpp>
@@ -42,6 +41,7 @@
 #include <chrono>
 #include <cstddef>
 #include <cstring>
+#include <exception>
 #include <fstream>
 #include <functional>
 #include <iostream>
@@ -63,7 +63,7 @@ namespace simple_camera {
     App::~App() {}
 
     void App::run() {
-        std::string name = "Keyboard Control Application";
+        std::string name = "Camera Application";
         std::cout << "Running App \"" << name << "\"\n";
 
         VkPhysicalDeviceFeatures requiredDeviceFeatures = {};
@@ -76,9 +76,8 @@ namespace simple_camera {
 
         this->createRenderPass();
 
-        // Prepare a camera with a max buffercount of 3 (triple buffering)
-        this->upCamera =
-            std::move(std::make_unique<fillcan::Camera>(this->upFillcan->getCurrentDevice(), this->upFillcan->getSwapchain()->getImageCount(), 3));
+        // Prepare a camera with a buffercount of 3 (triple buffering)
+        this->upCamera = std::move(std::make_unique<fillcan::Camera>(this->upFillcan->getCurrentDevice(), 3));
 
         this->preloadTextures();
 
@@ -109,14 +108,15 @@ namespace simple_camera {
         // Prepare framebuffers for each image in flight, with a max of 3 (triple buffering)
         this->upFramebuffers.resize(3);
 
-        upFillcan->MainLoop(std::bind(&App::update, this, std::placeholders::_1));
+        upFillcan->mainLoop(std::bind(&App::update, this, std::placeholders::_1));
     }
 
     void App::update(double deltaTime) {
+        this->deltaTimef = static_cast<float>(deltaTime);
+
         // Recreate swapchain if window was resized
         if (this->upFillcan->getWindow()->wasResized()) {
             this->upFillcan->recreateSwapchain();
-            this->upCamera->resizeBufferCount(this->upFillcan->getSwapchain()->getImageCount());
             return;
         }
 
@@ -148,15 +148,14 @@ namespace simple_camera {
             Create framebuffer
         */
         // Create imageviews which will be used as attachments for the framebuffer
-        std::vector<fillcan::ImageView*> pAttachments = {swapchainImage.pSwapchainImageView, swapchainImage.pDepthBufferImageView};
+        std::vector<fillcan::ImageView*> pAttachments = {swapchainImage.pSwapchainImageView, swapchainImage.pDepthImageView};
         this->upFramebuffers.at(this->currentFrameIndex) = std::move(std::make_unique<fillcan::Framebuffer>(
-            this->upFillcan->getCurrentDevice(), this->upFillcan->getRenderPass(), pAttachments,
-            this->upFillcan->getSwapchain()->getImageExtent().width, this->upFillcan->getSwapchain()->getImageExtent().height,
-            this->upFillcan->getSwapchain()->getImageArrayLayers()));
+            this->upFillcan->getCurrentDevice(), this->upRenderPass.get(), pAttachments, this->upFillcan->getSwapchain()->getImageExtent().width,
+            this->upFillcan->getSwapchain()->getImageExtent().height, this->upFillcan->getSwapchain()->getImageArrayLayers()));
         /* */
 
         std::vector<VkClearValue> clearValues = {{.color = {{0.0f, 0.0f, 0.0f, 1.0f}}}, {.depthStencil = {1.0f, 0}}};
-        this->upFillcan->getRenderPass()->begin(pCurrentGraphicsCommandBuffer, this->upFramebuffers.at(this->currentFrameIndex).get(), &clearValues);
+        this->upRenderPass->begin(pCurrentGraphicsCommandBuffer, this->upFramebuffers.at(this->currentFrameIndex).get(), &clearValues);
 
         VkViewport viewport = {.x = 0.0f,
                                .y = 0.0f,
@@ -170,7 +169,7 @@ namespace simple_camera {
 
         this->renderGameObjects(pCurrentGraphicsCommandBuffer);
 
-        this->upFillcan->getRenderPass()->end();
+        this->upRenderPass->end();
 
         pCurrentGraphicsCommandRecording->endAll();
         pCurrentGraphicsCommandRecording->submit();
@@ -189,7 +188,7 @@ namespace simple_camera {
     void App::loadGameObjects() {
         std::shared_ptr<fillcan::Model> spModel =
             std::make_unique<fillcan::Model>(this->upFillcan->getCurrentDevice(), this->APP_DIR + "/models/viking_room.obj");
-        spModel->setTexture(this->upFillcan->getAssetManager()->getTexture(0));
+        spModel->texture = this->upFillcan->getAssetManager()->getTexture(0);
 
         fillcan::GameObject cubeGameObject = fillcan::GameObject::createGameObject();
         cubeGameObject.transform.translation = {0.0f, 0.f, 0.5};
@@ -222,27 +221,22 @@ namespace simple_camera {
         static auto startTime = std::chrono::high_resolution_clock::now();
         auto currentTime = std::chrono::high_resolution_clock::now();
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-        this->upCamera->translateXYZ(glm::vec3(1.f, 0.f, 0.f) * this->upFillcan->deltaTimef());
-        this->upCamera->lookAt(glm::vec3(0.0f, 0.f, 0.5));
+        this->upCamera->translateXYZ(glm::vec3(0.f, 0.f, 1.f) * this->deltaTimef);
+        this->upCamera->lookAt(glm::vec3(0.0f, 1.f, 0.5f));
 
         // Bind the current Camera descriptor set describing the projection to the pipeline and update it's value
-        this->upCamera->updateBuffer(this->upGraphicsPipeline.get(), 1, this->currentFrameIndex);
+        this->upCamera->updateBuffer(this->upGraphicsPipeline.get());
 
         for (fillcan::GameObject& gameObject : this->gameObjects) {
-            // gameObject.transform.rotation.y =
-            //     glm::mod(gameObject.transform.rotation.y + (0.5f * this->upFillcan->deltaTimef()), glm::two_pi<float>());
-            // gameObject.transform.rotation.x =
-            //     glm::mod(gameObject.transform.rotation.x + (0.25f * this->upFillcan->deltaTimef()), glm::two_pi<float>());
             SimplePushConstantData data = {.transform = gameObject.transform.mat4(),
                                            .color = gameObject.color,
-                                           .textureIndex =
-                                               gameObject.model->getTexture() != nullptr ? gameObject.model->getTexture()->getIndex() : -1};
+                                           .textureIndex = gameObject.model->texture != nullptr ? gameObject.model->texture->getIndex() : -1};
             std::unique_ptr<SimplePushConstantData> simplePushConstantData = std::make_unique<SimplePushConstantData>(data);
             this->upGraphicsPipeline->pushConstantData("SimplePushConstant", std::move(simplePushConstantData));
 
             gameObject.model->bind(pCommandBuffer);
-            gameObject.model->draw();
-            // gameObject.model->drawIndexed();
+            // gameObject.model->draw();
+            gameObject.model->drawIndexed();
         }
     }
 
@@ -264,18 +258,21 @@ namespace simple_camera {
         renderPassBuilder.addColorAttachment(swapChainAttachmentIndex, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, false);
 
         // Add attachment for subpass 1 describing the depth image
-        unsigned int depthImageAttachmentIndex =
-            renderPassBuilder.addAttachment({.flags = 0,
-                                             .format = this->upFillcan->getCurrentDevice()->getPhysicalDevice()->findSupportedFormat(
-                                                 {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
-                                                 VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT),
-                                             .samples = VK_SAMPLE_COUNT_1_BIT,
-                                             .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
-                                             .storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
-                                             .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
-                                             .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
-                                             .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
-                                             .finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL});
+        std::optional<VkFormat> depthImageFormat = this->upFillcan->getCurrentDevice()->getPhysicalDevice()->findSupportedFormat(
+            {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT}, VK_IMAGE_TILING_OPTIMAL,
+            VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
+        if (!depthImageFormat.has_value()) {
+            throw std::runtime_error("Failed to find a supported format for the depth image attachment.");
+        }
+        unsigned int depthImageAttachmentIndex = renderPassBuilder.addAttachment({.flags = 0,
+                                                                                  .format = depthImageFormat.value(),
+                                                                                  .samples = VK_SAMPLE_COUNT_1_BIT,
+                                                                                  .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+                                                                                  .storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+                                                                                  .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+                                                                                  .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+                                                                                  .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+                                                                                  .finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL});
         // Define attachment as a depthstencil attachment
         renderPassBuilder.setDepthStencilAttachment(depthImageAttachmentIndex, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, false);
 
@@ -290,7 +287,7 @@ namespace simple_camera {
                                          .srcAccessMask = 0,
                                          .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT});
 
-        this->upFillcan->createRenderPass(renderPassBuilder);
+        this->upRenderPass = renderPassBuilder.getResult();
     }
 
     std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> App::createVertexDescriptorSetLayouts() {
@@ -344,7 +341,9 @@ namespace simple_camera {
 
         // Describe the vertex shader
         graphicsPipelineBuilder.setVertexInputState(
-            {fillcan::Model::Vertex::getBindingDescriptions(), fillcan::Model::Vertex::getAttributeDescriptions()});
+            {fillcan::Model::Vertex::getBindingDescriptions(),
+             {fillcan::Model::Vertex::getPositionAttributeDescription(0), fillcan::Model::Vertex::getColorAttributeDescription(1),
+              fillcan::Model::Vertex::getTextureCoordinateAttributeDescription(2)}});
 
         // The viewports and scissors are dynamic, but the amount of viewports and scissors should still be defined
         std::vector<VkViewport> viewports = {};
@@ -401,8 +400,8 @@ namespace simple_camera {
         // Set the viewports and scissors to dynamic to allow for window resizing
         std::vector<VkDynamicState> dynamicStates = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
         graphicsPipelineBuilder.setDynamicState({.dynamicStates = dynamicStates});
-        graphicsPipelineBuilder.setRenderPass(this->upFillcan->getRenderPass());
+        graphicsPipelineBuilder.setRenderPass(this->upRenderPass.get());
 
         this->upGraphicsPipeline = graphicsPipelineBuilder.getResult();
     }
-} // namespace keyboard_control
+} // namespace simple_camera

@@ -2,12 +2,14 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include <cstddef>
-#include <cstdint>
 #include <fillcan/instance/logical_device.hpp>
 #include <fillcan/memory/buffer.hpp>
 #include <fillcan/memory/image.hpp>
 #include <fillcan/memory/memory.hpp>
+
+// std
+#include <cstddef>
+#include <cstdint>
 #include <iostream>
 #include <stdexcept>
 
@@ -43,8 +45,7 @@ namespace fillcan {
         if (!(memoryRequirements.memoryTypeBits & this->flags)) {
             throw std::runtime_error("Memory property flags are not supported");
         }
-        VkPhysicalDeviceMemoryProperties physicalDeviceMemoryProperties;
-        vkGetPhysicalDeviceMemoryProperties(this->pLogicalDevice->getPhysicalDevice()->getPhysicalDeviceHandle(), &physicalDeviceMemoryProperties);
+        VkPhysicalDeviceMemoryProperties physicalDeviceMemoryProperties = this->pLogicalDevice->getPhysicalDevice()->getMemoryProperties();
         unsigned int i = 0;
         for (i = 0; i < physicalDeviceMemoryProperties.memoryTypeCount; i++) {
             if (physicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & this->flags) {
@@ -64,7 +65,7 @@ namespace fillcan {
         }
     }
 
-    VkDeviceMemory Memory::getMemoryHandle() { return this->hMemory; }
+    const VkDeviceMemory Memory::getMemoryHandle() const { return this->hMemory; }
 
     void** Memory::map(VkDeviceSize offset, VkDeviceSize size) {
         if (vkMapMemory(this->pLogicalDevice->getLogicalDeviceHandle(), this->hMemory, offset, size, 0, &this->pData) != VK_SUCCESS) {
@@ -76,10 +77,6 @@ namespace fillcan {
     void** Memory::getData() { return &this->pData; }
 
     void Memory::unmap() {
-        if (this->pLogicalDevice == nullptr) {
-            std::cerr << "Failed to unmap Memory: Logical Device was NULL"
-                      << "\n";
-        }
         vkUnmapMemory(this->pLogicalDevice->getLogicalDeviceHandle(), this->hMemory);
         this->pData = nullptr;
     }

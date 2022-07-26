@@ -1,23 +1,19 @@
 // vulkan
-#include "fillcan/memory/memory.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include "fillcan/memory/image_director.hpp"
-#include "fillcan/memory/image_view.hpp"
-#include <algorithm>
 #include <fillcan/commands/queue.hpp>
 #include <fillcan/graphics/swapchain.hpp>
 #include <fillcan/instance/logical_device.hpp>
 #include <fillcan/memory/image.hpp>
+#include <fillcan/memory/image_director.hpp>
+#include <fillcan/memory/image_view.hpp>
+#include <fillcan/memory/memory.hpp>
 #include <fillcan/window.hpp>
 
 // std
-#include <cstdint>
-#include <iostream>
 #include <memory>
 #include <stdexcept>
-#include <utility>
 #include <vector>
 
 namespace fillcan {
@@ -38,7 +34,7 @@ namespace fillcan {
         VkSurfaceCapabilitiesKHR surfaceCapabilities = this->pLogicalDevice->getPhysicalDevice()->getSurfaceCapabilitiesKHR();
 
         const std::vector<VkPresentModeKHR> surfacePresentModes = this->pLogicalDevice->getPhysicalDevice()->getSurfacePresentModesKHR();
-        if (!std::count(surfacePresentModes.begin(), surfacePresentModes.end(), presentMode)) {
+        if (std::count(surfacePresentModes.begin(), surfacePresentModes.end(), presentMode) == 0) {
             // Requested present mode is not supported, using fallback present mode
             this->presentMode = VK_PRESENT_MODE_FIFO_KHR;
         }
@@ -121,7 +117,7 @@ namespace fillcan {
         vkDestroySwapchainKHR(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSwapchain, nullptr);
     }
 
-    VkSwapchainKHR Swapchain::getSwapchainHandle() { return this->hSwapchain; }
+    const VkSwapchainKHR Swapchain::getSwapchainHandle() const { return this->hSwapchain; }
 
     uint32_t Swapchain::getImageCount() { return this->upSwapchainImages.size(); }
 
@@ -133,7 +129,7 @@ namespace fillcan {
 
     VkPresentModeKHR Swapchain::getPresentMode() { return this->presentMode; }
 
-    std::vector<uint32_t>& Swapchain::getQueueFamilyIndices() { return this->queueFamilyIndices; }
+    const std::vector<uint32_t>& Swapchain::getQueueFamilyIndices() const { return this->queueFamilyIndices; }
 
     SwapchainImage Swapchain::getNextImage(Fence* pFence) {
         uint32_t swapchainImageIndex = 0;
@@ -149,8 +145,8 @@ namespace fillcan {
 
         SwapchainImage returnImage = {.outOfDate = false,
                                       .index = swapchainImageIndex,
-                                      .pSwapchainImageView = this->upSwapchainImages.at(this->currentImageIndex)->getImageViews().at(0),
-                                      .pDepthBufferImageView = this->upDepthImages.at(this->currentImageIndex)->getImageViews().at(0),
+                                      .pSwapchainImageView = this->upSwapchainImages.at(this->currentImageIndex)->getImageView(0),
+                                      .pDepthImageView = this->upDepthImages.at(this->currentImageIndex)->getImageView(0),
                                       .pSemaphoreImageReady = this->upImageReadySemaphores[this->currentImageIndex].get(),
                                       .pSemaphorePresentReady = this->upPresentReadySemaphores.at(this->currentImageIndex).get()};
         this->currentImageIndex = (this->currentImageIndex + 1) % (this->getImageCount());

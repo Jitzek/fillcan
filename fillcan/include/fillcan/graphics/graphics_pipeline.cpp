@@ -1,20 +1,16 @@
 // vulkan
-#include "fillcan/memory/buffer.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include <cstddef>
 #include <fillcan/graphics/graphics_pipeline.hpp>
 #include <fillcan/graphics/render_pass.hpp>
-
 #include <fillcan/shader/pipeline.hpp>
 #include <fillcan/shader/pipeline_layout.hpp>
 #include <fillcan/shader/shader_module.hpp>
 
-#include <fillcan/memory/buffer.hpp>
-
 // std
 #include <algorithm>
+#include <cstddef>
 #include <iterator>
 #include <memory>
 #include <stdexcept>
@@ -22,15 +18,15 @@
 
 namespace fillcan {
     GraphicsPipeline::GraphicsPipeline(
-        LogicalDevice* pLogicalDevice, CommandBuffer* pCommandBuffer, VkPipelineCreateFlags flags, std::vector<PipelineShaderStage> shaderStages,
+        LogicalDevice* pLogicalDevice, VkPipelineCreateFlags flags, std::vector<PipelineShaderStage> shaderStages,
         std::vector<PushConstant> pushConstants, VkPipelineCache pipelineCache, Pipeline* pBasePipeline,
         VkPipelineInputAssemblyStateCreateInfo* pInputAssemblyState, VkPipelineVertexInputStateCreateInfo* pVertexInputState,
         VkPipelineTessellationStateCreateInfo* pTessellationState, std::vector<VkPipelineViewportStateCreateInfo>& viewportState,
         VkPipelineRasterizationStateCreateInfo* pRasterizationState, VkPipelineMultisampleStateCreateInfo* pMultisampleState,
         VkPipelineDepthStencilStateCreateInfo* pDepthStencilState, VkPipelineColorBlendStateCreateInfo* pColorBlendState,
         VkPipelineDynamicStateCreateInfo* pDynamicState, RenderPass* pRenderPass, unsigned int subpass)
-        : Pipeline(pLogicalDevice, pCommandBuffer, flags, shaderStages, std::move(pushConstants), pipelineCache, pBasePipeline),
-          pRenderPass(pRenderPass), subpass(subpass) {
+        : Pipeline(pLogicalDevice, flags, shaderStages, std::move(pushConstants), pipelineCache, pBasePipeline), pRenderPass(pRenderPass),
+          subpass(subpass) {
         this->setBindPoint(VK_PIPELINE_BIND_POINT_GRAPHICS);
         VkGraphicsPipelineCreateInfo graphicsPipelineCreateInfo = {};
         graphicsPipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -130,11 +126,5 @@ namespace fillcan {
         }
         vkCmdDrawIndexed(this->pCommandBuffer->getCommandBufferHandle(), indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
     }
-
-    void GraphicsPipeline::pushConstantData(std::string name, std::unique_ptr<PushConstantData> upPushConstantData) {
-        this->layout->pushConstantData(this->pCommandBuffer, name, std::move(upPushConstantData));
-    }
-
-    // PushConstant& GraphicsPipeline::getPushConstant(std::string name) { return this->layout->getPushConstant(name); }
 
 } // namespace fillcan

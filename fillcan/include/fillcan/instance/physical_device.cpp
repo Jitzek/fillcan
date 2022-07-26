@@ -7,7 +7,9 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <iostream>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 
 namespace fillcan {
@@ -15,14 +17,16 @@ namespace fillcan {
                                    VkPhysicalDeviceFeatures requiredFeatures)
         : hPhysicalDevice(hPhysicalDevice), pWindow(pWindow), requiredExtensions(requiredExtensions), requiredFeatures(requiredFeatures) {
         std::vector<VkQueueFamilyProperties> physicalDeviceQueueFamilyProperties = this->getQueueFamilyProperties();
-        this->findGraphicsAndPresentQueueFamilyIndex(physicalDeviceQueueFamilyProperties);
-        this->findComputeQueueFamilyIndex(physicalDeviceQueueFamilyProperties);
+        if (pWindow != nullptr) {
+            this->findGraphicsQueueFamilyIndices(physicalDeviceQueueFamilyProperties);
+            this->findPresentQueueFamilyIndices(physicalDeviceQueueFamilyProperties);
+        }
+        this->findComputeQueueFamilyIndices(physicalDeviceQueueFamilyProperties);
     }
 
     PhysicalDevice::~PhysicalDevice() {}
 
     const VkPhysicalDevice PhysicalDevice::getPhysicalDeviceHandle() const { return this->hPhysicalDevice; }
-    Window* PhysicalDevice::getWindow() { return this->pWindow; }
 
     const std::vector<const char*>& PhysicalDevice::getRequiredExtensions() const { return this->requiredExtensions; }
 
@@ -110,38 +114,6 @@ namespace fillcan {
                (features.inheritedQueries ? supportedFeatures.inheritedQueries == VK_TRUE : true);
     }
 
-    void PhysicalDevice::findGraphicsAndPresentQueueFamilyIndex(std::vector<VkQueueFamilyProperties> queueFamilyProperties) {
-        if (queueFamilyProperties.size() <= 0) {
-            queueFamilyProperties = this->getQueueFamilyProperties();
-        }
-        for (size_t i = 0; i < queueFamilyProperties.size(); i++) {
-            if (queueFamilyProperties[i].queueCount > 0 && queueFamilyProperties[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
-                graphicsQueueFamilyIndex = i;
-            }
-            VkBool32 presentSupported = VK_FALSE;
-            vkGetPhysicalDeviceSurfaceSupportKHR(this->hPhysicalDevice, i, this->pWindow->getSurface(), &presentSupported);
-            if (queueFamilyProperties[i].queueCount > 0 && presentSupported) {
-                presentQueueFamilyIndex = i;
-            }
-            // Prefer that the graphics and present use the same queue
-            if (graphicsQueueFamilyIndex != -1 && graphicsQueueFamilyIndex == presentQueueFamilyIndex) {
-                break;
-            }
-        }
-    }
-
-    void PhysicalDevice::findComputeQueueFamilyIndex(std::vector<VkQueueFamilyProperties> queueFamilyProperties) {
-        if (queueFamilyProperties.size() <= 0) {
-            queueFamilyProperties = this->getQueueFamilyProperties();
-        }
-        for (size_t i = 0; i < queueFamilyProperties.size(); i++) {
-            if (queueFamilyProperties[i].queueCount > 0 && queueFamilyProperties[i].queueFlags & VK_QUEUE_COMPUTE_BIT) {
-                computeQueueFamilyIndex = i;
-                break;
-            }
-        }
-    }
-
     const VkPhysicalDeviceFeatures PhysicalDevice::getFeatures() const {
         VkPhysicalDeviceFeatures features;
         vkGetPhysicalDeviceFeatures(this->hPhysicalDevice, &features);
@@ -155,12 +127,22 @@ namespace fillcan {
     }
 
     const VkSurfaceCapabilitiesKHR PhysicalDevice::getSurfaceCapabilitiesKHR() const {
+        if (!this->pWindow) {
+            std::cerr << "Requested to query Surface Capabilities without a Window bound."
+                      << "\n";
+            return {};
+        }
         VkSurfaceCapabilitiesKHR surfaceCapabilities;
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(this->hPhysicalDevice, this->pWindow->getSurface(), &surfaceCapabilities);
         return surfaceCapabilities;
     }
 
     const std::vector<VkSurfaceFormatKHR> PhysicalDevice::getSurfaceFormatsKHR() const {
+        if (!this->pWindow) {
+            std::cerr << "Requested to query Physical Device Surface Formats without a Window bound."
+                      << "\n";
+            return {};
+        }
         uint32_t surfaceFormatCount = 0;
         vkGetPhysicalDeviceSurfaceFormatsKHR(this->hPhysicalDevice, this->pWindow->getSurface(), &surfaceFormatCount, nullptr);
         if (surfaceFormatCount == 0) {
@@ -172,6 +154,11 @@ namespace fillcan {
     }
 
     const std::vector<VkPresentModeKHR> PhysicalDevice::getSurfacePresentModesKHR() const {
+        if (!this->pWindow) {
+            std::cerr << "Requested to query Present Modes without a Window bound."
+                      << "\n";
+            return {};
+        }
         uint32_t presentModeCount;
         vkGetPhysicalDeviceSurfacePresentModesKHR(this->hPhysicalDevice, this->pWindow->getSurface(), &presentModeCount, nullptr);
         if (presentModeCount == 0) {
@@ -199,8 +186,14 @@ namespace fillcan {
         return formatProperties;
     }
 
-    VkFormat PhysicalDevice::findSupportedFormat(std::vector<VkFormat> formats, VkImageTiling tiling,
-                                                                  VkFormatFeatureFlags features) {
+    const VkPhysicalDeviceMemoryProperties PhysicalDevice::getMemoryProperties() const {
+        VkPhysicalDeviceMemoryProperties memoryProperties;
+        vkGetPhysicalDeviceMemoryProperties(this->hPhysicalDevice, &memoryProperties);
+        return memoryProperties;
+    }
+
+    const std::optional<VkFormat> PhysicalDevice::findSupportedFormat(std::vector<VkFormat> formats, VkImageTiling tiling,
+                                                                      VkFormatFeatureFlags features) const {
         for (VkFormat format : formats) {
             VkFormatProperties formatProperties = this->getFormatProperties(format);
             if ((tiling == VK_IMAGE_TILING_LINEAR && (formatProperties.linearTilingFeatures & features)) ||
@@ -208,10 +201,55 @@ namespace fillcan {
                 return format;
             }
         }
-        throw std::runtime_error("Failed to find supported format");
+        return std::nullopt;
     }
 
-    int PhysicalDevice::getGraphicsQueueFamilyIndex() { return this->graphicsQueueFamilyIndex; }
-    int PhysicalDevice::getPresentQueueFamilyIndex() { return this->presentQueueFamilyIndex; }
-    int PhysicalDevice::getComputeQueueFamilyIndex() { return this->computeQueueFamilyIndex; }
+    void PhysicalDevice::findGraphicsQueueFamilyIndices(std::vector<VkQueueFamilyProperties> queueFamilyProperties) {
+        if (!this->pWindow) {
+            std::cerr << "Requested to find graphics queue family indices without a Window bound."
+                      << "\n";
+            return;
+        }
+        if (queueFamilyProperties.size() <= 0) {
+            queueFamilyProperties = this->getQueueFamilyProperties();
+        }
+        for (size_t i = 0; i < queueFamilyProperties.size(); i++) {
+            if (queueFamilyProperties[i].queueCount > 0 && queueFamilyProperties[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+                this->graphicsQueueFamilyIndices.push_back(i);
+            }
+        }
+    }
+
+    void PhysicalDevice::findPresentQueueFamilyIndices(std::vector<VkQueueFamilyProperties> queueFamilyProperties) {
+        if (!this->pWindow) {
+            std::cerr << "Requested to find present queue family indices without a Window bound."
+                      << "\n";
+            return;
+        }
+        if (queueFamilyProperties.size() <= 0) {
+            queueFamilyProperties = this->getQueueFamilyProperties();
+        }
+        for (size_t i = 0; i < queueFamilyProperties.size(); i++) {
+            VkBool32 presentSupported = VK_FALSE;
+            vkGetPhysicalDeviceSurfaceSupportKHR(this->hPhysicalDevice, i, this->pWindow->getSurface(), &presentSupported);
+            if (queueFamilyProperties[i].queueCount > 0 && presentSupported) {
+                this->presentQueueFamilyIndices.push_back(i);
+            }
+        }
+    }
+
+    void PhysicalDevice::findComputeQueueFamilyIndices(std::vector<VkQueueFamilyProperties> queueFamilyProperties) {
+        if (queueFamilyProperties.size() <= 0) {
+            queueFamilyProperties = this->getQueueFamilyProperties();
+        }
+        for (size_t i = 0; i < queueFamilyProperties.size(); i++) {
+            if (queueFamilyProperties[i].queueCount > 0 && queueFamilyProperties[i].queueFlags & VK_QUEUE_COMPUTE_BIT) {
+                this->computeQueueFamilyIndices.push_back(i);
+            }
+        }
+    }
+
+    const std::vector<unsigned int>& PhysicalDevice::getGraphicsQueueFamilyIndices() const { return this->graphicsQueueFamilyIndices; }
+    const std::vector<unsigned int>& PhysicalDevice::getPresentQueueFamilyIndices() const { return this->presentQueueFamilyIndices; }
+    const std::vector<unsigned int>& PhysicalDevice::getComputeQueueFamilyIndices() const { return this->computeQueueFamilyIndices; }
 } // namespace fillcan

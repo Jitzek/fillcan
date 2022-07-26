@@ -1,13 +1,16 @@
 
 // fillcan
-#include "glm/gtc/matrix_transform.hpp"
 #include <fillcan/graphics/game_object.hpp>
-#include <iostream>
 
+// glm
 #define GLM_ENABLE_EXPERIMENTAL
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #define GLM_FORCE_RADIANS
-#include "glm/gtx/string_cast.hpp"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/string_cast.hpp>
+
+// std
+#include <iostream>
 
 namespace fillcan {
     glm::mat4 TransformComponent::mat4() {

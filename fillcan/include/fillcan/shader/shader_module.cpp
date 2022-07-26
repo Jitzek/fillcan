@@ -1,7 +1,9 @@
 
-// fillcan
-#include "fillcan/instance/logical_device.hpp"
+// vulkan
 #include "vulkan/vulkan_core.h"
+
+// fillcan
+#include <fillcan/instance/logical_device.hpp>
 #include <fillcan/shader/descriptor_set_layout.hpp>
 #include <fillcan/shader/shader_module.hpp>
 
@@ -53,7 +55,7 @@ namespace fillcan {
         vkDestroyShaderModule(this->pLogicalDevice->getLogicalDeviceHandle(), this->hShaderModule, nullptr);
     }
 
-    VkShaderModule ShaderModule::getShaderModuleHandle() { return this->hShaderModule; }
+    const VkShaderModule ShaderModule::getShaderModuleHandle() const { return this->hShaderModule; }
     std::vector<DescriptorSetLayout*> ShaderModule::getDescriptorSetLayouts() {
         std::vector<DescriptorSetLayout*> pDescriptorSetLayouts = {};
         pDescriptorSetLayouts.reserve(this->upDescriptorSetLayouts.size());
@@ -61,5 +63,5 @@ namespace fillcan {
                        [](const std::unique_ptr<DescriptorSetLayout>& upDescriptorSetLayout) { return upDescriptorSetLayout.get(); });
         return pDescriptorSetLayouts;
     }
-    DescriptorPool* ShaderModule::getDescriptorPool() const { return this->upDescriptorPool.get(); }
+    DescriptorPool* ShaderModule::getDescriptorPool() { return this->upDescriptorPool.get(); }
 } // namespace fillcan

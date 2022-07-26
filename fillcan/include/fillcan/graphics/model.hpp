@@ -1,14 +1,17 @@
 #pragma once
 
 // vulkan
-#include "fillcan/commands/command_recording.hpp"
+#include "glm/detail/type_vec.hpp"
 #include "vulkan/vulkan_core.h"
 
 // fillcan
+#include <cstddef>
+#include <fillcan/commands/command_recording.hpp>
 #include <fillcan/graphics/texture.hpp>
 #include <fillcan/memory/buffer.hpp>
 
 // std
+#include <functional>
 #include <memory>
 #include <string>
 #include <vector>
@@ -26,11 +29,19 @@ namespace fillcan {
         struct Vertex {
             glm::vec3 position{};
             glm::vec3 color{};
-            glm::vec2 textureCoordinate;
+            glm::vec2 textureCoordinate{};
             glm::vec3 normal{};
+
+            bool operator==(const Vertex& other) const {
+                return position == other.position && color == other.color && textureCoordinate == other.textureCoordinate && normal == other.normal;
+            }
 
             static std::vector<VkVertexInputBindingDescription> getBindingDescriptions();
             static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
+            static VkVertexInputAttributeDescription getPositionAttributeDescription(unsigned int location, unsigned int binding = 0);
+            static VkVertexInputAttributeDescription getColorAttributeDescription(unsigned int location, unsigned int binding = 0);
+            static VkVertexInputAttributeDescription getTextureCoordinateAttributeDescription(unsigned int location, unsigned int binding = 0);
+            static VkVertexInputAttributeDescription getNormalAttributeDescription(unsigned int location, unsigned int binding = 0);
         };
 
       private:
@@ -56,16 +67,17 @@ namespace fillcan {
         Model(LogicalDevice* pLogicalDevice, const std::vector<Vertex>& vertices, const std::vector<uint16_t>& indices);
         Model(LogicalDevice* pLogicalDevice, std::string filePath);
         ~Model();
-
         Model(const Model&) = delete;
         Model& operator=(const Model&) = delete;
 
-        void setTexture(Texture* pTexture);
-        Texture* getTexture();
+        // void setTexture(Texture* pTexture);
+        // Texture* getTexture();
 
         void bind(CommandBuffer* pCommandBuffer);
         void draw();
         void drawIndexed();
+
+        Texture* texture = nullptr;
     };
 
 } // namespace fillcan

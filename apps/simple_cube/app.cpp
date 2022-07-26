@@ -4,6 +4,7 @@
 // vulkan
 #include "fillcan/graphics/game_object.hpp"
 #include "fillcan/graphics/model.hpp"
+#include "fillcan/shader/pipeline_builder.hpp"
 #include "glm/detail/func_common.hpp"
 #include "shaderc/shaderc.h"
 #include "vulkan/vulkan_core.h"
@@ -75,9 +76,6 @@ namespace simple_cube {
             this->upFillcan->createShaderModule(this->APP_DIR + "/shaders", "simple.frag", shaderc_fragment_shader, {}, nullptr, true, false);
 
         this->createGraphicsPipeline(upVertexShaderModule.get(), upFragmentShaderModule.get());
-        if (this->upGraphicsPipeline->getDescriptorSets().size() > 0) {
-            this->upGraphicsPipeline->bindDescriptorSets();
-        }
 
         for (size_t i = 0; i < this->upFillcan->getSwapchain()->getImageCount(); i++) {
             this->pCommandRecordings.push_back(this->upFillcan->getCurrentDevice()->getGraphicsQueue()->createRecording(1, 0));
@@ -88,10 +86,11 @@ namespace simple_cube {
 
         this->loadGameObjects();
 
-        upFillcan->MainLoop(std::bind(&App::update, this, std::placeholders::_1));
+        upFillcan->mainLoop(std::bind(&App::update, this, std::placeholders::_1));
     }
 
     void App::update(double deltaTime) {
+        this->deltaTimef = static_cast<float>(deltaTime);
         // Recreate swapchain if window was resized
         if (this->upFillcan->getWindow()->wasResized()) {
             this->upFillcan->recreateSwapchain();
@@ -126,15 +125,14 @@ namespace simple_cube {
             Create framebuffer
         */
         // Create imageviews which will be used as attachments for the framebuffer
-        std::vector<fillcan::ImageView*> pAttachments = {swapchainImage.pSwapchainImageView, swapchainImage.pDepthBufferImageView};
+        std::vector<fillcan::ImageView*> pAttachments = {swapchainImage.pSwapchainImageView, swapchainImage.pDepthImageView};
         this->upFramebuffers.at(this->currentFrameIndex) = std::move(std::make_unique<fillcan::Framebuffer>(
-            this->upFillcan->getCurrentDevice(), this->upFillcan->getRenderPass(), pAttachments,
-            this->upFillcan->getSwapchain()->getImageExtent().width, this->upFillcan->getSwapchain()->getImageExtent().height,
-            this->upFillcan->getSwapchain()->getImageArrayLayers()));
+            this->upFillcan->getCurrentDevice(), this->upRenderPass.get(), pAttachments, this->upFillcan->getSwapchain()->getImageExtent().width,
+            this->upFillcan->getSwapchain()->getImageExtent().height, this->upFillcan->getSwapchain()->getImageArrayLayers()));
         /* */
 
         std::vector<VkClearValue> clearValues = {{.color = {{0.0f, 0.0f, 0.0f, 1.0f}}}, {.depthStencil = {1.0f, 0}}};
-        this->upFillcan->getRenderPass()->begin(pCurrentGraphicsCommandBuffer, this->upFramebuffers.at(this->currentFrameIndex).get(), &clearValues);
+        this->upRenderPass->begin(pCurrentGraphicsCommandBuffer, this->upFramebuffers.at(this->currentFrameIndex).get(), &clearValues);
 
         VkViewport viewport = {.x = 0.0f,
                                .y = 0.0f,
@@ -148,7 +146,7 @@ namespace simple_cube {
 
         this->renderGameObjects(pCurrentGraphicsCommandBuffer);
 
-        this->upFillcan->getRenderPass()->end();
+        this->upRenderPass->end();
 
         pCurrentGraphicsCommandRecording->endAll();
         pCurrentGraphicsCommandRecording->submit();
@@ -321,8 +319,8 @@ namespace simple_cube {
         for (auto& v : vertices) {
             v.position += offset;
         }
-        std::unique_ptr<fillcan::Model> cubeModel = std::move(std::make_unique<fillcan::Model>(
-            this->upFillcan->getCurrentDevice(), vertices, indices));
+        std::unique_ptr<fillcan::Model> cubeModel =
+            std::move(std::make_unique<fillcan::Model>(this->upFillcan->getCurrentDevice(), vertices, indices));
         return std::move(cubeModel);
     }
 
@@ -339,11 +337,12 @@ namespace simple_cube {
 
     void App::renderGameObjects(fillcan::CommandBuffer* pCommandBuffer) {
         this->upGraphicsPipeline->bindToCommandBuffer(pCommandBuffer);
+        if (this->upGraphicsPipeline->getDescriptorSets().size() > 0) {
+            this->upGraphicsPipeline->bindDescriptorSets();
+        }
         for (fillcan::GameObject& gameObject : this->gameObjects) {
-            gameObject.transform.rotation.y =
-                glm::mod(gameObject.transform.rotation.y + (0.5f * this->upFillcan->deltaTimef()), glm::two_pi<float>());
-            gameObject.transform.rotation.x =
-                glm::mod(gameObject.transform.rotation.x + (0.25f * this->upFillcan->deltaTimef()), glm::two_pi<float>());
+            gameObject.transform.rotation.y = glm::mod(gameObject.transform.rotation.y + (0.5f * this->deltaTimef), glm::two_pi<float>());
+            gameObject.transform.rotation.x = glm::mod(gameObject.transform.rotation.x + (0.25f * this->deltaTimef), glm::two_pi<float>());
 
             SimplePushConstantData data = {.transform = gameObject.transform.mat4(), .color = gameObject.color};
             std::unique_ptr<SimplePushConstantData> simplePushConstantData = std::make_unique<SimplePushConstantData>(data);
@@ -373,18 +372,21 @@ namespace simple_cube {
         renderPassBuilder.addColorAttachment(swapChainAttachmentIndex, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, false);
 
         // Add attachment for subpass 1 describing the depth image
-        unsigned int depthImageAttachmentIndex =
-            renderPassBuilder.addAttachment({.flags = 0,
-                                             .format = this->upFillcan->getCurrentDevice()->getPhysicalDevice()->findSupportedFormat(
-                                                 {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
-                                                 VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT),
-                                             .samples = VK_SAMPLE_COUNT_1_BIT,
-                                             .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
-                                             .storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
-                                             .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
-                                             .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
-                                             .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
-                                             .finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL});
+        std::optional<VkFormat> depthImageFormat = this->upFillcan->getCurrentDevice()->getPhysicalDevice()->findSupportedFormat(
+            {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT}, VK_IMAGE_TILING_OPTIMAL,
+            VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
+        if (!depthImageFormat.has_value()) {
+            throw std::runtime_error("Failed to find a supported format for the depth image attachment.");
+        }
+        unsigned int depthImageAttachmentIndex = renderPassBuilder.addAttachment({.flags = 0,
+                                                                                  .format = depthImageFormat.value(),
+                                                                                  .samples = VK_SAMPLE_COUNT_1_BIT,
+                                                                                  .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+                                                                                  .storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+                                                                                  .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+                                                                                  .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+                                                                                  .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+                                                                                  .finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL});
         // Define attachment as a depthstencil attachment
         renderPassBuilder.setDepthStencilAttachment(depthImageAttachmentIndex, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, false);
 
@@ -399,7 +401,7 @@ namespace simple_cube {
                                          .srcAccessMask = 0,
                                          .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT});
 
-        this->upFillcan->createRenderPass(renderPassBuilder);
+        this->upRenderPass = renderPassBuilder.getResult();
     }
 
     // std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> App::createDescriptorSetLayouts() {}
@@ -420,7 +422,8 @@ namespace simple_cube {
 
         // Describe the vertex shader
         graphicsPipelineBuilder.setVertexInputState(
-            {fillcan::Model::Vertex::getBindingDescriptions(), fillcan::Model::Vertex::getAttributeDescriptions()});
+            {fillcan::Model::Vertex::getBindingDescriptions(),
+             {fillcan::Model::Vertex::getPositionAttributeDescription(0), fillcan::Model::Vertex::getColorAttributeDescription(1)}});
 
         // The viewports and scissors are dynamic, but the amount of viewports and scissors should still be defined
         std::vector<VkViewport> viewports = {};
@@ -477,7 +480,7 @@ namespace simple_cube {
         // Set the viewports and scissors to dynamic to allow for window resizing
         std::vector<VkDynamicState> dynamicStates = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
         graphicsPipelineBuilder.setDynamicState({.dynamicStates = dynamicStates});
-        graphicsPipelineBuilder.setRenderPass(this->upFillcan->getRenderPass());
+        graphicsPipelineBuilder.setRenderPass(this->upRenderPass.get());
 
         this->upGraphicsPipeline = graphicsPipelineBuilder.getResult();
     }

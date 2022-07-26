@@ -67,7 +67,7 @@ namespace compute_pipeline {
             Instance Fillcan
         */
         VkPhysicalDeviceFeatures requiredDeviceFeatures = {};
-        upFillcan = std::make_unique<fillcan::Fillcan>(name.c_str(), 1.0, 800, 600, requiredDeviceFeatures);
+        upFillcan = std::make_unique<fillcan::Fillcan>(name.c_str(), 1.0, requiredDeviceFeatures);
 
         // Select any device
         upFillcan->selectDevice(0);
@@ -192,13 +192,12 @@ namespace compute_pipeline {
 
         // Create recording to gain access to a primary commandbuffer
         fillcan::CommandRecording* pComputeCommandRecording = upFillcan->getCurrentDevice()->getComputeQueue()->createRecording(1, 0);
-        fillcan::CommandBuffer* pComputePrimaryCommandBuffer = pComputeCommandRecording->pPrimaryCommandBuffers[0];
+        fillcan::CommandBuffer* pComputePrimaryCommandBuffer = pComputeCommandRecording->pPrimaryCommandBuffers.at(0);
 
         // Begin compute recording commands
         pComputePrimaryCommandBuffer->begin();
         this->upComputePipeline->bindToCommandBuffer(pComputePrimaryCommandBuffer);
         this->upComputePipeline->bindDescriptorSets();
-        // this->upComputePipeline->start();
         int groupCount = ((integerCount) / 256) + 1;
         vkCmdDispatch(pComputePrimaryCommandBuffer->getCommandBufferHandle(), groupCount, 1, 1);
         pComputePrimaryCommandBuffer->end();
@@ -242,7 +241,7 @@ namespace compute_pipeline {
         // OutputBuffer
         descriptorSetLayoutBuilder.addBinding(2, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT);
 
-        upDescriptorSetLayouts.emplace_back(descriptorSetLayoutBuilder.getResult());
+        upDescriptorSetLayouts.push_back(descriptorSetLayoutBuilder.getResult());
 
         return std::move(upDescriptorSetLayouts);
     }

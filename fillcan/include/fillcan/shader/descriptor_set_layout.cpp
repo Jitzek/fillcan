@@ -2,7 +2,7 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include "fillcan/instance/logical_device.hpp"
+#include <fillcan/instance/logical_device.hpp>
 #include <fillcan/shader/descriptor_set_layout.hpp>
 
 // std
@@ -36,7 +36,7 @@ namespace fillcan {
         vkDestroyDescriptorSetLayout(this->pLogicalDevice->getLogicalDeviceHandle(), this->hDescriptorSetLayout, nullptr);
     }
 
-    VkDescriptorSetLayout DescriptorSetLayout::getDescriptorSetLayoutHandle() { return this->hDescriptorSetLayout; }
+    const VkDescriptorSetLayout DescriptorSetLayout::getDescriptorSetLayoutHandle() const { return this->hDescriptorSetLayout; }
 
     const std::vector<VkDescriptorSetLayoutBinding>& DescriptorSetLayout::getBindings() const { return this->bindings; }
 } // namespace fillcan

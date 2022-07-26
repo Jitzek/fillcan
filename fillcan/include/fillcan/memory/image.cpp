@@ -105,11 +105,11 @@ namespace fillcan {
 
     const Memory* Image::getMemory() const { return this->pMemory; }
 
-    ImageView* Image::createImageView(VkImageViewType viewType, VkFormat format, VkImageSubresourceRange subresourceRange,
-                                      VkComponentMapping components) {
+    unsigned int Image::createImageView(VkImageViewType viewType, VkFormat format, VkImageSubresourceRange subresourceRange,
+                                        VkComponentMapping components) {
         this->upImageViews.emplace_back(
             std::move(std::make_unique<ImageView>(this->pLogicalDevice, this, viewType, format, subresourceRange, components)));
-        return this->upImageViews.back().get();
+        return this->upImageViews.size() - 1;
     }
 
     std::vector<ImageView*> Image::getImageViews() {
@@ -119,6 +119,10 @@ namespace fillcan {
                        [](const std::unique_ptr<ImageView>& upImageView) { return upImageView.get(); });
         return pImageViews;
     }
+
+    ImageView* Image::getImageView(unsigned int index) { return this->upImageViews.at(index).get(); }
+
+    void Image::destroyImageView(unsigned int index) { this->upImageViews.erase(this->upImageViews.begin() + index); }
 
     void Image::destroyImageViews() { this->upImageViews.clear(); }
 

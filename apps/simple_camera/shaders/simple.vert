@@ -20,14 +20,6 @@ layout(set = 1, binding = 0) uniform ViewProjection {
 vp;
 
 void main() {
-    // gl_Position = vec4(inPosition, 1.0);
-    // gl_Position = mat4(
-    //     1, 0, 0, 0,
-    //     0, 1, 0, 0,
-    //     0, 0, 1, 0,
-    //     0, 0, 0, 1
-    // ) * vec4(inPosition, 1.0);
-    // gl_Position = push_constant.transform * vec4(inPosition, 1.0);
     gl_Position = vp.projection * vp.view * push_constant.transform * vec4(inPosition, 1.0);
 
     outColor = inColor;

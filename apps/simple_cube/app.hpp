@@ -40,6 +40,7 @@ namespace simple_cube {
       private:
         std::unique_ptr<fillcan::FillcanGraphics> upFillcan;
         std::unique_ptr<fillcan::GraphicsPipeline> upGraphicsPipeline;
+        std::unique_ptr<fillcan::RenderPass> upRenderPass;
         std::unique_ptr<fillcan::Buffer> upVertexBuffer = nullptr;
         std::unique_ptr<fillcan::Buffer> upIndexBuffer = nullptr;
 
@@ -59,6 +60,8 @@ namespace simple_cube {
         void loadGameObjects();
         void renderGameObjects(fillcan::CommandBuffer* pCommandBuffer);
         std::unique_ptr<fillcan::Model> createCubeModel(glm::vec3 offset);
+
+        float deltaTimef = 0.f;
 
       public:
         App();

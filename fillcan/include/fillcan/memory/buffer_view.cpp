@@ -5,6 +5,8 @@
 #include <fillcan/instance/logical_device.hpp>
 #include <fillcan/memory/buffer.hpp>
 #include <fillcan/memory/buffer_view.hpp>
+
+// std
 #include <stdexcept>
 
 namespace fillcan {
@@ -34,5 +36,5 @@ namespace fillcan {
         vkDestroyBufferView(this->pLogicalDevice->getLogicalDeviceHandle(), this->hBufferView, nullptr);
     }
 
-    VkBufferView BufferView::getBufferViewHandle() { return this->hBufferView; }
+    const VkBufferView BufferView::getBufferViewHandle() const { return this->hBufferView; }
 } // namespace fillcan

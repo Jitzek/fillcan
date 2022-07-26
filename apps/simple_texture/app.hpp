@@ -41,6 +41,7 @@ namespace simple_texture {
       private:
         std::unique_ptr<fillcan::FillcanGraphics> upFillcan;
         std::unique_ptr<fillcan::GraphicsPipeline> upGraphicsPipeline;
+        std::unique_ptr<fillcan::RenderPass> upRenderPass;
         std::unique_ptr<fillcan::ShaderModule> upVertexShaderModule;
         std::unique_ptr<fillcan::ShaderModule> upFragmentShaderModule;
         std::unique_ptr<fillcan::Buffer> upVertexBuffer = nullptr;
@@ -68,6 +69,8 @@ namespace simple_texture {
         void loadGameObjects();
         void renderGameObjects(fillcan::CommandBuffer* pCommandBuffer);
         std::unique_ptr<fillcan::Model> createCubeModel(glm::vec3 offset);
+
+        float deltaTimef = 0.f;
 
       public:
         App();

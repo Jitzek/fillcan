@@ -149,7 +149,7 @@ namespace simple_triangle {
 
         this->upFramebuffers.resize(this->upFillcan->getSwapchain()->getImageCount());
 
-        upFillcan->MainLoop(std::bind(&App::update, this, std::placeholders::_1));
+        upFillcan->mainLoop(std::bind(&App::update, this, std::placeholders::_1));
     }
 
     void App::update(double deltaTime) {
@@ -192,13 +192,12 @@ namespace simple_triangle {
             Create framebuffer
         */
         this->upFramebuffers.at(this->currentFrameIndex) = std::move(std::make_unique<fillcan::Framebuffer>(
-            this->upFillcan->getCurrentDevice(), this->upFillcan->getRenderPass(), pAttachments,
-            this->upFillcan->getSwapchain()->getImageExtent().width, this->upFillcan->getSwapchain()->getImageExtent().height,
-            this->upFillcan->getSwapchain()->getImageArrayLayers()));
+            this->upFillcan->getCurrentDevice(), this->upRenderPass.get(), pAttachments, this->upFillcan->getSwapchain()->getImageExtent().width,
+            this->upFillcan->getSwapchain()->getImageExtent().height, this->upFillcan->getSwapchain()->getImageArrayLayers()));
         /* */
 
         std::vector<VkClearValue> clearValues = {{.color = {.float32 = {0.0f, 0.0f, 0.0f, 1.0f}}}};
-        this->upFillcan->getRenderPass()->begin(pCurrentGraphicsCommandBuffer, this->upFramebuffers[this->currentFrameIndex].get(), &clearValues);
+        this->upRenderPass->begin(pCurrentGraphicsCommandBuffer, this->upFramebuffers[this->currentFrameIndex].get(), &clearValues);
 
         upGraphicsPipeline->bindToCommandBuffer(pCurrentGraphicsCommandBuffer);
         VkViewport viewport = {.x = 0.0f,
@@ -226,7 +225,7 @@ namespace simple_triangle {
         // upGraphicsPipeline->draw(this->vertices.size());
         upGraphicsPipeline->drawIndexed(this->indices.size());
 
-        this->upFillcan->getRenderPass()->end();
+        this->upRenderPass->end();
 
         pCurrentGraphicsCommandRecording->endAll();
         pCurrentGraphicsCommandRecording->submit();
@@ -258,7 +257,8 @@ namespace simple_triangle {
                                          .dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
                                          .srcAccessMask = 0,
                                          .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT});
-        this->upFillcan->createRenderPass(renderPassBuilder);
+
+        this->upRenderPass = renderPassBuilder.getResult();
     }
 
     // std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> App::createDescriptorSetLayouts() {}
@@ -324,7 +324,7 @@ namespace simple_triangle {
         std::vector<VkDynamicState> dynamicStates = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
         graphicsPipelineBuilder.setDynamicState({.dynamicStates = dynamicStates});
 
-        graphicsPipelineBuilder.setRenderPass(this->upFillcan->getRenderPass());
+        graphicsPipelineBuilder.setRenderPass(this->upRenderPass.get());
 
         this->upGraphicsPipeline = graphicsPipelineBuilder.getResult();
     }

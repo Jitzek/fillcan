@@ -30,7 +30,7 @@ namespace fillcan {
         // Remove all physical devices that don't meet the requirements
         this->supportedPhysicalDevices.erase(
             std::remove_if(this->supportedPhysicalDevices.begin(), this->supportedPhysicalDevices.end(),
-                           [](PhysicalDevice& physicalDevice) {
+                           [pWindow](PhysicalDevice& physicalDevice) {
                                // Check if the physical device supports the required device extensions
                                if (!physicalDevice.areExtensionsSupported()) {
                                    return true;
@@ -41,30 +41,35 @@ namespace fillcan {
                                    return true;
                                }
 
-                               // Check if the physical device supports a swapchain
-                               std::vector<VkSurfaceFormatKHR> physicalDeviceSurfaceFormatsKHR = physicalDevice.getSurfaceFormatsKHR();
-                               if (physicalDeviceSurfaceFormatsKHR.empty()) {
-                                   return true;
-                               }
-                               std::vector<VkPresentModeKHR> physicalDeviceSurfacePresentModesKHR = physicalDevice.getSurfacePresentModesKHR();
-                               if (physicalDeviceSurfacePresentModesKHR.empty()) {
-                                   return true;
+                               if (pWindow != nullptr) {
+                                   // Check if the physical device supports a swapchain
+                                   std::vector<VkSurfaceFormatKHR> physicalDeviceSurfaceFormatsKHR = physicalDevice.getSurfaceFormatsKHR();
+                                   if (physicalDeviceSurfaceFormatsKHR.empty()) {
+                                       return true;
+                                   }
+
+                                   std::vector<VkPresentModeKHR> physicalDeviceSurfacePresentModesKHR = physicalDevice.getSurfacePresentModesKHR();
+                                   if (physicalDeviceSurfacePresentModesKHR.empty()) {
+                                       return true;
+                                   }
                                }
 
                                std::vector<VkQueueFamilyProperties> physicalDeviceQueueFamilyProperties = physicalDevice.getQueueFamilyProperties();
 
-                               // Check if the physical device supports graphics operations
-                               if (physicalDevice.getGraphicsQueueFamilyIndex() == -1) {
-                                   return true;
-                               }
+                               if (pWindow != nullptr) {
+                                   // Check if the physical device supports graphics operations
+                                   if (!(physicalDevice.getComputeQueueFamilyIndices().size() > 0)) {
+                                       return true;
+                                   }
 
-                               // Check if the physical device supports present operations
-                               if (physicalDevice.getPresentQueueFamilyIndex() == -1) {
-                                   return true;
+                                   // Check if the physical device supports present operations
+                                   if (!(physicalDevice.getPresentQueueFamilyIndices().size() > 0)) {
+                                       return true;
+                                   }
                                }
 
                                // Check if the physical device supports compute operations
-                               if (physicalDevice.getComputeQueueFamilyIndex() == -1) {
+                               if (!(physicalDevice.getComputeQueueFamilyIndices().size() > 0)) {
                                    return true;
                                }
 
@@ -76,7 +81,7 @@ namespace fillcan {
 #endif
     }
 
-    DevicePool::~DevicePool() { this->supportedPhysicalDevices.clear(); }
+    DevicePool::~DevicePool() {}
 
     std::vector<PhysicalDevice> DevicePool::getSupportedPhysicalDevices() { return this->supportedPhysicalDevices; }
 

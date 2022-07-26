@@ -1,7 +1,7 @@
 // vulkan
 #include "vulkan/vulkan_core.h"
 
-#include "fillcan/instance/logical_device.hpp"
+#include <fillcan/instance/logical_device.hpp>
 #include <fillcan/memory/semaphore.hpp>
 
 // std
@@ -30,5 +30,5 @@ namespace fillcan {
         vkDestroySemaphore(this->pLogicalDevice->getLogicalDeviceHandle(), this->hSemaphore, nullptr);
     }
 
-    VkSemaphore Semaphore::getSemaphoreHandle() { return this->hSemaphore; }
+    const VkSemaphore Semaphore::getSemaphoreHandle() const { return this->hSemaphore; }
 } // namespace fillcan

@@ -42,6 +42,7 @@
 #include <functional>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <thread>
@@ -95,10 +96,11 @@ namespace simple_texture {
 
         this->upFramebuffers.resize(this->upFillcan->getSwapchain()->getImageCount());
 
-        upFillcan->MainLoop(std::bind(&App::update, this, std::placeholders::_1));
+        upFillcan->mainLoop(std::bind(&App::update, this, std::placeholders::_1));
     }
 
     void App::update(double deltaTime) {
+        this->deltaTimef = static_cast<float>(deltaTime);
         // Recreate swapchain if window was resized
         if (this->upFillcan->getWindow()->wasResized()) {
             this->upFillcan->recreateSwapchain();
@@ -133,15 +135,14 @@ namespace simple_texture {
             Create framebuffer
         */
         // Create imageviews which will be used as attachments for the framebuffer
-        std::vector<fillcan::ImageView*> pAttachments = {swapchainImage.pSwapchainImageView, swapchainImage.pDepthBufferImageView};
+        std::vector<fillcan::ImageView*> pAttachments = {swapchainImage.pSwapchainImageView, swapchainImage.pDepthImageView};
         this->upFramebuffers.at(this->currentFrameIndex) = std::move(std::make_unique<fillcan::Framebuffer>(
-            this->upFillcan->getCurrentDevice(), this->upFillcan->getRenderPass(), pAttachments,
-            this->upFillcan->getSwapchain()->getImageExtent().width, this->upFillcan->getSwapchain()->getImageExtent().height,
-            this->upFillcan->getSwapchain()->getImageArrayLayers()));
+            this->upFillcan->getCurrentDevice(), this->upRenderPass.get(), pAttachments, this->upFillcan->getSwapchain()->getImageExtent().width,
+            this->upFillcan->getSwapchain()->getImageExtent().height, this->upFillcan->getSwapchain()->getImageArrayLayers()));
         /* */
 
         std::vector<VkClearValue> clearValues = {{.color = {{0.0f, 0.0f, 0.0f, 1.0f}}}, {.depthStencil = {1.0f, 0}}};
-        this->upFillcan->getRenderPass()->begin(pCurrentGraphicsCommandBuffer, this->upFramebuffers.at(this->currentFrameIndex).get(), &clearValues);
+        this->upRenderPass->begin(pCurrentGraphicsCommandBuffer, this->upFramebuffers.at(this->currentFrameIndex).get(), &clearValues);
 
         VkViewport viewport = {.x = 0.0f,
                                .y = 0.0f,
@@ -155,7 +156,7 @@ namespace simple_texture {
 
         this->renderGameObjects(pCurrentGraphicsCommandBuffer);
 
-        this->upFillcan->getRenderPass()->end();
+        this->upRenderPass->end();
 
         pCurrentGraphicsCommandRecording->endAll();
         pCurrentGraphicsCommandRecording->submit();
@@ -232,10 +233,10 @@ namespace simple_texture {
 
     void App::loadGameObjects() {
         std::shared_ptr<fillcan::Model> spModel1 = this->createCubeModel({0.f, 0.f, 0.f});
-        spModel1->setTexture(this->upFillcan->getAssetManager()->getTexture(0));
+        spModel1->texture = this->upFillcan->getAssetManager()->getTexture(0);
 
         std::shared_ptr<fillcan::Model> spModel2 = this->createCubeModel({0.f, 0.f, 0.f});
-        spModel2->setTexture(this->upFillcan->getAssetManager()->getTexture(1));
+        spModel2->texture = this->upFillcan->getAssetManager()->getTexture(1);
         // const std::vector<fillcan::Model::Vertex> vertices = {{{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
         //                                                       {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
         //                                                       {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
@@ -269,14 +270,11 @@ namespace simple_texture {
         this->upGraphicsPipeline->bindToCommandBuffer(pCommandBuffer);
         this->upGraphicsPipeline->bindDescriptorSets(std::vector<std::string>{"TexturesDescriptorSet"}, 0);
         for (fillcan::GameObject& gameObject : this->gameObjects) {
-            gameObject.transform.rotation.y =
-                glm::mod(gameObject.transform.rotation.y + (0.5f * this->upFillcan->deltaTimef()), glm::two_pi<float>());
-            gameObject.transform.rotation.x =
-                glm::mod(gameObject.transform.rotation.x + (0.25f * this->upFillcan->deltaTimef()), glm::two_pi<float>());
+            gameObject.transform.rotation.y = glm::mod(gameObject.transform.rotation.y + (0.5f * this->deltaTimef), glm::two_pi<float>());
+            gameObject.transform.rotation.x = glm::mod(gameObject.transform.rotation.x + (0.25f * this->deltaTimef), glm::two_pi<float>());
             SimplePushConstantData data = {.transform = gameObject.transform.mat4(),
                                            .color = gameObject.color,
-                                           .textureIndex =
-                                               gameObject.model->getTexture() != nullptr ? gameObject.model->getTexture()->getIndex() : -1};
+                                           .textureIndex = gameObject.model->texture != nullptr ? gameObject.model->texture->getIndex() : -1};
             std::unique_ptr<SimplePushConstantData> simplePushConstantData = std::make_unique<SimplePushConstantData>(data);
             this->upGraphicsPipeline->pushConstantData("SimplePushConstant", std::move(simplePushConstantData));
 
@@ -304,18 +302,21 @@ namespace simple_texture {
         renderPassBuilder.addColorAttachment(swapChainAttachmentIndex, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, false);
 
         // Add attachment for subpass 1 describing the depth image
-        unsigned int depthImageAttachmentIndex =
-            renderPassBuilder.addAttachment({.flags = 0,
-                                             .format = this->upFillcan->getCurrentDevice()->getPhysicalDevice()->findSupportedFormat(
-                                                 {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
-                                                 VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT),
-                                             .samples = VK_SAMPLE_COUNT_1_BIT,
-                                             .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
-                                             .storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
-                                             .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
-                                             .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
-                                             .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
-                                             .finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL});
+        std::optional<VkFormat> depthImageFormat = this->upFillcan->getCurrentDevice()->getPhysicalDevice()->findSupportedFormat(
+            {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT}, VK_IMAGE_TILING_OPTIMAL,
+            VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
+        if (!depthImageFormat.has_value()) {
+            throw std::runtime_error("Failed to find a supported format for the depth image attachment.");
+        }
+        unsigned int depthImageAttachmentIndex = renderPassBuilder.addAttachment({.flags = 0,
+                                                                                  .format = depthImageFormat.value(),
+                                                                                  .samples = VK_SAMPLE_COUNT_1_BIT,
+                                                                                  .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+                                                                                  .storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+                                                                                  .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+                                                                                  .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+                                                                                  .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+                                                                                  .finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL});
         // Define attachment as a depthstencil attachment
         renderPassBuilder.setDepthStencilAttachment(depthImageAttachmentIndex, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, false);
 
@@ -330,7 +331,7 @@ namespace simple_texture {
                                          .srcAccessMask = 0,
                                          .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT});
 
-        this->upFillcan->createRenderPass(renderPassBuilder);
+        this->upRenderPass = renderPassBuilder.getResult();
     }
 
     std::vector<std::unique_ptr<fillcan::DescriptorSetLayout>> App::createFragmentDescriptorSetLayouts() {
@@ -363,7 +364,9 @@ namespace simple_texture {
 
         // Describe the vertex shader
         graphicsPipelineBuilder.setVertexInputState(
-            {fillcan::Model::Vertex::getBindingDescriptions(), fillcan::Model::Vertex::getAttributeDescriptions()});
+            {fillcan::Model::Vertex::getBindingDescriptions(),
+             {fillcan::Model::Vertex::getPositionAttributeDescription(0), fillcan::Model::Vertex::getColorAttributeDescription(1),
+              fillcan::Model::Vertex::getTextureCoordinateAttributeDescription(2)}});
 
         // The viewports and scissors are dynamic, but the amount of viewports and scissors should still be defined
         std::vector<VkViewport> viewports = {};
@@ -420,7 +423,7 @@ namespace simple_texture {
         // Set the viewports and scissors to dynamic to allow for window resizing
         std::vector<VkDynamicState> dynamicStates = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
         graphicsPipelineBuilder.setDynamicState({.dynamicStates = dynamicStates});
-        graphicsPipelineBuilder.setRenderPass(this->upFillcan->getRenderPass());
+        graphicsPipelineBuilder.setRenderPass(this->upRenderPass.get());
 
         this->upGraphicsPipeline = graphicsPipelineBuilder.getResult();
     }

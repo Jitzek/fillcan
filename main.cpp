@@ -1,9 +1,9 @@
 #include "apps/compute_pipeline/app.hpp"
 #include "apps/simple_camera/app.hpp"
-#include "apps/simple_triangle/app.hpp"
 #include "apps/simple_cube/app.hpp"
-#include "apps/simple_texture/app.hpp"
 #include "apps/simple_model/app.hpp"
+#include "apps/simple_texture/app.hpp"
+#include "apps/simple_triangle/app.hpp"
 
 // std
 #include <cstdlib>

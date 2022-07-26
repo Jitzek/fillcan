@@ -2,12 +2,12 @@
 #include "vulkan/vulkan_core.h"
 
 // fillcan
-#include <algorithm>
 #include <fillcan/graphics/framebuffer.hpp>
 #include <fillcan/graphics/render_pass.hpp>
 #include <fillcan/instance/logical_device.hpp>
 
 // std
+#include <algorithm>
 #include <memory>
 #include <stdexcept>
 #include <utility>
@@ -44,13 +44,13 @@ namespace fillcan {
         vkDestroyRenderPass(this->pLogicalDevice->getLogicalDeviceHandle(), this->hRenderPass, nullptr);
     }
 
-    VkRenderPass RenderPass::getRenderPassHandle() { return this->hRenderPass; }
+    const VkRenderPass RenderPass::getRenderPassHandle() const { return this->hRenderPass; }
 
-    std::vector<VkAttachmentDescription>& RenderPass::getAttachments() { return this->attachments; }
+    const std::vector<VkAttachmentDescription>& RenderPass::getAttachments() const { return this->attachments; }
 
-    std::vector<VkSubpassDescription>& RenderPass::getSubpasses() { return this->subpasses; }
+    const std::vector<VkSubpassDescription>& RenderPass::getSubpasses() const { return this->subpasses; }
 
-    std::vector<VkSubpassDependency>& RenderPass::getDependencies() { return this->dependencies; }
+    const std::vector<VkSubpassDependency>& RenderPass::getDependencies() const { return this->dependencies; }
 
     void RenderPass::begin(CommandBuffer* pCommandBuffer, Framebuffer* pFramebuffer, std::vector<VkClearValue>* pClearValues, VkRect2D* pRenderArea) {
         this->pCommandBuffer = pCommandBuffer;
@@ -76,7 +76,7 @@ namespace fillcan {
 
     void RenderPass::end() {
         if (this->pCommandBuffer == nullptr) {
-            throw std::runtime_error("Attempting to end renderpass when it has not begun");
+            throw std::runtime_error("Attempting to end renderpass when it has not begun.");
         }
         vkCmdEndRenderPass(this->pCommandBuffer->getCommandBufferHandle());
         this->pCommandBuffer = nullptr;

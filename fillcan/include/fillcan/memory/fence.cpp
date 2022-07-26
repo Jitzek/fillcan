@@ -30,13 +30,13 @@ namespace fillcan {
         vkDestroyFence(this->pLogicalDevice->getLogicalDeviceHandle(), this->hFence, nullptr);
     }
 
-    VkFence Fence::getFenceHandle() { return this->hFence; }
+    const VkFence Fence::getFenceHandle() const { return this->hFence; }
 
     bool Fence::reset() { return vkResetFences(this->pLogicalDevice->getLogicalDeviceHandle(), 1, &this->hFence) == VK_SUCCESS; }
 
     bool Fence::waitFor(uint64_t timeout) { return vkWaitForFences(pLogicalDevice->getLogicalDeviceHandle(), 1, &this->hFence, true, timeout); }
 
-    bool Fence::waitForAll(LogicalDevice* pLogicalDevice, std::vector<Fence*> pFences, uint64_t timeout) {
+    bool Fence::s_waitForAll(LogicalDevice* pLogicalDevice, std::vector<Fence*> pFences, uint64_t timeout) {
         std::vector<VkFence> hFences;
         hFences.reserve(pFences.size());
         std::transform(pFences.begin(), pFences.end(), std::back_inserter(hFences), [](const Fence* pFence) { return pFence->hFence; });
@@ -46,7 +46,7 @@ namespace fillcan {
                    : false;
     }
 
-    bool Fence::resetAll(LogicalDevice* pLogicalDevice, std::vector<Fence*> pFences) {
+    bool Fence::s_resetAll(LogicalDevice* pLogicalDevice, std::vector<Fence*> pFences) {
         std::vector<VkFence> hFences;
         hFences.reserve(pFences.size());
         std::transform(pFences.begin(), pFences.end(), std::back_inserter(hFences), [](const Fence* pFence) { return pFence->hFence; });

@@ -1,14 +1,16 @@
 
-// fillcan
-#include "fillcan/commands/command_buffer.hpp"
-#include "fillcan/shader/shader_module.hpp"
+// vulkan
 #include "vulkan/vulkan_core.h"
-#include <cstddef>
+
+// fillcan
+#include <fillcan/commands/command_buffer.hpp>
 #include <fillcan/fillcan.hpp>
 #include <fillcan/instance/logical_device.hpp>
+#include <fillcan/shader/shader_module.hpp>
 
 // std
 #include <chrono>
+#include <cstddef>
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -21,41 +23,18 @@
 #include <shaderc/status.h>
 
 namespace fillcan {
-
-    std::vector<const char*> requiredInstanceLayers = {
-#ifndef NDEBUG
-        "VK_LAYER_KHRONOS_validation"
-#endif
-    };
-
-    std::vector<const char*> requiredInstanceExtensions = {
-#ifndef NDEBUG
-        VK_EXT_DEBUG_UTILS_EXTENSION_NAME
-#endif
-    };
-
-    std::vector<const char*> requiredDeviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
-
-    Fillcan::Fillcan(const char* pApplicationName, uint32_t applicationVersion, unsigned int windowWidth, unsigned int windowHeight,
-                     VkPhysicalDeviceFeatures requiredDeviceFeatures) {
-        // Initialize Window
-        this->upWindow = std::make_unique<Window>(windowWidth, windowHeight, pApplicationName);
-
+    Fillcan::Fillcan(const char* pApplicationName, uint32_t applicationVersion, VkPhysicalDeviceFeatures requiredDeviceFeatures,
+                     std::vector<const char*> requiredDeviceExtensions) {
         // Initialize Instance
-        std::vector<const char*> windowExtensions = upWindow->getRequiredExtensions();
-        requiredInstanceExtensions.insert(requiredInstanceExtensions.begin(), windowExtensions.begin(), windowExtensions.end());
         this->upInstance = std::make_unique<Instance>(pApplicationName, applicationVersion, requiredInstanceLayers, requiredInstanceExtensions);
 
-        // Create surface of Window using Instance
-        this->upWindow->createSurface(this->upInstance.get());
-
         // Initialize Device Pool
-        this->upDevicePool =
-            std::make_unique<DevicePool>(this->upInstance.get(), this->upWindow.get(), requiredDeviceExtensions, requiredDeviceFeatures);
+        this->upDevicePool = std::make_unique<DevicePool>(this->upInstance.get(), nullptr, requiredDeviceExtensions, requiredDeviceFeatures);
     }
 
+    Fillcan::Fillcan() {}
+
     Fillcan::~Fillcan() {
-        vkDestroySurfaceKHR(this->upInstance->getInstanceHandle(), this->upWindow->getSurface(), nullptr);
         this->upDevicePool.reset();
         this->upInstance.reset();
     }
@@ -65,8 +44,6 @@ namespace fillcan {
     LogicalDevice* Fillcan::selectDevice(unsigned int deviceIndex) { return this->upDevicePool->selectDevice(deviceIndex); }
 
     LogicalDevice* Fillcan::getCurrentDevice() { return this->upDevicePool->getCurrentDevice(); }
-
-    Window* Fillcan::getWindow() { return this->upWindow.get(); }
 
     std::vector<char> Fillcan::readFile(std::string fileLocation, size_t* fileSize) {
         std::ifstream fileStream(fileLocation, std::ios::ate | std::ios::binary);
@@ -87,8 +64,7 @@ namespace fillcan {
     std::unique_ptr<ShaderModule> Fillcan::createShaderModule(const std::string shaderDirectory, const std::string shaderFileName,
                                                               shaderc_shader_kind shaderKind,
                                                               std::vector<std::unique_ptr<DescriptorSetLayout>> upDescriptorSetLayouts,
-                                                              std::unique_ptr<DescriptorPool> upDescriptorPool /*, TODO: pushConstants*/,
-                                                              bool preprocess, bool optimize) {
+                                                              std::unique_ptr<DescriptorPool> upDescriptorPool, bool preprocess, bool optimize) {
         shaderc::Compiler compiler;
         shaderc::CompileOptions options;
 
@@ -105,8 +81,9 @@ namespace fillcan {
             }
         }
 
-        if (optimize)
+        if (optimize) {
             options.SetOptimizationLevel(shaderc_optimization_level_performance);
+        }
 
         shaderc::SpvCompilationResult spvResult =
             compiler.CompileGlslToSpv(shaderSourceText.data(), shaderFileSize, shaderKind, shaderFileName.c_str(), options);
@@ -119,20 +96,5 @@ namespace fillcan {
 
         return std::move(
             std::make_unique<ShaderModule>(this->getCurrentDevice(), spirvCode, std::move(upDescriptorSetLayouts), std::move(upDescriptorPool)));
-    }
-
-    CommandRecording* Fillcan::beginSingleTimeCommands(Queue* pQueue) {
-        fillcan::CommandRecording* singleTimeRecording = pQueue->createRecording(1, 0);
-        for (CommandBuffer* pCommandBuffer : singleTimeRecording->pPrimaryCommandBuffers) {
-            pCommandBuffer->begin();
-        }
-        return singleTimeRecording;
-    }
-
-    void Fillcan::endSingleTimeCommands(CommandRecording* pCommandRecording) {
-        pCommandRecording->endAll();
-        pCommandRecording->submit();
-        pCommandRecording->pQueue->waitIdle();
-        pCommandRecording->free();
     }
 } // namespace fillcan
