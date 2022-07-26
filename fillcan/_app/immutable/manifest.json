@@ -1,130 +1,104 @@
 {
   ".svelte-kit/runtime/client/start.js": {
-    "file": "start-e80b72af.js",
+    "file": "start-1f2fac4e.js",
     "src": ".svelte-kit/runtime/client/start.js",
     "isEntry": true,
     "imports": [
-      "_index-974b575e.js",
-      "_index-4112df05.js"
+      "_index-5cee6edc.js",
+      "_paths-fbc4d9fe.js"
     ],
     "dynamicImports": [
       "src/routes/__layout.svelte",
       ".svelte-kit/runtime/components/error.svelte",
-      "src/routes/documentation-bak.svelte",
       "src/routes/documentation.svelte",
       "src/routes/examples.svelte",
       "src/routes/index.svelte"
     ]
   },
   "src/routes/__layout.svelte": {
-    "file": "pages/__layout.svelte-9a21708f.js",
+    "file": "pages/__layout.svelte-804fb1f3.js",
     "src": "src/routes/__layout.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_index-974b575e.js",
-      "_HamburgerMenuIcon-525600aa.js",
-      "_StateStore-20b0ac83.js",
-      "_index-4112df05.js"
+      "_index-5cee6edc.js",
+      "_HamburgerMenuIcon-d70e24a9.js",
+      "_StateStore-3027a606.js",
+      "_paths-fbc4d9fe.js"
     ],
     "css": [
       "assets/pages/__layout.svelte-77a19d81.css"
     ]
   },
   ".svelte-kit/runtime/components/error.svelte": {
-    "file": "error.svelte-30307c4e.js",
+    "file": "error.svelte-3b933eeb.js",
     "src": ".svelte-kit/runtime/components/error.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_index-974b575e.js"
-    ]
-  },
-  "src/routes/documentation-bak.svelte": {
-    "file": "pages/documentation-bak.svelte-4dea7418.js",
-    "src": "src/routes/documentation-bak.svelte",
-    "isEntry": true,
-    "isDynamicEntry": true,
-    "imports": [
-      "_index-974b575e.js",
-      "_nord-5eb09d97.js",
-      "_StateStore-20b0ac83.js",
-      "_index-4112df05.js"
-    ],
-    "css": [
-      "assets/pages/documentation-bak.svelte-1bd7d4a9.css"
+      "_index-5cee6edc.js"
     ]
   },
   "src/routes/documentation.svelte": {
-    "file": "pages/documentation.svelte-d505f0d5.js",
+    "file": "pages/documentation.svelte-8ba91083.js",
     "src": "src/routes/documentation.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_index-974b575e.js",
-      "_HamburgerMenuIcon-525600aa.js",
-      "_nord-5eb09d97.js",
-      "_StateStore-20b0ac83.js",
-      "_index-4112df05.js"
+      "_index-5cee6edc.js",
+      "_HamburgerMenuIcon-d70e24a9.js",
+      "_StateStore-3027a606.js",
+      "_paths-fbc4d9fe.js"
     ],
     "css": [
-      "assets/pages/documentation.svelte-ddb8c362.css"
+      "assets/pages/documentation.svelte-08605e23.css"
     ]
   },
   "src/routes/examples.svelte": {
-    "file": "pages/examples.svelte-7bb883dc.js",
+    "file": "pages/examples.svelte-b6dadc57.js",
     "src": "src/routes/examples.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_index-974b575e.js"
+      "_index-5cee6edc.js"
     ]
   },
   "src/routes/index.svelte": {
-    "file": "pages/index.svelte-779064a5.js",
+    "file": "pages/index.svelte-fa4aef74.js",
     "src": "src/routes/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
-      "_index-974b575e.js",
-      "_StateStore-20b0ac83.js",
-      "_index-4112df05.js"
+      "_index-5cee6edc.js",
+      "_paths-fbc4d9fe.js",
+      "_StateStore-3027a606.js"
     ],
     "css": [
       "assets/pages/index.svelte-f36030f8.css"
     ]
   },
-  "_index-974b575e.js": {
-    "file": "chunks/index-974b575e.js"
+  "_index-5cee6edc.js": {
+    "file": "chunks/index-5cee6edc.js"
   },
-  "_index-4112df05.js": {
-    "file": "chunks/index-4112df05.js",
+  "_paths-fbc4d9fe.js": {
+    "file": "chunks/paths-fbc4d9fe.js",
     "imports": [
-      "_index-974b575e.js"
+      "_index-5cee6edc.js"
     ]
   },
-  "_StateStore-20b0ac83.js": {
-    "file": "chunks/StateStore-20b0ac83.js",
+  "_StateStore-3027a606.js": {
+    "file": "chunks/StateStore-3027a606.js",
     "imports": [
-      "_index-4112df05.js"
+      "_paths-fbc4d9fe.js"
     ]
   },
-  "_HamburgerMenuIcon-525600aa.js": {
-    "file": "chunks/HamburgerMenuIcon-525600aa.js",
+  "_HamburgerMenuIcon-d70e24a9.js": {
+    "file": "chunks/HamburgerMenuIcon-d70e24a9.js",
     "imports": [
-      "_index-974b575e.js"
+      "_index-5cee6edc.js"
     ],
     "css": [
       "assets/HamburgerMenuIcon-8f4e6a83.css"
-    ]
-  },
-  "_nord-5eb09d97.js": {
-    "file": "chunks/nord-5eb09d97.js",
-    "imports": [
-      "_index-974b575e.js"
-    ],
-    "css": [
-      "assets/nord-cc0cdcf9.css"
     ]
   }
 }
